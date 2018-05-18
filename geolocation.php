@@ -508,6 +508,10 @@ function reverse_geocode($latitude, $longitude) {
 	$url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude."&sensor=false";
 	$result = wp_remote_get($url);
 	$json = json_decode($result['body']);
+        $city = '';
+        $state = '';
+        $country = '';
+        $address = '';
 	foreach ($json->results as $result)
 	{
 		foreach($result->address_components as $addressPart) {
