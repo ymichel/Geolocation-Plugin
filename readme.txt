@@ -44,4 +44,4 @@ Visitors see a short description of the address either before, after, or at a cu
 
 = 0.2.2 =
 * scrutinizer auto-fixes
-* [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ymichel/Geolocation-Plugin/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ymichel/Geolocation-Plugin/?branch=master)
+* !https://scrutinizer-ci.com/g/ymichel/Geolocation-Plugin/badges/quality-score.png?b=master!:https://scrutinizer-ci.com/g/ymichel/Geolocation-Plugin/?branch=master
