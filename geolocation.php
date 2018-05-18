@@ -98,11 +98,9 @@ function geolocation_save_postdata($post_id) {
   // Check authorization, permissions, autosave, etc
   if (!wp_verify_nonce($_POST['geolocation_nonce'], plugin_basename(__FILE__)))
     return $post_id;
-  
-  if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+  else if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
     return $post_id;
-  
-  if('page' == $_POST['post_type'] ) {
+  else if('page' == $_POST['post_type'] ) {
     if(!current_user_can('edit_page', $post_id))
 		return $post_id;
   } else {
@@ -123,7 +121,7 @@ function geolocation_save_postdata($post_id) {
   	if(esc_html($address) != '')
   		update_post_meta($post_id, 'geo_address', $address);
   		
-  	if($on) {
+  	else if($on) {
   		update_post_meta($post_id, 'geo_enabled', 1);
   		
 	  	if($public)
