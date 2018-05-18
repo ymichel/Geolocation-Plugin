@@ -13,6 +13,8 @@ The Geolocation plugin allows WordPress users to geotag their posts using the Ed
 
 Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location.
 
+https://scrutinizer-ci.com/g/ymichel/Geolocation-Plugin/badges/quality-score.png?b=master
+
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory.
@@ -44,4 +46,3 @@ Visitors see a short description of the address either before, after, or at a cu
 
 = 0.2.2 =
 * scrutinizer auto-fixes
-* !https://scrutinizer-ci.com/g/ymichel/Geolocation-Plugin/badges/quality-score.png?b=master!:https://scrutinizer-ci.com/g/ymichel/Geolocation-Plugin/?branch=master
