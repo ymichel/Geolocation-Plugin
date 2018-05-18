@@ -50,8 +50,7 @@ function activate() {
 function geolocation_add_custom_box() {
         if (function_exists('add_meta_box')) {
             add_meta_box('geolocation_sectionid', __('Geolocation', 'myplugin_textdomain'), 'geolocation_inner_custom_box', 'post', 'advanced');
-        } 
-        else {
+        } else {
             add_action('dbx_post_advanced', 'geolocation_old_custom_box');
         }
 }
@@ -96,16 +95,18 @@ function geolocation_old_custom_box() {
 
 function geolocation_save_postdata($post_id) {
     // Check authorization, permissions, autosave, etc
-    if (!wp_verify_nonce($_POST['geolocation_nonce'], plugin_basename(__FILE__)))
-    return $post_id;
-    else if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-    return $post_id;
-    else if ('page' == $_POST['post_type']) {
-    if (!current_user_can('edit_page', $post_id))
+    if (!wp_verify_nonce($_POST['geolocation_nonce'], plugin_basename(__FILE__))) {
         return $post_id;
+    } else if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return $post_id;
+    } else if ('page' == $_POST['post_type']) {
+    if (!current_user_can('edit_page', $post_id)) {
+            return $post_id;
+    }
     } else {
-    if (!current_user_can('edit_post', $post_id)) 
-        return $post_id;
+    if (!current_user_can('edit_post', $post_id)) {
+            return $post_id;
+    }
     }
 
     $latitude = clean_coordinate($_POST['geolocation-latitude']);
@@ -118,18 +119,17 @@ function geolocation_save_postdata($post_id) {
         update_post_meta($post_id, 'geo_latitude', $latitude);
         update_post_meta($post_id, 'geo_longitude', $longitude);
   	
-        if (esc_html($address) != '')
-            update_post_meta($post_id, 'geo_address', $address);
-  		
-        else if ($on) {
+        if (esc_html($address) != '') {
+                    update_post_meta($post_id, 'geo_address', $address);
+        } else if ($on) {
             update_post_meta($post_id, 'geo_enabled', 1);
   		
-            if ($public)
-                update_post_meta($post_id, 'geo_public', 1);
-            else
-                update_post_meta($post_id, 'geo_public', 0);
-        }
-        else {
+            if ($public) {
+                            update_post_meta($post_id, 'geo_public', 1);
+            } else {
+                            update_post_meta($post_id, 'geo_public', 0);
+            }
+        } else {
             update_post_meta($post_id, 'geo_enabled', 0);
             update_post_meta($post_id, 'geo_public', 1);
         }
@@ -449,11 +449,12 @@ function add_google_maps($posts) {
 
 function geo_has_shortcode($content) {
     $pos = strpos($content, SHORTCODE);
-    if ($pos === false)
-        return false;
-    else
-        return true;
-}
+    if ($pos === false) {
+            return false;
+    } else {
+            return true;
+    }
+    }
 
 function display_location($content) {
     default_settings();
@@ -468,11 +469,13 @@ function display_location($content) {
     $public = (bool) get_post_meta($post->ID, 'geo_public', true);
 	
     $on = true;
-    if (get_post_meta($post->ID, 'geo_enabled', true) != '')
-        $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
+    if (get_post_meta($post->ID, 'geo_enabled', true) != '') {
+            $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
+    }
 	
-    if (empty($address))
-        $address = reverse_geocode($latitude, $longitude);
+    if (empty($address)) {
+            $address = reverse_geocode($latitude, $longitude);
+    }
 	
     if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {
         $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">Posted from '.esc_html($address).'.</a>';
@@ -510,24 +513,26 @@ function reverse_geocode($latitude, $longitude) {
     foreach ($json->results as $result)
     {
         foreach ($result->address_components as $addressPart) {
-            if ((in_array('locality', $addressPart->types)) && (in_array('political', $addressPart->types)))
-                    $city = $addressPart->long_name;
-                else if ((in_array('administrative_area_level_1', $addressPart->types)) && (in_array('political', $addressPart->types)))
-                    $state = $addressPart->long_name;
-                else if ((in_array('country', $addressPart->types)) && (in_array('political', $addressPart->types)))
-                    $country = $addressPart->long_name;
+            if ((in_array('locality', $addressPart->types)) && (in_array('political', $addressPart->types))) {
+                                $city = $addressPart->long_name;
+            } else if ((in_array('administrative_area_level_1', $addressPart->types)) && (in_array('political', $addressPart->types))) {
+                                    $state = $addressPart->long_name;
+                } else if ((in_array('country', $addressPart->types)) && (in_array('political', $addressPart->types))) {
+                                    $country = $addressPart->long_name;
+                }
         }
     }
 	
         $address = '';
-    if (($city != '') && ($state != '') && ($country != ''))
-        $address = $city.', '.$state.', '.$country;
-    else if (($city != '') && ($state != ''))
-        $address = $city.', '.$state;
-    else if (($state != '') && ($country != ''))
-        $address = $state.', '.$country;
-    else if ($country != '')
-        $address = $country;
+    if (($city != '') && ($state != '') && ($country != '')) {
+            $address = $city.', '.$state.', '.$country;
+    } else if (($city != '') && ($state != '')) {
+            $address = $city.', '.$state;
+    } else if (($state != '') && ($country != '')) {
+            $address = $state.', '.$country;
+    } else if ($country != '') {
+            $address = $country;
+    }
 		
     return $address;
 }
@@ -556,36 +561,43 @@ function register_settings() {
 }
 
 function is_checked($field) {
-    if (get_option($field))
-            echo ' checked="checked" ';
-}
+    if (get_option($field)) {
+                echo ' checked="checked" ';
+    }
+    }
 
 function is_value($field, $value) {
-    if (get_option($field) == $value) 
-            echo ' checked="checked" ';
-}
+    if (get_option($field) == $value) {
+                echo ' checked="checked" ';
+    }
+    }
 
 function default_settings() {
-    if (get_option('geolocation_map_width') == '0')
-        update_option('geolocation_map_width', '450');
+    if (get_option('geolocation_map_width') == '0') {
+            update_option('geolocation_map_width', '450');
+    }
 		
-    if (get_option('geolocation_map_height') == '0')
-        update_option('geolocation_map_height', '200');
+    if (get_option('geolocation_map_height') == '0') {
+            update_option('geolocation_map_height', '200');
+    }
 		
-    if (get_option('geolocation_default_zoom') == '0')
-        update_option('geolocation_default_zoom', '16');
+    if (get_option('geolocation_default_zoom') == '0') {
+            update_option('geolocation_default_zoom', '16');
+    }
 		
-    if (get_option('geolocation_map_position') == '0')
-        update_option('geolocation_map_position', 'after');
-}
+    if (get_option('geolocation_map_position') == '0') {
+            update_option('geolocation_map_position', 'after');
+    }
+    }
 
 function geolocation_settings_page() {
     default_settings();
     $zoomImage = get_option('geolocation_default_zoom');
-    if (get_option('geolocation_wp_pin'))
-        $zoomImage = 'wp_'.$zoomImage.'.png';
-    else
-        $zoomImage = $zoomImage.'.png';
+    if (get_option('geolocation_wp_pin')) {
+            $zoomImage = 'wp_'.$zoomImage.'.png';
+    } else {
+            $zoomImage = $zoomImage.'.png';
+    }
     ?>
 	<style type="text/css">
 		#zoom_level_sample { background: url('<?php echo esc_url(plugins_url('img/zoom/'.$zoomImage, __FILE__)); ?>'); width:390px; height:190px; border: solid 1px #999; }
