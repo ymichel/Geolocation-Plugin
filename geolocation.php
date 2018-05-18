@@ -465,7 +465,6 @@ function display_location($content)  {
 	// Backup current registered shortcodes and clear them all out
 	$orig_shortcode_tags = $shortcode_tags;
 	$shortcode_tags = array();
-	$post_id = $post->ID;
 	$latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
 	$longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
 	$address = get_post_meta($post->ID, 'geo_address', true);
@@ -478,7 +477,7 @@ function display_location($content)  {
 	if(empty($address))
 		$address = reverse_geocode($latitude, $longitude);
 	
-	if((!empty($latitude)) && (!empty($longitude) && ($public == true) && ($on == true))) {
+	if((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {
 		$html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">Posted from '.esc_html($address).'.</a>';
 		switch(esc_attr(get_option('geolocation_map_position')))
 		{
