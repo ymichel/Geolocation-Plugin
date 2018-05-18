@@ -150,7 +150,6 @@ function admin_init() {
 function admin_head() {
 	global $post;
 	$post_id = $post->ID;
-	$post_type = $post->post_type;
 	$zoom = (int) get_option('geolocation_default_zoom');
 	?>
 		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
@@ -344,10 +343,10 @@ function add_geo_support() {
 			echo add_google_maps($posts);
 			break;
 		case 'yahoo':
-			echo add_yahoo_maps($posts);
+			//echo add_yahoo_maps($posts);
 			break;
 		case 'bing':
-			echo add_bing_maps($posts);
+			//echo add_bing_maps($posts);
 			break;
 	}
 	echo '<link type="text/css" rel="stylesheet" href="'.esc_url(plugins_url('style.css', __FILE__)).'" />';
@@ -511,19 +510,19 @@ function reverse_geocode($latitude, $longitude) {
         $city = '';
         $state = '';
         $country = '';
-        $address = '';
 	foreach ($json->results as $result)
 	{
 		foreach($result->address_components as $addressPart) {
 			if((in_array('locality', $addressPart->types)) && (in_array('political', $addressPart->types)))
-	    		$city = $addressPart->long_name;
-	    	else if((in_array('administrative_area_level_1', $addressPart->types)) && (in_array('political', $addressPart->types)))
-	    		$state = $addressPart->long_name;
-	    	else if((in_array('country', $addressPart->types)) && (in_array('political', $addressPart->types)))
-	    		$country = $addressPart->long_name;
+	    			$city = $addressPart->long_name;
+	    		else if((in_array('administrative_area_level_1', $addressPart->types)) && (in_array('political', $addressPart->types)))
+	    			$state = $addressPart->long_name;
+	    		else if((in_array('country', $addressPart->types)) && (in_array('political', $addressPart->types)))
+	    			$country = $addressPart->long_name;
 		}
 	}
 	
+        $address = '';
 	if(($city != '') && ($state != '') && ($country != ''))
 		$address = $city.', '.$state.', '.$country;
 	else if(($city != '') && ($state != ''))
