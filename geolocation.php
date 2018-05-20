@@ -327,8 +327,8 @@ function admin_head() {
 }
 
 function add_geo_div() {
-    $width = esc_attr(get_option('geolocation_map_width'));
-    $height = esc_attr(get_option('geolocation_map_height'));
+    $width = esc_attr(/** @scrutinizer ignore-type */get_option('geolocation_map_width'));
+    $height = esc_attr(/** @scrutinizer ignore-type */get_option('geolocation_map_height'));
     echo '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 }
 
@@ -545,6 +545,7 @@ function clean_coordinate($coordinate) {
 
 function add_settings() {
     if (is_admin()) { // admin actions
+        /** @scrutinizer ignore-call */ 
         add_options_page('Geolocation Plugin Settings', 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page', __FILE__);
             add_action('admin_init', 'register_settings');
     } else {
