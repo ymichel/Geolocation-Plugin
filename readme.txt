@@ -42,5 +42,8 @@ Visitors see a short description of the address either before, after, or at a cu
 = 0.2.1 =
 * fixed some left overs from the previus release
 
+= 0.2.2 =
+* code optimizations
+
 = 0.3 = 
 * introduced Google Maps API key option
