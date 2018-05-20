@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: http://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.2.1
+Version: 0.2.2
 Author: Chris Boyd
 Author URI: http://geo.chrisboyd.net
 Author: Yann Michel

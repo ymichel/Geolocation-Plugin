@@ -43,4 +43,4 @@ Visitors see a short description of the address either before, after, or at a cu
 * fixed some left overs from the previus release
 
 = 0.2.2 =
-* scrutinizer auto-fixes
+* code optimizations
