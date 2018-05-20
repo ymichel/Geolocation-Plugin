@@ -563,7 +563,7 @@ function register_settings() {
 function get_google_maps_api_key() {
     $apikey = get_option('geolocation_google_maps_api_key');
     if ($apikey != "") {
-       return "&key=".$apikey;
+        return "&key=".$apikey;
     }
     return "";
 }
