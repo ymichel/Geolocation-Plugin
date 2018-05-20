@@ -3,15 +3,14 @@
 Plugin Name: Geolocation
 Plugin URI: http://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.2.2
-Author: Chris Boyd
-Author URI: http://geo.chrisboyd.net
+Version: 0.3
 Author: Yann Michel
 Author URI: http://www.yann-michel.de
 License: GPL2
 */
 
-/*  Copyright 2010 Chris Boyd (email : chris@chrisboyd.net)
+/*  Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
+              2018 Yann Michel (email : dev@yann-michel.de)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -327,8 +326,8 @@ function admin_head() {
 }
 
 function add_geo_div() {
-    $width = esc_attr(/** @scrutinizer ignore-type */get_option('geolocation_map_width'));
-    $height = esc_attr(/** @scrutinizer ignore-type */get_option('geolocation_map_height'));
+    $width = esc_attr(get_option('geolocation_map_width'));
+    $height = esc_attr(get_option('geolocation_map_height'));
     echo '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 }
 
@@ -545,7 +544,6 @@ function clean_coordinate($coordinate) {
 
 function add_settings() {
     if (is_admin()) { // admin actions
-        /** @scrutinizer ignore-call */ 
         add_options_page('Geolocation Plugin Settings', 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page', __FILE__);
             add_action('admin_init', 'register_settings');
     } else {
@@ -559,6 +557,15 @@ function register_settings() {
     register_setting('geolocation-settings-group', 'geolocation_default_zoom', 'intval');
     register_setting('geolocation-settings-group', 'geolocation_map_position');
     register_setting('geolocation-settings-group', 'geolocation_wp_pin');
+    register_setting('geolocation-settings-group', 'geolocation_google_maps_api_key');
+}
+
+function get_google_maps_api_key() {
+    $apikey = get_option('geolocation_google_maps_api_key');
+    if ($apikey != "") {
+       return "&key=".$apikey;
+    }
+    return "";
 }
 
 function is_checked($field) {
@@ -666,6 +673,11 @@ function geolocation_settings_page() {
         	<td class="position">        	
 				<input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked('geolocation_wp_pin'); ?> onclick="javascript:pin_click();"><label for="geolocation_wp_pin">Show your support for WordPress by using the WordPress map pin.</label>
 	        </td>
+        </tr>
+        <tr valign="top">
+        	<th scope="row">Google Maps API key</th>
+        	<td class="apikey">        	
+	        	<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr(get_option('geolocation_google_maps_api_key')); ?>" />
         </tr>
     </table>
     
