@@ -47,3 +47,4 @@ Visitors see a short description of the address either before, after, or at a cu
 
 = 0.3 = 
 * introduced Google Maps API key option
+* preparing for i18n
