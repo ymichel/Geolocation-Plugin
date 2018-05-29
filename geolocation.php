@@ -5,12 +5,13 @@ Plugin URI: http://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
 Version: 0.3
 Author: Yann Michel
-Author URI: http://www.yann-michel.de
+Author URI: https://www.yann-michel.de/geolocation
+Text Domain: geolocation
 License: GPL2
 */
 
 /*  Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-              2018 Yann Michel (email : dev@yann-michel.de)
+              2018 Yann Michel (email : geolocation@yann-michel.de)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -48,7 +49,7 @@ function activate() {
 
 function geolocation_add_custom_box() {
         if (function_exists('add_meta_box')) {
-            add_meta_box('geolocation_sectionid', __('Geolocation', 'myplugin_textdomain'), 'geolocation_inner_custom_box', 'post', 'advanced');
+            add_meta_box('geolocation_sectionid', __('Geolocation', 'myplugin_textdomain', 'geolocation'), 'geolocation_inner_custom_box', 'post', 'advanced');
         } else {
             add_action('dbx_post_advanced', 'geolocation_old_custom_box');
         }
@@ -59,20 +60,20 @@ function geolocation_inner_custom_box() {
     wp_create_nonce(plugin_basename(__FILE__)).'" />';
     echo '
 		<label class="screen-reader-text" for="geolocation-address">Geolocation</label>
-		<div class="taghint">Enter your address</div>
+		<div class="taghint">'.__('Enter your address', 'my-text-domain', 'geolocation').'</div>
 		<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
-		<input id="geolocation-load" type="button" class="button geolocationadd" value="Load" tabindex="3" />
+		<input id="geolocation-load" type="button" class="button geolocationadd" value="'.__('Load', 'my-text-domain', 'geolocation').'" tabindex="3" />
 		<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
 		<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
 		<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:265px;height:200px;margin-top:5px;"></div>
 		<div style="margin:5px 0 0 0;">
 			<input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
-			<label for="geolocation-public">Public</label>
+			<label for="geolocation-public">'.__('Public', 'my-text-domain', 'geolocation').'</label>
 			<div style="float:right">
 				<input id="geolocation-enabled" name="geolocation-on" type="radio" value="1" />
-				<label for="geolocation-enabled">On</label>
+				<label for="geolocation-enabled">'.__('On', 'my-text-domain', 'geolocation').'</label>
 				<input id="geolocation-disabled" name="geolocation-on" type="radio" value="0" />
-				<label for="geolocation-disabled">Off</label>
+				<label for="geolocation-disabled">'.__('Off', 'my-text-domain', 'geolocation').'</label>
 			</div>
 		</div>
 	';
@@ -83,7 +84,7 @@ function geolocation_old_custom_box() {
     echo '<div class="dbx-b-ox-wrapper">'."\n";
     echo '<fieldset id="geolocation_fieldsetid" class="dbx-box">'."\n";
     echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">'. 
-        __('Geolocation', 'geolocation_textdomain')."</h3></div>";   
+        __('Geolocation', 'geolocation_textdomain', 'geolocation')."</h3></div>";   
    
     echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
 
@@ -150,7 +151,7 @@ function admin_head() {
     $zoom = (int) get_option('geolocation_default_zoom');
     ?>
 		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true<?php echo get_google_maps_api_key(); ?>"></script>
 		<script type="text/javascript">
 		 	var $j = jQuery.noConflict();
 			$j(function() {
@@ -355,7 +356,7 @@ function add_google_maps($posts) {
     global $post_count;
     $post_count = count($posts);
 	
-    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false'.get_google_maps_api_key().'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function(){
@@ -440,7 +441,7 @@ function add_google_maps($posts) {
 			}
 			
 			google.maps.event.addListener(map, "click", function() {
-				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
+				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng()<?php echo get_google_maps_api_key(); ?>;
 			});
 		});
 	</script>';
@@ -503,7 +504,7 @@ function display_location($content) {
 }
 
 function reverse_geocode($latitude, $longitude) {
-    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude."&sensor=false";
+    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude."&sensor=false".get_google_maps_api_key();
     $result = wp_remote_get($url);
     $json = json_decode($result['body']);
         $city = '';
@@ -682,7 +683,7 @@ function geolocation_settings_page() {
     </table>
     
     <p class="submit">
-    <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geolocation') ?>" />
     </p>
 	<input type="hidden" name="action" value="update" />
 	<input type="hidden" name="page_options" value="geolocation_map_width,geolocation_map_height,geolocation_default_zoom,geolocation_map_position,geolocation_wp_pin" />
