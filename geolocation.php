@@ -60,7 +60,7 @@ function geolocation_inner_custom_box() {
     wp_create_nonce(plugin_basename(__FILE__)).'" />';
     echo '
 		<label class="screen-reader-text" for="geolocation-address">Geolocation</label>
-		<div class="taghint">'.__('Enter your address', 'my-text-domain', 'geolocation').'</div>
+		<div class="taghint">'.__('Enter your address', 'geolocation').'</div>
 		<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 		<input id="geolocation-load" type="button" class="button geolocationadd" value="'.__('Load', 'my-text-domain', 'geolocation').'" tabindex="3" />
 		<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
@@ -84,7 +84,7 @@ function geolocation_old_custom_box() {
     echo '<div class="dbx-b-ox-wrapper">'."\n";
     echo '<fieldset id="geolocation_fieldsetid" class="dbx-box">'."\n";
     echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">'. 
-        __('Geolocation', 'geolocation')."</h3></div>";   
+        __('Golocation', 'geolocation')."</h3></div>";   
    
     echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
 
@@ -562,7 +562,7 @@ function register_settings() {
 }
 
 function get_google_maps_api_key() {
-    $apikey = get_option('geolocation_google_maps_api_key');
+    $apikey = (string)get_option('geolocation_google_maps_api_key');
     if ($apikey != "") {
         return "&key=".$apikey;
     }
