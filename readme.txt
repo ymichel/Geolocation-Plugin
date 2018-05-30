@@ -26,8 +26,18 @@ Visitors see a short description of the address either before, after, or at a cu
 
 == Changelog ==
 
-= 0.1 =
-* Initial release.
+= 0.3 = 
+* introduced Google Maps API key option
+* preparing for i18n
+
+= 0.2.2 =
+* code optimizations
+
+= 0.2.1 =
+* fixed some left overs from the previus release
+
+= 0.2 =
+* updated Google API calls to recent version
 
 = 0.1.1 =
 * Added ability to turn geolocation on and off for individual posts.
@@ -36,15 +46,5 @@ Visitors see a short description of the address either before, after, or at a cu
 * Map link color now defaults to your theme.
 * Clicking map link now (properly) does nothing.
 
-= 0.2 =
-* updated Google API calls to recent version
-
-= 0.2.1 =
-* fixed some left overs from the previus release
-
-= 0.2.2 =
-* code optimizations
-
-= 0.3 = 
-* introduced Google Maps API key option
-* preparing for i18n
+= 0.1 =
+* Initial release.
