@@ -62,18 +62,18 @@ function geolocation_inner_custom_box() {
 		<label class="screen-reader-text" for="geolocation-address">Geolocation</label>
 		<div class="taghint">'.__('Enter your address', 'geolocation').'</div>
 		<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
-		<input id="geolocation-load" type="button" class="button geolocationadd" value="'.__('Load', 'my-text-domain', 'geolocation').'" tabindex="3" />
+		<input id="geolocation-load" type="button" class="button geolocationadd" value="'.__('Load', 'geolocation').'" tabindex="3" />
 		<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
 		<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
 		<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:265px;height:200px;margin-top:5px;"></div>
 		<div style="margin:5px 0 0 0;">
 			<input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
-			<label for="geolocation-public">'.__('Public', 'my-text-domain', 'geolocation').'</label>
+			<label for="geolocation-public">'.__('Public', 'geolocation').'</label>
 			<div style="float:right">
 				<input id="geolocation-enabled" name="geolocation-on" type="radio" value="1" />
-				<label for="geolocation-enabled">'.__('On', 'my-text-domain', 'geolocation').'</label>
+				<label for="geolocation-enabled">'.__('On', 'geolocation').'</label>
 				<input id="geolocation-disabled" name="geolocation-on" type="radio" value="0" />
-				<label for="geolocation-disabled">'.__('Off', 'my-text-domain', 'geolocation').'</label>
+				<label for="geolocation-disabled">'.__('Off', 'geolocation').'</label>
 			</div>
 		</div>
 	';
@@ -478,7 +478,7 @@ function display_location($content) {
     }
 	
     if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {
-        $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'my-text-domain').esc_html($address).'.</a>';
+        $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
         switch (esc_attr((string)get_option('geolocation_map_position')))
         {
             case 'before':
@@ -545,7 +545,7 @@ function clean_coordinate($coordinate) {
 
 function add_settings() {
     if (is_admin()) { // admin actions
-        add_options_page('Geolocation Plugin Settings', 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page', __FILE__);
+        add_options_page(__('Geolocation Plugin Settings', 'geolocation'), 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page', __FILE__);
             add_action('admin_init', 'register_settings');
     } else {
         // non-admin enqueues, actions, and filters
@@ -633,38 +633,38 @@ function geolocation_settings_page() {
 			div.style.background = 'url(' + file + ')';
 		}
 	</script>
-	<div class="wrap"><h2>Geolocation Plugin Settings</h2></div>
+	<div class="wrap"><h2><?php __('Geolocation Plugin Settings', 'geolocation');?></h2></div>
 	
 	<form method="post" action="options.php">
     <?php settings_fields('geolocation-settings-group'); ?>
     <table class="form-table">
         <tr valign="top">
 	        <tr valign="top">
-	        <th scope="row">Dimensions</th>
+	        <th scope="row"><?php __('Dimensions', 'geolocation'); ?></th>
 	        <td class="dimensions">
-	        	<strong>Width:</strong><input type="text" name="geolocation_map_width" value="<?php echo esc_attr(get_option('geolocation_map_width')); ?>" />px<br/>
-	        	<strong>Height:</strong><input type="text" name="geolocation_map_height" value="<?php echo esc_attr(get_option('geolocation_map_height')); ?>" />px
+	        	<strong><?php __('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width" value="<?php echo esc_attr(get_option('geolocation_map_width')); ?>" />px<br/>
+	        	<strong><?php __('Height', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_height" value="<?php echo esc_attr(get_option('geolocation_map_height')); ?>" />px
 	        </td>
         </tr>
         <tr valign="top">
-        	<th scope="row">Position</th>
+        	<th scope="row"><?php __('Position', 'geolocation'); ?></th>
         	<td class="position">        	
-				<input type="radio" id="geolocation_map_position_before" name="geolocation_map_position" value="before"<?php is_value('geolocation_map_position', 'before'); ?>><label for="geolocation_map_position_before">Before the post.</label><br/>
+				<input type="radio" id="geolocation_map_position_before" name="geolocation_map_position" value="before"<?php is_value('geolocation_map_position', 'before'); ?>><label for="geolocation_map_position_before"><?php __('Before the post.', 'geolocation'; ?></label><br/>
 				
-				<input type="radio" id="geolocation_map_position_after" name="geolocation_map_position" value="after"<?php is_value('geolocation_map_position', 'after'); ?>><label for="geolocation_map_position_after">After the post.</label><br/>
-				<input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode"<?php is_value('geolocation_map_position', 'shortcode'); ?>><label for="geolocation_map_position_shortcode">Wherever I put the <strong>[geolocation]</strong> shortcode.</label>
+				<input type="radio" id="geolocation_map_position_after" name="geolocation_map_position" value="after"<?php is_value('geolocation_map_position', 'after'); ?>><label for="geolocation_map_position_after"><?php __('After the post.', 'geolocation'); ?></label><br/>
+				<input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode"<?php is_value('geolocation_map_position', 'shortcode'); ?>><label for="geolocation_map_position_shortcode"><?php __('Wherever I put the <strong>[geolocation]</strong> shortcode.','geolocation'); ?></label>
 	        </td>
         </tr>
         <tr valign="top">
-	        <th scope="row">Default Zoom Level</th>
+	        <th scope="row"><?php __('Default Zoom Level', 'geolocation'); ?></th>
 	        <td class="zoom">        	
-				<input type="radio" id="geolocation_default_zoom_globe" name="geolocation_default_zoom" value="1"<?php is_value('geolocation_default_zoom', '1'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_globe">Globe</label>
+				<input type="radio" id="geolocation_default_zoom_globe" name="geolocation_default_zoom" value="1"<?php is_value('geolocation_default_zoom', '1'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_globe"><?php __('Globe', 'geolocation'); ?></label>
 				
-				<input type="radio" id="geolocation_default_zoom_country" name="geolocation_default_zoom" value="3"<?php is_value('geolocation_default_zoom', '3'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_country">Country</label>
-				<input type="radio" id="geolocation_default_zoom_state" name="geolocation_default_zoom" value="6"<?php is_value('geolocation_default_zoom', '6'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_state">State</label>
-				<input type="radio" id="geolocation_default_zoom_city" name="geolocation_default_zoom" value="9"<?php is_value('geolocation_default_zoom', '9'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_city">City</label>
-				<input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16"<?php is_value('geolocation_default_zoom', '16'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street">Street</label>
-				<input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18"<?php is_value('geolocation_default_zoom', '18'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block">Block</label>
+				<input type="radio" id="geolocation_default_zoom_country" name="geolocation_default_zoom" value="3"<?php is_value('geolocation_default_zoom', '3'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_country"><?php __('Country', 'geolocation'); ?></label>
+				<input type="radio" id="geolocation_default_zoom_state" name="geolocation_default_zoom" value="6"<?php is_value('geolocation_default_zoom', '6'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_state"><?php __('State', 'geolocation'); ?></label>
+				<input type="radio" id="geolocation_default_zoom_city" name="geolocation_default_zoom" value="9"<?php is_value('geolocation_default_zoom', '9'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_city"><?php __('City', 'geolocation'); ?></label>
+				<input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16"<?php is_value('geolocation_default_zoom', '16'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street"><?php __('Street', 'geolocation'); ?></label>
+				<input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18"<?php is_value('geolocation_default_zoom', '18'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php __('Block', 'geolocation'); ?></label>
 				<br/>
 				<div id="zoom_level_sample"></div>
 	        </td>
@@ -672,7 +672,7 @@ function geolocation_settings_page() {
         <tr valign="top">
         	<th scope="row"></th>
         	<td class="position">        	
-				<input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked('geolocation_wp_pin'); ?> onclick="javascript:pin_click();"><label for="geolocation_wp_pin">Show your support for WordPress by using the WordPress map pin.</label>
+				<input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked('geolocation_wp_pin'); ?> onclick="javascript:pin_click();"><label for="geolocation_wp_pin"><?php __('Show your support for WordPress by using the WordPress map pin.', 'geolocation'); ?></label>
 	        </td>
         </tr>
         <tr valign="top">
