@@ -469,7 +469,7 @@ function display_location($content) {
     $public = (bool) get_post_meta($post->ID, 'geo_public', true);
 	
     $on = true;
-    if (((bool) get_post_meta($post->ID, 'geo_enabled', true) != '') {
+    if ((bool) get_post_meta($post->ID, 'geo_enabled', true) != '') {
             $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
     }
 	
