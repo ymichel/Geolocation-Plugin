@@ -158,10 +158,10 @@ function admin_head() {
 				$j(document).ready(function() {
 				    var hasLocation = false;
 					var center = new google.maps.LatLng(0.0,0.0);
-					var postLatitude =  '<?php echo esc_js(get_post_meta($post_id, 'geo_latitude', true)); ?>';
-					var postLongitude =  '<?php echo esc_js(get_post_meta($post_id, 'geo_longitude', true)); ?>';
-					var public = '<?php echo get_post_meta($post_id, 'geo_public', true); ?>';
-					var on = '<?php echo get_post_meta($post_id, 'geo_enabled', true); ?>';
+					var postLatitude =  '<?php echo esc_js((string)get_post_meta($post_id, 'geo_latitude', true)); ?>';
+					var postLongitude =  '<?php echo esc_js((string)get_post_meta($post_id, 'geo_longitude', true)); ?>';
+					var public = '<?php echo (string)get_post_meta($post_id, 'geo_public', true); ?>';
+					var on = '<?php echo (string)get_post_meta($post_id, 'geo_enabled', true); ?>';
 					
 					if(public == '0')
 						$j("#geolocation-public").attr('checked', false);
@@ -465,11 +465,11 @@ function display_location($content) {
     $shortcode_tags = array();
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
-    $address = get_post_meta($post->ID, 'geo_address', true);
+    $address = (string)get_post_meta($post->ID, 'geo_address', true);
     $public = (bool) get_post_meta($post->ID, 'geo_public', true);
 	
     $on = true;
-    if (get_post_meta($post->ID, 'geo_enabled', true) != '') {
+    if (((bool) get_post_meta($post->ID, 'geo_enabled', true) != '') {
             $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
     }
 	
