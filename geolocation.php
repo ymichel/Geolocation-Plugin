@@ -642,8 +642,8 @@ function geolocation_settings_page() {
 	        <tr valign="top">
 	        <th scope="row"><?php __('Dimensions', 'geolocation'); ?></th>
 	        <td class="dimensions">
-	        	<strong><?php __('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width" value="<?php echo esc_attr(get_option('geolocation_map_width')); ?>" />px<br/>
-	        	<strong><?php __('Height', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_height" value="<?php echo esc_attr(get_option('geolocation_map_height')); ?>" />px
+	        	<strong><?php __('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width" value="<?php echo esc_attr((string)get_option('geolocation_map_width')); ?>" />px<br/>
+	        	<strong><?php __('Height', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_height" value="<?php echo esc_attr((string)get_option('geolocation_map_height')); ?>" />px
 	        </td>
         </tr>
         <tr valign="top">
