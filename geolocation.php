@@ -158,10 +158,10 @@ function admin_head() {
 				$j(document).ready(function() {
 				    var hasLocation = false;
 					var center = new google.maps.LatLng(0.0,0.0);
-					var postLatitude =  '<?php echo esc_js((string)get_post_meta($post_id, 'geo_latitude', true)); ?>';
-					var postLongitude =  '<?php echo esc_js((string)get_post_meta($post_id, 'geo_longitude', true)); ?>';
-					var public = '<?php echo (string)get_post_meta($post_id, 'geo_public', true); ?>';
-					var on = '<?php echo (string)get_post_meta($post_id, 'geo_enabled', true); ?>';
+					var postLatitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
+					var postLongitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
+					var public = '<?php echo (string) get_post_meta($post_id, 'geo_public', true); ?>';
+					var on = '<?php echo (string) get_post_meta($post_id, 'geo_enabled', true); ?>';
 					
 					if(public == '0')
 						$j("#geolocation-public").attr('checked', false);
@@ -327,8 +327,8 @@ function admin_head() {
 }
 
 function add_geo_div() {
-    $width = esc_attr((string)get_option('geolocation_map_width'));
-    $height = esc_attr((string)get_option('geolocation_map_height'));
+    $width = esc_attr((string) get_option('geolocation_map_width'));
+    $height = esc_attr((string) get_option('geolocation_map_height'));
     echo '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 }
 
@@ -465,7 +465,7 @@ function display_location($content) {
     $shortcode_tags = array();
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
-    $address = (string)get_post_meta($post->ID, 'geo_address', true);
+    $address = (string) get_post_meta($post->ID, 'geo_address', true);
     $public = (bool) get_post_meta($post->ID, 'geo_public', true);
 	
     $on = true;
@@ -479,7 +479,7 @@ function display_location($content) {
 	
     if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {
         $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
-        switch (esc_attr((string)get_option('geolocation_map_position')))
+        switch (esc_attr((string) get_option('geolocation_map_position')))
         {
             case 'before':
                 $content = str_replace(SHORTCODE, '', $content);
@@ -562,7 +562,7 @@ function register_settings() {
 }
 
 function get_google_maps_api_key() {
-    $apikey = (string)get_option('geolocation_google_maps_api_key');
+    $apikey = (string) get_option('geolocation_google_maps_api_key');
     if ($apikey != "") {
         return "&key=".$apikey;
     }
@@ -576,33 +576,33 @@ function is_checked($field) {
     }
 
 function is_value($field, $value) {
-    if ((string)get_option($field) == $value) {
+    if ((string) get_option($field) == $value) {
                 echo ' checked="checked" ';
     }
     }
 
 function default_settings() {
-    if ((string)get_option('geolocation_map_width') == '0') {
+    if ((string) get_option('geolocation_map_width') == '0') {
             update_option('geolocation_map_width', '450');
     }
 		
-    if ((string)get_option('geolocation_map_height') == '0') {
+    if ((string) get_option('geolocation_map_height') == '0') {
             update_option('geolocation_map_height', '200');
     }
 		
-    if ((string)get_option('geolocation_default_zoom') == '0') {
+    if ((string) get_option('geolocation_default_zoom') == '0') {
             update_option('geolocation_default_zoom', '16');
     }
 		
-    if ((string)get_option('geolocation_map_position') == '0') {
+    if ((string) get_option('geolocation_map_position') == '0') {
             update_option('geolocation_map_position', 'after');
     }
     }
 
 function geolocation_settings_page() {
     default_settings();
-    $zoomImage = (string)get_option('geolocation_default_zoom');
-    if ((bool)get_option('geolocation_wp_pin')) {
+    $zoomImage = (string) get_option('geolocation_default_zoom');
+    if ((bool) get_option('geolocation_wp_pin')) {
             $zoomImage = 'wp_'.$zoomImage.'.png';
     } else {
             $zoomImage = $zoomImage.'.png';
@@ -618,7 +618,7 @@ function geolocation_settings_page() {
 	</style>
 	<script type="text/javascript">
 		var file;
-		var zoomlevel = <?php echo (int) esc_attr((string)get_option('geolocation_default_zoom')); ?>;
+		var zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
 		var path = '<?php echo esc_js(plugins_url('img/zoom/', __FILE__)); ?>';
 		function swap_zoom_sample(id) {
 			zoomlevel = document.getElementById(id).value;
@@ -633,7 +633,7 @@ function geolocation_settings_page() {
 			div.style.background = 'url(' + file + ')';
 		}
 	</script>
-	<div class="wrap"><h2><?php __('Geolocation Plugin Settings', 'geolocation');?></h2></div>
+	<div class="wrap"><h2><?php __('Geolocation Plugin Settings', 'geolocation'); ?></h2></div>
 	
 	<form method="post" action="options.php">
     <?php settings_fields('geolocation-settings-group'); ?>
@@ -642,8 +642,8 @@ function geolocation_settings_page() {
 	        <tr valign="top">
 	        <th scope="row"><?php __('Dimensions', 'geolocation'); ?></th>
 	        <td class="dimensions">
-	        	<strong><?php __('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width" value="<?php echo esc_attr((string)get_option('geolocation_map_width')); ?>" />px<br/>
-	        	<strong><?php __('Height', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_height" value="<?php echo esc_attr((string)get_option('geolocation_map_height')); ?>" />px
+	        	<strong><?php __('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width" value="<?php echo esc_attr((string) get_option('geolocation_map_width')); ?>" />px<br/>
+	        	<strong><?php __('Height', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_height" value="<?php echo esc_attr((string) get_option('geolocation_map_height')); ?>" />px
 	        </td>
         </tr>
         <tr valign="top">
@@ -652,7 +652,7 @@ function geolocation_settings_page() {
 				<input type="radio" id="geolocation_map_position_before" name="geolocation_map_position" value="before"<?php is_value('geolocation_map_position', 'before'); ?>><label for="geolocation_map_position_before"><?php __('Before the post.', 'geolocation'); ?></label><br/>
 				
 				<input type="radio" id="geolocation_map_position_after" name="geolocation_map_position" value="after"<?php is_value('geolocation_map_position', 'after'); ?>><label for="geolocation_map_position_after"><?php __('After the post.', 'geolocation'); ?></label><br/>
-				<input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode"<?php is_value('geolocation_map_position', 'shortcode'); ?>><label for="geolocation_map_position_shortcode"><?php __('Wherever I put the <strong>[geolocation]</strong> shortcode.','geolocation'); ?></label>
+				<input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode"<?php is_value('geolocation_map_position', 'shortcode'); ?>><label for="geolocation_map_position_shortcode"><?php __('Wherever I put the <strong>[geolocation]</strong> shortcode.', 'geolocation'); ?></label>
 	        </td>
         </tr>
         <tr valign="top">
@@ -678,7 +678,7 @@ function geolocation_settings_page() {
         <tr valign="top">
         	<th scope="row">Google Maps API key</th>
         	<td class="apikey">        	
-	        	<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string)get_option('geolocation_google_maps_api_key')); ?>" />
+	        	<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string) get_option('geolocation_google_maps_api_key')); ?>" />
         </tr>
     </table>
     
