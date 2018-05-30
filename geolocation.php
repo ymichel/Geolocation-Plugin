@@ -49,7 +49,7 @@ function activate() {
 
 function geolocation_add_custom_box() {
         if (function_exists('add_meta_box')) {
-            add_meta_box('geolocation_sectionid', __('Geolocation', 'myplugin_textdomain', 'geolocation'), 'geolocation_inner_custom_box', 'post', 'advanced');
+            add_meta_box('geolocation_sectionid', __('Geolocation', 'geolocation'), 'geolocation_inner_custom_box', 'post', 'advanced');
         } else {
             add_action('dbx_post_advanced', 'geolocation_old_custom_box');
         }
@@ -84,7 +84,7 @@ function geolocation_old_custom_box() {
     echo '<div class="dbx-b-ox-wrapper">'."\n";
     echo '<fieldset id="geolocation_fieldsetid" class="dbx-box">'."\n";
     echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">'. 
-        __('Geolocation', 'geolocation_textdomain', 'geolocation')."</h3></div>";   
+        __('Geolocation', 'geolocation')."</h3></div>";   
    
     echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
 
@@ -478,7 +478,7 @@ function display_location($content) {
     }
 	
     if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {
-        $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">Posted from '.esc_html($address).'.</a>';
+        $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'my-text-domain').esc_html($address).'.</a>';
         switch (esc_attr(get_option('geolocation_map_position')))
         {
             case 'before':
