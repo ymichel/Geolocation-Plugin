@@ -327,8 +327,8 @@ function admin_head() {
 }
 
 function add_geo_div() {
-    $width = esc_attr(get_option('geolocation_map_width'));
-    $height = esc_attr(get_option('geolocation_map_height'));
+    $width = esc_attr((string)get_option('geolocation_map_width'));
+    $height = esc_attr((string)get_option('geolocation_map_height'));
     echo '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 }
 
@@ -618,7 +618,7 @@ function geolocation_settings_page() {
 	</style>
 	<script type="text/javascript">
 		var file;
-		var zoomlevel = <?php echo (int) esc_attr(get_option('geolocation_default_zoom')); ?>;
+		var zoomlevel = <?php echo (int) esc_attr((string)get_option('geolocation_default_zoom')); ?>;
 		var path = '<?php echo esc_js(plugins_url('img/zoom/', __FILE__)); ?>';
 		function swap_zoom_sample(id) {
 			zoomlevel = document.getElementById(id).value;
