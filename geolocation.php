@@ -196,7 +196,7 @@ function admin_head() {
 					var marker = new google.maps.Marker({
 						position: center, 
 						map: map, 
-						title:'Post Location'<?php if (get_option('geolocation_wp_pin')) { ?>,
+						title:'Post Location'<?php if ((bool) get_option('geolocation_wp_pin')) { ?>,
 						icon: image,
 						shadow: shadow
 					<?php } ?>
@@ -376,7 +376,7 @@ function add_google_maps($posts) {
 					position: center, 
 					map: map, 
 					title:"Post Location"';
-                if (get_option('geolocation_wp_pin')) {
+                if ((bool) get_option('geolocation_wp_pin')) {
                     echo ',
 					icon: image,
 					shadow: shadow';
@@ -570,31 +570,31 @@ function get_google_maps_api_key() {
 }
 
 function is_checked($field) {
-    if (get_option($field)) {
+    if ((bool) get_option($field)) {
                 echo ' checked="checked" ';
     }
     }
 
 function is_value($field, $value) {
-    if (get_option($field) == $value) {
+    if ((string)get_option($field) == $value) {
                 echo ' checked="checked" ';
     }
     }
 
 function default_settings() {
-    if (get_option('geolocation_map_width') == '0') {
+    if ((string)get_option('geolocation_map_width') == '0') {
             update_option('geolocation_map_width', '450');
     }
 		
-    if (get_option('geolocation_map_height') == '0') {
+    if ((string)get_option('geolocation_map_height') == '0') {
             update_option('geolocation_map_height', '200');
     }
 		
-    if (get_option('geolocation_default_zoom') == '0') {
+    if ((string)get_option('geolocation_default_zoom') == '0') {
             update_option('geolocation_default_zoom', '16');
     }
 		
-    if (get_option('geolocation_map_position') == '0') {
+    if ((string)get_option('geolocation_map_position') == '0') {
             update_option('geolocation_map_position', 'after');
     }
     }
@@ -602,7 +602,7 @@ function default_settings() {
 function geolocation_settings_page() {
     default_settings();
     $zoomImage = (string)get_option('geolocation_default_zoom');
-    if (get_option('geolocation_wp_pin')) {
+    if ((bool)get_option('geolocation_wp_pin')) {
             $zoomImage = 'wp_'.$zoomImage.'.png';
     } else {
             $zoomImage = $zoomImage.'.png';
@@ -678,7 +678,7 @@ function geolocation_settings_page() {
         <tr valign="top">
         	<th scope="row">Google Maps API key</th>
         	<td class="apikey">        	
-	        	<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr(get_option('geolocation_google_maps_api_key')); ?>" />
+	        	<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string)get_option('geolocation_google_maps_api_key')); ?>" />
         </tr>
     </table>
     
