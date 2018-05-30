@@ -479,7 +479,7 @@ function display_location($content) {
 	
     if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {
         $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'my-text-domain').esc_html($address).'.</a>';
-        switch (esc_attr(get_option('geolocation_map_position')))
+        switch (esc_attr((string)get_option('geolocation_map_position')))
         {
             case 'before':
                 $content = str_replace(SHORTCODE, '', $content);
@@ -601,7 +601,7 @@ function default_settings() {
 
 function geolocation_settings_page() {
     default_settings();
-    $zoomImage = get_option('geolocation_default_zoom');
+    $zoomImage = (string)get_option('geolocation_default_zoom');
     if (get_option('geolocation_wp_pin')) {
             $zoomImage = 'wp_'.$zoomImage.'.png';
     } else {
