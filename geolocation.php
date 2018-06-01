@@ -41,7 +41,7 @@ define('SHORTCODE', '[geolocation]');
 
 function languages_init() {
     $plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages/'; /* Relative to WP_PLUGIN_DIR */
-    load_plugin_textdomain( 'geolocation', false, $plugin_rel_path );
+    load_plugin_textdomain( 'geolocation', 'false', $plugin_rel_path );
 }
 
 function activate() {
@@ -367,7 +367,7 @@ function add_google_maps($posts) {
 		$j(function(){
 			var center = new google.maps.LatLng(0.0, 0.0);
 			var myOptions = {
-		      zoom: '.$zoom.',
+		      zoom: '<?php echo $zoom ?>',
 		      center: center,
 		      mapTypeId: google.maps.MapTypeId.ROADMAP
 		    };
