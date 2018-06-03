@@ -156,7 +156,7 @@ function admin_head() {
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
     echo '		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true'.esc_url("&").get_google_maps_api_key().'"></script>'; ?>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true&#038'.get_google_maps_api_key().'"></script>'; ?>
 		<script type="text/javascript">
 		 	var $j = jQuery.noConflict();
 			$j(function() {
@@ -361,7 +361,7 @@ function add_google_maps($posts) {
     global $post_count;
     $post_count = count($posts);
 	
-    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false'.esc_url("&").get_google_maps_api_key().'"></script>'; ?>
+    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&#038'.get_google_maps_api_key().'"></script>'; ?>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function(){
