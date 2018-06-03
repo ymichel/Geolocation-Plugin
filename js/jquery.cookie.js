@@ -1,4 +1,4 @@
-/*jslint browser: true */ /*global jQuery: true */
+/*jslint browser: true */ /*global jQuery: true *//** global: decodeURIComponent */
 
 /**
  * jQuery Cookie plugin

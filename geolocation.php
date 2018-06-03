@@ -343,7 +343,7 @@ function add_geo_support() {
     // To do: add support for multiple Map API providers
     switch (PROVIDER) {
         case 'google':
-            echo add_google_maps($posts);
+            add_google_maps($posts);
             break;
         case 'yahoo':
             //echo add_yahoo_maps($posts);
