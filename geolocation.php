@@ -40,8 +40,8 @@ define('PROVIDER', 'google');
 define('SHORTCODE', '[geolocation]');
 
 function languages_init() {
-    $plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages/'; /* Relative to WP_PLUGIN_DIR */
-    load_plugin_textdomain( 'geolocation', 'false', $plugin_rel_path );
+    $plugin_rel_path = basename(dirname(__FILE__)).'/languages/'; /* Relative to WP_PLUGIN_DIR */
+    load_plugin_textdomain('geolocation', 'false', $plugin_rel_path);
 }
 
 function activate() {
@@ -156,17 +156,17 @@ function admin_head() {
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
     echo '		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true&#38'.get_google_maps_api_key().'"></script>';?>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true&#38'.get_google_maps_api_key().'"></script>'; ?>
 		<script type="text/javascript">
 		 	var $j = jQuery.noConflict();
 			$j(function() {
 				$j(document).ready(function() {
 				    var hasLocation = false;
 					var center = new google.maps.LatLng(0.0,0.0);
-					var postLatitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true));?>';
-					var postLongitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true));?>';
-					var public = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true));?>';
-					var on = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true));?>';
+					var postLatitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
+					var postLongitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
+					var public = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
+					var on = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
 					
 					if(public == '0')
 						$j("#geolocation-public").attr('checked', false);
@@ -191,8 +191,8 @@ function admin_head() {
 				      'center': center,
 				      'mapTypeId': google.maps.MapTypeId.ROADMAP
 				    };
-				    var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__)));?>';
-				    var shadow = new google.maps.MarkerImage('<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__)));?>',
+				    var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
+				    var shadow = new google.maps.MarkerImage('<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))); ?>',
 						new google.maps.Size(39, 23),
 						new google.maps.Point(0, 0),
 						new google.maps.Point(12, 25));
@@ -372,8 +372,8 @@ function add_google_maps($posts) {
 		      mapTypeId: google.maps.MapTypeId.ROADMAP
 		    };
 		    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-		    var image = "'<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__)));?>'";
-		    var shadow = new google.maps.MarkerImage("'<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__);?>'",
+		    var image = "'<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>'";
+		    var shadow = new google.maps.MarkerImage("'<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__); ?>'",
 		    	new google.maps.Size(39, 23),
 				new google.maps.Point(0, 0),
 				new google.maps.Point(12, 25));
@@ -446,7 +446,7 @@ function add_google_maps($posts) {
 			}<?php
 			
 			echo '			google.maps.event.addListener(map, "click", function() {
-				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng() + ",+" +"'.get_google_maps_api_key().'";';?>
+				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng() + ",+" +"'.get_google_maps_api_key().'";'; ?>
 			});
 		});
 	</script>';
