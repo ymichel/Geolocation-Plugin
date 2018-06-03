@@ -445,7 +445,7 @@ function add_google_maps($posts) {
 				map.setCenter(location);
 			}<?php
 			
-			echo '			google.maps.event.addListener(map, "click", function() {
+            echo '			google.maps.event.addListener(map, "click", function() {
 				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng() + ",+" +"'.get_google_maps_api_key().'";'; ?>
 			});
 		});
