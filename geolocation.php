@@ -90,7 +90,7 @@ function geolocation_old_custom_box() {
     echo '<div class="dbx-b-ox-wrapper">'."\n";
     echo '<fieldset id="geolocation_fieldsetid" class="dbx-box">'."\n";
     echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">'. 
-        __('Golocation', 'geolocation')."</h3></div>";   
+        __('Geolocation', 'geolocation')."</h3></div>";   
    
     echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
 
@@ -156,7 +156,7 @@ function admin_head() {
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
     echo '		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true&#38'.get_google_maps_api_key().'"></script>'; ?>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true'.get_google_maps_api_key().'"></script>'; ?>
 		<script type="text/javascript">
 		 	var $j = jQuery.noConflict();
 			$j(function() {
@@ -551,7 +551,7 @@ function clean_coordinate($coordinate) {
 
 function add_settings() {
     if (is_admin()) { // admin actions
-        add_options_page(_e('Geolocation Plugin Settings', 'geolocation'), 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page', __FILE__);
+        add_options_page(__('Geolocation Plugin Settings', 'geolocation'), 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page', __FILE__);
             add_action('admin_init', 'register_settings');
     } else {
         // non-admin enqueues, actions, and filters
