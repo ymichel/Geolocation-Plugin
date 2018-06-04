@@ -509,7 +509,7 @@ function display_location($content) {
 }
 
 function reverse_geocode($latitude, $longitude) {
-    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude."&sensor=false&".get_google_maps_api_key();
+    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude."&sensor=false&#038".get_google_maps_api_key();
     $result = wp_remote_get($url);
     $json = json_decode($result['body']);
         $city = '';
