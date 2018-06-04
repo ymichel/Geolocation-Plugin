@@ -361,19 +361,19 @@ function add_google_maps($posts) {
     global $post_count;
     $post_count = count($posts);
 	
-    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&#038'.get_google_maps_api_key().'"></script>'; ?>
+    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&#038'.get_google_maps_api_key().'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function(){
 			var center = new google.maps.LatLng(0.0, 0.0);
 			var myOptions = {
-		      zoom: '<?php echo $zoom ?>',
+		      zoom: '.$zoom.',
 		      center: center,
 		      mapTypeId: google.maps.MapTypeId.ROADMAP
 		    };
 		    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-		    var image = "'<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>'";
-		    var shadow = new google.maps.MarkerImage("'<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__); ?>'",
+		    var image = "'.esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))).'";
+		    var shadow = new google.maps.MarkerImage("'.plugins_url('img/wp_pin_shadow.png', __FILE__).'",
 		    	new google.maps.Size(39, 23),
 				new google.maps.Point(0, 0),
 				new google.maps.Point(12, 25));
@@ -443,14 +443,13 @@ function add_google_maps($posts) {
 				map.setZoom('.$zoom.');
 				marker.setPosition(location);
 				map.setCenter(location);
-			}<?php
+			}';
 			
             echo '			google.maps.event.addListener(map, "click", function() {
-				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng() + ",+" +"'.get_google_maps_api_key().'";'; ?>
+				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng() + ",+" +"'.get_google_maps_api_key().'";
 			});
 		});
 	</script>';
-<?php
 }
 
 function geo_has_shortcode($content) {
