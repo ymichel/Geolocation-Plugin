@@ -333,14 +333,14 @@ function admin_head() {
 }
 
 function get_geo_div() {
-   $width = esc_attr((string) get_option('geolocation_map_width'));
-   $height = esc_attr((string) get_option('geolocation_map_height'));
-   return '<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
-   //open: id="mymap'.$post->ID.'"
+    $width = esc_attr((string) get_option('geolocation_map_width'));
+    $height = esc_attr((string) get_option('geolocation_map_height'));
+    return '<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+    //open: id="mymap'.$post->ID.'"
 }
 
 function add_geo_div() {
-	echo get_geo_div();
+    echo get_geo_div();
 }
 
 function add_geo_support() {
@@ -366,8 +366,8 @@ function add_google_maps($posts) {
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
-	//open: handle multiple maps within code
-	//      id="geolocation'.$post->ID.'"
+    //open: handle multiple maps within code
+    //      id="geolocation'.$post->ID.'"
     echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&#038'.get_google_maps_api_key().'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
@@ -492,17 +492,17 @@ function display_location($content) {
     }
 	
     if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {    	    switch(esc_attr((string) get_option('geolocation_map_display')))
-	    {
-	        case 'link':
-					$html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
+        {
+            case 'link':
+                    $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
                 break;
             case 'full':
                 $html = get_geo_div();
                 break;
             case 'debug':
-                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string)$on.'<br> $public: '.(string)$public.'</pre>';
+                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string) $on.'<br> $public: '.(string) $public.'</pre>';
                 break;
-	    }
+        }
 
         
         switch (esc_attr((string) get_option('geolocation_map_position')))
@@ -622,7 +622,7 @@ function default_settings() {
             update_option('geolocation_map_position', 'after');
     }        
     if ((string) get_option('geolocation_map_display') == '0') {
-        	   update_option('geolocation_map_display', 'link');
+                update_option('geolocation_map_display', 'link');
     }
 }
 
