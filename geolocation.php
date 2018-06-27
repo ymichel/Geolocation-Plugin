@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: http://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.3
+Version: 0.4
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -50,6 +50,7 @@ function activate() {
     add_option('geolocation_map_height', '150');
     add_option('geolocation_default_zoom', '16');
     add_option('geolocation_map_position', 'after');
+    add_option('geolocation_map_display', 'link');
     add_option('geolocation_wp_pin', '1');
 }
 
@@ -331,10 +332,17 @@ function admin_head() {
 <?php		
 }
 
+function get_geo_div() {
+	$width = esc_attr(get_option('geolocation_map_width'));
+	$height = esc_attr(get_option('geolocation_map_height'));
+   return '<div id="mymap" border=5 style="width:'.$width.'px;height:'.$height.'px;"></div>';
+}
+
 function add_geo_div() {
-    $width = esc_attr((string) get_option('geolocation_map_width'));
-    $height = esc_attr((string) get_option('geolocation_map_height'));
-    echo '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+//    $width = esc_attr((string) get_option('geolocation_map_width'));
+//    $height = esc_attr((string) get_option('geolocation_map_height'));
+//    echo '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+	echo get_geo_div();
 }
 
 function add_geo_support() {
@@ -482,8 +490,20 @@ function display_location($content) {
             $address = reverse_geocode($latitude, $longitude);
     }
 	
-    if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {
-        $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
+    if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {    	    switch(esc_attr(get_option('geolocation_map_display')))
+	    {
+	        case 'link':
+					$html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
+                break;
+            case 'full':
+                $html = get_geo_div();
+                break;
+            case 'debug':
+                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.$on.'<br> $public: '.$public.'</pre>';
+                break;
+	    }
+
+        
         switch (esc_attr((string) get_option('geolocation_map_position')))
         {
             case 'before':
@@ -562,6 +582,7 @@ function register_settings() {
     register_setting('geolocation-settings-group', 'geolocation_map_height', 'intval');
     register_setting('geolocation-settings-group', 'geolocation_default_zoom', 'intval');
     register_setting('geolocation-settings-group', 'geolocation_map_position');
+    register_setting('geolocation-settings-group', 'geolocation_map_display');
     register_setting('geolocation-settings-group', 'geolocation_wp_pin');
     register_setting('geolocation-settings-group', 'geolocation_google_maps_api_key');
 }
@@ -590,19 +611,19 @@ function default_settings() {
     if ((string) get_option('geolocation_map_width') == '0') {
             update_option('geolocation_map_width', '450');
     }
-		
     if ((string) get_option('geolocation_map_height') == '0') {
             update_option('geolocation_map_height', '200');
     }
-		
     if ((string) get_option('geolocation_default_zoom') == '0') {
             update_option('geolocation_default_zoom', '16');
     }
-		
     if ((string) get_option('geolocation_map_position') == '0') {
             update_option('geolocation_map_position', 'after');
+    }        
+    if ((string) get_option('geolocation_map_display') == '0') {
+        	   update_option('geolocation_map_display', 'link');
     }
-    }
+}
 
 function geolocation_settings_page() {
     default_settings();
@@ -653,13 +674,23 @@ function geolocation_settings_page() {
         </tr>
         <tr valign="top">
         	<th scope="row"><?php _e('Position', 'geolocation'); ?></th>
-        	<td class="position">        	
+        	<td class="position">
 				<input type="radio" id="geolocation_map_position_before" name="geolocation_map_position" value="before"<?php is_value('geolocation_map_position', 'before'); ?>><label for="geolocation_map_position_before"><?php _e('Before the post.', 'geolocation'); ?></label><br/>
-				
 				<input type="radio" id="geolocation_map_position_after" name="geolocation_map_position" value="after"<?php is_value('geolocation_map_position', 'after'); ?>><label for="geolocation_map_position_after"><?php _e('After the post.', 'geolocation'); ?></label><br/>
 				<input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode"<?php is_value('geolocation_map_position', 'shortcode'); ?>><label for="geolocation_map_position_shortcode"><?php _e('Wherever I put the <strong>[geolocation]</strong> shortcode.', 'geolocation'); ?></label>
 	        </td>
         </tr>
+        <tr valign="top">
+	        <th scope="row"><?php _e('How would you like your maps to be displayed?', 'geolocation'); ?></th>
+                <td class="display">
+                                <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link"<?php is_value('geolocation_map_display', 'link'); ?>>
+                <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br/>
+                                <input type="radio" id="geolocation_map_display_full" name="geolocation_map_display" value="full"<?php is_value('geolocation_map_display', 'full'); ?>>
+                <label for="geolocation_map_display_full"><?php _e('Display full map.', 'geolocation'); ?></label><br/>
+                                <input type="radio" id="geolocation_map_display_debug" name="geolocation_map_display" value="debug"<?php is_value('geolocation_map_display', 'debug'); ?>>
+                <label for="geolocation_map_display_debug"><?php _e('Debug PlugIn.', 'geolocation'); ?></label><br/>
+                </td>        
+        </tr>                        
         <tr valign="top">
 	        <th scope="row"><?php _e('Default Zoom Level', 'geolocation'); ?></th>
 	        <td class="zoom">        	
