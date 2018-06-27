@@ -489,7 +489,7 @@ function display_location($content) {
             $address = reverse_geocode($latitude, $longitude);
     }
 	
-    if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {    	    switch(esc_attr(get_option('geolocation_map_display')))
+    if ((!empty($latitude)) && (!empty($longitude) && ($public === true) && ($on === true))) {    	    switch(esc_attr((string) get_option('geolocation_map_display')))
 	    {
 	        case 'link':
 					$html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
