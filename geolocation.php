@@ -333,15 +333,13 @@ function admin_head() {
 }
 
 function get_geo_div() {
-	$width = esc_attr(get_option('geolocation_map_width'));
-	$height = esc_attr(get_option('geolocation_map_height'));
-   return '<div id="mymap" border=5 style="width:'.$width.'px;height:'.$height.'px;"></div>';
+   $width = esc_attr((string) get_option('geolocation_map_width'));
+   $height = esc_attr((string) get_option('geolocation_map_height'));
+   return '<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+   //open: id="mymap'.$post->ID.'"
 }
 
 function add_geo_div() {
-//    $width = esc_attr((string) get_option('geolocation_map_width'));
-//    $height = esc_attr((string) get_option('geolocation_map_height'));
-//    echo '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 	echo get_geo_div();
 }
 
@@ -368,7 +366,8 @@ function add_google_maps($posts) {
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
-	
+	//open: handle multiple maps within code
+	//      id="geolocation'.$post->ID.'"
     echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&#038'.get_google_maps_api_key().'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
