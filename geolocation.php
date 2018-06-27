@@ -471,7 +471,7 @@ function geo_has_shortcode($content) {
 function display_location($content) {
     default_settings();
     global $post, $shortcode_tags, $post_count;
-    $html = ""; 
+    $html = ''; 
     settype ($html, "string");
 
     // Backup current registered shortcodes and clear them all out
