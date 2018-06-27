@@ -107,13 +107,13 @@ function geolocation_save_postdata($post_id) {
     } else if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return $post_id;
     } else if ('page' == $_POST['post_type']) {
-    	  if (!current_user_can('edit_page', $post_id)) {
+            if (!current_user_can('edit_page', $post_id)) {
             return $post_id;
-    	  }
+            }
     } else {
-    		if (!current_user_can('edit_post', $post_id)) {
+            if (!current_user_can('edit_post', $post_id)) {
             return $post_id;
-    		}
+            }
     }
 
     $latitude = clean_coordinate($_POST['geolocation-latitude']);
@@ -127,17 +127,17 @@ function geolocation_save_postdata($post_id) {
         update_post_meta($post_id, 'geo_longitude', $longitude);
   	
         if (esc_html($address) != '') {
-        		update_post_meta($post_id, 'geo_address', $address);
+                update_post_meta($post_id, 'geo_address', $address);
         }
         if ($on) {
             update_post_meta($post_id, 'geo_enabled', 1);
-        } else{
+        } else {
             update_post_meta($post_id, 'geo_enabled', 0);
         } 
         if ($public) {
-        		update_post_meta($post_id, 'geo_public', 1);
+                update_post_meta($post_id, 'geo_public', 1);
         } else {
-        		update_post_meta($post_id, 'geo_public', 0);
+                update_post_meta($post_id, 'geo_public', 0);
         }
     }
   
@@ -332,13 +332,13 @@ function admin_head() {
 }
 
 function get_geo_div() {
-   $width = esc_attr((string) get_option('geolocation_map_width'));
-   $height = esc_attr((string) get_option('geolocation_map_height'));
-   return '<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+    $width = esc_attr((string) get_option('geolocation_map_width'));
+    $height = esc_attr((string) get_option('geolocation_map_height'));
+    return '<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 }
 
 function add_geo_div() {
-	echo get_geo_div();
+    echo get_geo_div();
 }
 
 function add_geo_support() {
@@ -462,41 +462,41 @@ function display_location($content) {
     default_settings();
     global $post;
     $html = ''; 
-    settype ($html, "string");
+    settype($html, "string");
 
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
 
     if ((empty($latitude)) || (empty($longitude))) {
-      $content = str_replace(SHORTCODE, '', $content);
-    	return $content;
+        $content = str_replace(SHORTCODE, '', $content);
+        return $content;
     }
 
     $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
     if ( $on === '' || $on === false) {
-      $content = str_replace(SHORTCODE, '', $content);
-    	return $content;
+        $content = str_replace(SHORTCODE, '', $content);
+        return $content;
     }
     
     $public = (bool) get_post_meta($post->ID, 'geo_public', true);
     if ($public === true) {    
-    	$address = (string) get_post_meta($post->ID, 'geo_address', true);
-	   if (empty($address)) {
+        $address = (string) get_post_meta($post->ID, 'geo_address', true);
+        if (empty($address)) {
             $address = reverse_geocode($latitude, $longitude);
-    	}
+        }
     
-	    switch(esc_attr((string) get_option('geolocation_map_display')))
-	    {
-	        case 'link':
-					$html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
+        switch(esc_attr((string) get_option('geolocation_map_display')))
+        {
+            case 'link':
+                    $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
                 break;
             case 'full':
                 $html = get_geo_div();
                 break;
             case 'debug':
-                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string)$on.'<br> $public: '.(string)$public.'</pre>';
+                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string) $on.'<br> $public: '.(string) $public.'</pre>';
                 break;
-	    }
+        }
         
         switch (esc_attr((string) get_option('geolocation_map_position')))
         {
@@ -529,15 +529,15 @@ function reverse_geocode($latitude, $longitude) {
     foreach ($json->results as $result)
     {
         foreach ($result->address_components as $addressPart) {
-        		if (in_array('political', $addressPart->types)) {
-        			if ((in_array('locality', $addressPart->types)) ) {
-        					$city = $addressPart->long_name;
-            		} else if ((in_array('administrative_area_level_1', $addressPart->types)) ) {
-            				$state = $addressPart->long_name;
+                if (in_array('political', $addressPart->types)) {
+                    if ((in_array('locality', $addressPart->types)) ) {
+                            $city = $addressPart->long_name;
+                    } else if ((in_array('administrative_area_level_1', $addressPart->types)) ) {
+                            $state = $addressPart->long_name;
                 } else if ((in_array('country', $addressPart->types)) ) {
-                		$country = $addressPart->long_name;
+                        $country = $addressPart->long_name;
                 }
-        		}    
+                }    
         }
     }
 	
@@ -613,7 +613,7 @@ function default_settings() {
             update_option('geolocation_map_position', 'after');
     }        
     if ((string) get_option('geolocation_map_display') == '0') {
-        	   update_option('geolocation_map_display', 'link');
+                update_option('geolocation_map_display', 'link');
     }
 }
 
