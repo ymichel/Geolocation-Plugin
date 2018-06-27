@@ -471,6 +471,8 @@ function geo_has_shortcode($content) {
 function display_location($content) {
     default_settings();
     global $post, $shortcode_tags, $post_count;
+    $html = ""; 
+    settype ($html, "string");
 
     // Backup current registered shortcodes and clear them all out
     $orig_shortcode_tags = $shortcode_tags;
@@ -498,7 +500,7 @@ function display_location($content) {
                 $html = get_geo_div();
                 break;
             case 'debug':
-                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.$on.'<br> $public: '.$public.'</pre>';
+                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string)$on.'<br> $public: '.(string)$public.'</pre>';
                 break;
 	    }
 
