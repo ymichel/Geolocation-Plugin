@@ -28,6 +28,7 @@ Visitors see a short description of the address either before, after, or at a cu
 
 = 0.4 =
 * optionally display map directly, i.e., simple text (standard) or map within article
+* performance/code optimizations
 
 = 0.3 = 
 * introduced Google Maps API key option
