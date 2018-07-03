@@ -156,7 +156,7 @@ function admin_head() {
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
     echo '		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true&#038'.get_google_maps_api_key().'"></script>'; ?>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>'; ?>
 		<script type="text/javascript">
 		 	var $j = jQuery.noConflict();
 			$j(function() {
@@ -334,7 +334,7 @@ function admin_head() {
 function get_geo_div() {
     $width = esc_attr((string) get_option('geolocation_map_width'));
     $height = esc_attr((string) get_option('geolocation_map_height'));
-    return '<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+    return '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 }
 
 function add_geo_div() {
@@ -358,7 +358,7 @@ function add_google_maps($posts) {
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
-    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&#038'.get_google_maps_api_key().'"></script>
+    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function(){
@@ -440,10 +440,10 @@ function add_google_maps($posts) {
 				map.setZoom('.$zoom.');
 				marker.setPosition(location);
 				map.setCenter(location);
-			}';
+			}
 			
-            echo '			google.maps.event.addListener(map, "click", function() {
-				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng() + ",+" +"'.get_google_maps_api_key().'";
+			google.maps.event.addListener(map, "click", function() {
+				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
 			});
 		});
 	</script>';
@@ -520,7 +520,7 @@ function display_location($content) {
 }
 
 function reverse_geocode($latitude, $longitude) {
-    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude."&sensor=false&#038".get_google_maps_api_key();
+    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude.get_google_maps_api_key("&");
     $result = wp_remote_get($url);
     $json = json_decode($result['body']);
     $city = '';
@@ -579,10 +579,10 @@ function register_settings() {
     register_setting('geolocation-settings-group', 'geolocation_google_maps_api_key');
 }
 
-function get_google_maps_api_key() {
+function get_google_maps_api_key($sep) {
     $apikey = (string) get_option('geolocation_google_maps_api_key');
     if ($apikey != "") {
-        return 'key='.$apikey;
+        return $sep.'key='.$apikey;
     }
     return '';
 }
