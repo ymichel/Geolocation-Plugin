@@ -562,7 +562,7 @@ function clean_coordinate($coordinate) {
 
 function add_settings() {
     if (is_admin()) { // admin actions
-        add_options_page(__('Geolocation Plugin Settings', 'geolocation'), 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page', __FILE__);
+        add_options_page(__('Geolocation Plugin Settings', 'geolocation'), 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page');
             add_action('admin_init', 'register_settings');
     } else {
         // non-admin enqueues, actions, and filters
