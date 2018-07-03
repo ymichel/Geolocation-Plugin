@@ -570,9 +570,9 @@ function add_settings() {
 }
 
 function register_settings() {
-    register_setting('geolocation-settings-group', 'geolocation_map_width', 'intval');
-    register_setting('geolocation-settings-group', 'geolocation_map_height', 'intval');
-    register_setting('geolocation-settings-group', 'geolocation_default_zoom', 'intval');
+    register_setting('geolocation-settings-group', 'geolocation_map_width');
+    register_setting('geolocation-settings-group', 'geolocation_map_height');
+    register_setting('geolocation-settings-group', 'geolocation_default_zoom');
     register_setting('geolocation-settings-group', 'geolocation_map_position');
     register_setting('geolocation-settings-group', 'geolocation_map_display');
     register_setting('geolocation-settings-group', 'geolocation_wp_pin');
