@@ -28,6 +28,7 @@ Visitors see a short description of the address either before, after, or at a cu
 
 = 0.4 =
 * fixes Google Maps API key option
+* fixed Google Link and added auto-pan-back when center changed
 * optionally display map directly, i.e., simple text (standard) or map within article
 * performance/code optimizations
 

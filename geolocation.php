@@ -442,8 +442,15 @@ function add_google_maps($posts) {
 				map.setCenter(location);
 			}
 			
+			google.maps.event.addListener(map, "center_changed", function() {
+          			// 5 seconds after the center of the map has changed, pan back to the
+          			// marker.
+          			window.setTimeout(function() {
+          			  map.panTo(marker.getPosition());
+          			}, 5000);
+        		});
 			google.maps.event.addListener(map, "click", function() {
-				window.location = "http://maps.googleapis.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
+				window.location = "http://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
 			});
 		});
 	</script>';
