@@ -443,11 +443,11 @@ function add_google_maps($posts) {
 			}
 			
 			google.maps.event.addListener(map, "center_changed", function() {
-          			// 5 seconds after the center of the map has changed, pan back to the
+          			// 10 seconds after the center of the map has changed, pan back to the
           			// marker.
           			window.setTimeout(function() {
           			  map.panTo(marker.getPosition());
-          			}, 5000);
+          			}, 10000);
         		});
 			google.maps.event.addListener(map, "click", function() {
 				window.location = "http://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
@@ -494,6 +494,9 @@ function display_location($content) {
     
         switch(esc_attr((string) get_option('geolocation_map_display')))
         {
+            case 'plain':
+                    $html = __('Posted from ', 'geolocation').esc_html($address);
+                break;
             case 'link':
                     $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
                 break;
@@ -682,6 +685,8 @@ function geolocation_settings_page() {
         <tr valign="top">
 	        <th scope="row"><?php _e('How would you like your maps to be displayed?', 'geolocation'); ?></th>
                 <td class="display">
+                                <input type="radio" id="geolocation_map_display_plain" name="geolocation_map_display" value="plain"<?php is_value('geolocation_map_display', 'plain'); ?>>
+                <label for="geolocation_map_display_plain"><?php _e('Simple plain text.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link"<?php is_value('geolocation_map_display', 'link'); ?>>
                 <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_full" name="geolocation_map_display" value="full"<?php is_value('geolocation_map_display', 'full'); ?>>
