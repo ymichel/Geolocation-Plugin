@@ -11,7 +11,7 @@ The Geolocation plugin allows WordPress users to geotag their posts using the Ed
 
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone, WordPress for Android, or WordPress for BlackBerry.
 
-Visitors see a short description of the address either before, after, or at a custom location within the post. Alternatively, hovering over the address reveals a map that displays the post's exact location or a direct map is shown within the article.
+Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location.
 
 == Installation ==
 
@@ -29,11 +29,23 @@ Visitors see a short description of the address either before, after, or at a cu
 = 0.4 =
 * visualization enhanced: display geolocation either as plain text, simple text incl. map w/mouse over (default) or map only within the article
 
+= 0.3.7 =
+* re-enabled the usage without API key
+
+= 0.3.6 =
+* fixed reverse geocoding
+
+= 0.3.5 =
+* fixed default_settings
+
+= 0.3.4 =
+* fixed update hook
+
 = 0.3.3 =
 * fixed display by applying update hook
 
-= 0.3.2 = 
-* fixed display
+= 0.3.2 =
+* fixed display 
 
 = 0.3.1 =
 * fixes Google Maps API key option

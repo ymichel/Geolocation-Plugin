@@ -27,12 +27,13 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+add_action('upgrader_process_complete', 'plugin_upgrade_completed', 10, 2 );
 add_action('plugins_loaded', 'languages_init');
 add_action('wp_head', 'add_geo_support');
 add_action('wp_footer', 'add_geo_div');
 add_action('admin_menu', 'add_settings');
 add_filter('the_content', 'display_location', 5);
-add_action( 'upgrader_process_complete', 'plugin_upgrade', 10, 2 );
+
 admin_init();
 register_activation_hook(__FILE__, 'activate');
 wp_enqueue_script("jquery");
@@ -55,9 +56,9 @@ function activate() {
     add_option('geolocation_wp_pin', '1');
 }
 
-function plugin_upgrade( $upgrader_object, $options ) {
+function plugin_upgrade_completed( $upgrader_object, $options ) {
  $our_plugin = plugin_basename( __FILE__ );
- if( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
+ if( $options['action'] == 'update' && $options['type'] == 'plugin'  ) {
   foreach( $options['plugins'] as $plugin ) {
    if( $plugin == $our_plugin ) {
     register_settings();
@@ -456,11 +457,11 @@ function add_google_maps($posts) {
 			}
 			
 			google.maps.event.addListener(map, "center_changed", function() {
-          			// 10 seconds after the center of the map has changed, pan back to the
+          			// 5 seconds after the center of the map has changed, pan back to the
           			// marker.
           			window.setTimeout(function() {
           			  map.panTo(marker.getPosition());
-          			}, 10000);
+          			}, 5000);
         		});
 			google.maps.event.addListener(map, "click", function() {
 				window.location = "http://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
@@ -507,9 +508,6 @@ function display_location($content) {
     
         switch(esc_attr((string) get_option('geolocation_map_display')))
         {
-            case 'plain':
-                    $html = __('Posted from ', 'geolocation').esc_html($address);
-                break;
             case 'link':
                     $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
                 break;
@@ -543,7 +541,7 @@ function display_location($content) {
 }
 
 function reverse_geocode($latitude, $longitude) {
-    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude.get_google_maps_api_key("&");
+    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude;
     $result = wp_remote_get($url);
     $json = json_decode($result['body']);
     $city = '';
@@ -607,7 +605,7 @@ function get_google_maps_api_key($sep) {
     if ($apikey != "") {
         return $sep.'key='.$apikey;
     }
-    return '';
+    return $sep.'sensor=true';
 }
 
 function is_checked($field) {
@@ -623,20 +621,20 @@ function is_value($field, $value) {
 }
 
 function default_settings() {
-    if ((string) get_option('geolocation_map_width') == '0') {
+    if (!get_option('geolocation_map_width')) {
             update_option('geolocation_map_width', '450');
     }
-    if ((string) get_option('geolocation_map_height') == '0') {
+    if (!get_option('geolocation_map_height')) {
             update_option('geolocation_map_height', '200');
     }
-    if ((string) get_option('geolocation_default_zoom') == '0') {
+    if (!get_option('geolocation_default_zoom')) {
             update_option('geolocation_default_zoom', '16');
     }
-    if ((string) get_option('geolocation_map_position') == '0') {
+    if (!get_option('geolocation_map_position')) {
             update_option('geolocation_map_position', 'after');
     }        
-    if ((string) get_option('geolocation_map_display') == '0') {
-                update_option('geolocation_map_display', 'link');
+    if (!get_option('geolocation_map_display')) {
+            update_option('geolocation_map_display', 'link');
     }
 }
 
