@@ -29,6 +29,9 @@ Visitors see a short description of the address either before, after, or at a cu
 = 0.4 =
 * visualization enhanced: display geolocation either as plain text, simple text incl. map w/mouse over (default) or map only within the article
 
+= 0.3.3 =
+* fixed display by applying update hook
+
 = 0.3.2 = 
 * fixed display
 

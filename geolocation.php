@@ -32,6 +32,7 @@ add_action('wp_head', 'add_geo_support');
 add_action('wp_footer', 'add_geo_div');
 add_action('admin_menu', 'add_settings');
 add_filter('the_content', 'display_location', 5);
+add_action( 'upgrader_process_complete', 'plugin_upgrade', 10, 2 );
 admin_init();
 register_activation_hook(__FILE__, 'activate');
 wp_enqueue_script("jquery");
@@ -52,6 +53,18 @@ function activate() {
     add_option('geolocation_map_position', 'after');
     add_option('geolocation_map_display', 'link');
     add_option('geolocation_wp_pin', '1');
+}
+
+function plugin_upgrade( $upgrader_object, $options ) {
+ $our_plugin = plugin_basename( __FILE__ );
+ if( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
+  foreach( $options['plugins'] as $plugin ) {
+   if( $plugin == $our_plugin ) {
+    register_settings();
+    default_settings();
+   }
+  }
+ }
 }
 
 function geolocation_add_custom_box() {
@@ -686,7 +699,7 @@ function geolocation_settings_page() {
 	        <th scope="row"><?php _e('How would you like your maps to be displayed?', 'geolocation'); ?></th>
                 <td class="display">
                                 <input type="radio" id="geolocation_map_display_plain" name="geolocation_map_display" value="plain"<?php is_value('geolocation_map_display', 'plain'); ?>>
-                <label for="geolocation_map_display_plain"><?php _e('Simple plain text.', 'geolocation'); ?></label><br/>
+                <label for="geolocation_map_display_plain"><?php _e('Plain text.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link"<?php is_value('geolocation_map_display', 'link'); ?>>
                 <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_full" name="geolocation_map_display" value="full"<?php is_value('geolocation_map_display', 'full'); ?>>
