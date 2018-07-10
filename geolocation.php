@@ -136,7 +136,7 @@ function geolocation_save_postdata($post_id) {
     $public = $_POST['geolocation-public'];
     $on = $_POST['geolocation-on'];
   
-    if ($latitude != '') && ($longitude != '') {
+    if (($latitude != '') && ($longitude != '')) {
         update_post_meta($post_id, 'geo_latitude', $latitude);
         update_post_meta($post_id, 'geo_longitude', $longitude);
   	
