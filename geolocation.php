@@ -27,7 +27,7 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-add_action('upgrader_process_complete', 'plugin_upgrade_completed', 10, 2 );
+add_action('upgrader_process_complete', 'plugin_upgrade_completed', 10, 2);
 add_action('plugins_loaded', 'languages_init');
 add_action('wp_head', 'add_geo_support');
 add_action('wp_footer', 'add_geo_div');
@@ -56,11 +56,11 @@ function activate() {
     add_option('geolocation_wp_pin', '1');
 }
 
-function plugin_upgrade_completed( $upgrader_object, $options ) {
- $our_plugin = plugin_basename( __FILE__ );
- if( $options['action'] == 'update' && $options['type'] == 'plugin'  ) {
-  foreach( $options['plugins'] as $plugin ) {
-   if( $plugin == $our_plugin ) {
+function plugin_upgrade_completed($upgrader_object, $options) {
+ $our_plugin = plugin_basename(__FILE__);
+ if ($options['action'] == 'update' && $options['type'] == 'plugin') {
+  foreach ($options['plugins'] as $plugin) {
+   if ($plugin == $our_plugin) {
     register_settings();
     default_settings();
    }
@@ -494,7 +494,7 @@ function display_location($content) {
     }
 
     $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
-    if ( $on === '' || $on === false) {
+    if ($on === '' || $on === false) {
         $content = str_replace(SHORTCODE, '', $content);
         return $content;
     }
@@ -506,7 +506,7 @@ function display_location($content) {
             $address = reverse_geocode($latitude, $longitude);
         }
     
-        switch(esc_attr((string) get_option('geolocation_map_display')))
+        switch (esc_attr((string) get_option('geolocation_map_display')))
         {
             case 'plain':
                     $html = '<div class="geolocation-plain" id="geolocation'.$post->ID.'">'.__('Posted from ', 'geolocation').esc_html($address).'.</div>';
@@ -554,11 +554,11 @@ function reverse_geocode($latitude, $longitude) {
     {
         foreach ($result->address_components as $addressPart) {
                 if (in_array('political', $addressPart->types)) {
-                    if ((in_array('locality', $addressPart->types)) ) {
+                    if ((in_array('locality', $addressPart->types))) {
                             $city = $addressPart->long_name;
-                    } else if ((in_array('administrative_area_level_1', $addressPart->types)) ) {
+                    } else if ((in_array('administrative_area_level_1', $addressPart->types))) {
                             $state = $addressPart->long_name;
-                } else if ((in_array('country', $addressPart->types)) ) {
+                } else if ((in_array('country', $addressPart->types))) {
                         $country = $addressPart->long_name;
                 }
                 }    
