@@ -136,11 +136,11 @@ function geolocation_save_postdata($post_id) {
     $public = $_POST['geolocation-public'];
     $on = $_POST['geolocation-on'];
   
-    if ((clean_coordinate($latitude) != '') && (clean_coordinate($longitude)) != '') {
+    if ($latitude != '') && ($longitude != '') {
         update_post_meta($post_id, 'geo_latitude', $latitude);
         update_post_meta($post_id, 'geo_longitude', $longitude);
   	
-        if (esc_html($address) != '') {
+        if ($address != '') {
                 update_post_meta($post_id, 'geo_address', $address);
         }
         if ($on) {
@@ -560,7 +560,7 @@ function buildAddress($city, $state, $country){
     } else if ($country != '') {
             $address = $country;
     }
-    return $address;
+    return esc_html($address);
 }
 
 function reverse_geocode($latitude, $longitude) {
