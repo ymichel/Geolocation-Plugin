@@ -13,11 +13,14 @@ The Geolocation plugin allows WordPress users to geotag their posts using the Ed
 
 Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location.
 
+Since Google changed their policy in term of maps usage, one needs to have a Goole Maps API key to use this plugin.
+
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Modify the display settings as needed on the Settings > Geolocation page.
+3. Insert the Google Maps API key on the Settings > Geolocatiojn page.
+4. Modify the display settings as needed on the Settings > Geolocation page.
 
 == Screenshots ==
 
