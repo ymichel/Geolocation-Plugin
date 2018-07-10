@@ -543,10 +543,28 @@ function display_location($content) {
     return $content;
 }
 
-function reverse_geocode($latitude, $longitude) {
+function pullGoogleJSON($latitude, $longitude) {
     $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude;
     $result = wp_remote_get($url);
-    $json = json_decode($result['body']);
+    return json_decode($result['body']);
+}
+
+funtion buildAddress($city, $state, $country){
+    $address = '';
+    if (($city != '') && ($state != '') && ($country != '')) {
+            $address = $city.', '.$state.', '.$country;
+    } else if (($city != '') && ($state != '')) {
+            $address = $city.', '.$state;
+    } else if (($state != '') && ($country != '')) {
+            $address = $state.', '.$country;
+    } else if ($country != '') {
+            $address = $country;
+    }
+    return $address;
+}
+
+function reverse_geocode($latitude, $longitude) {
+    $json = pullGoogleJSON($latitude, $longitude);
     $city = '';
     $state = '';
     $country = '';
@@ -564,18 +582,7 @@ function reverse_geocode($latitude, $longitude) {
                 }    
         }
     }
-	
-    $address = '';
-    if (($city != '') && ($state != '') && ($country != '')) {
-            $address = $city.', '.$state.', '.$country;
-    } else if (($city != '') && ($state != '')) {
-            $address = $city.', '.$state;
-    } else if (($state != '') && ($country != '')) {
-            $address = $state.', '.$country;
-    } else if ($country != '') {
-            $address = $country;
-    }
-    return $address;
+    return buildAddress($city, $state, $country);
 }
 
 function clean_coordinate($coordinate) {
