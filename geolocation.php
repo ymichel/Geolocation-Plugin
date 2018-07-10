@@ -508,6 +508,9 @@ function display_location($content) {
     
         switch(esc_attr((string) get_option('geolocation_map_display')))
         {
+            case 'plain':
+                    $html = '<div class="geolocation-plain" id="geolocation'.$post->ID.'">'.__('Posted from ', 'geolocation').esc_html($address).'.</div>';
+                break;
             case 'link':
                     $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
                 break;
@@ -700,10 +703,6 @@ function geolocation_settings_page() {
                 <label for="geolocation_map_display_plain"><?php _e('Plain text.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link"<?php is_value('geolocation_map_display', 'link'); ?>>
                 <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br/>
-                                <input type="radio" id="geolocation_map_display_full" name="geolocation_map_display" value="full"<?php is_value('geolocation_map_display', 'full'); ?>>
-                <label for="geolocation_map_display_full"><?php _e('Display full map.', 'geolocation'); ?></label><br/>
-                                <input type="radio" id="geolocation_map_display_debug" name="geolocation_map_display" value="debug"<?php is_value('geolocation_map_display', 'debug'); ?>>
-                <label for="geolocation_map_display_debug"><?php _e('Debug PlugIn.', 'geolocation'); ?></label><br/>
                 </td>        
         </tr>                        
         <tr valign="top">
