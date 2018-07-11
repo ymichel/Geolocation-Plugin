@@ -550,6 +550,16 @@ function pullGoogleJSON($latitude, $longitude) {
 }
 
 function buildAddress($city, $state, $country){
+    $mask = '___';
+    if ($city != '') {
+        $mask[1]='X';
+    }
+    if ($state != '') {
+        $mask[2]='X';
+    }
+    if ($country != '') {
+        $mask[3]='X';
+    }
     $address = '';
     if (($city != '') && ($state != '') && ($country != '')) {
             $address = $city.', '.$state.', '.$country;
