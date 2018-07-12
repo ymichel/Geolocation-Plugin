@@ -27,6 +27,10 @@ msgstr "Bitte geben sie die Adresse ein"
 msgid "Load"
 msgstr "Laden"
 
+#: geolocation.php:75
+msgid "Google Maps API key is missing for"
+msgstr "Der Google Maps API key fehlt f&uuml;r"
+
 #: geolocation.php:78
 msgid "Public"
 msgstr "&Ouml;ffentlich"
