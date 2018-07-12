@@ -57,15 +57,15 @@ function activate() {
 }
 
 function plugin_upgrade_completed($upgrader_object, $options) {
- $our_plugin = plugin_basename(__FILE__);
- if ($options['action'] == 'update' && $options['type'] == 'plugin') {
-  foreach ($options['plugins'] as $plugin) {
-   if ($plugin == $our_plugin) {
+    $our_plugin = plugin_basename(__FILE__);
+    if ($options['action'] == 'update' && $options['type'] == 'plugin') {
+    foreach ($options['plugins'] as $plugin) {
+    if ($plugin == $our_plugin) {
     register_settings();
     default_settings();
-   }
-  }
- }
+    }
+    }
+    }
 }
 
 // display custom admin notice
@@ -561,7 +561,7 @@ function pullGoogleJSON($latitude, $longitude) {
     return json_decode($result['body']);
 }
 
-function buildAddress($city, $state, $country){
+function buildAddress($city, $state, $country) {
     $address = '';
     if (($city != '') && ($state != '') && ($country != '')) {
             $address = $city.', '.$state.', '.$country;
