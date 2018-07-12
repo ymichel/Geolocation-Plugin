@@ -627,7 +627,7 @@ function get_google_maps_api_key($sep) {
     if ($apikey != "") {
         return $sep.'key='.$apikey;
     }
-    return $sep.'sensor=true';
+    return '';
 }
 
 function is_checked($field) {

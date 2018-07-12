@@ -30,7 +30,8 @@ Since Google changed their policy in term of maps usage, one needs to have a Goo
 == Changelog ==
 
 = 0.4 =
-* visualization enhanced: display geolocation either as plain text, simple text incl. map w/mouse over (default) or map only within the article
+* visualization enhanced: display geolocation either as plain text (with no further 3rd party loads) or as simple text incl. map w/mouse over (default till now)
+* since Google changed their policy and an API key is required, the plugin will now show an error message if this key is missing. 
 
 = 0.3.7 =
 * re-enabled the usage without API key
