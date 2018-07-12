@@ -68,6 +68,18 @@ function plugin_upgrade_completed($upgrader_object, $options) {
  }
 }
 
+// display custom admin notice
+function geolocation_custom_admin_notice() {
+    if (!get_option('geolocation_google_maps_api_key')) { ?>
+	<div class="notice notice-error">
+		<p><?php _e('Google Maps API key is missing for', 'geolocation'); ?> <a href="options-general.php?page=geolocation">Geolocation</a>!</p>
+	</div>
+	
+<?php 
+    }
+}
+add_action('admin_notices', 'geolocation_custom_admin_notice');
+
 function geolocation_add_custom_box() {
         if (function_exists('add_meta_box')) {
             add_meta_box('geolocation_sectionid', __('Geolocation', 'geolocation'), 'geolocation_inner_custom_box', 'post', 'advanced');
@@ -550,16 +562,6 @@ function pullGoogleJSON($latitude, $longitude) {
 }
 
 function buildAddress($city, $state, $country){
-    $mask = '___';
-    if ($city != '') {
-        $mask[1]='X';
-    }
-    if ($state != '') {
-        $mask[2]='X';
-    }
-    if ($country != '') {
-        $mask[3]='X';
-    }
     $address = '';
     if (($city != '') && ($state != '') && ($country != '')) {
             $address = $city.', '.$state.', '.$country;
