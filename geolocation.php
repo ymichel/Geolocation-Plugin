@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: http://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.4
+Version: 0.4.1
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -364,17 +364,22 @@ function get_geo_div() {
 }
 
 function add_geo_div() {
-    echo get_geo_div();
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') ) {
+        echo get_geo_div();
+    }
 }
 
 function add_geo_support() {
     global $geolocation_options, $posts;
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_admin())) {
 	
-    // To do: add support for multiple Map API providers
-    switch (PROVIDER) {
-        case 'google':
-            add_google_maps($posts);
-            break;
+       // To do: add support for multiple Map API providers
+       switch (PROVIDER) {
+           case 'google':
+               add_google_maps($posts);
+               break;
+       }
+
     }
     echo '<link type="text/css" rel="stylesheet" href="'.esc_url(plugins_url('style.css', __FILE__)).'" />';
 }
