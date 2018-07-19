@@ -141,7 +141,7 @@ function geolocation_save_postdata($post_id) {
     $public = $_POST['geolocation-public'];
     $on = $_POST['geolocation-on'];
   
-    if (($latitude != '') && ($longitude != '')) {
+    if ((empty($latitude)) && (empty($longitude))) {
         update_post_meta($post_id, 'geo_latitude', $latitude);
         update_post_meta($post_id, 'geo_longitude', $longitude);
   	
@@ -497,57 +497,50 @@ function display_location($content) {
 
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
-
-    if ((empty($latitude)) || (empty($longitude))) {
-        $content = str_replace(SHORTCODE, '', $content);
-        return $content;
-    }
-
     $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
-    if ($on === '' || $on === false) {
+    $public = (bool) get_post_meta($post->ID, 'geo_public', true);
+
+    if (((empty($latitude)) || (empty($longitude))) ||
+        ($on === '' || $on === false) ||
+        ($public === '' || $public === false)) {
         $content = str_replace(SHORTCODE, '', $content);
         return $content;
     }
     
-    $public = (bool) get_post_meta($post->ID, 'geo_public', true);
-    if ($public === true) {    
-        $address = (string) get_post_meta($post->ID, 'geo_address', true);
-        if (empty($address)) {
-            $address = reverse_geocode($latitude, $longitude);
-        }
+    $address = (string) get_post_meta($post->ID, 'geo_address', true);
+    if (empty($address)) {
+        $address = reverse_geocode($latitude, $longitude);
+    }
     
-        switch (esc_attr((string) get_option('geolocation_map_display')))
-        {
-            case 'plain':
-                    $html = '<div class="geolocation-plain" id="geolocation'.$post->ID.'">'.__('Posted from ', 'geolocation').esc_html($address).'.</div>';
-                break;
-            case 'link':
-                    $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
-                break;
-            case 'full':
-                $html = get_geo_div();
-                break;
-            case 'debug':
-                $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string) $on.'<br> $public: '.(string) $public.'</pre>';
-                break;
-        }
+    switch (esc_attr((string) get_option('geolocation_map_display')))
+    {
+        case 'plain':
+                $html = '<div class="geolocation-plain" id="geolocation'.$post->ID.'">'.__('Posted from ', 'geolocation').esc_html($address).'.</div>';
+            break;
+        case 'link':
+                $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
+            break;
+        case 'full':
+            $html = get_geo_div();
+            break;
+        case 'debug':
+            $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string) $on.'<br> $public: '.(string) $public.'</pre>';
+            break;
+    }
         
-        switch (esc_attr((string) get_option('geolocation_map_position')))
-        {
-            case 'before':
-                $content = str_replace(SHORTCODE, '', $content);
-                $content = $html.'<br/><br/>'.$content;
-                break;
-            case 'after':
-                $content = str_replace(SHORTCODE, '', $content);
-                $content = $content.'<br/><br/>'.$html;
-                break;
-            case 'shortcode':
-                $content = str_replace(SHORTCODE, $html, $content);
-                break;
-        }
-    } else {
-        $content = str_replace(SHORTCODE, '', $content);
+    switch (esc_attr((string) get_option('geolocation_map_position')))
+    {
+        case 'before':
+            $content = str_replace(SHORTCODE, '', $content);
+            $content = $html.'<br/><br/>'.$content;
+            break;
+        case 'after':
+            $content = str_replace(SHORTCODE, '', $content);
+            $content = $content.'<br/><br/>'.$html;
+            break;
+        case 'shortcode':
+            $content = str_replace(SHORTCODE, $html, $content);
+            break;
     }
 
     return $content;
