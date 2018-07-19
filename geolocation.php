@@ -128,18 +128,11 @@ function geolocation_old_custom_box() {
 
 function geolocation_save_postdata($post_id) {
     // Check authorization, permissions, autosave, etc
-    if (!wp_verify_nonce($_POST['geolocation_nonce'], plugin_basename(__FILE__))) {
+    if ((!wp_verify_nonce($_POST['geolocation_nonce'], plugin_basename(__FILE__))) ||
+        (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) ||
+        (('page' == $_POST['post_type']) && (!current_user_can('edit_page', $post_id))) ||
+        (!current_user_can('edit_post', $post_id))) {
         return $post_id;
-    } else if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return $post_id;
-    } else if ('page' == $_POST['post_type']) {
-            if (!current_user_can('edit_page', $post_id)) {
-            return $post_id;
-            }
-    } else {
-            if (!current_user_can('edit_post', $post_id)) {
-            return $post_id;
-            }
     }
 
     $latitude = clean_coordinate($_POST['geolocation-latitude']);
