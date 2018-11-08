@@ -14,6 +14,7 @@ The Geolocation plugin allows WordPress users to geotag their posts using the Ed
 Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location. If one would only like to show a textual version without accessing any external services when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location.
 
 Since Google changed their policy in terms of maps usage, one needs to have a Goole Maps API key to use this plugin.
+You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
 == Installation ==
 
@@ -31,6 +32,8 @@ Since Google changed their policy in terms of maps usage, one needs to have a Go
 
 = 0.4.1 = 
 * enabling GDPR/DSGVO compliant "show only" mode without accessing any external services
+* fixing http to https accesses
+* fixed reverse geocoding
 
 = 0.4 =
 * visualization enhanced: display geolocation either as plain text or as simple text incl. map w/mouse over (default till now)

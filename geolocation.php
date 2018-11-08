@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Geolocation
-Plugin URI: http://wordpress.org/extend/plugins/geolocation/
+Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
 Version: 0.4.1
 Author: Yann Michel
@@ -174,8 +174,8 @@ function admin_head() {
     global $post;
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
-    echo '		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>'; ?>
+    echo '		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>'; ?>
 		<script type="text/javascript">
 		 	var $j = jQuery.noConflict();
 			$j(function() {
@@ -382,7 +382,7 @@ function add_google_maps($posts) {
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
-    echo '<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
+    echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function(){
@@ -474,7 +474,7 @@ function add_google_maps($posts) {
           			}, 5000);
         		});
 			google.maps.event.addListener(map, "click", function() {
-				window.location = "http://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
+				window.location = "https://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
 			});
 		});
 	</script>';
@@ -547,7 +547,7 @@ function display_location($content) {
 }
 
 function pullGoogleJSON($latitude, $longitude) {
-    $url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".$latitude.",".$longitude;
+    $url = "https://maps.googleapis.com/maps/api/geocode/json".get_google_maps_api_key("?")."&latlng=".$latitude.",".$longitude;
     $result = wp_remote_get($url);
     return json_decode($result['body']);
 }
