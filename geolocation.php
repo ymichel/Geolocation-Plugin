@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.4.1
+Version: 0.4.2
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -96,8 +96,8 @@ function geolocation_inner_custom_box() {
 		<div class="taghint">'.__('Enter your address', 'geolocation').'</div>
 		<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 		<input id="geolocation-load" type="button" class="button geolocationadd" value="'.__('Load', 'geolocation').'" tabindex="3" />
-		<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
-		<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
+		<input type="text" id="geolocation-latitude" name="geolocation-latitude" />
+		<input type="text" id="geolocation-longitude" name="geolocation-longitude" />
 		<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:265px;height:200px;margin-top:5px;"></div>
 		<div style="margin:5px 0 0 0;">
 			<input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
@@ -141,7 +141,7 @@ function geolocation_save_postdata($post_id) {
     $public = $_POST['geolocation-public'];
     $on = $_POST['geolocation-on'];
   
-    if ((empty($latitude)) && (empty($longitude))) {
+    if ((!empty($latitude)) && (!empty($longitude))) {
         update_post_meta($post_id, 'geo_latitude', $latitude);
         update_post_meta($post_id, 'geo_longitude', $longitude);
   	
@@ -713,6 +713,8 @@ function geolocation_settings_page() {
                 <label for="geolocation_map_display_plain"><?php _e('Plain text.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link"<?php is_value('geolocation_map_display', 'link'); ?>>
                 <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br/>
+                                <input type="radio" id="geolocation_map_display_debug" name="geolocation_map_display" value="debug"<?php is_value('geolocation_map_display', 'debug'); ?>>
+                <label for="geolocation_map_display_debug"><?php _e('Debug.', 'geolocation'); ?></label><br/>
                 </td>        
         </tr>                        
         <tr valign="top">
