@@ -96,8 +96,8 @@ function geolocation_inner_custom_box() {
 		<div class="taghint">'.__('Enter your address', 'geolocation').'</div>
 		<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 		<input id="geolocation-load" type="button" class="button geolocationadd" value="'.__('Load', 'geolocation').'" tabindex="3" />
-		<input type="text" id="geolocation-latitude" name="geolocation-latitude" />
-		<input type="text" id="geolocation-longitude" name="geolocation-longitude" />
+		<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
+		<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
 		<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:265px;height:200px;margin-top:5px;"></div>
 		<div style="margin:5px 0 0 0;">
 			<input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
