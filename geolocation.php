@@ -43,7 +43,7 @@ define('SHORTCODE', '[geolocation]');
 
 function languages_init() {
     $plugin_rel_path = basename(dirname(__FILE__)).'/languages/'; /* Relative to WP_PLUGIN_DIR */
-    load_plugin_textdomain('geolocation', FALSE, $plugin_rel_path);
+    load_plugin_textdomain('geolocation', 'false', $plugin_rel_path);
 }
 
 function activate() {
