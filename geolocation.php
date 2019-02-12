@@ -549,6 +549,29 @@ function display_location($content) {
     return $content;
 }
 
+function updateGeolocationAddresses() {
+   $args = array(
+        'post_type' => 'post'
+    );
+
+    $post_query = new WP_Query($args);
+    if($post_query->have_posts() ) {
+      echo "<HR>";
+      while($post_query->have_posts() ) {
+        $post_query->the_post();
+        $post_id = get_the_ID();
+        $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
+        $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
+        $postAddress = get_post_meta($post_id, 'geo_address', true);
+
+        echo "$postLatitude | $postLongitude | $postAddress |";
+        echo reverse_geocode($postLatitude,$postLongitude); 
+        echo "<br>";
+      }
+      echo "<HR>";
+    } 
+}
+
 function getSiteLang() {
     $language = substr(get_locale(), 0, 2);
     return $language;
@@ -756,6 +779,9 @@ function geolocation_settings_page() {
 	        	<?php echo esc_attr((string) getSiteLang()); ?>
         </tr>
     </table>
+<?php
+  updateGeolocationAddresses();
+?>
     
     <p class="submit">
     <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geolocation') ?>" />
