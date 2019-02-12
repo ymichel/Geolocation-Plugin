@@ -150,3 +150,6 @@ msgstr "Yann Michel"
 #. Author URI of the plugin/theme
 msgid "https://www.yann-michel.de/geolocation"
 msgstr "https://www.yann-michel.de/geolocation"
+
+msgid "Used Language for Adresses"
+msgstr "Genutzte Sprache für Adressen"

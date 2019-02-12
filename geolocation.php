@@ -364,7 +364,7 @@ function add_geo_div() {
 
 function add_geo_support() {
     global $geolocation_options, $posts;
-    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_admin())) {
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_user_logged_in())) {
 	
         // To do: add support for multiple Map API providers
         switch (PROVIDER) {
@@ -383,7 +383,7 @@ function add_google_maps($posts) {
     global $post_count;
     $post_count = count($posts);
 
-    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')  || (is_admin())) {
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')  || (is_user_logged_in())) {
     echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
@@ -749,6 +749,11 @@ function geolocation_settings_page() {
         	<th scope="row">Google Maps API key</th>
         	<td class="apikey">        	
 	        	<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string) get_option('geolocation_google_maps_api_key')); ?>" />
+        </tr>
+        <tr valign="top">
+        	<th scope="row"><?php _e('Used Language for Adresses', 'geolocation'); ?></th>
+        	<td class="apikey">        	
+	        	<?php echo esc_attr((string) getSiteLang()); ?>
         </tr>
     </table>
     

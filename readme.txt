@@ -31,8 +31,8 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 == Changelog ==
 
 = 0.5
-* improved "plain" option: google-apis are no longer loaded for a common user but only if admin user logged in
-* reverse geocoding now uses the website language for the texts being shown and locally stored
+* improved "plain" option: google-apis are no longer loaded for a visiting user but only if a backend user is logged in.
+* reverse geocoding now uses the website language for the texts being shown and locally stored (also to be seen in admin panel)
 
 = 0.4.2 = 
 * fixing bug in saving geolocation to post_meta
