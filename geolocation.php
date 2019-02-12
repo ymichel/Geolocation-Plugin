@@ -357,7 +357,7 @@ function get_geo_div() {
 }
 
 function add_geo_div() {
-    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') ) {
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')) {
         echo get_geo_div();
     }
 }
@@ -366,12 +366,12 @@ function add_geo_support() {
     global $geolocation_options, $posts;
     if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_admin())) {
 	
-       // To do: add support for multiple Map API providers
-       switch (PROVIDER) {
-           case 'google':
+        // To do: add support for multiple Map API providers
+        switch (PROVIDER) {
+            case 'google':
                add_google_maps($posts);
-               break;
-       }
+                break;
+        }
 
     }
     echo '<link type="text/css" rel="stylesheet" href="'.esc_url(plugins_url('style.css', __FILE__)).'" />';
@@ -383,7 +383,7 @@ function add_google_maps($posts) {
     global $post_count;
     $post_count = count($posts);
 
- if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')  || (is_admin())) {
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')  || (is_admin())) {
     echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
