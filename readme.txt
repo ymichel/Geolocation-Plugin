@@ -31,7 +31,7 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 == Changelog ==
 
 = 0.5
-* improved plain option: googleapis are no longer loaded unless admin
+* improved "plain" option: google-apis are no longer loaded for a common user but only if admin user logged in
 * reverse geocoding now uses the website language for the texts being shown and locally stored
 
 = 0.4.2 = 
