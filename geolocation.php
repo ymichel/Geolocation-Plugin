@@ -27,8 +27,8 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+add_action('init', 'languages_init');
 add_action('upgrader_process_complete', 'plugin_upgrade_completed', 10, 2);
-add_action('plugins_loaded', 'languages_init');
 add_action('wp_head', 'add_geo_support');
 add_action('wp_footer', 'add_geo_div');
 add_action('admin_menu', 'add_settings');
@@ -42,8 +42,7 @@ define('PROVIDER', 'google');
 define('SHORTCODE', '[geolocation]');
 
 function languages_init() {
-    $plugin_rel_path = basename(dirname(__FILE__)).'/languages/'; /* Relative to WP_PLUGIN_DIR */
-    load_plugin_textdomain('geolocation', 'false', $plugin_rel_path);
+    load_plugin_textdomain( 'geolocation', false, basename( dirname( __FILE__ ) ) . '/languages' ); 
 }
 
 function activate() {
