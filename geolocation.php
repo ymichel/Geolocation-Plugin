@@ -554,20 +554,34 @@ function updateGeolocationAddresses() {
     );
 
     $post_query = new WP_Query($args);
-    if($post_query->have_posts() ) {
-      echo "<HR>";
+    if($post_query->have_posts() ) {?>
+        <div class="notice notice-success is-dismissible">
+        <p><?php _e( 'Addresses have been updated as follows!', 'geolocation' ); ?></p>
+      <?php
+      echo '<table class="form-table">
+        <tr valign="top">
+	        <tr valign="top">
+	        <th scope="head">Post</th>	
+	        <th scope="head">Old Address</th>
+	        <th scope="head">New Address</th>
+	        </tr>';
       while($post_query->have_posts() ) {
         $post_query->the_post();
         $post_id = get_the_ID();
+        $post_title = get_the_title();
         $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
         $postAddress = get_post_meta($post_id, 'geo_address', true);
-
-        echo "$postLatitude | $postLongitude | $postAddress |";
-        echo reverse_geocode($postLatitude,$postLongitude); 
-        echo "<br>";
+        $postAddressNew = reverse_geocode($postLatitude,$postLongitude); 
+        update_post_meta($post_id, 'geo_address', $postAddressNew);
+        echo '<tr>';
+        echo '<td>'.$post_title.'</td>';
+        echo '<td>'.$postAddress.'</td>';
+        echo '<td>'.$postAddressNew.'</td>';
+        echo '</td>';
       }
-      echo "<HR>";
+      echo '</table>';
+      echo '</div>';
     } 
 }
 
@@ -641,6 +655,7 @@ function register_settings() {
     register_setting('geolocation-settings-group', 'geolocation_map_display');
     register_setting('geolocation-settings-group', 'geolocation_wp_pin');
     register_setting('geolocation-settings-group', 'geolocation_google_maps_api_key');
+    register_setting('geolocation-settings-group', 'geolocation_updateAddresses');
 }
 
 function get_google_maps_api_key($sep) {
@@ -679,10 +694,16 @@ function default_settings() {
     if (!get_option('geolocation_map_display')) {
             update_option('geolocation_map_display', 'link');
     }
+    update_option('geolocation_updateAddresses', false);
 }
 
 function geolocation_settings_page() {
+    if ((bool) get_option('geolocation_updateAddresses')) {
+       updateGeolocationAddresses();
+    }
+    
     default_settings();
+
     $zoomImage = (string) get_option('geolocation_default_zoom');
     if ((bool) get_option('geolocation_wp_pin')) {
             $zoomImage = 'wp_'.$zoomImage.'.png';
@@ -777,10 +798,13 @@ function geolocation_settings_page() {
         	<td class="apikey">        	
 	        	<?php echo esc_attr((string) getSiteLang()); ?>
         </tr>
+        <tr valign="top">
+        	<th scope="row"></th>
+        	<td class="position">
+				<input type="checkbox" id="geolocation_updateAddresses" name="geolocation_updateAddresses" value="1" <?php is_checked('geolocation_updateAddresses'); ?> ><label for="geolocation_updateAddresses"><?php _e('Update all addresses from posts that have location information<br>(only once this setup is saved).', 'geolocation'); ?></label>
+	        </td>
+        </tr>
     </table>
-<?php
-  updateGeolocationAddresses();
-?>
     
     <p class="submit">
     <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geolocation') ?>" />
