@@ -567,12 +567,12 @@ function updateGeolocationAddresses() {
 	        </tr>';
       while($post_query->have_posts() ) {
         $post_query->the_post();
-        $post_id = get_the_ID();
+        $post_id = (integer) get_the_ID();
         $post_title = get_the_title();
         $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
         $postAddress = get_post_meta($post_id, 'geo_address', true);
-        $postAddressNew = reverse_geocode($postLatitude,$postLongitude); 
+        $postAddressNew = (string) reverse_geocode($postLatitude,$postLongitude); 
         update_post_meta($post_id, 'geo_address', $postAddressNew);
         echo '<tr>';
         echo '<td>'.$post_title.'</td>';
