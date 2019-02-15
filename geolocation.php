@@ -349,15 +349,17 @@ function admin_head() {
 <?php		
 }
 
-function get_geo_div() {
+function get_geo_div($post_id) {
     $width = esc_attr((string) get_option('geolocation_map_width'));
     $height = esc_attr((string) get_option('geolocation_map_height'));
-    return '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+    return '<hr><div id="geolocation'.$post_id.'" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div><br>-'.$post_id.'-<hr>';
 }
 
 function add_geo_div() {
     if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')) {
-        echo get_geo_div();
+        $width = esc_attr((string) get_option('geolocation_map_width'));
+        $height = esc_attr((string) get_option('geolocation_map_height'));
+        return '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
     }
 }
 
@@ -523,7 +525,7 @@ function display_location($content) {
                 $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
             break;
         case 'full':
-            $html = get_geo_div();
+            $html = get_geo_div($post->ID);
             break;
         case 'debug':
             $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string) $on.'<br> $public: '.(string) $public.'</pre>';
@@ -764,8 +766,13 @@ function geolocation_settings_page() {
                 <label for="geolocation_map_display_plain"><?php _e('Plain text.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link"<?php is_value('geolocation_map_display', 'link'); ?>>
                 <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br/>
+<?php /**
+                                <input type="radio" id="geolocation_map_display_full" name="geolocation_map_display" value="full"<?php is_value('geolocation_map_display', 'full'); ?>>
+                <label for="geolocation_map_display_full"><?php _e('Map.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_debug" name="geolocation_map_display" value="debug"<?php is_value('geolocation_map_display', 'debug'); ?>>
                 <label for="geolocation_map_display_debug"><?php _e('Debug.', 'geolocation'); ?></label><br/>
+*/
+?>
                 </td>        
         </tr>                        
         <tr valign="top">
