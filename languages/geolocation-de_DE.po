@@ -1,147 +1,153 @@
-# Copyright (C) 2018 Geolocation
+# Copyright (C) 2019 Geolocation
 # This file is distributed under the same license as the Geolocation package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Geolocation 0.4\n"
+"Project-Id-Version: Geolocation 0.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Geolocation-"
 "Plugin\n"
-"POT-Creation-Date: 2018-07-07 11:48:15+00:00\n"
+"POT-Creation-Date: 2019-02-16 08:20:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#. #-#-#-#-#  plugin-slug.pot (Geolocation 0.4)  #-#-#-#-#
+#: geolocation.php:74
+msgid "Google Maps API key is missing for"
+msgstr "Der Goole Maps API Schl&uuml;ssel fehlt f&uuml;r"
+
+#. #-#-#-#-#  new.pot (Geolocation 0.5)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: geolocation.php:59 geolocation.php:94
+#: geolocation.php:84 geolocation.php:119
 msgid "Geolocation"
 msgstr "Geolocation"
 
-#: geolocation.php:70
+#: geolocation.php:95
 msgid "Enter your address"
-msgstr "Bitte geben sie die Adresse ein"
+msgstr "Geben Sie ihre Adresse ein"
 
-#: geolocation.php:72
+#: geolocation.php:97
 msgid "Load"
 msgstr "Laden"
 
-#: geolocation.php:75
-msgid "Google Maps API key is missing for"
-msgstr "Der Google Maps API key fehlt f&uuml;r"
-
-#: geolocation.php:78
+#: geolocation.php:103
 msgid "Public"
 msgstr "&Ouml;ffentlich"
 
-#: geolocation.php:81
+#: geolocation.php:106
 msgid "On"
 msgstr "Ein"
 
-#: geolocation.php:83
+#: geolocation.php:108
 msgid "Off"
 msgstr "Aus"
 
-#: geolocation.php:498 geolocation.php:501
+#: geolocation.php:522 geolocation.php:525
 msgid "Posted from "
-msgstr "Geschrieben von"
+msgstr "Geschrieben aus "
 
-#: geolocation.php:575 geolocation.php:664
+#: geolocation.php:561
+msgid "Addresses have been updated as follows!"
+msgstr "Die Adressen wurden wie folgt aktualisiert!"
+
+#: geolocation.php:645 geolocation.php:741
 msgid "Geolocation Plugin Settings"
-msgstr "Geolocation Einstellungen"
+msgstr "Geolocation Plugin Einstellungen"
 
-#: geolocation.php:671
+#: geolocation.php:748
 msgid "Dimensions"
-msgstr "Gr&ouml;&szlig;en"
+msgstr "Ma&szlig;e"
 
-#: geolocation.php:673
+#: geolocation.php:750
 msgid "Width"
 msgstr "Breite"
 
-#: geolocation.php:674
+#: geolocation.php:751
 msgid "Height"
 msgstr "H&ouml;he"
 
-#: geolocation.php:678
+#: geolocation.php:755
 msgid "Position"
 msgstr "Position"
 
-#: geolocation.php:680
+#: geolocation.php:757
 msgid "Before the post."
 msgstr "Vor dem Artikel."
 
-#: geolocation.php:681
+#: geolocation.php:758
 msgid "After the post."
 msgstr "Nach dem Artikel."
 
-#: geolocation.php:682
+#: geolocation.php:759
 msgid "Wherever I put the <strong>[geolocation]</strong> shortcode."
-msgstr "Woimmer <strong>[geolocation]</strong> steht."
+msgstr "Wo immer auch die Markierung <strong>[geolocation]</strong> steht."
 
-#: geolocation.php:686
+#: geolocation.php:763
 msgid "How would you like your maps to be displayed?"
-msgstr "Wie m&ouml;chten Sie Ihre Karten darstellen?"
+msgstr "Wie sollen Ihre Karten dargestellt werden?"
 
-#: geolocation.php:689
+#: geolocation.php:766
 msgid "Plain text."
-msgstr "Schlichter Text."
+msgstr "Schlichter Text"
 
-#: geolocation.php:691
+#: geolocation.php:768
 msgid "Simple link w/hover."
-msgstr "Einfacher Link mit einblendbarer Karte."
+msgstr "Einfache Verkn&uuml;pfung  mit einblendbarer Karte."
 
-#: geolocation.php:693
-msgid "Display full map."
-msgstr "Kartendarstellung."
-
-#: geolocation.php:695
-msgid "Debug PlugIn."
-msgstr "PlugIn debuggen."
-
-#: geolocation.php:699
+#: geolocation.php:779
 msgid "Default Zoom Level"
 msgstr "Standard Zoom Darstellung"
 
-#: geolocation.php:701
+#: geolocation.php:781
 msgid "Globe"
-msgstr "Globus"
+msgstr "Welt"
 
-#: geolocation.php:703
+#: geolocation.php:783
 msgid "Country"
-msgstr "Land"
+msgstr "Land/Staat"
 
-#: geolocation.php:704
+#: geolocation.php:784
 msgid "State"
 msgstr "Bundesland"
 
-#: geolocation.php:705
+#: geolocation.php:785
 msgid "City"
 msgstr "Stadt"
 
-#: geolocation.php:706
+#: geolocation.php:786
 msgid "Street"
 msgstr "Stra&szlig;e"
 
-#: geolocation.php:707
+#: geolocation.php:787
 msgid "Block"
 msgstr "Haus"
 
-#: geolocation.php:715
+#: geolocation.php:795
 msgid "Show your support for WordPress by using the WordPress map pin."
-msgstr "Zeig Deine Unterst&uuml;tzung f&uuml;r Wordpress indem Du den entsprechenden Pin nutzt."
+msgstr "Zeig Deine Unterst&uuml;tzung f&uuml;r WordPress indem Du den Pin benutzt."
 
-#: geolocation.php:726
+#: geolocation.php:804
+msgid "Used Language for Adresses"
+msgstr "Genutzte Sprache f&uumlr die gezeigten Adressen"
+
+#: geolocation.php:811
+msgid ""
+"Update all addresses from posts that have location information<br>(only once "
+"this setup is saved)."
+msgstr "Alle Adressen f&uuml;r Artikel mit Geodaten neu ableiten.<br>(Einmalig beim Speichern dieses Setup.)"
+
+#: geolocation.php:817
 msgid "Save Changes"
 msgstr "&Auml;nderungen speichern"
 
 #. Plugin URI of the plugin/theme
-msgid "http://wordpress.org/extend/plugins/geolocation/"
-msgstr "http://wordpress.org/extend/plugins/geolocation/"
+msgid "https://wordpress.org/extend/plugins/geolocation/"
+msgstr "https://wordpress.org/extend/plugins/geolocation/"
 
 #. Description of the plugin/theme
 msgid "Displays post geotag information on an embedded map."
-msgstr "Zeigt die am Beitrag hinterlegten Geoinformationen auf einer eingebetteten Karte."
+msgstr "Stellt die Geoinformationen des Artikels auf einer eingebetteten Karte dar."
 
 #. Author of the plugin/theme
 msgid "Yann Michel"
@@ -150,6 +156,3 @@ msgstr "Yann Michel"
 #. Author URI of the plugin/theme
 msgid "https://www.yann-michel.de/geolocation"
 msgstr "https://www.yann-michel.de/geolocation"
-
-msgid "Used Language for Adresses"
-msgstr "Genutzte Sprache für Adressen"
