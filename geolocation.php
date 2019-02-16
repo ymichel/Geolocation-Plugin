@@ -563,9 +563,9 @@ function updateGeolocationAddresses() {
       echo '<table class="form-table">
         <tr valign="top">
 	        <tr valign="top">
-	        <th scope="head"><?php _e('Post','geolocation'); ?></th>	
-	        <th scope="head"><?php _e('Old Address','geolocation'); ?></th>
-	        <th scope="head"><?php _e('New Address','geolocation'); ?></th>
+	        <th scope="head">'._e('Post','geolocation').'</th>	
+	        <th scope="head">'._e('Old Address','geolocation').'</th>
+	        <th scope="head">'._e('New Address','geolocation').'</th>
 	        </tr>';
       while($post_query->have_posts() ) {
         $post_query->the_post();
