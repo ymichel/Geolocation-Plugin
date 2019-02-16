@@ -51,6 +51,15 @@ msgstr "Geschrieben aus "
 msgid "Addresses have been updated as follows!"
 msgstr "Die Adressen wurden wie folgt aktualisiert!"
 
+msgid "Post"
+msgstr "Artikel"
+
+msgid "Old Address"
+msgstr "Alte Adresse"
+
+msgid "New Address"
+msgstr "Neue Adresse"
+
 #: geolocation.php:645 geolocation.php:741
 msgid "Geolocation Plugin Settings"
 msgstr "Geolocation Plugin Einstellungen"
