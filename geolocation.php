@@ -556,25 +556,25 @@ function updateGeolocationAddresses() {
     );
 
     $post_query = new WP_Query($args);
-    if($post_query->have_posts() ) {?>
+    if ($post_query->have_posts()) {?>
         <div class="notice notice-success is-dismissible">
-        <p><?php _e( 'Addresses have been updated as follows!', 'geolocation' ); ?></p>
+        <p><?php _e('Addresses have been updated as follows!', 'geolocation'); ?></p>
       <?php
         echo '<table class="form-table">
         <tr valign="top">
 	        <tr valign="top">
-	        <th scope="head">'.__('Post','geolocation').'</th>	
-	        <th scope="head">'.__('Old Address','geolocation').'</th>
-	        <th scope="head">'.__('New Address','geolocation').'</th>
+	        <th scope="head">'.__('Post', 'geolocation').'</th>	
+	        <th scope="head">'.__('Old Address', 'geolocation').'</th>
+	        <th scope="head">'.__('New Address', 'geolocation').'</th>
 	        </tr>';
-        while($post_query->have_posts() ) {
+        while ($post_query->have_posts()) {
         $post_query->the_post();
         $post_id = (integer) get_the_ID();
         $post_title = get_the_title();
         $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
         $postAddress = get_post_meta($post_id, 'geo_address', true);
-        $postAddressNew = (string) reverse_geocode($postLatitude,$postLongitude); 
+        $postAddressNew = (string) reverse_geocode($postLatitude, $postLongitude); 
         update_post_meta($post_id, 'geo_address', $postAddressNew);
         echo '<tr>';
         echo '<td>'.$post_title.'</td>';
