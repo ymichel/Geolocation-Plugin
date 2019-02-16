@@ -42,7 +42,7 @@ define('PROVIDER', 'google');
 define('SHORTCODE', '[geolocation]');
 
 function languages_init() {
-    load_plugin_textdomain( 'geolocation', false, basename( dirname( __FILE__ ) ) . '/languages' ); 
+    load_plugin_textdomain('geolocation', false, basename(dirname(__FILE__)).'/languages'); 
 }
 
 function activate() {
@@ -384,7 +384,7 @@ function add_google_maps($posts) {
     global $post_count;
     $post_count = count($posts);
 
-    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')  || (is_user_logged_in())) {
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_user_logged_in())) {
     echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
@@ -551,7 +551,7 @@ function display_location($content) {
 }
 
 function updateGeolocationAddresses() {
-   $args = array(
+    $args = array(
         'post_type' => 'post'
     );
 
@@ -560,14 +560,14 @@ function updateGeolocationAddresses() {
         <div class="notice notice-success is-dismissible">
         <p><?php _e( 'Addresses have been updated as follows!', 'geolocation' ); ?></p>
       <?php
-      echo '<table class="form-table">
+        echo '<table class="form-table">
         <tr valign="top">
 	        <tr valign="top">
 	        <th scope="head">'.__('Post','geolocation').'</th>	
 	        <th scope="head">'.__('Old Address','geolocation').'</th>
 	        <th scope="head">'.__('New Address','geolocation').'</th>
 	        </tr>';
-      while($post_query->have_posts() ) {
+        while($post_query->have_posts() ) {
         $post_query->the_post();
         $post_id = (integer) get_the_ID();
         $post_title = get_the_title();
@@ -581,9 +581,9 @@ function updateGeolocationAddresses() {
         echo '<td>'.$postAddress.'</td>';
         echo '<td>'.$postAddressNew.'</td>';
         echo '</td>';
-      }
-      echo '</table>';
-      echo '</div>';
+        }
+        echo '</table>';
+        echo '</div>';
     } 
 }
 
@@ -701,7 +701,7 @@ function default_settings() {
 
 function geolocation_settings_page() {
     if ((bool) get_option('geolocation_updateAddresses')) {
-       updateGeolocationAddresses();
+        updateGeolocationAddresses();
     }
     
     default_settings();
