@@ -2,8 +2,8 @@
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag
 Requires at least: 2.9.2
-Tested up to: 5.1
-Stable tag: 0.5
+Tested up to: 5.0
+Stable tag: 0.5.2
 
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications.
 
@@ -30,7 +30,7 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 
 == Changelog ==
 
-= 0.5
+= 0.5.2
 * improved "plain" option: google-apis are no longer loaded for a visiting user but only if a backend user is logged in.
 * reverse geocoding now uses the website language for the texts being shown and locally stored (also to be seen in admin panel)
 * added feature to "re-run" address determination, i.e., update all geodata posts with proper address information (also respecting the language of the given site)
