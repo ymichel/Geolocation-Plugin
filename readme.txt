@@ -31,7 +31,7 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 == Changelog ==
 
 = 0.5.1/0.5.2
-* fixed bug
+* fixed bugs
 
 = 0.5
 * improved "plain" option: google-apis are no longer loaded for a visiting user but only if a backend user is logged in.

@@ -11,7 +11,7 @@ License: GPL2
 */
 
 /*  Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-              2019 Yann Michel (email : geolocation@yann-michel.de)
+              2018 Yann Michel (email : geolocation@yann-michel.de)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -27,8 +27,8 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-add_action('plugins_loaded', 'languages_init');
 add_action('upgrader_process_complete', 'plugin_upgrade_completed', 10, 2);
+add_action('plugins_loaded', 'languages_init');
 add_action('wp_head', 'add_geo_support');
 add_action('wp_footer', 'add_geo_div');
 add_action('admin_menu', 'add_settings');
@@ -42,7 +42,8 @@ define('PROVIDER', 'google');
 define('SHORTCODE', '[geolocation]');
 
 function languages_init() {
-    load_plugin_textdomain('geolocation', 'false', basename(dirname(__FILE__)).'/languages'); 
+    $plugin_rel_path = basename(dirname(__FILE__)).'/languages/'; /* Relative to WP_PLUGIN_DIR */
+    load_plugin_textdomain('geolocation', 'false', $plugin_rel_path);
 }
 
 function activate() {
@@ -349,17 +350,15 @@ function admin_head() {
 <?php		
 }
 
-function get_geo_div($post_id) {
+function get_geo_div() {
     $width = esc_attr((string) get_option('geolocation_map_width'));
     $height = esc_attr((string) get_option('geolocation_map_height'));
-    return '<hr><div id="geolocation'.$post_id.'" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div><br>-'.$post_id.'-<hr>';
+    return '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
 }
 
 function add_geo_div() {
-    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')) {
-        $width = esc_attr((string) get_option('geolocation_map_width'));
-        $height = esc_attr((string) get_option('geolocation_map_height'));
-        return '<div id="map" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') ) {
+        echo get_geo_div();
     }
 }
 
@@ -367,12 +366,12 @@ function add_geo_support() {
     global $geolocation_options, $posts;
     if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_user_logged_in())) {
 	
-        // To do: add support for multiple Map API providers
-        switch (PROVIDER) {
-            case 'google':
+       // To do: add support for multiple Map API providers
+       switch (PROVIDER) {
+           case 'google':
                add_google_maps($posts);
-                break;
-        }
+               break;
+       }
 
     }
     echo '<link type="text/css" rel="stylesheet" href="'.esc_url(plugins_url('style.css', __FILE__)).'" />';
@@ -383,8 +382,6 @@ function add_google_maps($posts) {
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
-
-    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_user_logged_in())) {
     echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
@@ -482,7 +479,6 @@ function add_google_maps($posts) {
 		});
 	</script>';
 }
-}
 
 function geo_has_shortcode($content) {
     $pos = strpos($content, SHORTCODE);
@@ -525,7 +521,7 @@ function display_location($content) {
                 $html = '<a class="geolocation-link" href="#" id="geolocation'.$post->ID.'" name="'.$latitude.','.$longitude.'" onclick="return false;">'.__('Posted from ', 'geolocation').esc_html($address).'.</a>';
             break;
         case 'full':
-            $html = get_geo_div($post->ID);
+            $html = get_geo_div();
             break;
         case 'debug':
             $html = '<pre> $latitude: '.$latitude.'<br> $longitude: '.$longitude.'<br> $address: '.$address.'<br> $on: '.(string) $on.'<br> $public: '.(string) $public.'</pre>';
@@ -562,10 +558,10 @@ function updateGeolocationAddresses() {
       <?php
         echo '<table class="form-table">
         <tr valign="top">
-	        <th scope="head">'.__('Post', 'geolocation').'</th>	
-	        <th scope="head">'.__('Old Address', 'geolocation').'</th>
-	        <th scope="head">'.__('New Address', 'geolocation').'</th>
-	</tr>';
+                <th scope="head">'.__('Post', 'geolocation').'</th>
+                <th scope="head">'.__('Old Address', 'geolocation').'</th>
+                <th scope="head">'.__('New Address', 'geolocation').'</th>
+        </tr>';
         while ($post_query->have_posts()) {
             $post_query->the_post();
             $post_id = (integer) get_the_ID();
@@ -573,7 +569,7 @@ function updateGeolocationAddresses() {
             $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
             $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
             $postAddress = (string) get_post_meta($post_id, 'geo_address', true);
-            $postAddressNew = (string) reverse_geocode($postLatitude, $postLongitude); 
+            $postAddressNew = (string) reverse_geocode($postLatitude, $postLongitude);
             update_post_meta($post_id, 'geo_address', $postAddressNew);
             echo '<tr>';
             echo '<td>'.$post_title.'</td>';
@@ -583,7 +579,7 @@ function updateGeolocationAddresses() {
         }
         echo '</table>';
         echo '</div>';
-    } 
+    }
 }
 
 function getSiteLang() {
@@ -702,9 +698,8 @@ function geolocation_settings_page() {
     if ((bool) get_option('geolocation_updateAddresses')) {
         updateGeolocationAddresses();
     }
-    
-    default_settings();
 
+    default_settings();
     $zoomImage = (string) get_option('geolocation_default_zoom');
     if ((bool) get_option('geolocation_wp_pin')) {
             $zoomImage = 'wp_'.$zoomImage.'.png';
@@ -765,13 +760,6 @@ function geolocation_settings_page() {
                 <label for="geolocation_map_display_plain"><?php _e('Plain text.', 'geolocation'); ?></label><br/>
                                 <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link"<?php is_value('geolocation_map_display', 'link'); ?>>
                 <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br/>
-<?php /**
-                                <input type="radio" id="geolocation_map_display_full" name="geolocation_map_display" value="full"<?php is_value('geolocation_map_display', 'full'); ?>>
-                <label for="geolocation_map_display_full"><?php _e('Map.', 'geolocation'); ?></label><br/>
-                                <input type="radio" id="geolocation_map_display_debug" name="geolocation_map_display" value="debug"<?php is_value('geolocation_map_display', 'debug'); ?>>
-                <label for="geolocation_map_display_debug"><?php _e('Debug.', 'geolocation'); ?></label><br/>
-*/
-?>
                 </td>        
         </tr>                        
         <tr valign="top">
@@ -800,15 +788,15 @@ function geolocation_settings_page() {
 	        	<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string) get_option('geolocation_google_maps_api_key')); ?>" />
         </tr>
         <tr valign="top">
-        	<th scope="row"><?php _e('Used Language for Adresses', 'geolocation'); ?></th>
-        	<td class="apikey">        	
-	        	<?php echo esc_attr((string) getSiteLang()); ?>
+                <th scope="row"><?php _e('Used Language for Adresses', 'geolocation'); ?></th>
+                <td class="apikey">
+                        <?php echo esc_attr((string) getSiteLang()); ?>
         </tr>
         <tr valign="top">
-        	<th scope="row"></th>
-        	<td class="position">
-				<input type="checkbox" id="geolocation_updateAddresses" name="geolocation_updateAddresses" value="1" <?php is_checked('geolocation_updateAddresses'); ?> ><label for="geolocation_updateAddresses"><?php _e('Update all addresses from posts that have location information<br>(only once this setup is saved).', 'geolocation'); ?></label>
-	        </td>
+                <th scope="row"></th>
+                <td class="position">
+                                <input type="checkbox" id="geolocation_updateAddresses" name="geolocation_updateAddresses" value="1" <?php is_checked('geolocation_updateAddresses'); ?> ><label for="geolocation_updateAddresses"><?php _e('Update all addresses from posts that have location information<br>(only once this setup is saved).', 'geolocation'); ?></label>
+                </td>
         </tr>
     </table>
     
