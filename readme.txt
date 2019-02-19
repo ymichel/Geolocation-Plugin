@@ -25,8 +25,8 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 
 == Screenshots ==
 
-1. screenshot-1.png
-2. screenshot-2.png
+1. Editing a post
+2. Viewing the location in a post
 
 == Changelog ==
 
