@@ -568,10 +568,8 @@ function updateGeolocationAddresses() {
         while ($post_query->have_posts()) {
             $post_query->the_post();
             $post_id = (integer) get_the_ID();
-            $post_title = get_the_title();
             $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
             $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
-            $postAddress = (string) get_post_meta($post_id, 'geo_address', true);
             $postAddressNew = (string) reverse_geocode($postLatitude, $postLongitude);
             update_post_meta($post_id, 'geo_address', $postAddressNew);
 	    $counter = $counter + 1;
