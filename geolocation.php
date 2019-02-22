@@ -546,6 +546,7 @@ function display_location($content) {
     return $content;
 }
 
+function updateGeolocationAddresses() {
     $args = array(
         'post_type' => 'post',
 	'posts_per_page' => -1,
