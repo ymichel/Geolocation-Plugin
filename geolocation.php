@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.5.2
+Version: 0.5.3
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -546,22 +546,24 @@ function display_location($content) {
     return $content;
 }
 
-function updateGeolocationAddresses() {
     $args = array(
-        'post_type' => 'post'
+        'post_type' => 'post',
+	'posts_per_page' => -1,
+	'post_status'    => 'publish',
+	'meta_query' => array(
+	   'relation' => 'AND',
+    	   array(
+      	      'key' => 'geo_latitude'
+    	   ),
+ 	   array(
+      	      'key' => 'geo_longitude'
+	   )
+	)
     );
 
     $post_query = new WP_Query($args);
-    if ($post_query->have_posts()) {?>
-        <div class="notice notice-success is-dismissible">
-        <p><?php _e('Addresses have been updated as follows!', 'geolocation'); ?></p>
-      <?php
-        echo '<table class="form-table">
-        <tr valign="top">
-                <th scope="head">'.__('Post', 'geolocation').'</th>
-                <th scope="head">'.__('Old Address', 'geolocation').'</th>
-                <th scope="head">'.__('New Address', 'geolocation').'</th>
-        </tr>';
+    if ($post_query->have_posts()) { 
+		$counter = 0;
         while ($post_query->have_posts()) {
             $post_query->the_post();
             $post_id = (integer) get_the_ID();
@@ -571,15 +573,10 @@ function updateGeolocationAddresses() {
             $postAddress = (string) get_post_meta($post_id, 'geo_address', true);
             $postAddressNew = (string) reverse_geocode($postLatitude, $postLongitude);
             update_post_meta($post_id, 'geo_address', $postAddressNew);
-            echo '<tr>';
-            echo '<td>'.$post_title.'</td>';
-            echo '<td>'.$postAddress.'</td>';
-            echo '<td>'.$postAddressNew.'</td>';
-            echo '</tr>';
+	    $counter = $counter + 1;
         }
-        echo '</table>';
-        echo '</div>';
-    }
+	echo '<div class="notice notice-success is-dismissible"><p>'.__($counter.' Addresses have been updated!', 'geolocation').'</p></div>';
+     }
 }
 
 function getSiteLang() {
