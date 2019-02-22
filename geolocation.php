@@ -622,6 +622,7 @@ function reverse_geocode($latitude, $longitude) {
                 }    
         }
     }
+    $json = null;
     return buildAddress($city, $state, $country);
 }
 
