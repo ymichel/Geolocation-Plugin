@@ -20,8 +20,9 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Insert the Google Maps API key on the Settings > Geolocatiojn page.
+3. Insert the Google Maps API key on the Settings > Geolocation page.
 4. Modify the display settings as needed on the Settings > Geolocation page.
+5. Start posting with geolocation data :-)
 
 == Screenshots ==
 
@@ -33,7 +34,12 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 = 0.5.3
 * fixing 'update all Addresses' to really process al posts providing geolocation information (and not just the first few entries).
 
-= 0.5.1/0.5.2
+= 0.5.2
+* fixed bugs
+* moved screenshots from plugin to asset folder (shown on description and thus not locally neccessary)
+* added plugin icon ;-)
+
+= 0.5.1
 * fixed bugs
 
 = 0.5
