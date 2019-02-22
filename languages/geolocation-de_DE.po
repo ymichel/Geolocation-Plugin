@@ -48,8 +48,8 @@ msgid "Posted from "
 msgstr "Geschrieben aus "
 
 #: geolocation.php:561
-msgid "Addresses have been updated as follows!"
-msgstr "Die Adressen wurden wie folgt aktualisiert!"
+msgid " Addresses have been updated!"
+msgstr " Adressen wurden aktualisiert!"
 
 msgid "Post"
 msgstr "Artikel"
