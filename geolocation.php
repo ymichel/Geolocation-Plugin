@@ -491,15 +491,22 @@ function geo_has_shortcode($content) {
 
 function display_location($content) {
     default_settings();
+   	 if ( is_page() ) {
+		return display_location_page($content);
+	 } else {
+	 	return display_location_post($content);
+	 }
+}
+
+function display_location_page($content) {
     global $post;
     $html = ''; 
     settype($html, "string");
 
-   	 if ( is_page() ) {
 		settype($category, "string");
-		$category = get_post_meta($post->ID, 'category', true);
+		$category = (string) get_post_meta($post->ID, 'category', true);
+		$category_id = get_cat_ID ( $category );
 		if ($category != '') {
-			$category_id = get_cat_ID ( $category );
    	   		$html = '<HR>This is a page with a category="'.$category.'" ('.$category_id.')!<HR>';
    	   	} else {
    	   		$html = '<HR>This is a page with no category defined!<HR>';
@@ -508,9 +515,9 @@ function display_location($content) {
 
     	$pargs = array(
 			'post_type' => 'post',
+			'cat' => $category_id,
 			'posts_per_page' => -1,
 			'post_status'    => 'publish',
-			'cat' => $category_id,
 			'meta_query' => array(
 	  	 		'relation' => 'AND',
     	   			array(
@@ -533,7 +540,15 @@ function display_location($content) {
 
       	$html = $html.' -> '.$counter.' posts available with geo information.<hr>';
    	 	$content = str_replace(SHORTCODE, $html, $content);
-	 } else {
+
+    return $content;
+}
+
+function display_location_post($content) {
+    default_settings();
+    global $post;
+    $html = ''; 
+    settype($html, "string");
     
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
@@ -582,10 +597,8 @@ function display_location($content) {
             $content = str_replace(SHORTCODE, $html, $content);
             break;
     }
-}
     return $content;
 }
-
 function updateGeolocationAddresses() {
     $args = array(
         'post_type' => 'post',
