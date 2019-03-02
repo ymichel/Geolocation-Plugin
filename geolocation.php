@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.5.2
+Version: 0.6
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -11,7 +11,7 @@ License: GPL2
 */
 
 /*  Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-              2018 Yann Michel (email : geolocation@yann-michel.de)
+              2018-2019 Yann Michel (email : geolocation@yann-michel.de)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -495,6 +495,46 @@ function display_location($content) {
     $html = ''; 
     settype($html, "string");
 
+   	 if ( is_page() ) {
+		settype($category, "string");
+		$category = get_post_meta($post->ID, 'category', true);
+		if ($category != '') {
+			$category_id = get_cat_ID ( $category );
+   	   		$html = '<HR>This is a page with a category="'.$category.'" ('.$category_id.')!<HR>';
+   	   	} else {
+   	   		$html = '<HR>This is a page with no category defined!<HR>';
+   		}
+		$counter = 0;
+
+    	$pargs = array(
+			'post_type' => 'post',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'cat' => $category_id,
+			'meta_query' => array(
+	  	 		'relation' => 'AND',
+    	   			array(
+      	   	   			'key' => 'geo_latitude'
+    		   		),
+ 	   				array(
+      		      		'key' => 'geo_longitude'
+	   				)
+			)
+    	);
+
+      	$post_query = new WP_Query($pargs);
+   		while ($post_query->have_posts()) {
+            $post_query->the_post();
+//            $post_id = (integer) get_the_ID(); 
+//            $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
+//            $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
+	    		$counter = $counter + 1;
+   		}
+
+      	$html = $html.' -> '.$counter.' posts available with geo information.<hr>';
+   	 	$content = str_replace(SHORTCODE, $html, $content);
+	 } else {
+    
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
     $on = (bool) get_post_meta($post->ID, 'geo_enabled', true);
@@ -542,44 +582,40 @@ function display_location($content) {
             $content = str_replace(SHORTCODE, $html, $content);
             break;
     }
-
+}
     return $content;
 }
 
 function updateGeolocationAddresses() {
     $args = array(
-        'post_type' => 'post'
+        'post_type' => 'post',
+	'posts_per_page' => -1,
+	'post_status'    => 'publish',
+	'meta_query' => array(
+	   'relation' => 'AND',
+    	   array(
+      	      'key' => 'geo_latitude'
+    	   ),
+ 	   array(
+      	      'key' => 'geo_longitude'
+	   )
+	)
     );
 
     $post_query = new WP_Query($args);
-    if ($post_query->have_posts()) {?>
-        <div class="notice notice-success is-dismissible">
-        <p><?php _e('Addresses have been updated as follows!', 'geolocation'); ?></p>
-      <?php
-        echo '<table class="form-table">
-        <tr valign="top">
-                <th scope="head">'.__('Post', 'geolocation').'</th>
-                <th scope="head">'.__('Old Address', 'geolocation').'</th>
-                <th scope="head">'.__('New Address', 'geolocation').'</th>
-        </tr>';
+    if ($post_query->have_posts()) { 
+		$counter = 0;
         while ($post_query->have_posts()) {
             $post_query->the_post();
             $post_id = (integer) get_the_ID();
-            $post_title = get_the_title();
             $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
             $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
-            $postAddress = (string) get_post_meta($post_id, 'geo_address', true);
             $postAddressNew = (string) reverse_geocode($postLatitude, $postLongitude);
             update_post_meta($post_id, 'geo_address', $postAddressNew);
-            echo '<tr>';
-            echo '<td>'.$post_title.'</td>';
-            echo '<td>'.$postAddress.'</td>';
-            echo '<td>'.$postAddressNew.'</td>';
-            echo '</tr>';
+	    $counter = $counter + 1;
         }
-        echo '</table>';
-        echo '</div>';
-    }
+	echo '<div class="notice notice-success is-dismissible"><p>'.__($counter.' Addresses have been updated!', 'geolocation').'</p></div>';
+     }
 }
 
 function getSiteLang() {
@@ -590,7 +626,9 @@ function getSiteLang() {
 function pullGoogleJSON($latitude, $longitude) {
     $url = "https://maps.googleapis.com/maps/api/geocode/json".get_google_maps_api_key("?")."&language=".getSiteLang()."&latlng=".$latitude.",".$longitude;
     $result = wp_remote_get($url);
-    return json_decode($result['body']);
+    $decoded = json_decode($result['body']);
+    $result = null;
+    return $decoded;
 }
 
 function buildAddress($city, $state, $country) {
@@ -626,6 +664,7 @@ function reverse_geocode($latitude, $longitude) {
                 }    
         }
     }
+    $json = null;
     return buildAddress($city, $state, $country);
 }
 
@@ -823,5 +862,4 @@ function geolocation_settings_page() {
 	</div>
 	<?php
 }
-
 ?>
