@@ -1,9 +1,9 @@
 === Geolocation ===
 Contributors: frsh, mdawaffe, automattic, ymichel
-Tags: geolocation, maps, geotag
+Tags: geolocation, maps, geotag, google maps, travel
 Requires at least: 2.9.2
-Tested up to: 5.0
-Stable tag: 0.5.2
+Tested up to: 5.1
+Stable tag: 0.5.3
 
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications.
 
@@ -11,7 +11,9 @@ The Geolocation plugin allows WordPress users to geotag their posts using the Ed
 
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone, WordPress for Android, or WordPress for BlackBerry.
 
-Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location. If one would only like to show a textual version without accessing any external services when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location.
+Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location. 
+If one would only like to show a textual version without accessing any external services when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location. That way, the Google APIs are only used when a logged in user is accessing the site or when a post is being made.
+Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. 
 
 Since Google changed their policy in terms of maps usage, one needs to have a Goole Maps API key to use this plugin.
 You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
@@ -20,17 +22,30 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Insert the Google Maps API key on the Settings > Geolocatiojn page.
+3. Insert the Google Maps API key on the Settings > Geolocation page.
 4. Modify the display settings as needed on the Settings > Geolocation page.
+5. Start posting with geolocation data :-)
 
 == Screenshots ==
 
-1. screenshot-1.png
-2. screenshot-2.png
+1. Editing a post
+2. Viewing the location in a post
 
 == Changelog ==
 
-= 0.5.1/0.5.2
+= 0.6
+* optimizing 'update all Addresses'
+* introducing 'page mode', i.e., usage of [geolocation] in a page to provide a map with multiple locations shown together
+
+= 0.5.3
+* fixing 'update all Addresses' to really process al posts providing geolocation information (and not just the first few entries).
+
+= 0.5.2
+* fixed bugs
+* moved screenshots from plugin to asset folder (shown on description and thus not locally neccessary)
+* added plugin icon ;-)
+
+= 0.5.1
 * fixed bugs
 
 = 0.5
