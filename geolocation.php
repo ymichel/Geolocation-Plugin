@@ -548,7 +548,7 @@ function display_location_page($content) {
             $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
             $script = $script."
       marker = new google.maps.Marker({
-            position: new google.maps.LatLng(".$latitude.",".$longitude."),
+            position: new google.maps.LatLng(".$postLatitude.",".$postLongitude."),
             map: map
       });
       bounds.extend(marker.position);";
