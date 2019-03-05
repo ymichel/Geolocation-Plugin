@@ -502,6 +502,8 @@ function display_location_page($content) {
     global $post;
     $html = ''; 
     settype($html, "string");
+    $script = ''; 
+    settype($script, "string");
 
 		settype($category, "string");
 		$category = (string) get_post_meta($post->ID, 'category', true);
@@ -529,16 +531,41 @@ function display_location_page($content) {
 			)
     	);
 
+    	$script = $script."<script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js'".get_google_maps_api_key("?")."'\"></script>
+<script type=\"text/javascript\">
+      var map = new google.maps.Map(
+        document.getElementById(\'mymap\'), {
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      );
+      var bounds = new google.maps.LatLngBounds();";
+
       	$post_query = new WP_Query($pargs);
    		while ($post_query->have_posts()) {
             $post_query->the_post();
-//            $post_id = (integer) get_the_ID(); 
-//            $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
-//            $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
+            $post_id = (integer) get_the_ID(); 
+            $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
+            $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
+            $script = $script."
+      marker = new google.maps.Marker({
+            position: new google.maps.LatLng(".$latitude.",".$longitude."),
+            map: map
+      });
+      bounds.extend(marker.position);";
 	    		$counter = $counter + 1;
    		}
+    	$script = $script."
+       map.fitBounds(bounds);
+</script>";    
 
       	$html = $html.' -> '.$counter.' posts available with geo information.<hr>';
+      	if ($counter > 0) {
+    		$width = esc_attr((string) get_option('geolocation_map_width'));
+    		$height = esc_attr((string) get_option('geolocation_map_height'));
+			$html = $html.'<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+			$html = $html.$script;
+			
+      	}
    	 	$content = str_replace(SHORTCODE, $html, $content);
 
     return $content;
