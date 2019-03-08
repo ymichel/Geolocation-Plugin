@@ -504,16 +504,10 @@ function display_location_page($content) {
     settype($html, "string");
     $script = ''; 
     settype($script, "string");
-
-		settype($category, "string");
-		$category = (string) get_post_meta($post->ID, 'category', true);
-		$category_id = get_cat_ID ( $category );
-		if ($category != '') {
-   	   		$html = '<HR>This is a page with a category="'.$category.'" ('.$category_id.')!<HR>';
-   	   	} else {
-   	   		$html = '<HR>This is a page with no category defined!<HR>';
-   		}
-		$counter = 0;
+    settype($category, "string");
+    $category = (string) get_post_meta($post->ID, 'category', true);
+    $category_id = get_cat_ID ( $category );
+    $counter = 0;
 
     	$pargs = array(
 			'post_type' => 'post',
@@ -534,7 +528,7 @@ function display_location_page($content) {
     	$script = $script."<script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js'".get_google_maps_api_key("?")."'\"></script>
 <script type=\"text/javascript\">
       var map = new google.maps.Map(
-        document.getElementById(\'mymap\'), {
+        document.getElementById('mymap'), {
           mapTypeId: google.maps.MapTypeId.ROADMAP
         }
       );
@@ -558,7 +552,6 @@ function display_location_page($content) {
        map.fitBounds(bounds);
 </script>";    
 
-      	$html = $html.' -> '.$counter.' posts available with geo information.<hr>';
       	if ($counter > 0) {
     		$width = esc_attr((string) get_option('geolocation_map_width'));
     		$height = esc_attr((string) get_option('geolocation_map_height'));
