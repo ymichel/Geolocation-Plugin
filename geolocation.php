@@ -509,23 +509,33 @@ function display_location_page($content) {
     $category_id = get_cat_ID ( $category );
     $counter = 0;
 
-        $pargs = array(
-            'post_type' => 'post',
-            'cat' => $category_id,
-            'posts_per_page' => -1,
-            'post_status'    => 'publish',
-            'meta_query' => array(
-                    'relation' => 'AND',
-                        array(
-                                'key' => 'geo_latitude'
-                        ),
-                        array(
-                            'key' => 'geo_longitude'
-                        )
-            )
-        );
+    $pargs = array(
+        'post_type' => 'post',
+        'cat' => $category_id,
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'meta_query' => array(
+                'relation' => 'AND',
+                    array(
+                        'key' => 'geo_latitude'
+                    ),
+                    array(
+                        'key' => 'geo_longitude'
+                    ),
+                    array(
+                        'key' => 'geo_enabled',
+	        	'value' => '1',
+	        	'compare' => '='
+                    ),
+                    array(
+                        'key' => 'geo_public',
+	        	'value' => '1',
+	        	'compare' => '='
+                    )
+        )
+    );
 
-        $script = $script."<script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js'".get_google_maps_api_key("?")."'\"></script>
+    $script = $script."<script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js'".get_google_maps_api_key("?")."'\"></script>
 <script type=\"text/javascript\">
       var map = new google.maps.Map(
         document.getElementById('mymap'), {
@@ -534,33 +544,31 @@ function display_location_page($content) {
       );
       var bounds = new google.maps.LatLngBounds();";
 
-            $post_query = new WP_Query($pargs);
-            while ($post_query->have_posts()) {
-            $post_query->the_post();
-            $post_id = (integer) get_the_ID(); 
-            $postLatitude = (string) get_post_meta($post_id, 'geo_latitude', true);
-            $postLongitude = (string) get_post_meta($post_id, 'geo_longitude', true);
-            $script = $script."
+    $post_query = new WP_Query($pargs);
+    while ($post_query->have_posts()) {
+        $post_query->the_post();
+        $post_id = (integer) get_the_ID(); 
+        $postLatitude = (string) get_post_meta($post_id, 'geo_latitude', true);
+        $postLongitude = (string) get_post_meta($post_id, 'geo_longitude', true);
+        $script = $script."
       marker = new google.maps.Marker({
             position: new google.maps.LatLng(".$postLatitude.",".$postLongitude."),
             map: map
       });
       bounds.extend(marker.position);";
-                $counter = $counter + 1;
-            }
-        $script = $script."
+        $counter = $counter + 1;
+    }
+    $script = $script."
        map.fitBounds(bounds);
 </script>";    
 
-            if ($counter > 0) {
-            $width = esc_attr((string) get_option('geolocation_map_width'));
-            $height = esc_attr((string) get_option('geolocation_map_height'));
-            $html = $html.'<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
-            $html = $html.$script;
-			
-            }
-            $content = str_replace(SHORTCODE, $html, $content);
-
+    if ($counter > 0) {
+        $width = esc_attr((string) get_option('geolocation_map_width'));
+        $height = esc_attr((string) get_option('geolocation_map_height'));
+        $html = $html.'<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
+        $html = $html.$script;
+	    }
+    $content = str_replace(SHORTCODE, $html, $content);
     return $content;
 }
 
@@ -629,9 +637,9 @@ function updateGeolocationAddresses() {
             array(
                 'key' => 'geo_latitude'
             ),
-        array(
+            array(
                 'key' => 'geo_longitude'
-        )
+            )
     )
     );
 
