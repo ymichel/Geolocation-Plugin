@@ -538,8 +538,8 @@ function display_location_page($content) {
    		while ($post_query->have_posts()) {
             $post_query->the_post();
             $post_id = (integer) get_the_ID(); 
-            $postLatitude = get_post_meta($post_id, 'geo_latitude', true);
-            $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
+            $postLatitude = (string) get_post_meta($post_id, 'geo_latitude', true);
+            $postLongitude = (string) get_post_meta($post_id, 'geo_longitude', true);
             $script = $script."
       marker = new google.maps.Marker({
             position: new google.maps.LatLng(".$postLatitude.",".$postLongitude."),
