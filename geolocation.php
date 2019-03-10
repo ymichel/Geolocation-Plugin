@@ -357,7 +357,7 @@ function get_geo_div() {
 }
 
 function add_geo_div() {
-    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') ) {
+    if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain')) {
         echo get_geo_div();
     }
 }
@@ -491,7 +491,7 @@ function geo_has_shortcode($content) {
 
 function display_location($content) {
     default_settings();
-        if ( is_page() ) {
+        if (is_page()) {
         return display_location_page($content);
         } else {
             return display_location_post($content);
@@ -506,7 +506,7 @@ function display_location_page($content) {
     settype($script, "string");
     settype($category, "string");
     $category = (string) get_post_meta($post->ID, 'category', true);
-    $category_id = get_cat_ID ( $category );
+    $category_id = get_cat_ID($category);
     $counter = 0;
 
     $pargs = array(
@@ -524,13 +524,13 @@ function display_location_page($content) {
                     ),
                     array(
                         'key' => 'geo_enabled',
-	        	'value' => '1',
-	        	'compare' => '='
+                'value' => '1',
+                'compare' => '='
                     ),
                     array(
                         'key' => 'geo_public',
-	        	'value' => '1',
-	        	'compare' => '='
+                'value' => '1',
+                'compare' => '='
                     )
         )
     );
@@ -567,7 +567,7 @@ function display_location_page($content) {
         $height = esc_attr((string) get_option('geolocation_map_height'));
         $html = $html.'<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
         $html = $html.$script;
-	    }
+        }
     $content = str_replace(SHORTCODE, $html, $content);
     return $content;
 }
