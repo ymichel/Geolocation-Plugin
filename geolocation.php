@@ -48,23 +48,25 @@ function languages_init() {
 
 function activate() {
     register_settings();
-    add_option('geolocation_map_width', '350');
-    add_option('geolocation_map_height', '150');
+    add_option('geolocation_map_width', '450');
+    add_option('geolocation_map_height', '200');
     add_option('geolocation_default_zoom', '16');
     add_option('geolocation_map_position', 'after');
     add_option('geolocation_map_display', 'link');
     add_option('geolocation_wp_pin', '1');
+    add_option('geolocation_map_width_page', '600');
+    add_option('geolocation_map_height_page', '250');
 }
 
 function plugin_upgrade_completed($upgrader_object, $options) {
     $our_plugin = plugin_basename(__FILE__);
     if ($options['action'] == 'update' && $options['type'] == 'plugin') {
-    foreach ($options['plugins'] as $plugin) {
-    if ($plugin == $our_plugin) {
-    register_settings();
-    default_settings();
-    }
-    }
+        foreach ($options['plugins'] as $plugin) {
+            if ($plugin == $our_plugin) {
+                register_settings();
+                default_settings();
+            }
+        }
     }
 }
 
@@ -74,7 +76,6 @@ function geolocation_custom_admin_notice() {
 	<div class="notice notice-error">
 		<p><?php _e('Google Maps API key is missing for', 'geolocation'); ?> <a href="options-general.php?page=geolocation">Geolocation</a>!</p>
 	</div>
-	
 <?php 
     }
 }
@@ -146,7 +147,7 @@ function geolocation_save_postdata($post_id) {
         update_post_meta($post_id, 'geo_longitude', $longitude);
   	
         if ($address != '') {
-                update_post_meta($post_id, 'geo_address', $address);
+            update_post_meta($post_id, 'geo_address', $address);
         }
         if ($on) {
             update_post_meta($post_id, 'geo_enabled', 1);
@@ -483,16 +484,16 @@ function add_google_maps($posts) {
 function geo_has_shortcode($content) {
     $pos = strpos($content, SHORTCODE);
     if ($pos === false) {
-            return false;
+         return false;
     } else {
-            return true;
+         return true;
     }
 }
 
 function display_location($content) {
     default_settings();
         if (is_page()) {
-        return display_location_page($content);
+            return display_location_page($content);
         } else {
             return display_location_post($content);
         }
@@ -517,20 +518,19 @@ function display_location_page($content) {
         'meta_query' => array(
                 'relation' => 'AND',
                     array(
-                        'key' => 'geo_latitude'
+                        'key' => 'geo_latitude',
+                        'value' => '0',
+                        'compare' => '!='
                     ),
                     array(
-                        'key' => 'geo_longitude'
-                    ),
-                    array(
-                        'key' => 'geo_enabled',
-                'value' => '1',
-                'compare' => '='
+                        'key' => 'geo_longitude',
+                        'value' => '0',
+                        'compare' => '!='
                     ),
                     array(
                         'key' => 'geo_public',
-                'value' => '1',
-                'compare' => '='
+                        'value' => '1',
+			'compare' => '='
                     )
         )
     );
@@ -563,11 +563,11 @@ function display_location_page($content) {
 </script>";    
 
     if ($counter > 0) {
-        $width = esc_attr((string) get_option('geolocation_map_width'));
-        $height = esc_attr((string) get_option('geolocation_map_height'));
+        $width = esc_attr((string) get_option('geolocation_map_width_page'));
+        $height = esc_attr((string) get_option('geolocation_map_height_page'));
         $html = $html.'<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
         $html = $html.$script;
-        }
+    }
     $content = str_replace(SHORTCODE, $html, $content);
     return $content;
 }
@@ -627,20 +627,25 @@ function display_location_post($content) {
     }
     return $content;
 }
+
 function updateGeolocationAddresses() {
     $args = array(
         'post_type' => 'post',
-    'posts_per_page' => -1,
-    'post_status'    => 'publish',
-    'meta_query' => array(
-        'relation' => 'AND',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'meta_query' => array(
+            'relation' => 'AND',
             array(
-                'key' => 'geo_latitude'
+                'key' => 'geo_latitude',
+                'value' => '0',
+                'compare' => '!='
             ),
             array(
-                'key' => 'geo_longitude'
+                'key' => 'geo_longitude',
+                'value' => '0',
+                'compare' => '!='
             )
-    )
+        )
     );
 
     $post_query = new WP_Query($args);
@@ -653,10 +658,10 @@ function updateGeolocationAddresses() {
             $postLongitude = get_post_meta($post_id, 'geo_longitude', true);
             $postAddressNew = (string) reverse_geocode($postLatitude, $postLongitude);
             update_post_meta($post_id, 'geo_address', $postAddressNew);
-        $counter = $counter + 1;
+            $counter = $counter + 1;
         }
-    echo '<div class="notice notice-success is-dismissible"><p>'.__($counter.' Addresses have been updated!', 'geolocation').'</p></div>';
-        }
+        echo '<div class="notice notice-success is-dismissible"><p>'.__($counter.' Addresses have been updated!', 'geolocation').'</p></div>';
+    }
 }
 
 function getSiteLang() {
@@ -733,6 +738,8 @@ function register_settings() {
     register_setting('geolocation-settings-group', 'geolocation_wp_pin');
     register_setting('geolocation-settings-group', 'geolocation_google_maps_api_key');
     register_setting('geolocation-settings-group', 'geolocation_updateAddresses');
+    register_setting('geolocation-settings-group', 'geolocation_map_width_page');
+    register_setting('geolocation-settings-group', 'geolocation_map_height_page');
 }
 
 function get_google_maps_api_key($sep) {
@@ -772,6 +779,12 @@ function default_settings() {
             update_option('geolocation_map_display', 'link');
     }
     update_option('geolocation_updateAddresses', false);
+    if (!get_option('geolocation_map_width_page')) {
+            update_option('geolocation_map_width_page', '600');
+    }
+    if (!get_option('geolocation_map_height_page')) {
+            update_option('geolocation_map_height_page', '250');
+    }
 }
 
 function geolocation_settings_page() {
@@ -818,7 +831,6 @@ function geolocation_settings_page() {
     <?php settings_fields('geolocation-settings-group'); ?>
     <table class="form-table">
         <tr valign="top">
-	        <tr valign="top">
 	        <th scope="row"><?php _e('Dimensions', 'geolocation'); ?></th>
 	        <td class="dimensions">
 	        	<strong><?php _e('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width" value="<?php echo esc_attr((string) get_option('geolocation_map_width')); ?>" />px<br/>
@@ -854,6 +866,13 @@ function geolocation_settings_page() {
 				<input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18"<?php is_value('geolocation_default_zoom', '18'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php _e('Block', 'geolocation'); ?></label>
 				<br/>
 				<div id="zoom_level_sample"></div>
+	        </td>
+        </tr>
+        <tr valign="top">
+	        <th scope="row"><?php _e('Dimensions Page', 'geolocation'); ?></th>
+	        <td class="dimensions">
+	        	<strong><?php _e('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width_page" value="<?php echo esc_attr((string) get_option('geolocation_map_width_page')); ?>" />px<br/>
+	        	<strong><?php _e('Height', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_height_page" value="<?php echo esc_attr((string) get_option('geolocation_map_height_page')); ?>" />px
 	        </td>
         </tr>
         <tr valign="top">
