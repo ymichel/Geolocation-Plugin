@@ -81,9 +81,9 @@
      * @cat    Plugins/Event
      * @author Bennett McElwee
      */
-    var interval = null;
-    var nbChecks = null;
-    var checklist = [];
+	let interval = null;
+	let nbChecks = null;
+	let checklist = [];
 
     $.elementReady = function(id, fn) {
 	    checklist.push({id: id, fn: fn});
@@ -102,10 +102,10 @@
 
     // Private function
     function check() {
-	    for (var i = checklist.length - 1; 0 <= i; --i) {
-		    var el = document.getElementById(checklist[i].id);
+		for (let i = checklist.length - 1; 0 <= i; --i) {
+			let el = document.getElementById(checklist[i].id);
 		    if (el) {
-			    var fn = checklist[i].fn; // first remove from checklist, then call function
+				let fn = checklist[i].fn; // first remove from checklist, then call function
 			    checklist[i] = checklist[checklist.length - 1];
 			    checklist.pop();
 			    fn.apply(el, [$]);
@@ -117,6 +117,6 @@
 		    interval = null;
             nbChecks = null;
 	    }
-    };
+	}
 
 })(jQuery);

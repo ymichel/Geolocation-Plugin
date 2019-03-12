@@ -49,13 +49,15 @@
  * @example $.cookie('the_cookie');
  * @desc Get the value of a cookie.
  *
- * @param String key The key of the cookie.
  * @return The value of the cookie.
  * @type String
  *
  * @name $.cookie
  * @cat Plugins/Cookie
  * @author Klaus Hartl/klaus.hartl@stilbuero.de
+ * @param key
+ * @param value
+ * @param options
  */
 jQuery.cookie = function (key, value, options) {
     
@@ -68,7 +70,7 @@ jQuery.cookie = function (key, value, options) {
         }
 
         if (typeof options.expires === 'number') {
-            var days = options.expires, t = options.expires = new Date();
+            let days = options.expires, t = options.expires = new Date();
             t.setDate(t.getDate() + days);
         }
         
@@ -86,6 +88,8 @@ jQuery.cookie = function (key, value, options) {
 
     // key and possibly options given, get cookie...
     options = value || {};
-    var result, decode = options.raw ? function (s) { return s; } : decodeURIComponent;
+    let result, decode = options.raw ? function (s) {
+        return s;
+    } : decodeURIComponent;
     return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
 };
