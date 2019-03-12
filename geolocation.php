@@ -869,16 +869,16 @@ function geolocation_settings_page() {
 	        </td>
         </tr>
         <tr valign="top">
+        	<th scope="row"></th>
+        	<td class="position">        	
+				<input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked('geolocation_wp_pin'); ?> onclick="javascript:pin_click();"><label for="geolocation_wp_pin"><?php _e('Show your support for WordPress by using the WordPress map pin.', 'geolocation'); ?></label>
+	        </td>
+        </tr>
+        <tr valign="top">
 	        <th scope="row"><?php _e('Dimensions Page', 'geolocation'); ?></th>
 	        <td class="dimensions">
 	        	<strong><?php _e('Width', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_width_page" value="<?php echo esc_attr((string) get_option('geolocation_map_width_page')); ?>" />px<br/>
 	        	<strong><?php _e('Height', 'geolocation'); ?>:</strong><input type="text" name="geolocation_map_height_page" value="<?php echo esc_attr((string) get_option('geolocation_map_height_page')); ?>" />px
-	        </td>
-        </tr>
-        <tr valign="top">
-        	<th scope="row"></th>
-        	<td class="position">        	
-				<input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked('geolocation_wp_pin'); ?> onclick="javascript:pin_click();"><label for="geolocation_wp_pin"><?php _e('Show your support for WordPress by using the WordPress map pin.', 'geolocation'); ?></label>
 	        </td>
         </tr>
         <tr valign="top">
