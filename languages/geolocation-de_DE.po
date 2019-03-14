@@ -15,7 +15,7 @@ msgstr ""
 
 #: geolocation.php:74
 msgid "Google Maps API key is missing for"
-msgstr "Der Goole Maps API Schl&uuml;ssel fehlt f&uuml;r"
+msgstr "Der Google Maps API Schl&uuml;ssel fehlt f&uuml;r"
 
 #. #-#-#-#-#  new.pot (Geolocation 0.5)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
