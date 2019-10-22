@@ -30,25 +30,27 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 
 1. Editing a post
 2. Viewing the location in a post
+3. Showing all posts providing location informatiob
+4. Showing all posts of a particular category by adding a custom field
 
 == Changelog ==
 
-= 0.6
+= 0.6 =
 * optimizing 'update all Addresses'
 * introducing 'page mode', i.e., usage of [geolocation] in a page to provide a map with multiple locations shown together
 
-= 0.5.3
+= 0.5.3 =
 * fixing 'update all Addresses' to really process al posts providing geolocation information (and not just the first few entries).
 
-= 0.5.2
+= 0.5.2 =
 * fixed bugs
 * moved screenshots from plugin to asset folder (shown on description and thus not locally neccessary)
 * added plugin icon ;-)
 
-= 0.5.1
+= 0.5.1 =
 * fixed bugs
 
-= 0.5
+= 0.5 =
 * improved "plain" option: google-apis are no longer loaded for a visiting user but only if a backend user is logged in.
 * reverse geocoding now uses the website language for the texts being shown and locally stored (also to be seen in admin panel)
 * added feature to "re-run" address determination, i.e., update all geodata posts with proper address information (also respecting the language of the given site)
