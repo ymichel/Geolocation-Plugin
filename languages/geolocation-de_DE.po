@@ -89,8 +89,8 @@ msgid "After the post."
 msgstr "Nach dem Artikel."
 
 #: geolocation.php:759
-msgid "Wherever I put the <strong>[geolocation]</strong> shortcode."
-msgstr "Wo immer auch die Markierung <strong>[geolocation]</strong> steht."
+msgid "Wherever I put the shortcode: "
+msgstr "Wo immer auch die folgende Markierung steht: "
 
 #: geolocation.php:763
 msgid "How would you like your maps to be displayed?"

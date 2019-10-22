@@ -9,7 +9,6 @@
   <component name="PhpRuntimeConfiguration">
     <extensions>
       <extension name="Ev" enabled="false" />
-      <extension name="LevelDB" enabled="false" />
       <extension name="SQLite" enabled="false" />
       <extension name="SplType" enabled="false" />
       <extension name="Zend OPcache" enabled="false" />
@@ -17,9 +16,7 @@
       <extension name="ZendUtils" enabled="false" />
       <extension name="amqp" enabled="false" />
       <extension name="apache" enabled="false" />
-      <extension name="apc" enabled="false" />
       <extension name="apcu" enabled="false" />
-      <extension name="com_dotnet" enabled="false" />
       <extension name="couchbase" enabled="false" />
       <extension name="cubrid" enabled="false" />
       <extension name="enchant" enabled="false" />
