@@ -369,6 +369,9 @@ function add_geo_support()
             case 'google':
                 add_google_maps($posts);
                 break;
+            case 'osm':
+                add_osm_maps($posts);
+                break;
         }
 
     }
@@ -476,6 +479,19 @@ function add_google_maps($posts)
 				window.location = "https://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
 			});
 		});
+	</script>';
+}
+
+function add_osm_maps($posts)
+{
+    default_settings();
+    $zoom = (int)get_option('geolocation_default_zoom');
+    global $post_count;
+    $post_count = count($posts);
+    echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>';
+    echo '<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>';
+    echo '<script type="text/javascript">
+        var mymap = L.map("map").setView([51.505, -0.09], 13);
 	</script>';
 }
 
