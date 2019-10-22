@@ -18,7 +18,7 @@
   None of these are likely to occur. In fact I don't think they are possible
   at all except on IE. -- Bennett McElwee, August 2007
 */
-(function($) {
+(function ($) {
 
     /**
      * While a page is loading, call a given callback function as soon as a specific
@@ -85,15 +85,15 @@
     var nbChecks = null;
     var checklist = [];
 
-    $.elementReady = function(id, fn) {
-	    checklist.push({id: id, fn: fn});
-	    if (!interval) {
-		    interval = setInterval(check, $.elementReady.interval_ms);
-	    }
+    $.elementReady = function (id, fn) {
+        checklist.push({id: id, fn: fn});
+        if (!interval) {
+            interval = setInterval(check, $.elementReady.interval_ms);
+        }
         if (!nbChecks) {
             nbChecks = $.elementReady.max_checks;
         }
-	    return this;
+        return this;
     };
 
     // Plugin settings
@@ -102,21 +102,21 @@
 
     // Private function
     function check() {
-	    for (var i = checklist.length - 1; 0 <= i; --i) {
-		    var el = document.getElementById(checklist[i].id);
-		    if (el) {
-			    var fn = checklist[i].fn; // first remove from checklist, then call function
-			    checklist[i] = checklist[checklist.length - 1];
-			    checklist.pop();
-			    fn.apply(el, [$]);
-		    }
+        for (var i = checklist.length - 1; 0 <= i; --i) {
+            var el = document.getElementById(checklist[i].id);
+            if (el) {
+                var fn = checklist[i].fn; // first remove from checklist, then call function
+                checklist[i] = checklist[checklist.length - 1];
+                checklist.pop();
+                fn.apply(el, [$]);
+            }
             nbChecks--;
-	    }
-	    if (nbChecks === 0 || checklist.length === 0) {
-		    clearInterval(interval);
-		    interval = null;
+        }
+        if (nbChecks === 0 || checklist.length === 0) {
+            clearInterval(interval);
+            interval = null;
             nbChecks = null;
-	    }
+        }
     };
 
 })(jQuery);
