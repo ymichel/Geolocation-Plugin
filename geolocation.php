@@ -490,9 +490,6 @@ function add_osm_maps($posts)
     $post_count = count($posts);
     echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>';
     echo '<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>';
-    echo '<script type="text/javascript">
-        var mymap = L.map("map").setView([51.505, -0.09], 13);
-	</script>';
 }
 
 function geo_has_shortcode($content)
@@ -513,6 +510,69 @@ function display_location($content)
     } else {
         return display_location_post($content);
     }
+}
+
+function display_location_page_osm($content)
+{
+    global $post;
+    $html = '';
+    settype($html, "string");
+    $script = '';
+    settype($script, "string");
+    settype($category, "string");
+    $category = (string)get_post_meta($post->ID, 'category', true);
+    $category_id = get_cat_ID($category);
+    $counter = 0;
+
+    $pargs = array(
+        'post_type' => 'post',
+        'cat' => $category_id,
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'meta_query' => array(
+            'relation' => 'AND',
+            array(
+                'key' => 'geo_latitude',
+                'value' => '0',
+                'compare' => '!='
+            ),
+            array(
+                'key' => 'geo_longitude',
+                'value' => '0',
+                'compare' => '!='
+            ),
+            array(
+                'key' => 'geo_public',
+                'value' => '1',
+                'compare' => '='
+            )
+        )
+    );
+
+    $script = $script . "<script type=\"text/javascript\">
+        var mymap = L.map('mapid').setView([51.505, -0.09], 13);";
+
+    $post_query = new WP_Query($pargs);
+    while ($post_query->have_posts()) {
+        $post_query->the_post();
+        $post_id = (integer)get_the_ID();
+        $postLatitude = (string)get_post_meta($post_id, 'geo_latitude', true);
+        $postLongitude = (string)get_post_meta($post_id, 'geo_longitude', true);
+        $script = $script . "
+        marker = L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap);";
+        $counter = $counter + 1;
+    }
+    $script = $script . "
+</script>";
+
+    if ($counter > 0) {
+        $width = esc_attr((string)get_option('geolocation_map_width_page'));
+        $height = esc_attr((string)get_option('geolocation_map_height_page'));
+        $html = $html . '<div id="mapid" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+        $html = $html . $script;
+    }
+    $content = str_replace(get_option('geolocation_shortcode'), $html, $content);
+    return $content;
 }
 
 function display_location_page($content)
