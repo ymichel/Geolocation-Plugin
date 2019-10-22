@@ -186,8 +186,8 @@ function admin_head() {
 					var center = new google.maps.LatLng(0.0,0.0);
 					var postLatitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
 					var postLongitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
-                    var isPublic = '<?php echo esc_js((string)get_post_meta($post_id, 'geo_public', true)); ?>';
-                    var isGeoEnabled = '<?php echo esc_js((string)get_post_meta($post_id, 'geo_enabled', true)); ?>';
+                    var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
+                    var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
 
                     if (isPublic === '0')
 						$j("#geolocation-public").attr('checked', false);
@@ -390,12 +390,12 @@ function add_google_maps($posts) {
 		$j(function(){
 			var center = new google.maps.LatLng(0.0, 0.0);
 			var myOptions = {
-		      zoom: ' . $zoom . ',
+		      zoom: ' . $zoom.',
 		      center: center,
 		      mapTypeId: google.maps.MapTypeId.ROADMAP
 		    }
 		    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-		    var image = "' . esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) . '";
+		    var image = "' . esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))).'";
 		    var shadow = new google.maps.MarkerImage("'.plugins_url('img/wp_pin_shadow.png', __FILE__).'",
 		    	new google.maps.Size(39, 23),
 				new google.maps.Point(0, 0),
