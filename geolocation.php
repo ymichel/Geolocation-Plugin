@@ -3,12 +3,13 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.6
+Version: 0.6.1
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
 License: GPL2
 */
+
 
 /*  Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
               2018-2019 Yann Michel (email : geolocation@yann-michel.de)
@@ -185,20 +186,20 @@ function admin_head() {
 					var center = new google.maps.LatLng(0.0,0.0);
 					var postLatitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
 					var postLongitude =  '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
-					var public = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
-					var on = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
-					
-					if(public == '0')
+                    var isPublic = '<?php echo esc_js((string)get_post_meta($post_id, 'geo_public', true)); ?>';
+                    var isGeoEnabled = '<?php echo esc_js((string)get_post_meta($post_id, 'geo_enabled', true)); ?>';
+
+                    if (isPublic === '0')
 						$j("#geolocation-public").attr('checked', false);
 					else
 						$j("#geolocation-public").attr('checked', true);
-					
-					if(on == '0')
+
+                    if (isGeoEnabledon === '0')
 						disableGeo();
 					else
 						enableGeo();
-					
-					if((postLatitude != '') && (postLongitude != '')) {
+
+                    if ((postLatitude !== '') && (postLongitude !== '')) {
 						center = new google.maps.LatLng(postLatitude, postLongitude);
 						hasLocation = true;
 						$j("#geolocation-latitude").val(center.lat());
@@ -243,12 +244,12 @@ function admin_head() {
 					var customAddress = false;
 					$j("#geolocation-address").click(function(){
 						currentAddress = $j(this).val();
-						if(currentAddress != '')
+                        if (currentAddress !== '')
 							$j("#geolocation-address").val('');
 					});
 					
 					$j("#geolocation-load").click(function(){
-						if($j("#geolocation-address").val() != '') {
+                        if ($j("#geolocation-address").val() !== '') {
 							customAddress = true;
 							currentAddress = $j("#geolocation-address").val();
 							geocode(currentAddress);
@@ -256,7 +257,7 @@ function admin_head() {
 					});
 					
 					$j("#geolocation-address").keyup(function(e) {
-						if(e.keyCode == 13)
+                        if (e.keyCode === 13)
 							$j("#geolocation-load").click();
 					});
 					
@@ -271,7 +272,7 @@ function admin_head() {
 					function placeMarker(location) {
 						marker.setPosition(location);
 						map.setCenter(location);
-						if((location.lat() != '') && (location.lng() != '')) {
+                        if ((location.lat() !== '') && (location.lng() !== '')) {
 							$j("#geolocation-latitude").val(location.lat());
 							$j("#geolocation-longitude").val(location.lng());
 						}
@@ -284,7 +285,7 @@ function admin_head() {
 						var geocoder = new google.maps.Geocoder();
 					    if (geocoder) {
 							geocoder.geocode({"address": address}, function(results, status) {
-								if (status == google.maps.GeocoderStatus.OK) {
+                                if (status === google.maps.GeocoderStatus.OK) {
 									placeMarker(results[0].geometry.location);
 									if(!hasLocation) {
 								    	map.setZoom(16);
@@ -300,12 +301,12 @@ function admin_head() {
 						var geocoder = new google.maps.Geocoder();
 					    if (geocoder) {
 							geocoder.geocode({"latLng": location}, function(results, status) {
-							if (status == google.maps.GeocoderStatus.OK) {
+                                if (status === google.maps.GeocoderStatus.OK) {
 							  if(results[1]) {
 							  	var address = results[1].formatted_address;
-							  	if(address == "")
+                                  if (address === "") {
 							  		address = results[7].formatted_address;
-							  	else {
+                                  } else {
 									$j("#geolocation-address").val(address);
 									placeMarker(location);
 							  	}
@@ -325,8 +326,8 @@ function admin_head() {
 						$j("#geolocation-map").removeAttr('readonly');
 						$j("#geolocation-disabled").removeAttr('checked');
 						$j("#geolocation-enabled").attr('checked', 'checked');
-						
-						if(public == '1')
+
+                        if (isPublic === '1')
 							$j("#geolocation-public").attr('checked', 'checked');
 					}
 					
@@ -341,8 +342,8 @@ function admin_head() {
 						
 						$j("#geolocation-enabled").removeAttr('checked');
 						$j("#geolocation-disabled").attr('checked', 'checked');
-						
-						if(public == '1')
+
+                        if (isPublic === '1')
 							$j("#geolocation-public").attr('checked', 'checked');
 					}
 				});
@@ -364,7 +365,7 @@ function add_geo_div() {
 }
 
 function add_geo_support() {
-    global $geolocation_options, $posts;
+    global $posts;
     if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_user_logged_in())) {
 	
         // To do: add support for multiple Map API providers
@@ -389,12 +390,12 @@ function add_google_maps($posts) {
 		$j(function(){
 			var center = new google.maps.LatLng(0.0, 0.0);
 			var myOptions = {
-		      zoom: '.$zoom.',
+		      zoom: ' . $zoom . ',
 		      center: center,
 		      mapTypeId: google.maps.MapTypeId.ROADMAP
-		    };
+		    }
 		    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-		    var image = "'.esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))).'";
+		    var image = "' . esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) . '";
 		    var shadow = new google.maps.MarkerImage("'.plugins_url('img/wp_pin_shadow.png', __FILE__).'",
 		    	new google.maps.Size(39, 23),
 				new google.maps.Point(0, 0),
@@ -671,9 +672,7 @@ function getSiteLang() {
 
 function pullGoogleJSON($latitude, $longitude) {
     $url = "https://maps.googleapis.com/maps/api/geocode/json".get_google_maps_api_key("?")."&language=".getSiteLang()."&latlng=".$latitude.",".$longitude;
-    $result = wp_remote_get($url);
-    $decoded = json_decode($result['body']);
-    $result = null;
+    $decoded = json_decode(wp_remote_get($url)['body']);
     return $decoded;
 }
 
@@ -710,7 +709,6 @@ function reverse_geocode($latitude, $longitude) {
                 }    
         }
     }
-    $json = null;
     return buildAddress($city, $state, $country);
 }
 
@@ -724,8 +722,6 @@ function add_settings() {
     if (is_admin()) { // admin actions
         add_options_page(__('Geolocation Plugin Settings', 'geolocation'), 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page');
             add_action('admin_init', 'register_settings');
-    } else {
-        // non-admin enqueues, actions, and filters
     }
 }
 
