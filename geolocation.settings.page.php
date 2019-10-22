@@ -1,16 +1,16 @@
 <?php
 function geolocation_settings_page()
 {
-    if ((bool)get_option('geolocation_updateAddresses')) {
+    if ((bool) get_option('geolocation_updateAddresses')) {
         updateGeolocationAddresses();
     }
 
     default_settings();
-    $zoomImage = (string)get_option('geolocation_default_zoom');
-    if ((bool)get_option('geolocation_wp_pin')) {
-        $zoomImage = 'wp_' . $zoomImage . '.png';
+    $zoomImage = (string) get_option('geolocation_default_zoom');
+    if ((bool) get_option('geolocation_wp_pin')) {
+        $zoomImage = 'wp_'.$zoomImage.'.png';
     } else {
-        $zoomImage = $zoomImage . '.png';
+        $zoomImage = $zoomImage.'.png';
     }
     ?>
     <style type="text/css">
@@ -46,7 +46,7 @@ function geolocation_settings_page()
     </style>
     <script type="text/javascript">
         var file;
-        var zoomlevel = <?php echo (int)esc_attr((string)get_option('geolocation_default_zoom')); ?>;
+        var zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
         var path = '<?php echo esc_js(plugins_url('img/zoom/', __FILE__)); ?>';
 
         function swap_zoom_sample(id) {
@@ -72,10 +72,10 @@ function geolocation_settings_page()
                 <td class="dimensions">
                     <strong><?php _e('Width', 'geolocation'); ?>:</strong><input type="text"
                                                                                  name="geolocation_map_width"
-                                                                                 value="<?php echo esc_attr((string)get_option('geolocation_map_width')); ?>"/>px<br/>
+                                                                                 value="<?php echo esc_attr((string) get_option('geolocation_map_width')); ?>"/>px<br/>
                     <strong><?php _e('Height', 'geolocation'); ?>:</strong><input type="text"
                                                                                   name="geolocation_map_height"
-                                                                                  value="<?php echo esc_attr((string)get_option('geolocation_map_height')); ?>"/>px
+                                                                                  value="<?php echo esc_attr((string) get_option('geolocation_map_height')); ?>"/>px
                 </td>
             </tr>
             <tr valign="top">
@@ -149,22 +149,22 @@ function geolocation_settings_page()
                 <td class="dimensions">
                     <strong><?php _e('Width', 'geolocation'); ?>:</strong><input type="text"
                                                                                  name="geolocation_map_width_page"
-                                                                                 value="<?php echo esc_attr((string)get_option('geolocation_map_width_page')); ?>"/>px<br/>
+                                                                                 value="<?php echo esc_attr((string) get_option('geolocation_map_width_page')); ?>"/>px<br/>
                     <strong><?php _e('Height', 'geolocation'); ?>:</strong><input type="text"
                                                                                   name="geolocation_map_height_page"
-                                                                                  value="<?php echo esc_attr((string)get_option('geolocation_map_height_page')); ?>"/>px
+                                                                                  value="<?php echo esc_attr((string) get_option('geolocation_map_height_page')); ?>"/>px
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row">Google Maps API key</th>
                 <td class="apikey">
                     <input type="text" name="geolocation_google_maps_api_key"
-                           value="<?php echo esc_attr((string)get_option('geolocation_google_maps_api_key')); ?>"/>
+                           value="<?php echo esc_attr((string) get_option('geolocation_google_maps_api_key')); ?>"/>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Used Language for Adresses', 'geolocation'); ?></th>
                 <td class="apikey">
-                    <?php echo esc_attr((string)getSiteLang()); ?>
+                    <?php echo esc_attr((string) getSiteLang()); ?>
             </tr>
             <tr valign="top">
                 <th scope="row"></th>

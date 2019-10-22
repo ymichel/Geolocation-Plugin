@@ -41,7 +41,7 @@ admin_init();
 register_activation_hook(__FILE__, 'activate');
 wp_enqueue_script("jquery");
 
-require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
+require_once(GEOLOCATION__PLUGIN_DIR.'geolocation.settings.php');
 
 function plugin_upgrade_completed($upgrader_object, $options) {
     $our_plugin = plugin_basename(__FILE__);
@@ -469,9 +469,9 @@ function add_google_maps($posts) {
 function geo_has_shortcode($content) {
     $pos = strpos($content, get_option('geolocation_shortcode'));
     if ($pos === false) {
-         return false;
+            return false;
     } else {
-         return true;
+            return true;
     }
 }
 
@@ -515,7 +515,7 @@ function display_location_page($content) {
                     array(
                         'key' => 'geo_public',
                         'value' => '1',
-			'compare' => '='
+            'compare' => '='
                     )
         )
     );
