@@ -2,7 +2,7 @@
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, google maps, travel
 Requires at least: 2.9.2
-Tested up to: 5.1
+Tested up to: 5.2
 Stable tag: 0.6
 
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications.
