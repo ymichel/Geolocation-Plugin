@@ -579,6 +579,7 @@ function display_location_page_osm($content)
         $postLatitude = (string)get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string)get_post_meta($post_id, 'geo_longitude', true);
         $postTitle = (string)get_post_meta($post_id, 'title', true);
+        $postTitle = get_the_title();
         $script = $script . "
             L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\">" . $postTitle . "</a>');";
         $counter = $counter + 1;
