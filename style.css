@@ -23,7 +23,7 @@
     top: 0px;
     left: 0px;
     padding: 20px;
-    visibility: hidden;
+    visibility: display; /*hidden*/
 }
 
 #mapwrap {

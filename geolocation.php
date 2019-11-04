@@ -567,7 +567,7 @@ function display_location_page_osm($content)
     );
     $script = $script . "<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\"></script>";
     $script = $script . "<script type=\"text/javascript\">
-        var mymap = L.map('mapid').setView([51.505, -0.09], 15);
+        var mymap = L.map('mapid').setView([51.505, -0.09], 13);
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { 
      attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
     }).addTo(mymap);";
@@ -575,17 +575,15 @@ function display_location_page_osm($content)
     $post_query = new WP_Query($pargs);
     while ($post_query->have_posts()) {
         $post_query->the_post();
+        $postTitle = get_the_title();
         $post_id = (integer)get_the_ID();
         $postLatitude = (string)get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string)get_post_meta($post_id, 'geo_longitude', true);
-        $postTitle = (string)get_post_meta($post_id, 'title', true);
-        $postTitle = get_the_title();
         $script = $script . "
             L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\">" . $postTitle . "</a>');";
         $counter = $counter + 1;
     }
     $script = $script . "
-        mymap.fitBounds(mymap.getBounds());
 </script>";
 
     if ($counter > 0) {
