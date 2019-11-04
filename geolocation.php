@@ -578,12 +578,12 @@ function display_location_page_osm($content)
         $post_id = (integer)get_the_ID();
         $postLatitude = (string)get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string)get_post_meta($post_id, 'geo_longitude', true);
-        $postLocationName = (string)get_post_meta($post_id, 'title', true);
         $script = $script . "
-            L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap).bindPopup($postLocationName).openPopup();";
+            L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\"></a>');";
         $counter = $counter + 1;
     }
     $script = $script . "
+        mymap.fitBounds(mymap.getBounds());
 </script>";
 
     if ($counter > 0) {
