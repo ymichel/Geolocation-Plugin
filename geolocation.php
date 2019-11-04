@@ -569,7 +569,7 @@ function display_location_page_osm($content)
         $postLatitude = (string)get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string)get_post_meta($post_id, 'geo_longitude', true);
         $script = $script . "
-        marker = L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap);";
+        L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap);";
         $counter = $counter + 1;
     }
     $script = $script . "
@@ -578,6 +578,8 @@ function display_location_page_osm($content)
     if ($counter > 0) {
         $width = esc_attr((string)get_option('geolocation_map_width_page'));
         $height = esc_attr((string)get_option('geolocation_map_height_page'));
+        $html = $html . '<link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css">';
+        $html = $html . '<script src=\'https://unpkg.com/leaflet@1.3.3/dist/leaflet.js\'></script>';
         $html = $html . '<div id="mapid" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
         $html = $html . $script;
     }
