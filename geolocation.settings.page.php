@@ -156,6 +156,12 @@ function geolocation_settings_page()
                 </td>
             </tr>
             <tr valign="top">
+                <th scope="row">Maps Provider</th>
+                <td class="apikey">
+                    <input type="text" name="geolocation_provider"
+                           value="<?php echo esc_attr((string)get_option('geolocation_provider')); ?>"/>
+            </tr>
+            <tr valign="top">
                 <th scope="row">Google Maps API key</th>
                 <td class="apikey">
                     <input type="text" name="geolocation_google_maps_api_key"
