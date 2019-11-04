@@ -567,7 +567,10 @@ function display_location_page_osm($content)
     );
     $script = $script . "<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\"></script>";
     $script = $script . "<script type=\"text/javascript\">
-        var mymap = L.map('mapid').setView([51.505, -0.09], 15);";
+        var mymap = L.map('mapid').setView([51.505, -0.09], 15);
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { 
+     attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
+    }).addTo(mymap);";
 
     $post_query = new WP_Query($pargs);
     while ($post_query->have_posts()) {
