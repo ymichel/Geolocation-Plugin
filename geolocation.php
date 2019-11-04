@@ -488,8 +488,15 @@ function add_osm_maps($posts)
     $zoom = (int)get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
+
     echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>';
-    echo '<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>';
+    //echo '<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>';
+    echo '    <style>
+	        #mapid {
+				width: 100%;
+				height: 100%;
+			}
+	    </style>';
 }
 
 function geo_has_shortcode($content)
@@ -558,9 +565,9 @@ function display_location_page_osm($content)
             )
         )
     );
-
+    $script = $script . "<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\" integrity=\"sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==\" crossorigin=\"\"></script>";
     $script = $script . "<script type=\"text/javascript\">
-        var mymap = L.map('mapid').setView([51.505, -0.09], 13);";
+        var mymap = L.map('mapid').setView([51.505, -0.09], 15);";
 
     $post_query = new WP_Query($pargs);
     while ($post_query->have_posts()) {
@@ -573,13 +580,12 @@ function display_location_page_osm($content)
         $counter = $counter + 1;
     }
     $script = $script . "
+       mymap.fitBounds(bounds);
 </script>";
 
     if ($counter > 0) {
         $width = esc_attr((string)get_option('geolocation_map_width_page'));
         $height = esc_attr((string)get_option('geolocation_map_height_page'));
-        $html = $html . '<link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css">';
-        $html = $html . '<script src=\'https://unpkg.com/leaflet@1.3.3/dist/leaflet.js\'></script>';
         $html = $html . '<div id="mapid" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
         $html = $html . $script;
     }
