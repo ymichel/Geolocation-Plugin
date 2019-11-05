@@ -106,10 +106,23 @@ function delete_settings()
         delete_option('geolocation_provider');
     }
     if (get_option('geolocation_shortcode')) {
-        delete_option('geolocation_shortcode'');
+        delete_option('geolocation_shortcode');
     }
 }
 
+function delete_addresses(){
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page' => -1,
+    );
+
+    $post_query = new WP_Query($args);
+    if ($post_query->have_posts()) {
+        while ($post_query->have_posts()) {
+            delete_post_meta($post_id, 'geo_address');
+        }
+    }
+}
 
 function activate()
 {
@@ -120,6 +133,7 @@ function activate()
 function uninstall(){
 	unregister_settings();
 	delete_settings();
+	delete_addresses();
 }
 
 

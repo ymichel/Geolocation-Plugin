@@ -36,7 +36,6 @@ add_action('wp_head', 'add_geo_support');
 add_action('wp_footer', 'add_geo_div');
 add_action('admin_menu', 'add_settings');
 add_filter('the_content', 'display_location', 5);
-
 admin_init();
 register_activation_hook(__FILE__, 'activate');
 register_uninstall_hook(__FILE__, 'uninstall');
@@ -679,10 +678,10 @@ function display_location_page_google($content)
 function display_location_post($content)
 {
     default_settings();
+    $shortcode = get_option('geolocation_shortcode');
     global $post;
     $html = '';
     settype($html, "string");
-
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
     $on = (bool)get_post_meta($post->ID, 'geo_enabled', true);
@@ -691,7 +690,7 @@ function display_location_post($content)
     if (((empty($latitude)) || (empty($longitude))) ||
         ($on === '' || $on === false) ||
         ($public === '' || $public === false)) {
-        $content = str_replace(SHORTCODE, '', $content);
+        $content = str_replace($shortcode, '', $content);
         return $content;
     }
 
@@ -717,15 +716,15 @@ function display_location_post($content)
 
     switch (esc_attr((string)get_option('geolocation_map_position'))) {
         case 'before':
-            $content = str_replace(SHORTCODE, '', $content);
+            $content = str_replace($shortcode, '', $content);
             $content = $html . '<br/><br/>' . $content;
             break;
         case 'after':
-            $content = str_replace(SHORTCODE, '', $content);
+            $content = str_replace($shortcode, '', $content);
             $content = $content . '<br/><br/>' . $html;
             break;
         case 'shortcode':
-            $content = str_replace(SHORTCODE, $html, $content);
+            $content = str_replace($shortcode, $html, $content);
             break;
     }
     return $content;
