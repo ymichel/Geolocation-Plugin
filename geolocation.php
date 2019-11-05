@@ -565,9 +565,11 @@ function display_location_page_osm($content)
             )
         )
     );
+    $zoom = (int)get_option('geolocation_default_zoom');
     $script = $script . "<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\"></script>";
     $script = $script . "<script type=\"text/javascript\">
-        var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+        var mymap = L.map('mapid').setView([51.505, -0.09], ".$zoom.");
+        var myMapBounds = [];
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { 
      attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
     }).addTo(mymap);";
@@ -580,10 +582,13 @@ function display_location_page_osm($content)
         $postLatitude = (string)get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string)get_post_meta($post_id, 'geo_longitude', true);
         $script = $script . "
-            L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\">" . $postTitle . "</a>');";
+        var lat_lng = [" . $postLatitude . "," . $postLongitude . "];
+        L.marker(lat_lng).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\">" . $postTitle . "</a>');
+        myMapBounds.push(lat_lng);";
         $counter = $counter + 1;
     }
     $script = $script . "
+        mymap.fitBounds(myMapBounds);
 </script>";
 
     if ($counter > 0) {
