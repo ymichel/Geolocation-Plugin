@@ -39,6 +39,7 @@ add_filter('the_content', 'display_location', 5);
 
 admin_init();
 register_activation_hook(__FILE__, 'activate');
+register_uninstall_hook(__FILE__, 'uninstall');
 wp_enqueue_script("jquery");
 
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
