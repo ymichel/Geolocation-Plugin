@@ -485,7 +485,6 @@ function add_google_maps($posts)
 function add_osm_maps($posts)
 {
     default_settings();
-    $zoom = (int)get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
 
@@ -597,7 +596,7 @@ function display_location_page_osm($content)
         $html = $html . '<div id="mapid" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
         $html = $html . $script;
     }
-    $content = str_replace(get_option('geolocation_shortcode'), $html, $content);
+    $content = str_replace((string) get_option('geolocation_shortcode'), $html, $content);
     return $content;
 }
 
@@ -671,7 +670,7 @@ function display_location_page_google($content)
         $html = $html . '<div id="mymap" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
         $html = $html . $script;
     }
-    $content = str_replace(get_option('geolocation_shortcode'), $html, $content);
+    $content = str_replace((string) get_option('geolocation_shortcode'), $html, $content);
     return $content;
 }
 

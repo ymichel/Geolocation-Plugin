@@ -78,36 +78,16 @@ function default_settings()
 
 function delete_settings()
 {
-    if (get_option('geolocation_map_width')) {
-        delete_option('geolocation_map_width');
-    }
-    if (get_option('geolocation_map_height')) {
-        delete_option('geolocation_map_height');
-    }
-    if (get_option('geolocation_default_zoom')) {
-        delete_option('geolocation_default_zoom');
-    }
-    if (get_option('geolocation_map_position')) {
-        delete_option('geolocation_map_position');
-    }
-    if (get_option('geolocation_map_display')) {
-        delete_option('geolocation_map_display');
-    }
-    if (get_option('geolocation_map_display')) {
-    	  delete_option('geolocation_updateAddresses');
-    }
-    if (get_option('geolocation_map_width_page')) {
-        delete_option('geolocation_map_width_page');
-    }
-    if (get_option('geolocation_map_height_page')) {
-        delete_option('geolocation_map_height_page');
-    }
-    if (get_option('geolocation_provider')) {
-        delete_option('geolocation_provider');
-    }
-    if (get_option('geolocation_shortcode')) {
-        delete_option('geolocation_shortcode');
-    }
+    delete_option('geolocation_map_width');
+    delete_option('geolocation_map_height');
+    delete_option('geolocation_default_zoom');
+    delete_option('geolocation_map_position');
+    delete_option('geolocation_map_display');
+    delete_option('geolocation_updateAddresses');
+    delete_option('geolocation_map_width_page');
+    delete_option('geolocation_map_height_page');
+    delete_option('geolocation_provider');
+    delete_option('geolocation_shortcode');
 }
 
 function delete_addresses(){
