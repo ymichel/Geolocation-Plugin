@@ -35,6 +35,12 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 
 == Changelog ==
 
+= 0.7 =
+* code reorganization 
+* preparation of variable SHORTCODE
+* preparation of OSM usage within plugin
+* on plugin deletion, options and addresses are removed
+
 = 0.6.1 =
 * code cleanup minor things
 

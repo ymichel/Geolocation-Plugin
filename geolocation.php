@@ -36,9 +36,9 @@ add_action('wp_head', 'add_geo_support');
 add_action('wp_footer', 'add_geo_div');
 add_action('admin_menu', 'add_settings');
 add_filter('the_content', 'display_location', 5);
-
 admin_init();
 register_activation_hook(__FILE__, 'activate');
+register_uninstall_hook(__FILE__, 'uninstall');
 wp_enqueue_script("jquery");
 
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
@@ -485,7 +485,6 @@ function add_google_maps($posts)
 function add_osm_maps($posts)
 {
     default_settings();
-    $zoom = (int)get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts);
 
@@ -559,9 +558,11 @@ function display_location_page_osm($content)
             )
         )
     );
+    $zoom = (int)get_option('geolocation_default_zoom');
     $script = $script . "<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\"></script>";
     $script = $script . "<script type=\"text/javascript\">
-        var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+        var mymap = L.map('mapid').setView([51.505, -0.09], ".$zoom.");
+        var myMapBounds = [];
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { 
      attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
     }).addTo(mymap);";
@@ -574,10 +575,13 @@ function display_location_page_osm($content)
         $postLatitude = (string)get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string)get_post_meta($post_id, 'geo_longitude', true);
         $script = $script . "
-            L.marker([" . $postLatitude . "," . $postLongitude . "]).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\">" . $postTitle . "</a>');";
+        var lat_lng = [" . $postLatitude . "," . $postLongitude . "];
+        L.marker(lat_lng).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\">" . $postTitle . "</a>');
+        myMapBounds.push(lat_lng);";
         $counter = $counter + 1;
     }
     $script = $script . "
+        mymap.fitBounds(myMapBounds);
 </script>";
 
     if ($counter > 0) {
@@ -586,7 +590,7 @@ function display_location_page_osm($content)
         $html = $html . '<div id="mapid" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
         $html = $html . $script;
     }
-    $content = str_replace(get_option('geolocation_shortcode'), $html, $content);
+    $content = str_replace((string) get_option('geolocation_shortcode'), $html, $content);
     return $content;
 }
 
@@ -660,17 +664,17 @@ function display_location_page_google($content)
         $html = $html . '<div id="mymap" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
         $html = $html . $script;
     }
-    $content = str_replace(get_option('geolocation_shortcode'), $html, $content);
+    $content = str_replace((string) get_option('geolocation_shortcode'), $html, $content);
     return $content;
 }
 
 function display_location_post($content)
 {
     default_settings();
+    $shortcode = get_option('geolocation_shortcode');
     global $post;
     $html = '';
     settype($html, "string");
-
     $latitude = clean_coordinate(get_post_meta($post->ID, 'geo_latitude', true));
     $longitude = clean_coordinate(get_post_meta($post->ID, 'geo_longitude', true));
     $on = (bool)get_post_meta($post->ID, 'geo_enabled', true);
@@ -679,7 +683,7 @@ function display_location_post($content)
     if (((empty($latitude)) || (empty($longitude))) ||
         ($on === '' || $on === false) ||
         ($public === '' || $public === false)) {
-        $content = str_replace(SHORTCODE, '', $content);
+        $content = str_replace($shortcode, '', $content);
         return $content;
     }
 
@@ -705,15 +709,15 @@ function display_location_post($content)
 
     switch (esc_attr((string)get_option('geolocation_map_position'))) {
         case 'before':
-            $content = str_replace(SHORTCODE, '', $content);
+            $content = str_replace($shortcode, '', $content);
             $content = $html . '<br/><br/>' . $content;
             break;
         case 'after':
-            $content = str_replace(SHORTCODE, '', $content);
+            $content = str_replace($shortcode, '', $content);
             $content = $content . '<br/><br/>' . $html;
             break;
         case 'shortcode':
-            $content = str_replace(SHORTCODE, $html, $content);
+            $content = str_replace($shortcode, $html, $content);
             break;
     }
     return $content;

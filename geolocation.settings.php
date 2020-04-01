@@ -28,19 +28,20 @@ function register_settings()
     register_setting('geolocation-settings-group', 'geolocation_shortcode');
 }
 
-function activate()
+function unregister_settings()
 {
-    register_settings();
-    add_option('geolocation_map_width', '450');
-    add_option('geolocation_map_height', '200');
-    add_option('geolocation_default_zoom', '16');
-    add_option('geolocation_map_position', 'after');
-    add_option('geolocation_map_display', 'link');
-    add_option('geolocation_wp_pin', '1');
-    add_option('geolocation_map_width_page', '600');
-    add_option('geolocation_map_height_page', '250');
-    add_option('geolocation_provider', 'google');
-    add_option('geolocation_shortcode', '[geolocation]');
+    unregister_setting('geolocation-settings-group', 'geolocation_map_width');
+    unregister_setting('geolocation-settings-group', 'geolocation_map_height');
+    unregister_setting('geolocation-settings-group', 'geolocation_default_zoom');
+    unregister_setting('geolocation-settings-group', 'geolocation_map_position');
+    unregister_setting('geolocation-settings-group', 'geolocation_map_display');
+    unregister_setting('geolocation-settings-group', 'geolocation_wp_pin');
+    unregister_setting('geolocation-settings-group', 'geolocation_google_maps_api_key');
+    unregister_setting('geolocation-settings-group', 'geolocation_updateAddresses');
+    unregister_setting('geolocation-settings-group', 'geolocation_map_width_page');
+    unregister_setting('geolocation-settings-group', 'geolocation_map_height_page');
+    unregister_setting('geolocation-settings-group', 'geolocation_provider');
+    unregister_setting('geolocation-settings-group', 'geolocation_shortcode');
 }
 
 function default_settings()
@@ -73,9 +74,48 @@ function default_settings()
     if (!get_option('geolocation_shortcode')) {
         update_option('geolocation_shortcode', '[geolocation]');
     }
-
-
 }
+
+function delete_settings()
+{
+    delete_option('geolocation_map_width');
+    delete_option('geolocation_map_height');
+    delete_option('geolocation_default_zoom');
+    delete_option('geolocation_map_position');
+    delete_option('geolocation_map_display');
+    delete_option('geolocation_updateAddresses');
+    delete_option('geolocation_map_width_page');
+    delete_option('geolocation_map_height_page');
+    delete_option('geolocation_provider');
+    delete_option('geolocation_shortcode');
+}
+
+function delete_addresses(){
+    $args = array(
+        'post_type' => 'post',
+        'posts_per_page' => -1,
+    );
+
+    $post_query = new WP_Query($args);
+    if ($post_query->have_posts()) {
+        while ($post_query->have_posts()) {
+            delete_post_meta($post_id, 'geo_address');
+        }
+    }
+}
+
+function activate()
+{
+    register_settings();
+    default_settings();
+}
+
+function uninstall(){
+	unregister_settings();
+	delete_settings();
+	delete_addresses();
+}
+
 
 function add_settings()
 {
