@@ -491,12 +491,6 @@ function add_osm_maps($posts)
 
     echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>';
     //echo '<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>';
-    echo '    <style>
-	        #mapid {
-				width: 100%;
-				height: 100%;
-			}
-	    </style>';
 }
 
 function geo_has_shortcode($content)
