@@ -12,7 +12,7 @@ License: GPL2
 
 
 /*  Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-              2018-2019 Yann Michel (email : geolocation@yann-michel.de)
+              2018-2020 Yann Michel (email : geolocation@yann-michel.de)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -39,8 +39,15 @@ add_filter('the_content', 'display_location', 5);
 admin_init();
 register_activation_hook(__FILE__, 'activate');
 register_uninstall_hook(__FILE__, 'uninstall');
-wp_enqueue_script("jquery");
 
+add_action( 'wp_enqueue_scripts', 'add_my_scripts' ); 
+function add_my_scripts () {
+    wp_enqueue_script(
+        'geolocation', 
+        get_template_directory_uri() . '/js/jquery.elementReady.js',
+        array('jquery')
+    );
+}
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
 
 function plugin_upgrade_completed($upgrader_object, $options)
