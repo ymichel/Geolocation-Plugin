@@ -195,7 +195,7 @@ function admin_head()
                 else
                     $j("#geolocation-public").attr('checked', true);
 
-                if (isGeoEnabledon === '0')
+                if (isGeoEnabled === '0')
                     disableGeo();
                 else
                     enableGeo();
