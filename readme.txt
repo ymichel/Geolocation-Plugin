@@ -18,7 +18,7 @@ Furthermore, there is the option to use the tag [geolocation] also on a page in 
 Since Google changed their policy in terms of maps usage, one needs to have a Goole Maps API key to use this plugin.
 You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
-If you struggle wnle installing it or have feature requests, please feel free to drop a support request anytime. I M more than halpy to help you.
+If you struggle while installing it or have feature requests, please feel free to drop a support request anytime. I M more than halpy to help you.
 
 == Installation ==
 
@@ -32,7 +32,7 @@ If you struggle wnle installing it or have feature requests, please feel free to
 
 1. Editing a post
 2. Viewing the location in a post
-3. Showing all posts providing location informatiob
+3. Showing all posts providing location information
 4. Showing all posts of a particular category by adding a custom field
 
 == Changelog ==
