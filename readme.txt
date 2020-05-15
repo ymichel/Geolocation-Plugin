@@ -1,22 +1,24 @@
 === Geolocation ===
 Contributors: frsh, mdawaffe, automattic, ymichel
-Tags: geolocation, maps, geotag, google maps, travel
+Tags: geolocation, maps, geotag, google maps, travel, Maps, Reise, location based, location, Karte, journey, geo, GPS
 Requires at least: 2.9.2
 Tested up to: 5.4
-Stable tag: 0.6.1
+Stable tag: 0.6.2
 
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications.
 
 == Description ==
-
-The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone, WordPress for Android, or WordPress for BlackBerry.
+Easy display of post location infromation for travelbloggers or anyone who would like to show the location a post was created. The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone, WordPress for Android, or WordPress for BlackBerry. Simply enable public access to show the location descriotion and a nice map widget. 
 
 Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location. 
 If one would only like to show a textual version without accessing any external services when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location. That way, the Google APIs are only used when a logged in user is accessing the site or when a post is being made.
-Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. This can be achieved, by placing a user defined field called "category" and give it the name (not the slag!) of the category to be shown.
+
+Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. This can be achieved, by placing a user defined field called "category" and give it the name (not the slag!) of the category to be shown. This way, you can also hide the location information per post and only show an overview map if needed.
 
 Since Google changed their policy in terms of maps usage, one needs to have a Goole Maps API key to use this plugin.
 You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
+
+If you struggle wnle installing it or have feature requests, please feel free to drop a support request anytime. I M more than halpy to help you.
 
 == Installation ==
 
@@ -40,6 +42,10 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 * preparation of variable SHORTCODE
 * preparation of OSM usage within plugin
 * on plugin deletion, options and addresses are removed
+* jQuery refrerence was fixed for compatibility with WP_DEBUG switch
+
+= 0.6.2 =
+* fixed issue in admin panel where map was not displayed
 
 = 0.6.1 =
 * code cleanup minor things
