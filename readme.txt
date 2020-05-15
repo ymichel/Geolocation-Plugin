@@ -44,6 +44,9 @@ You may obtain a key via google cloud plattform. Make sure, you have activated "
 = 0.6.1 =
 * code cleanup minor things
 
+= 0.6.2 =
+* fixed issue in admin panel where map was not displayed
+
 = 0.6 =
 * optimizing 'update all Addresses'
 * introducing 'page mode', i.e., usage of [geolocation] in a page to provide a map with multiple locations shown together
