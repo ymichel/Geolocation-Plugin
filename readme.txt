@@ -5,7 +5,7 @@ Requires at least: 2.9.2
 Tested up to: 5.4
 Stable tag: 0.6.2
 
-Easy display of post location infromation for travelbloggers or anyone who would like to show the location a post was created.
+Easy display of post location information for travelbloggers or anyone who would like to show the location a post was created.
 
 == Description ==
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone, WordPress for Android, or WordPress for BlackBerry. Simply enable public access to show the location descriotion and a nice map widget. 
@@ -18,7 +18,7 @@ Furthermore, there is the option to use the tag [geolocation] also on a page in 
 Since Google changed their policy in terms of maps usage, one needs to have a Goole Maps API key to use this plugin.
 You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
-If you struggle while installing it or have feature requests, please feel free to drop a [WordPress](https://wordpress.org/support/plugin/geolocation/ "support request") anytime. I am more than happy to help you.
+If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://wordpress.org/support/plugin/geolocation/ "support request") anytime. I am more than happy to help you.
 
 == Installation ==
 
@@ -38,7 +38,7 @@ If you struggle while installing it or have feature requests, please feel free t
 == Changelog ==
 
 = 0.7 =
-* code reorganization 
+* code reorganization
 * preparation of variable SHORTCODE
 * preparation of OSM usage within plugin
 * on plugin deletion, options and addresses are removed
