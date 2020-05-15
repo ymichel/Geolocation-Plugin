@@ -5,10 +5,10 @@ Requires at least: 2.9.2
 Tested up to: 5.4
 Stable tag: 0.6.2
 
-The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications.
+Easy display of post location infromation for travelbloggers or anyone who would like to show the location a post was created.
 
 == Description ==
-Easy display of post location infromation for travelbloggers or anyone who would like to show the location a post was created. The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone, WordPress for Android, or WordPress for BlackBerry. Simply enable public access to show the location descriotion and a nice map widget. 
+The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone, WordPress for Android, or WordPress for BlackBerry. Simply enable public access to show the location descriotion and a nice map widget. 
 
 Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location. 
 If one would only like to show a textual version without accessing any external services when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location. That way, the Google APIs are only used when a logged in user is accessing the site or when a post is being made.
@@ -18,7 +18,7 @@ Furthermore, there is the option to use the tag [geolocation] also on a page in 
 Since Google changed their policy in terms of maps usage, one needs to have a Goole Maps API key to use this plugin.
 You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
-If you struggle while installing it or have feature requests, please feel free to drop a support request anytime. I M more than halpy to help you.
+If you struggle while installing it or have feature requests, please feel free to drop a [WordPress](https://wordpress.org/support/plugin/geolocation/ "support request") anytime. I am more than happy to help you.
 
 == Installation ==
 
