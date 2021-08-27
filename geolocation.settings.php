@@ -2,7 +2,7 @@
 
 function languages_init()
 {
-    $plugin_rel_path = basename(dirname(__FILE__)).'/languages/'; /* Relative to WP_PLUGIN_DIR */
+    $plugin_rel_path = basename(dirname(__FILE__)) . '/languages/'; /* Relative to WP_PLUGIN_DIR */
     load_plugin_textdomain('geolocation', 'false', $plugin_rel_path);
 }
 
@@ -90,7 +90,8 @@ function delete_settings()
     delete_option('geolocation_shortcode');
 }
 
-function delete_addresses() {
+function delete_addresses()
+{
     $args = array(
         'post_type' => 'post',
         'posts_per_page' => -1,
@@ -110,7 +111,8 @@ function activate()
     default_settings();
 }
 
-function uninstall(){
+function uninstall()
+{
     unregister_settings();
     delete_settings();
     delete_addresses();
@@ -120,7 +122,7 @@ function uninstall(){
 function add_settings()
 {
     if (is_admin()) { // admin actions
-        require_once(GEOLOCATION__PLUGIN_DIR.'geolocation.settings.page.php');
+        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.page.php');
         add_options_page(__('Geolocation Plugin Settings', 'geolocation'), 'Geolocation', 'administrator', 'geolocation.php', 'geolocation_settings_page');
         add_action('admin_init', 'register_settings');
     }
