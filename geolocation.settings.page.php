@@ -124,12 +124,17 @@ function geolocation_settings_page()
             <tr valign="top">
                 <th scope="row">Maps Provider</th>
                 <td class="apikey">
-                    <input type="text" name="geolocation_provider" value="<?php echo esc_attr((string) get_option('geolocation_provider')); ?>" />
+	            <select name="geolocation_provider">
+                    <option value="google"<?php if ((string) get_option('geolocation_provider')=='google') { echo ' selected';}?>>Google Maps</option>
+                    <option value="osm"<?php if ((string) get_option('geolocation_provider')=='osm') { echo ' selected';}?>>Open Street Maps</option>
+                    </select>
+                </td>
             </tr>
             <tr valign="top">
                 <th scope="row">Google Maps API key</th>
                 <td class="apikey">
                     <input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string) get_option('geolocation_google_maps_api_key')); ?>" />
+                </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Used Language for Adresses', 'geolocation'); ?></th>
