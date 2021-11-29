@@ -722,7 +722,7 @@ function display_location_post($content)
 
     switch (esc_attr((string) get_option('geolocation_map_position'))) {
         case 'before':
-            $content = str_replace($shortcode, '', $content);
+            $content = str_replace(esc_atr((string) $shortcode), '', $content);
             $content = $html . '<br/><br/>' . $content;
             break;
         case 'after':
