@@ -696,7 +696,7 @@ function display_location_post($content)
         ($on === '' || $on === false) ||
         ($public === '' || $public === false)
     ) {
-        $content = str_replace(esc_atr((string) $shortcode), '', $content);
+        $content = str_replace(esc_attr((string) $shortcode), '', $content);
         return $content;
     }
 
