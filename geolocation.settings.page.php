@@ -8,14 +8,14 @@ function geolocation_settings_page()
     default_settings();
     $zoomImage = (string) get_option('geolocation_default_zoom');
     if ((bool) get_option('geolocation_wp_pin')) {
-        $zoomImage = 'wp_' . $zoomImage . '.png';
+        $zoomImage = 'wp_'.$zoomImage.'.png';
     } else {
-        $zoomImage = $zoomImage . '.png';
+        $zoomImage = $zoomImage.'.png';
     }
 ?>
     <style type="text/css">
         #zoom_level_sample {
-            background: url('<?php echo esc_url(plugins_url('img/zoom/' . $zoomImage, __FILE__)); ?>');
+            background: url('<?php echo esc_url(plugins_url('img/zoom/'.$zoomImage, __FILE__)); ?>');
             width: 390px;
             height: 190px;
             border: solid 1px #999;
@@ -125,8 +125,8 @@ function geolocation_settings_page()
                 <th scope="row">Maps Provider</th>
                 <td class="apikey">
 	            <select name="geolocation_provider">
-                    <option value="google"<?php if ((string) get_option('geolocation_provider')=='google') { echo ' selected';}?>>Google Maps</option>
-                    <option value="osm"<?php if ((string) get_option('geolocation_provider')=='osm') { echo ' selected';}?>>Open Street Maps</option>
+                    <option value="google"<?php if ((string) get_option('geolocation_provider') == 'google') { echo ' selected'; }?>>Google Maps</option>
+                    <option value="osm"<?php if ((string) get_option('geolocation_provider') == 'osm') { echo ' selected'; }?>>Open Street Maps</option>
                     </select>
                 </td>
             </tr>
