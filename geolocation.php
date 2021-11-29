@@ -726,11 +726,11 @@ function display_location_post($content)
             $content = $html . '<br/><br/>' . $content;
             break;
         case 'after':
-            $content = str_replace($shortcode, '', $content);
+            $content = str_replace(esc_attr((string)$shortcode), '', $content);
             $content = $content . '<br/><br/>' . $html;
             break;
         case 'shortcode':
-            $content = str_replace($shortcode, $html, $content);
+            $content = str_replace(esc_attr((string)$shortcode), $html, $content);
             break;
     }
     return $content;
