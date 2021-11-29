@@ -1,9 +1,9 @@
 === Geolocation ===
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, google maps, travel, Maps, Reise, location based, location, Karte, journey, geo, GPS
-Requires at least: 2.9.2
+Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 0.6.2
+Stable tag: 0.7
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location a post was created.
 

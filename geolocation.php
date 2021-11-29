@@ -506,7 +506,7 @@ function add_osm_maps($posts)
 
 function geo_has_shortcode($content)
 {
-    $pos = strpos($content, get_option('geolocation_shortcode'));
+    $pos = strpos($content, esc_attr((string) get_option('geolocation_shortcode')));
     if ($pos === false) {
         return false;
     } else {
@@ -588,7 +588,7 @@ function display_location_page_osm($content)
         $postLongitude = (string) get_post_meta($post_id, 'geo_longitude', true);
         $script = $script . "
         var lat_lng = [" . $postLatitude . "," . $postLongitude . "];
-        L.marker(lat_lng).addTo(mymap).bindPopup('<a href=\"" . get_permalink($post_id) . "\">" . $postTitle . "</a>');
+        L.marker(lat_lng).addTo(mymap).bindPopup('<a href=\"" . esc_attr((string) get_permalink($post_id)) . "\">" . $postTitle . "</a>');
         myMapBounds.push(lat_lng);";
         $counter = $counter + 1;
     }
@@ -696,7 +696,7 @@ function display_location_post($content)
         ($on === '' || $on === false) ||
         ($public === '' || $public === false)
     ) {
-        $content = str_replace($shortcode, '', $content);
+        $content = str_replace(esc_atr((string) $shortcode), '', $content);
         return $content;
     }
 

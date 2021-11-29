@@ -100,7 +100,9 @@ function delete_addresses()
     $post_query = new WP_Query($args);
     if ($post_query->have_posts()) {
         while ($post_query->have_posts()) {
-            delete_post_meta($post_id, 'geo_address');
+            $post_query->the_post();
+	    $post = get_post();
+            delete_post_meta($post->ID, 'geo_address');
         }
     }
 }
