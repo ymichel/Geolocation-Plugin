@@ -822,7 +822,7 @@ function clean_coordinate($coordinate)
 {
     $pattern = '/^(\-)?(\d{1,3})\.(\d{1,15})/';
     preg_match($pattern, $coordinate, $matches);
-    if ($matches == null){
+    if ($matches == null) {
         return '';
     }
     return $matches[0];
