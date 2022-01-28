@@ -170,7 +170,7 @@ function admin_init()
     add_action('admin_head-post-new.php', 'admin_head');
     add_action('admin_head-post.php', 'admin_head');
     add_action('admin_menu', 'geolocation_add_custom_box');
-    add_action('save_post', 'geolocation_save_postdata');
+    add_action('save_post_post', 'geolocation_save_postdata');
 }
 
 function admin_head()
@@ -822,6 +822,9 @@ function clean_coordinate($coordinate)
 {
     $pattern = '/^(\-)?(\d{1,3})\.(\d{1,15})/';
     preg_match($pattern, $coordinate, $matches);
+    if ($matches == null){
+        return '';
+    }
     return $matches[0];
 }
 
