@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.7.4
+Version: 0.8
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -500,8 +500,11 @@ function add_osm_maps($posts)
     global $post_count;
     $post_count = count($posts);
 
-    echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>';
-    //echo '<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>';
+    if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
+	    echo '<link rel="stylesheet" href="'+apply_filters('osm_tiles_proxy_get_leaflet_css_url', '')+'"/>';
+    } else {
+	    echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>';
+    }
 }
 
 function geo_has_shortcode($content)
@@ -571,11 +574,22 @@ function display_location_page_osm($content)
         )
     );
     $zoom = (int) get_option('geolocation_default_zoom');
-    $script = $script."<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\"></script>";
+    if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
+    	$script = $script."<script src=\""+apply_filters('osm_tiles_proxy_get_leaflet_js_url', '')+"\"></script>";
+    } else {
+    	$script = $script."<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\"></script>";
+    }
+
     $script = $script."<script type=\"text/javascript\">
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom.");
         var myMapBounds = [];
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { 
+	L.tileLayer('";
+    if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
+	$script = $script.apply_filters('osm_tiles_proxy_get_proxy_url', '');
+    } else {
+	$script = $script."http://{s}.tile.osm.org/{z}/{x}/{y}.png";
+    }
+    $script = $script."', { 
      attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
     }).addTo(mymap);";
 

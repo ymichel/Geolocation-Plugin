@@ -37,6 +37,9 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 0.8 = 
+* introducing OSM readyness for proxy plugin to overcome DSGVO/GDPR tracking
+
 = 0.7.4 = 
 * fixing issue with missing reset in subquery within THE_LOOP
 
