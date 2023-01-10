@@ -2,8 +2,8 @@
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, google maps, travel, Maps, Reise, location based, location, Karte, journey, geo, GPS
 Requires at least: 5.0
-Tested up to: 5.9
-Stable tag: 0.7.1
+Tested up to: 6.1
+Stable tag: 0.7.2
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location a post was created.
 
@@ -36,6 +36,12 @@ If you struggle while installing it or have feature requests, please feel free t
 4. Showing all posts of a particular category by adding a custom field
 
 == Changelog ==
+
+= 0.7.2 =
+* settings bugfix
+
+= 0.7.1 =
+* various tiny bug fixes
 
 = 0.7 =
 * code reorganization

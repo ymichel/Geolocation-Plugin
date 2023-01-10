@@ -81,7 +81,7 @@ function geolocation_settings_page()
                 <td class="position">
                     <input type="radio" id="geolocation_map_position_before" name="geolocation_map_position" value="before" <?php is_value('geolocation_map_position', 'before'); ?>><label for="geolocation_map_position_before"><?php _e('Before the post.', 'geolocation'); ?></label><br />
                     <input type="radio" id="geolocation_map_position_after" name="geolocation_map_position" value="after" <?php is_value('geolocation_map_position', 'after'); ?>><label for="geolocation_map_position_after"><?php _e('After the post.', 'geolocation'); ?></label><br />
-                    <input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode" <?php is_value('geolocation_map_position', 'shortcode'); ?>><label for="geolocation_map_position_shortcode"><?php _e('Wherever I put the shortcode: ', 'geolocation'); echo esc_attr((string) get_option('geolocation_shortcode')) ?>.</label>
+                    <input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode" <?php is_value('geolocation_map_position', 'shortcode'); ?>><label for="geolocation_map_position_shortcode"><?php _e('Wherever I put the shortcode: ', 'geolocation'); echo esc_attr((string) get_option('geolocation_shortcode')); ?>.</label>
                 </td>
             </tr>
             <tr valign="top">

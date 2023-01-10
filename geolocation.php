@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.7.1
+Version: 0.7.2
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -12,7 +12,7 @@ License: GPL2
 
 
 /*  Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-              2018-2020 Yann Michel (email : geolocation@yann-michel.de)
+              2018-2023 Yann Michel (email : geolocation@yann-michel.de)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
