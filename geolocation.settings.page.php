@@ -125,7 +125,6 @@ function geolocation_settings_page()
                 <td class="apikey">
 	            <select name="geolocation_provider">
                     <option value="google"<?php if ((string) get_option('geolocation_provider') == 'google') { echo ' selected'; }?>>Google Maps</option>
-                    <option value="osm"<?php if ((string) get_option('geolocation_provider') == 'osm') { echo ' selected'; }?>>Open Street Maps</option>
                     </select>
                 </td>
             </tr>
