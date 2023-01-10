@@ -38,7 +38,7 @@ If you struggle while installing it or have feature requests, please feel free t
 == Changelog ==
 
 = 0.7.3 = 
-* diabling unfinished osm support
+* disabling unfinished osm support
 
 = 0.7.2 =
 * settings bugfix
