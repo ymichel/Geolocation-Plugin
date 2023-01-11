@@ -91,6 +91,10 @@ function geolocation_settings_page()
                     <label for="geolocation_map_display_plain"><?php _e('Plain text.', 'geolocation'); ?></label><br />
                     <input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link" <?php is_value('geolocation_map_display', 'link'); ?>>
                     <label for="geolocation_map_display_link"><?php _e('Simple link w/hover.', 'geolocation'); ?></label><br />
+<?php /*  ?>
+                    <input type="radio" id="geolocation_map_display_debug" name="geolocation_map_display" value="debug" <?php is_value('geolocation_map_display', 'debug'); ?>>
+                    <label for="geolocation_map_display_debug"><?php _e('Debug', 'geolocation'); ?></label><br />
+<?php // */ ?>
                 </td>
             </tr>
             <tr valign="top">

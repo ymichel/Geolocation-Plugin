@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 0.8
+Version: 0.7.4
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -499,12 +499,90 @@ function add_osm_maps($posts)
     default_settings();
     global $post_count;
     $post_count = count($posts);
+    echo '<link rel="stylesheet" href="http://na5:10085/wp-content/plugins/osm-tiles-proxy/libs/leaflet/leaflet.css
+"/>';
+    $zoom = (int) get_option('geolocation_default_zoom');
+    echo '<script src="http://na5:10085/wp-content/plugins/osm-tiles-proxy/libs/leaflet/leaflet.js"></script>';
+    echo '<script type="text/javascript">
+			var $j = jQuery.noConflict();		    
+			$j(function(){
+        		var map = L.map(document.getElementById("map")).setView([51.505, -0.09], ' . $zoom.');
+        		var myMapBounds = [];
+        		L.tileLayer(\'http://na5:10085/wp-content/cache/osm-tiles/{s}/{z}/{x}/{y}.png\', { 
+     				attribution: \'&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors\' 
+    			}).addTo(map);
 
-    if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
-	    echo '<link rel="stylesheet" href="'+apply_filters('osm_tiles_proxy_get_leaflet_css_url', '')+'"/>';
-    } else {
-	    echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>';
-    }
+				var allowDisappear = true;
+				var cancelDisappear = false;
+
+				$j(".geolocation-link").mouseover(function(){
+					$j("#map").stop(true, true);
+					var lat = $j(this).attr("name").split(",")[0];
+					var lng = $j(this).attr("name").split(",")[1];
+					var lat_lng = [lat, lng];
+        			L.marker(lat_lng).addTo(map).bindPopup("xyz");
+        			myMapBounds.push(lat_lng);				
+					map.fitBounds(myMapBounds);				
+					map.setZoom('. $zoom.');
+
+					var offset = $j(this).offset();
+					$j("#map").fadeTo(250, 1);
+					$j("#map").css("z-index", "99");
+					$j("#map").css("visibility", "visible");
+					$j("#map").css("top", offset.top + 20);
+					$j("#map").css("left", offset.left);
+					
+					allowDisappear = false;
+					$j("#map").css("visibility", "visible");
+				});
+			
+				$j(".geolocation-link").mouseout(function(){
+					allowDisappear = true;
+					cancelDisappear = false;
+					setTimeout(function() {
+						if((allowDisappear) && (!cancelDisappear))
+						{
+							$j("#map").fadeTo(500, 0, function() {
+								$j("#map").css("z-index", "-1");
+								allowDisappear = true;
+								cancelDisappear = false;
+							});
+						}
+				    },800);
+				});
+			
+				$j(".geolocation-link").mouseover(function(){
+				});
+			
+				$j(".geolocation-link").mouseout(function(){
+					allowDisappear = true;
+					cancelDisappear = false;
+					setTimeout(function() {
+						if((allowDisappear) && (!cancelDisappear))
+						{
+							$j("#map").fadeTo(500, 0, function() {
+								$j("#map").css("z-index", "-1");
+								allowDisappear = true;
+								cancelDisappear = false;
+							});
+						}
+				    },800);
+				});
+			
+				$j("#map").mouseover(function(){
+					allowDisappear = false;
+					cancelDisappear = true;
+					$j("#map").css("visibility", "visible");
+				});
+				
+				$j("#map").mouseout(function(){
+					allowDisappear = true;
+					cancelDisappear = false;
+					$j(".geolocation-link").mouseout();
+				});
+			});
+	</script>';
+	echo $script;
 }
 
 function geo_has_shortcode($content)
@@ -574,22 +652,11 @@ function display_location_page_osm($content)
         )
     );
     $zoom = (int) get_option('geolocation_default_zoom');
-    if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
-    	$script = $script."<script src=\""+apply_filters('osm_tiles_proxy_get_leaflet_js_url', '')+"\"></script>";
-    } else {
-    	$script = $script."<script src=\"https://unpkg.com/leaflet@1.5.1/dist/leaflet.js\"></script>";
-    }
-
+    $script = $script."<script src=\"http://na5:10085/wp-content/plugins/osm-tiles-proxy/libs/leaflet/leaflet.js\"></script>";
     $script = $script."<script type=\"text/javascript\">
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom.");
         var myMapBounds = [];
-	L.tileLayer('";
-    if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
-	$script = $script.apply_filters('osm_tiles_proxy_get_proxy_url', '');
-    } else {
-	$script = $script."http://{s}.tile.osm.org/{z}/{x}/{y}.png";
-    }
-    $script = $script."', { 
+        L.tileLayer('http://na5:10085/wp-content/cache/osm-tiles/{s}/{z}/{x}/{y}.png', { 
      attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
     }).addTo(mymap);";
 
