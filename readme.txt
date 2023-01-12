@@ -1,9 +1,10 @@
 === Geolocation ===
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, google maps, travel, Maps, Reise, location based, location, Karte, journey, geo, GPS
-Requires at least: 5.0
+Requires at least: 6.0
+Requires PHP: 8.0
 Tested up to: 6.1
-Stable tag: 0.7.4
+Stable tag: 0.8
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location a post was created.
 
@@ -38,7 +39,8 @@ If you struggle while installing it or have feature requests, please feel free t
 == Changelog ==
 
 = 0.8 = 
-* introducing OSM readyness for proxy plugin to overcome DSGVO/GDPR tracking
+* introducing OSM as an alternative for google maps
+* preparing readyness for proxy plugin to overcome DSGVO/GDPR tracking
 
 = 0.7.4 = 
 * fixing issue with missing reset in subquery within THE_LOOP
