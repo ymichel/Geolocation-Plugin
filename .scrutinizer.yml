@@ -3,7 +3,6 @@ build:
         analysis:
             dependencies:
                 before:
-                    - composer config --no-plugins allow-plugins.johnpbloch/wordpress-core-installer: true
                     - composer require --dev johnpbloch/wordpress
             project_setup:
                 override:
