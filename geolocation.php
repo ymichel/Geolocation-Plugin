@@ -762,7 +762,6 @@ function add_osm_maps($posts)
 				});
 			});
 	</script>';
-	echo $script;
 }
 
 function geo_has_shortcode($content)
