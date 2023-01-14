@@ -79,9 +79,18 @@ add_action('admin_notices', 'geolocation_custom_admin_notice');
 
 function geolocation_add_custom_box()
 {
-    echo '<input type="hidden" id="geolocation_nonce" name="geolocation_nonce" value="'.
-        wp_create_nonce(plugin_basename(__FILE__)).'" />';
-    echo '
+	    if (function_exists('add_meta_box')) {
+		            add_meta_box('geolocation_sectionid', __('Geolocation', 'geolocation'), 'geolocation_inner_custom_box', 'post', 'advanced');
+			        } else {
+					        add_action('dbx_post_advanced', 'geolocation_old_custom_box');
+						    }
+}
+
+function geolocation_inner_custom_box()
+{
+	    echo '<input type="hidden" id="geolocation_nonce" name="geolocation_nonce" value="'.
+		            wp_create_nonce(plugin_basename(__FILE__)).'" />';
+	        echo '
 		<label class="screen-reader-text" for="geolocation-address">Geolocation</label>
 		<div class="taghint">' . __('Enter your address', 'geolocation').'</div>
 		<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
@@ -101,6 +110,22 @@ function geolocation_add_custom_box()
 		</div>
 	';
 }
+
+/* Prints the edit form for pre-WordPress 2.5 post/page */
+function geolocation_old_custom_box()
+{
+	    echo '<div class="dbx-b-ox-wrapper">'."\n";
+	        echo '<fieldset id="geolocation_fieldsetid" class="dbx-box">'."\n";
+	        echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">'.
+			        __('Geolocation', 'geolocation')."</h3></div>";
+
+		    echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
+
+		    geolocation_inner_custom_box();
+
+		        echo "</div></div></fieldset></div>\n";
+}
+
 
 function geolocation_save_postdata($post_id)
 {
@@ -167,19 +192,19 @@ function admin_head_osm()
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
 
-    /* TODO include alternative for proxy */ ?>
+    /* TODO include alternative for proxy */ 
     echo '        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>';
-    echo '        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>';
-    echo '        <script type="text/javascript">
+    echo '        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>'; ?>
+<script type="text/javascript">
         var $j = jQuery.noConflict();
         $j(function() {
             $j(document).ready(function() {
                 var hasLocation = false;
-                var center = new google.maps.LatLng(0.0, 0.0);
                 var postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
                 var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
                 var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
                 var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
+                var zoom = '<?php echo $zoom; ?>';
 
                 if (isPublic === '0')
                     $j("#geolocation-public").attr('checked', false);
@@ -191,48 +216,24 @@ function admin_head_osm()
                 else
                     enableGeo();
 
+
                 if ((postLatitude !== '') && (postLongitude !== '')) {
-//TODO                center = new google.maps.LatLng(postLatitude, postLongitude);
+                    var lat_lng = [postLatitude, postLongitude];
+        	    var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
+        	    var myMapBounds = [];
+        	    /* TODO include alternative for proxy */ 
+                    L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
+     				attribution: \'&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors\' 
+    			}).addTo(map);
+                    L.marker(lat_lng).addTo(map).bindPopup("xyz");
+                    myMapBounds.push(lat_lng);                              
+                    map.fitBounds(myMapBounds);                             
+                    map.setZoom(zoom);
                     hasLocation = true;
-                    $j("#geolocation-latitude").val(center.lat());
-                    $j("#geolocation-longitude").val(center.lng());
-//TODO                 reverseGeocode(center);
+                    $j("#geolocation-latitude").val(postLatitude);
+                    $j("#geolocation-longitude").val(postLogitude);
+                    reverseGeocode(lat_lng);
                 }
-
-/** TODO                
-                var myOptions = {
-                    'zoom': <?php echo $zoom; ?>,
-                    'center': center,
-                    'mapTypeId': google.maps.MapTypeId.ROADMAP
-                };
-                var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
-                var shadow = new google.maps.MarkerImage('<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))); ?>',
-                    new google.maps.Size(39, 23),
-                    new google.maps.Point(0, 0),
-                    new google.maps.Point(12, 25));
-
-                var map = new google.maps.Map(document.getElementById('geolocation-map'), myOptions);
-                var marker = new google.maps.Marker({
-                    position: center,
-                    map: map,
-                    title: 'Post Location'
-                    <?php if ((bool) get_option('geolocation_wp_pin')) { ?>,
-                        icon: image,
-                        shadow: shadow
-                    <?php } ?>
-                });
-
-                if ((!hasLocation) && (google.loader.ClientLocation)) {
-                    center = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
-                    reverseGeocode(center);
-                } else if (!hasLocation) {
-                    map.setZoom(1);
-                }
-
-                google.maps.event.addListener(map, 'click', function(event) {
-                    placeMarker(event.latLng);
-                });
-**//
                 var currentAddress;
                 var customAddress = false;
                 $j("#geolocation-address").click(function() {
@@ -245,7 +246,7 @@ function admin_head_osm()
                     if ($j("#geolocation-address").val() !== '') {
                         customAddress = true;
                         currentAddress = $j("#geolocation-address").val();
-//TODO                        geocode(currentAddress);
+                        geocode(currentAddress);
                     }
                 });
 
@@ -262,58 +263,15 @@ function admin_head_osm()
                     disableGeo();
                 });
 
-/** TODO                
-                function placeMarker(location) {
-                    marker.setPosition(location);
-                    map.setCenter(location);
-                    if ((location.lat() !== '') && (location.lng() !== '')) {
-                        $j("#geolocation-latitude").val(location.lat());
-                        $j("#geolocation-longitude").val(location.lng());
-                    }
-
-                    if (!customAddress)
-                        reverseGeocode(location);
-                }
-
                 function geocode(address) {
-                    var geocoder = new google.maps.Geocoder();
-                    if (geocoder) {
-                        geocoder.geocode({
-                            "address": address
-                        }, function(results, status) {
-                            if (status === google.maps.GeocoderStatus.OK) {
-                                placeMarker(results[0].geometry.location);
-                                if (!hasLocation) {
-                                    map.setZoom(16);
-                                    hasLocation = true;
-                                }
-                            }
-                        });
-                    }
+		    // TODO                
                     $j("#geodata").html(latitude + ', ' + longitude);
                 }
 
                 function reverseGeocode(location) {
-                    var geocoder = new google.maps.Geocoder();
-                    if (geocoder) {
-                        geocoder.geocode({
-                            "latLng": location
-                        }, function(results, status) {
-                            if (status === google.maps.GeocoderStatus.OK) {
-                                if (results[1]) {
-                                    var address = results[1].formatted_address;
-                                    if (address === "") {
-                                        address = results[7].formatted_address;
-                                    } else {
-                                        $j("#geolocation-address").val(address);
-                                        placeMarker(location);
-                                    }
-                                }
-                            }
-                        });
-                    }
+		    // TODO                
                 }
-**//
+
                 function enableGeo() {
                     $j("#geolocation-address").removeAttr('disabled');
                     $j("#geolocation-load").removeAttr('disabled');
