@@ -193,18 +193,31 @@ function admin_head_osm()
     $zoom = (int) get_option('geolocation_default_zoom');
 
     /* TODO include alternative for proxy */ 
-    echo '        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>';
-    echo '        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>'; ?>
+    echo '        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="crossorigin=""/>';
+    echo '        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="crossorigin=""></script>'; ?>
 <script type="text/javascript">
         var $j = jQuery.noConflict();
         $j(function() {
             $j(document).ready(function() {
                 var hasLocation = false;
-                var postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
+                var postLatitude  = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
                 var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
                 var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
                 var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
                 var zoom = '<?php echo $zoom; ?>';
+                var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
+		var iconOptions = {
+		       iconUrl: image
+		    }
+		var customIcon = L.icon(iconOptions);
+		var markerOptions = {
+                    <?php if ((bool) get_option('geolocation_wp_pin')) { ?>
+                        icon: customIcon,
+                    <?php } ?>
+		       clickable: false,
+		       draggable: false
+	     	    }
+		var myMarker ={};
 
                 if (isPublic === '0')
                     $j("#geolocation-public").attr('checked', false);
@@ -217,22 +230,23 @@ function admin_head_osm()
                     enableGeo();
 
 
+                var lat_lng = [0.00, 0.00];
+        	var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
+        	var myMapBounds = [];
+        	/* TODO include alternative for proxy */ 
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+     			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
+    		}).addTo(map);
+                myMarker = L.marker(lat_lng, markerOptions).addTo(map);
+		map.setView(myMarker.getLatLng(),map.getZoom()); 
                 if ((postLatitude !== '') && (postLongitude !== '')) {
                     var lat_lng = [postLatitude, postLongitude];
-        	    var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
-        	    var myMapBounds = [];
-        	    /* TODO include alternative for proxy */ 
-                    L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
-     				attribution: \'&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors\' 
-    			}).addTo(map);
-                    L.marker(lat_lng).addTo(map).bindPopup("xyz");
-                    myMapBounds.push(lat_lng);                              
-                    map.fitBounds(myMapBounds);                             
-                    map.setZoom(zoom);
+		    myMarker.setLatLng(lat_lng);
+		    map.setView(myMarker.getLatLng(),map.getZoom()); 
                     hasLocation = true;
                     $j("#geolocation-latitude").val(postLatitude);
-                    $j("#geolocation-longitude").val(postLogitude);
-                    reverseGeocode(lat_lng);
+                    $j("#geolocation-longitude").val(postLongitude);
+                    reverseGeocode(postLatitude, postLongitude);
                 }
                 var currentAddress;
                 var customAddress = false;
@@ -264,12 +278,24 @@ function admin_head_osm()
                 });
 
                 function geocode(address) {
-		    // TODO                
-                    $j("#geodata").html(latitude + ', ' + longitude);
+			$j.getJSON('https://nominatim.openstreetmap.org/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, function(data) {
+                    		$j("#geolocation-latitude").val(data[0].lat);
+                    		$j("#geolocation-longitude").val(data[0].lon);
+                    		lat_lng = [data[0].lat, data[0].lon];
+
+				myMarker.setLatLng(lat_lng);
+				map.setView(myMarker.getLatLng(),map.getZoom()); 
+                    		hasLocation = true;
+				//console.log(data[0].lon);
+				//console.log(data[0].lat);
+                	});
                 }
 
-                function reverseGeocode(location) {
-		    // TODO                
+                function reverseGeocode(lat, lon) {
+			$j.getJSON('https://nominatim.openstreetmap.org/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon, function(data) {
+				//console.log(data);
+				$j("#geolocation-address").val(data.display_name);
+			});
                 }
 
                 function enableGeo() {
@@ -636,8 +662,8 @@ function add_osm_maps($posts)
 
 
     /* TODO include alternative for proxy */ 
-    echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>';
-    echo '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>';
+    echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="crossorigin=""/>';
+    echo '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="crossorigin=""></script>';
 
     $zoom = (int) get_option('geolocation_default_zoom');
     echo '<script type="text/javascript">
@@ -653,12 +679,24 @@ function add_osm_maps($posts)
 				var allowDisappear = true;
 				var cancelDisappear = false;
 
+		var iconOptions = {
+		       iconUrl: \'' . esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) . '\'
+		    }
+		var customIcon = L.icon(iconOptions);
+		var markerOptions = {';
+                    if ((bool) get_option('geolocation_wp_pin')) { 
+     echo '	       	       icon: customIcon,';
+     }
+     echo '		       clickable: false,
+		       draggable: false
+	     	    }
+
 				$j(".geolocation-link").mouseover(function(){
 					$j("#map").stop(true, true);
 					var lat = $j(this).attr("name").split(",")[0];
 					var lng = $j(this).attr("name").split(",")[1];
 					var lat_lng = [lat, lng];
-        			L.marker(lat_lng).addTo(map).bindPopup("xyz");
+        			L.marker(lat_lng, markerOptions).addTo(map).bindPopup("xyz");
         			myMapBounds.push(lat_lng);				
 					map.fitBounds(myMapBounds);				
 					map.setZoom('. $zoom.');
@@ -790,14 +828,27 @@ function display_location_page_osm($content)
     );
     $zoom = (int) get_option('geolocation_default_zoom');
     /* TODO include alternative for proxy */ 
-    $script = $script.'<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>';
+    $script = $script.'<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="crossorigin=""></script>';
     $script = $script."<script type=\"text/javascript\">
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom.");
         var myMapBounds = [];
+        var lat_lng = [];
         /* TODO include alternative for proxy */ 
-        L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
-    }).addTo(mymap);";
+        }).addTo(mymap);
+        var image = '".esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__)))."';
+	var iconOptions = {
+	       iconUrl: image
+	    }
+	var customIcon = L.icon(iconOptions);
+	var markerOptions = {";
+    if ((bool) get_option('geolocation_wp_pin')) {
+    $script = $script."                      icon: customIcon,";
+    } 
+    $script = $script."	       clickable: false,
+	       draggable: false
+     	    }";
 
     $post_query = new WP_Query($pargs);
     while ($post_query->have_posts()) {
@@ -807,8 +858,8 @@ function display_location_page_osm($content)
         $postLatitude = (string) get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string) get_post_meta($post_id, 'geo_longitude', true);
         $script = $script."
-        var lat_lng = [" . $postLatitude.",".$postLongitude."];
-        L.marker(lat_lng).addTo(mymap).bindPopup('<a href=\"" . esc_attr((string) get_permalink($post_id))."\">".$postTitle."</a>');
+        lat_lng = [" . $postLatitude.",".$postLongitude."];
+        L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"" . esc_attr((string) get_permalink($post_id))."\">".$postTitle."</a>');
         myMapBounds.push(lat_lng);";
         $counter = $counter + 1;
     }
@@ -996,6 +1047,13 @@ function updateGeolocationAddresses()
 }
 
 
+function pullOSMJSON($latitude, $longitude)
+{
+    $url = "https://nominatim.openstreetmap.org/reverse?format=json&accept-language='".getSiteLang()."''&lat="+$latitude+"&lon="+$longitude;
+    $decoded = json_decode(wp_remote_get($url)['body']);
+//				$j("#geolocation-address").val(data.display_name);
+    return $decoded;
+}
 function pullGoogleJSON($latitude, $longitude)
 {
     $url = "https://maps.googleapis.com/maps/api/geocode/json".get_google_maps_api_key("?")."&language=".getSiteLang()."&latlng=".$latitude.",".$longitude;
@@ -1020,11 +1078,19 @@ function buildAddress($city, $state, $country)
 
 function reverse_geocode($latitude, $longitude)
 {
-    //TODO: alternative for OSM
-    $json = pullGoogleJSON($latitude, $longitude);
     $city = '';
     $state = '';
     $country = '';
+    // To do: add support for multiple Map API providers
+    switch (get_option('geolocation_provider')) {
+        case 'google':
+            $json = pullGoogleJSON($latitude, $longitude);
+            break;
+        case 'osm':
+//TODO            $json = pullOSMJSON($latitude, $longitude);
+//TODO            break;
+            return buildAddress($city, $state, $country);
+    }    
     foreach ($json->results as $result) {
         foreach ($result->address_components as $addressPart) {
             if (in_array('political', $addressPart->types)) {
