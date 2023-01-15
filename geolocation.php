@@ -293,7 +293,7 @@ function admin_head_osm()
 
                 function reverseGeocode(lat, lon) {
 			$j.getJSON('https://nominatim.openstreetmap.org/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon, function(data) {
-				//console.log(data);
+				console.log(data);
 				$j("#geolocation-address").val(data.display_name);
 			});
                 }
@@ -1049,10 +1049,14 @@ function updateGeolocationAddresses()
 
 function pullOSMJSON($latitude, $longitude)
 {
-    $url = "https://nominatim.openstreetmap.org/reverse?format=json&accept-language='".getSiteLang()."''&lat="+$latitude+"&lon="+$longitude;
-    $decoded = json_decode(wp_remote_get($url)['body']);
-//				$j("#geolocation-address").val(data.display_name);
-    return $decoded;
+	$json = "https://nominatim.openstreetmap.org/reverse?format=json&lat=".$latitude."&lon=".$longitude."&addressdetails=1";
+	$ch = curl_init($json);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+	$jsonfile = curl_exec($ch);
+	curl_close($ch);
+	$decoded = json_decode($jsonfile, true);
+    	return $decoded;
 }
 function pullGoogleJSON($latitude, $longitude)
 {
@@ -1081,30 +1085,33 @@ function reverse_geocode($latitude, $longitude)
     $city = '';
     $state = '';
     $country = '';
+    //
     // To do: add support for multiple Map API providers
     switch (get_option('geolocation_provider')) {
         case 'google':
-            $json = pullGoogleJSON($latitude, $longitude);
-            break;
+            	$json = pullGoogleJSON($latitude, $longitude);
+     		foreach ($json->results as $result) {
+        		foreach ($result->address_components as $addressPart) {
+        		    if (in_array('political', $addressPart->types)) {
+        		        if ((in_array('locality', $addressPart->types))) {
+        		            $city = $addressPart->long_name;
+        		        } else if ((in_array('administrative_area_level_1', $addressPart->types))) {
+        		            $state = $addressPart->long_name;
+        		        } else if ((in_array('country', $addressPart->types))) {
+        		            $country = $addressPart->long_name;
+        		        }
+        		    }
+        		}
+    		}
+            	break;
         case 'osm':
-//TODO            $json = pullOSMJSON($latitude, $longitude);
-//TODO            break;
-            return buildAddress($city, $state, $country);
+            	$json = pullOSMJSON($latitude, $longitude);
+		$city = $json["address"]["city"];
+		$state = $json["address"]["suburb"];
+		$country = $json["address"]["country"];
+            	break;
     }    
-    foreach ($json->results as $result) {
-        foreach ($result->address_components as $addressPart) {
-            if (in_array('political', $addressPart->types)) {
-                if ((in_array('locality', $addressPart->types))) {
-                    $city = $addressPart->long_name;
-                } else if ((in_array('administrative_area_level_1', $addressPart->types))) {
-                    $state = $addressPart->long_name;
-                } else if ((in_array('country', $addressPart->types))) {
-                    $country = $addressPart->long_name;
-                }
-            }
-        }
-    }
-    return buildAddress($city, $state, $country);
+   return buildAddress($city, $state, $country);
 }
 
 function clean_coordinate($coordinate)
