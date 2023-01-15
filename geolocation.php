@@ -1049,7 +1049,7 @@ function updateGeolocationAddresses()
 
 function pullOSMJSON($latitude, $longitude)
 {
-	$json = "https://nominatim.openstreetmap.org/reverse?format=json&lat=".$latitude."&lon=".$longitude."&addressdetails=1";
+	$json = "https://nominatim.openstreetmap.org/reverse?format=json&accept-language=".getSiteLang()."&lat=".$latitude."&lon=".$longitude."&addressdetails=1";
 	$ch = curl_init($json);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);

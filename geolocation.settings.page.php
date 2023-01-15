@@ -65,8 +65,7 @@ function geolocation_settings_page()
     <div class="wrap">
         <h2><?php _e('Geolocation Plugin Settings', 'geolocation'); ?></h2>
     </div>
-
-    <form method="post" action="options.php">
+   <form method="post" action="options.php" id="settings">
         <?php settings_fields('geolocation-settings-group'); ?>
         <table class="form-table">
             <tr valign="top">
@@ -126,24 +125,24 @@ function geolocation_settings_page()
             </tr>
             <tr valign="top">
                 <th scope="row">Maps Provider</th>
-                <td class="apikey">
-	            <select name="geolocation_provider">
+                <td>
+	            <select id="geolocation_provider" name="geolocation_provider" onchange="providerSelected(this.value);">
                     <option value="google"<?php if ((string) get_option('geolocation_provider') == 'google') { echo ' selected'; }?>>Google Maps</option>
-<?php /* ?>
+<?php /* */?>
                     <option value="osm"<?php if ((string) get_option('geolocation_provider') == 'osm') { echo ' selected'; }?>>Open Street Maps</option>
 <?php // */ ?>
                     </select>
                 </td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="google-apikey">
                 <th scope="row">Google Maps API key</th>
-                <td class="apikey">
+                <td>
                     <input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string) get_option('geolocation_google_maps_api_key')); ?>" />
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"><?php _e('Used Language for Adresses', 'geolocation'); ?></th>
-                <td class="apikey">
+                <td>
                     <?php echo esc_attr((string) getSiteLang()); ?>
             </tr>
             <tr valign="top">
@@ -159,6 +158,20 @@ function geolocation_settings_page()
         </p>
         <input type="hidden" name="action" value="update" />
         <input type="hidden" name="page_options" value="geolocation_map_width,geolocation_map_height,geolocation_default_zoom,geolocation_map_position,geolocation_wp_pin" />
+     <script types="text/javascript">
+	function providerSelected(value) {
+		if (value == "google") {
+			document.getElementsByClassName("google-apikey")[0].style.display = "";
+		} else {
+			document.getElementsByClassName("google-apikey")[0].style.display = "none";
+		}
+	}
+    	function initializeForm() {
+		var provider = document.getElementById("geolocation_provider").value;
+		providerSelected(provider);
+	}
+	document.adEventListener("DOMContentLoaded", initializeForm());
+    </script>
     </form>
     <div id="preload">
         <img src="<?php echo esc_url(plugins_url('img/zoom/1.png', __FILE__)); ?>" alt="" />
