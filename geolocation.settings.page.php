@@ -140,7 +140,28 @@ function geolocation_settings_page()
                     <input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr((string) get_option('geolocation_google_maps_api_key')); ?>" />
                 </td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="osm-urls">
+                <th scope="row">OSM URLs</th>
+                <td>
+ <?php if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) :?>
+            <table>
+                 <tr>
+                     <th><?php _e('Tiles url (Caching)', 'osm-tiles-proxy') ?></th>
+                     <td><?php echo apply_filters('osm_tiles_proxy_get_proxy_url', '') ?></td>
+                </tr>
+                <tr>
+                     <th><?php _e('Leaflet JS', 'osm-tiles-proxy') ?></th>
+                     <td><?php echo apply_filters('osm_tiles_proxy_get_leaflet_js_url', '') ?></td>
+                </tr>
+                <tr>
+                     <th><?php _e('Leaflet CSS', 'osm-tiles-proxy') ?></th>
+                     <td><?php echo apply_filters('osm_tiles_proxy_get_leaflet_css_url', '') ?></td>
+                </tr>
+             </table>
+ <?php endif; ?>
+                </td>
+ 
+	    <tr valign="top">
                 <th scope="row"><?php _e('Used Language for Adresses', 'geolocation'); ?></th>
                 <td>
                     <?php echo esc_attr((string) getSiteLang()); ?>
@@ -162,8 +183,10 @@ function geolocation_settings_page()
 	function providerSelected(value) {
 		if (value == "google") {
 			document.getElementsByClassName("google-apikey")[0].style.display = "";
+			document.getElementsByClassName("osm-urls")[0].style.display = "none";
 		} else {
 			document.getElementsByClassName("google-apikey")[0].style.display = "none";
+			document.getElementsByClassName("osm-urls")[0].style.display = "";
 		}
 	}
     	function initializeForm() {
@@ -173,7 +196,8 @@ function geolocation_settings_page()
 	document.adEventListener("DOMContentLoaded", initializeForm());
     </script>
     </form>
-    <div id="preload">
+ <?php include_once ABSPATH . 'wp-admin/includes/plugin.php'; ?>
+   <div id="preload">
         <img src="<?php echo esc_url(plugins_url('img/zoom/1.png', __FILE__)); ?>" alt="" />
         <img src="<?php echo esc_url(plugins_url('img/zoom/3.png', __FILE__)); ?>" alt="" />
         <img src="<?php echo esc_url(plugins_url('img/zoom/6.png', __FILE__)); ?>" alt="" />
