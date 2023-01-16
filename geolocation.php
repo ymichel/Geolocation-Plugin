@@ -276,7 +276,7 @@ function admin_head_osm()
                 });
 
                 function geocode(address) {
-			$j.getJSON('<?php get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, function(data) {
+			$j.getJSON('<?php echo get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, function(data) {
                     		$j("#geolocation-latitude").val(data[0].lat);
                     		$j("#geolocation-longitude").val(data[0].lon);
                     		lat_lng = [data[0].lat, data[0].lon];
@@ -288,7 +288,7 @@ function admin_head_osm()
                 }
 
                 function reverseGeocode(lat, lon) {
-			$j.getJSON('<?php get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon, function(data) {
+			$j.getJSON('<?php echo get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon, function(data) {
 				console.log(data);
 				$j("#geolocation-address").val(data.display_name);
 			});
