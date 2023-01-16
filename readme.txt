@@ -41,6 +41,7 @@ If you struggle while installing it or have feature requests, please feel free t
 = 0.8 = 
 * introducing OSM as an alternative for google maps
 * preparing readyness for proxy plugin to overcome DSGVO/GDPR tracking
+* for new installations, OSM is the default
 
 = 0.7.4 = 
 * fixing issue with missing reset in subquery within THE_LOOP
