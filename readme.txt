@@ -4,7 +4,7 @@ Tags: geolocation, maps, geotag, google maps, travel, osm, Reise, location based
 Requires at least: 6.0
 Requires PHP: 7.1
 Tested up to: 6.1
-Stable tag: 1.0
+Stable tag: 1.1
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location a post was created.
 
@@ -36,6 +36,9 @@ If you struggle while installing it or have feature requests, please feel free t
 3. Showing all posts providing location information
 
 == Changelog ==
+
+= 1.1 = 
+* enabling the usage of the osm proxy "[Tiles Proxy for OpenStreetMap](https://wordpress.org/plugins/osm-tiles-proxy/ "Tiles Proxy for OpenStreetMap")
 
 = 1.0 = 
 * introducing OSM as an alternative for google maps by using leaflet-api

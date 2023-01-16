@@ -12,6 +12,8 @@ function geolocation_settings_page()
     } else {
         $zoomImage = $zoomImage.'.png';
     }
+    echo '<link rel="stylesheet" href="'.get_osm_leaflet_css_url().'"/>';
+    echo '<script src="'.get_osm_leaflet_js_url().'"></script>';
 ?>
     <style type="text/css">
         #zoom_level_sample {
@@ -51,6 +53,9 @@ function geolocation_settings_page()
 
         function swap_zoom_sample(id) {
             zoomlevel = document.getElementById(id).value;
+	    document.getElementById("zoomlevel").value = zoomlevel;
+
+//            map.setView(myMarker.getLatLng(),document.getElementById("zoomlevel").value);
             pin_click();
         }
 
@@ -107,7 +112,9 @@ function geolocation_settings_page()
                     <input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16" <?php is_value('geolocation_default_zoom', '16'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street"><?php _e('Street', 'geolocation'); ?></label>
                     <input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18" <?php is_value('geolocation_default_zoom', '18'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php _e('Block', 'geolocation'); ?></label>
                     <br />
+		    <input type="hidden" id="zoomlevel" name="zoomlevel" value="1">
                     <div id="zoom_level_sample"></div>
+<?php echo get_geo_div(); ?>
                 </td>
             </tr>
             <tr valign="top">
@@ -144,7 +151,7 @@ function geolocation_settings_page()
                 <th scope="row">OSM URLs</th>
                 <td>
             <table>
-<?php if (( false ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' )) { ?>
+<?php if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' )) { ?>
                  <tr>
                      <th><?php _e('Use Proxy', 'geolocation') ?></th>
 		     <td> <input type="checkbox" id="geolocation_osm_use_proxy" name="geolocation_osm_use_proxy" value="1" <?php is_checked('geolocation_osm_use_proxy'); ?>><label for="geolocation_osm_use_proxy"><?php _e('Make use of proxy plugin.', 'geolocation'); ?></label> </td>
@@ -201,7 +208,32 @@ function geolocation_settings_page()
 		var provider = document.getElementById("geolocation_provider").value;
 		providerSelected(provider);
 	}
-	document.adEventListener("DOMContentLoaded", initializeForm());
+	document.addEventListener("DOMContentLoaded", initializeForm());
+	document.getElementById("zoomlevel").value = '<?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>';
+
+	var lat_lng = [52.5162778,13.3733267];
+   	var map = L.map(document.getElementById("map")).setView(lat_lng, document.getElementById("zoomlevel").value);
+        var myMapBounds = [];
+	L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
+        	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
+        }).addTo(map);
+
+        var iconOptions = {
+		iconUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) ; ?>'
+        }
+        var customIcon = L.icon(iconOptions);
+        var markerOptions = {
+<?php            if ((bool) get_option('geolocation_wp_pin')) { ?>
+            icon: customIcon,
+<?php     } ?>
+            clickable: false,
+            draggable: false
+        }
+	var myMarker = {};
+	myMarker = L.marker(lat_lng, markerOptions).addTo(map);//TODO alternative content for .bindPopup("DEMO");
+	map.setView(myMarker.getLatLng(),document.getElementById("zoomlevel").value); 
+        myMapBounds.push(lat_lng);                              
+        map.fitBounds(myMapBounds);                             
     </script>
     </form>
  <?php include_once ABSPATH . 'wp-admin/includes/plugin.php'; ?>
