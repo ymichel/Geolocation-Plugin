@@ -2,7 +2,7 @@
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, google maps, travel, osm, Reise, location based, location, Karte, journey, geo, GPS
 Requires at least: 6.0
-Requires PHP: 8.0
+Requires PHP: 7.1
 Tested up to: 6.1
 Stable tag: 1.0
 
@@ -34,7 +34,6 @@ If you struggle while installing it or have feature requests, please feel free t
 1. Editing a post
 2. Viewing the location in a post
 3. Showing all posts providing location information
-4. Showing all posts of a particular category by adding a custom field
 
 == Changelog ==
 
