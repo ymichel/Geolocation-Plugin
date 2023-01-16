@@ -232,7 +232,7 @@ function admin_head_osm()
                 var lat_lng = [0.00, 0.00];
         	var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
         	var myMapBounds = [];
-		L.tileLayer('<?php get_osm_tiles_url();?>', {
+		L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
      			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
     		}).addTo(map);
                 myMarker = L.marker(lat_lng, markerOptions).addTo(map);
@@ -284,8 +284,6 @@ function admin_head_osm()
 				myMarker.setLatLng(lat_lng);
 				map.setView(myMarker.getLatLng(),map.getZoom()); 
                     		hasLocation = true;
-				//console.log(data[0].lon);
-				//console.log(data[0].lat);
                 	});
                 }
 
