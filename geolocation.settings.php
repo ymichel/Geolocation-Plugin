@@ -26,6 +26,11 @@ function register_settings()
     register_setting('geolocation-settings-group', 'geolocation_map_height_page');
     register_setting('geolocation-settings-group', 'geolocation_provider');
     register_setting('geolocation-settings-group', 'geolocation_shortcode');
+    register_setting('geolocation-settings-group', 'geolocation_osm_use_proxy');
+    register_setting('geolocation-settings-group', 'geolocation_osm_tiles_url');
+    register_setting('geolocation-settings-group', 'geolocation_osm_leaflet_js_url');
+    register_setting('geolocation-settings-group', 'geolocation_osm_leaflet_css_url');
+    register_setting('geolocation-settings-group', 'geolocation_osm_nominatim_url');
 }
 
 function unregister_settings()
@@ -42,6 +47,11 @@ function unregister_settings()
     unregister_setting('geolocation-settings-group', 'geolocation_map_height_page');
     unregister_setting('geolocation-settings-group', 'geolocation_provider');
     unregister_setting('geolocation-settings-group', 'geolocation_shortcode');
+    unregister_setting('geolocation-settings-group', 'geolocation_osm_use_proxy');
+    unregister_setting('geolocation-settings-group', 'geolocation_osm_tiles_url');
+    unregister_setting('geolocation-settings-group', 'geolocation_osm_leaflet_js_url');
+    unregister_setting('geolocation-settings-group', 'geolocation_osm_leaflet_css_url');
+    unregister_setting('geolocation-settings-group', 'geolocation_osm_nominatim_url');
 }
 
 function default_setting($name,$value)
@@ -63,6 +73,11 @@ function default_settings()
     default_setting('geolocation_map_height_page', '250');
     default_setting('geolocation_provider', 'google');
     default_setting('geolocation_shortcode', '[geolocation]');
+    default_setting('geolocation_osm_use_proxy', false);
+    default_setting('geolocation_osm_tiles_url', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png');
+    default_setting('geolocation_osm_leaflet_js_url', 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.js');
+    default_setting('geolocation_osm_leaflet_css_url', 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css');
+    default_setting('geolocation_osm_nominatim_url', 'https://nominatim.openstreetmap.org/');
 }
 
 function delete_settings()
@@ -77,6 +92,11 @@ function delete_settings()
     delete_option('geolocation_map_height_page');
     delete_option('geolocation_provider');
     delete_option('geolocation_shortcode');
+    delete_option('geolocation_osm_use_proxy');
+    delete_option('geolocation_osm_tiles_url');
+    delete_option('geolocation_osm_leaflet_js_url');
+    delete_option('geolocation_osm_leaflet_css_url');
+    delete_option('geolocation_osm_nominatim_url');
 }
 
 function delete_addresses()

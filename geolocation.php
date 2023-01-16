@@ -192,9 +192,8 @@ function admin_head_osm()
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
 
-    /* TODO include alternative for proxy */ 
-    echo '        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="crossorigin=""/>';
-    echo '        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="crossorigin=""></script>'; ?>
+    echo '        <link rel="stylesheet" href="'.get_osm_leaflet_css_url().'"/>';
+    echo '        <script src="'.get_osm_leaflet_js_url().'"></script>'; ?>
 <script type="text/javascript">
         var $j = jQuery.noConflict();
         $j(function() {
@@ -233,8 +232,7 @@ function admin_head_osm()
                 var lat_lng = [0.00, 0.00];
         	var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
         	var myMapBounds = [];
-        	/* TODO include alternative for proxy */ 
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		L.tileLayer('<?php get_osm_tiles_url();?>', {
      			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
     		}).addTo(map);
                 myMarker = L.marker(lat_lng, markerOptions).addTo(map);
@@ -278,7 +276,7 @@ function admin_head_osm()
                 });
 
                 function geocode(address) {
-			$j.getJSON('https://nominatim.openstreetmap.org/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, function(data) {
+			$j.getJSON('<?php get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, function(data) {
                     		$j("#geolocation-latitude").val(data[0].lat);
                     		$j("#geolocation-longitude").val(data[0].lon);
                     		lat_lng = [data[0].lat, data[0].lon];
@@ -292,7 +290,7 @@ function admin_head_osm()
                 }
 
                 function reverseGeocode(lat, lon) {
-			$j.getJSON('https://nominatim.openstreetmap.org/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon, function(data) {
+			$j.getJSON('<?php get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon, function(data) {
 				console.log(data);
 				$j("#geolocation-address").val(data.display_name);
 			});
@@ -661,9 +659,8 @@ function add_osm_maps($posts)
     $post_count = count($posts);
 
 
-    /* TODO include alternative for proxy */ 
-    echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="crossorigin=""/>';
-    echo '<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="crossorigin=""></script>';
+    echo '<link rel="stylesheet" href="'.get_osm_leaflet_css_url().'"/>';
+    echo '<script src="'.get_osm_leaflet_js_url().'"></script>';
 
     $zoom = (int) get_option('geolocation_default_zoom');
     echo '<script type="text/javascript">
@@ -671,8 +668,7 @@ function add_osm_maps($posts)
 			$j(function(){
         		var map = L.map(document.getElementById("map")).setView([51.505, -0.09], ' . $zoom.');
         		var myMapBounds = [];
-        		/* TODO include alternative for proxy */ 
-                L.tileLayer(\'https://tile.openstreetmap.org/{z}/{x}/{y}.png\', {
+			L.tileLayer(\''.get_osm_tiles_url().'\', {
      				attribution: \'&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors\' 
     			}).addTo(map);
 
@@ -827,15 +823,13 @@ function display_location_page_osm($content)
         )
     );
     $zoom = (int) get_option('geolocation_default_zoom');
-    /* TODO include alternative for proxy */ 
-    $script = $script.'<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="crossorigin=""></script>';
+    $script = $script."<script src=\"".get_osm_leaflet_js_url()."\"></script>"; 
     $script = $script."<script type=\"text/javascript\">
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom.");
         var myMapBounds = [];
         var lat_lng = [];
-        /* TODO include alternative for proxy */ 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
+	L.tileLayer('".get_osm_tiles_url()."', {
+        	attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
         }).addTo(mymap);
         var image = '".esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__)))."';
 	var iconOptions = {
@@ -1049,7 +1043,7 @@ function updateGeolocationAddresses()
 
 function pullOSMJSON($latitude, $longitude)
 {
-	$json = "https://nominatim.openstreetmap.org/reverse?format=json&accept-language=".getSiteLang()."&lat=".$latitude."&lon=".$longitude."&addressdetails=1";
+	$json = get_osm_nominatim_url()."/reverse?format=json&accept-language=".getSiteLang()."&lat=".$latitude."&lon=".$longitude."&addressdetails=1";
 	$ch = curl_init($json);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
@@ -1145,6 +1139,43 @@ function is_value($field, $value)
     if ((string) get_option($field) == $value) {
         echo ' checked="checked" ';
     }
+}
+
+include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+function get_osm_tiles_url(){
+	if ( ((bool) get_option('geolocation_osm_use_proxy') ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
+		$proxy_cached_url   = apply_filters( 'osm_tiles_proxy_get_proxy_url', $proxy_cached_url );
+    		return $proxy_cached_url;
+	} else {
+		$param = (string) get_option('geolocation_osm_tiles_url'); 
+    		return $param;
+	}
+}
+
+function get_osm_leaflet_js_url(){
+	if ( ((bool) get_option('geolocation_osm_use_proxy') ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
+		$leaflet_js_url     = apply_filters( 'osm_tiles_proxy_get_leaflet_js_url', $leaflet_js_url );
+    		return $leaflet_js_url;
+	} else {
+    		$param = (string) get_option('geolocation_osm_leaflet_js_url');
+    		return $param;
+	}
+}
+
+function get_osm_leaflet_css_url(){
+	if ( ((bool) get_option('geolocation_osm_use_proxy') ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
+		$leaflet_css_url    = apply_filters( 'osm_tiles_proxy_get_leaflet_css_url', $leaflet_css_url );
+    		return $leaflet_css_url;
+	} else {
+    		$param = (string) get_option('geolocation_osm_leaflet_css_url');
+    		return $param;
+	}
+}
+
+function get_osm_nominatim_url(){
+    $param = (string) get_option('geolocation_osm_nominatim_url');
+    return $param;
 }
 
 ?>

@@ -143,22 +143,30 @@ function geolocation_settings_page()
             <tr valign="top" class="osm-urls">
                 <th scope="row">OSM URLs</th>
                 <td>
- <?php if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) :?>
             <table>
+<?php if (( false ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' )) { ?>
                  <tr>
-                     <th><?php _e('Tiles url (Caching)', 'osm-tiles-proxy') ?></th>
-                     <td><?php echo apply_filters('osm_tiles_proxy_get_proxy_url', '') ?></td>
+                     <th><?php _e('Use Proxy', 'geolocation') ?></th>
+		     <td> <input type="checkbox" id="geolocation_osm_use_proxy" name="geolocation_osm_use_proxy" value="1" <?php is_checked('geolocation_osm_use_proxy'); ?>><label for="geolocation_osm_use_proxy"><?php _e('Make use of proxy plugin.', 'geolocation'); ?></label> </td>
+		</tr>
+<?php } ?>
+                 <tr>
+                     <th><?php _e('Tiles url (Caching)', 'geolocation') ?></th>
+		     <td><?php echo get_osm_tiles_url(); ?></td>
                 </tr>
                 <tr>
-                     <th><?php _e('Leaflet JS', 'osm-tiles-proxy') ?></th>
-                     <td><?php echo apply_filters('osm_tiles_proxy_get_leaflet_js_url', '') ?></td>
+                     <th><?php _e('Leaflet JS', 'geolocation') ?></th>
+		     <td><?php echo get_osm_leaflet_js_url(); ?></td>
                 </tr>
                 <tr>
-                     <th><?php _e('Leaflet CSS', 'osm-tiles-proxy') ?></th>
-                     <td><?php echo apply_filters('osm_tiles_proxy_get_leaflet_css_url', '') ?></td>
+                     <th><?php _e('Leaflet CSS', 'geolocation') ?></th>
+		     <td><?php echo get_osm_leaflet_css_url(); ?></td>
+                </tr>
+                <tr>
+		<th><?php _e('Nominatim (Geocoding)', 'geolocation') ?></th>
+		     <td><?php echo get_osm_nominatim_url(); ?></td>
                 </tr>
              </table>
- <?php endif; ?>
                 </td>
  
 	    <tr valign="top">
