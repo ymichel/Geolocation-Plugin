@@ -169,3 +169,20 @@ msgstr "https://www.yann-michel.de/geolocation"
 msgid "Dimensions Page"
 msgstr "Ma&szlig;e Seite"
 
+msgid "Use Proxy"
+msgstr "Proxy verwenden"
+
+msgid "Make use of proxy plugin."
+msgstr "Funktionen des Proxy-Plugins verwenden."
+
+msgid "Tiles url (Caching)"
+msgstr "Kachel URL (Caching)"
+
+msgid "Leaflet JS"
+msgstr "Leaflet JS"
+
+msgid "Leaflet CSS"
+msgstr "Leaflet CSS"
+
+msgid "Nominatim (Geocoding)"
+msgstr "Nominatim (Geocoding)"
