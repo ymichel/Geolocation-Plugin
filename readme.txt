@@ -38,7 +38,7 @@ If you struggle while installing it or have feature requests, please feel free t
 == Changelog ==
 
 = 1.1 = 
-* enabling the usage of the osm proxy "[Tiles Proxy for OpenStreetMap](https://wordpress.org/plugins/osm-tiles-proxy/ "Tiles Proxy for OpenStreetMap")
+* enabling the usage of the osm proxy [Tiles Proxy for OpenStreetMap](https://wordpress.org/plugins/osm-tiles-proxy/ "Tiles Proxy for OpenStreetMap")
 
 = 1.0 = 
 * introducing OSM as an alternative for google maps by using leaflet-api
