@@ -39,9 +39,9 @@ If you struggle while installing it or have feature requests, please feel free t
 == Changelog ==
 
 = 1.0 = 
-* introducing OSM as an alternative for google maps
+* introducing OSM as an alternative for google maps by using leaflet-api
 * for new installations, OSM is the default
-* preparing readyness for proxy plugin to overcome DSGVO/GDPR tracking
+* preparing readyness for osm tile proxy plugin to overcome DSGVO/GDPR tracking
 
 = 0.7.4 = 
 * fixing issue with missing reset in subquery within THE_LOOP
