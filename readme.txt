@@ -18,13 +18,13 @@ Furthermore, there is the option to use the tag [geolocation] also on a page in 
 
 By default, this plugin uses Open-Streetmap but as an alternative (and backwards-compatibility) google maps can also be used. However, one needs to have a Goole Maps API key to use this plugin with google maps. You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
-If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://wordpress.org/support/plugin/geolocation/ "support request") anytime. I am more than happy to help you. Also if you would want to give a [review](https://wordpress.org/support/plugin/geolocation/reviews/) "review" it you are happy with the plugin, I would appreciate the feedback.
+If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://wordpress.org/support/plugin/geolocation/ "support request") anytime. I am more than happy to help you. Also if you would want to give a [review](https://wordpress.org/support/plugin/geolocation/reviews/ "review") it you are happy with the plugin, I would appreciate the feedback.
 
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress. In case you would want to use Google Maps, chose Google Map as your provider an insert the Google Maps API key on the Settings > Geolocation page.
-3. Optionally (if you are using OSM as per default setting): Install and activate the [OSM proxy](https://wordpress.org/plugins/osm-tiles-proxy/) "OSM tile proxy".
+3. Optionally (if you are using OSM as per default setting): Install and activate the [OSM proxy](https://wordpress.org/plugins/osm-tiles-proxy/ "OSM tile proxy").
 4. Modify the display settings as needed on the Settings > Geolocation page.
 5. Start posting with geolocation data :-)
 
