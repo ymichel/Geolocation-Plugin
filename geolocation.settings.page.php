@@ -16,12 +16,6 @@ function geolocation_settings_page()
     echo '<script src="'.get_osm_leaflet_js_url().'"></script>';
 ?>
     <style type="text/css">
-        #zoom_level_sample {
-            background: url('<?php echo esc_url(plugins_url('img/zoom/'.$zoomImage, __FILE__)); ?>');
-            width: 390px;
-            height: 190px;
-            border: solid 1px #999;
-        }
 
         #preload {
             display: none;
@@ -46,27 +40,6 @@ function geolocation_settings_page()
             margin: 0 5px 0 2px;
         }
     </style>
-    <script type="text/javascript">
-        var file;
-        var zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
-        var path = '<?php echo esc_js(plugins_url('img/zoom/', __FILE__)); ?>';
-
-        function swap_zoom_sample(id) {
-            zoomlevel = document.getElementById(id).value;
-	    document.getElementById("zoomlevel").value = zoomlevel;
-
-//            map.setView(myMarker.getLatLng(),document.getElementById("zoomlevel").value);
-            pin_click();
-        }
-
-        function pin_click() {
-            var div = document.getElementById('zoom_level_sample');
-            file = path + zoomlevel + '.png';
-            if (document.getElementById('geolocation_wp_pin').checked)
-                file = path + 'wp_' + zoomlevel + '.png';
-            div.style.background = 'url(' + file + ')';
-        }
-    </script>
     <div class="wrap">
         <h2><?php _e('Geolocation Plugin Settings', 'geolocation'); ?></h2>
     </div>
@@ -112,15 +85,13 @@ function geolocation_settings_page()
                     <input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16" <?php is_value('geolocation_default_zoom', '16'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street"><?php _e('Street', 'geolocation'); ?></label>
                     <input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18" <?php is_value('geolocation_default_zoom', '18'); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php _e('Block', 'geolocation'); ?></label>
                     <br />
-		    <input type="hidden" id="zoomlevel" name="zoomlevel" value="1">
-                    <div id="zoom_level_sample"></div>
 <?php echo get_geo_div(); ?>
                 </td>
             </tr>
             <tr valign="top">
                 <th scope="row"></th>
                 <td class="position">
-                    <input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked('geolocation_wp_pin'); ?> onclick="javascript:pin_click();"><label for="geolocation_wp_pin"><?php _e('Show your support for WordPress by using the WordPress map pin.', 'geolocation'); ?></label>
+                    <input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked('geolocation_wp_pin'); ?> onclick="javascript:updatePin();"><label for="geolocation_wp_pin"><?php _e('Show your support for WordPress by using the WordPress map pin.', 'geolocation'); ?></label>
                 </td>
             </tr>
             <tr valign="top">
@@ -135,9 +106,7 @@ function geolocation_settings_page()
                 <td>
 	            <select id="geolocation_provider" name="geolocation_provider" onchange="providerSelected(this.value);">
                     <option value="google"<?php if ((string) get_option('geolocation_provider') == 'google') { echo ' selected'; }?>>Google Maps</option>
-<?php /* */?>
                     <option value="osm"<?php if ((string) get_option('geolocation_provider') == 'osm') { echo ' selected'; }?>>Open Street Maps</option>
-<?php // */ ?>
                     </select>
                 </td>
             </tr>
@@ -195,6 +164,64 @@ function geolocation_settings_page()
         <input type="hidden" name="action" value="update" />
         <input type="hidden" name="page_options" value="geolocation_map_width,geolocation_map_height,geolocation_default_zoom,geolocation_map_position,geolocation_wp_pin" />
      <script types="text/javascript">
+        var file;
+        var zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
+        var path = '<?php echo esc_js(plugins_url('img/zoom/', __FILE__)); ?>';
+
+	var lat_lng = [52.5162778,13.3733267];
+   	var map = {}
+        var myMapBounds = [];
+
+        var iconOptions = {
+		iconUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) ; ?>'
+        }
+        var customIcon = L.icon(iconOptions);
+        var markerOptions = {}
+	var myMarker = {};
+
+	function setMarkerOptions(){
+		if (document.getElementById("geolocation_wp_pin").checked) {
+        		markerOptions = {
+       		     	    icon: customIcon,
+        		    clickable: false,
+        		    draggable: false
+        		}
+		} else {
+        		markerOptions = {
+        		    clickable: false,
+        		    draggable: false
+        		}
+		}
+	}
+
+	function initializeMap(){
+   		map = L.map(document.getElementById("map")).setView(lat_lng, zoomlevel);
+        	myMapBounds = [];
+		L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
+        		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
+        	}).addTo(map);
+
+		setMarkerOptions();
+		myMarker = L.marker(lat_lng, markerOptions).addTo(map);
+		map.setView(myMarker.getLatLng(), zoomlevel);
+	}
+
+	function updatePin() {
+		setMarkerOptions();
+	        if (myMarker != undefined) {
+	              map.removeLayer(myMarker);
+                };
+		myMarker = L.marker(lat_lng, markerOptions).addTo(map);
+		map.setView(myMarker.getLatLng(), zoomlevel);
+		updateMap();
+	}
+	function updateMap() {
+		map.setView(myMarker.getLatLng(), zoomlevel);
+	}
+        function swap_zoom_sample(id) {
+            zoomlevel = document.getElementById(id).value;
+	    updateMap();
+        }
 	function providerSelected(value) {
 		if (value == "google") {
 			document.getElementsByClassName("google-apikey")[0].style.display = "";
@@ -207,33 +234,10 @@ function geolocation_settings_page()
     	function initializeForm() {
 		var provider = document.getElementById("geolocation_provider").value;
 		providerSelected(provider);
+		zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
+		initializeMap();
 	}
 	document.addEventListener("DOMContentLoaded", initializeForm());
-	document.getElementById("zoomlevel").value = '<?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>';
-
-	var lat_lng = [52.5162778,13.3733267];
-   	var map = L.map(document.getElementById("map")).setView(lat_lng, document.getElementById("zoomlevel").value);
-        var myMapBounds = [];
-	L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
-        	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
-        }).addTo(map);
-
-        var iconOptions = {
-		iconUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) ; ?>'
-        }
-        var customIcon = L.icon(iconOptions);
-        var markerOptions = {
-<?php            if ((bool) get_option('geolocation_wp_pin')) { ?>
-            icon: customIcon,
-<?php     } ?>
-            clickable: false,
-            draggable: false
-        }
-	var myMarker = {};
-	myMarker = L.marker(lat_lng, markerOptions).addTo(map);//TODO alternative content for .bindPopup("DEMO");
-	map.setView(myMarker.getLatLng(),document.getElementById("zoomlevel").value); 
-        myMapBounds.push(lat_lng);                              
-        map.fitBounds(myMapBounds);                             
     </script>
     </form>
  <?php include_once ABSPATH . 'wp-admin/includes/plugin.php'; ?>
