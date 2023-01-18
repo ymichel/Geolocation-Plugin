@@ -161,8 +161,6 @@ function geolocation_settings_page()
         <p class="submit">
             <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geolocation') ?>" alt="" />
         </p>
-        <input type="hidden" name="action" value="update" />
-        <input type="hidden" name="page_options" value="geolocation_map_width,geolocation_map_height,geolocation_default_zoom,geolocation_map_position,geolocation_wp_pin" />
      <script types="text/javascript">
         var file;
         var zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
@@ -237,25 +235,10 @@ function geolocation_settings_page()
 		zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
 		initializeMap();
 	}
+
 	document.addEventListener("DOMContentLoaded", initializeForm());
     </script>
     </form>
- <?php include_once ABSPATH . 'wp-admin/includes/plugin.php'; ?>
-   <div id="preload">
-        <img src="<?php echo esc_url(plugins_url('img/zoom/1.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/3.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/6.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/9.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/16.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/18.png', __FILE__)); ?>" alt="" />
-
-        <img src="<?php echo esc_url(plugins_url('img/zoom/wp_1.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/wp_3.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/wp_6.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/wp_9.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/wp_16.png', __FILE__)); ?>" alt="" />
-        <img src="<?php echo esc_url(plugins_url('img/zoom/wp_18.png', __FILE__)); ?>" alt="" />
-    </div>
 <?php
 }
 

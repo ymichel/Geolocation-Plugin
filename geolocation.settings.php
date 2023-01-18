@@ -70,7 +70,7 @@ function default_settings()
     default_setting('geolocation_map_display', 'link');
     update_option('geolocation_updateAddresses', false);
     default_setting('geolocation_map_width_page', '600');
-    default_setting('geolocation_map_height_page', '250');
+    default_setting('geolocation_map_height_page', '300');
     default_setting('geolocation_provider', 'google');
     default_setting('geolocation_shortcode', '[geolocation]');
     default_setting('geolocation_osm_use_proxy', false);
