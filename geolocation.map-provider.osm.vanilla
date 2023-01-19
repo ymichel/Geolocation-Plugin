@@ -2,161 +2,161 @@
 /** This is the provider specific pool for the provider "open streetmaps (osm)". **/
 function admin_head()
 {
-    global $post;
-    $post_id = $post->ID;
-    $zoom = (int) get_option('geolocation_default_zoom');
+global $post;
+$post_id = $post->ID;
+$zoom = (int) get_option('geolocation_default_zoom');
+?>
 
-    echo '        <link rel="stylesheet" href="'.get_osm_leaflet_css_url().'"/>';
-    echo '        <script src="'.get_osm_leaflet_js_url().'"></script>'; ?>
+<link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>"/>
+<script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
 <script type="text/javascript">
 
-    function ready(fn) {
-    	if (document.readyState != 'loading'){
-        	fn();
+document.addEventListener('DOMContentLoaded', function () {
+	let hasLocation = false;
+	let postLatitude  = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
+	let postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
+	let isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
+	let isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
+	let zoom = '<?php echo $zoom; ?>';
+	let image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
+	let iconOptions = {
+	       iconUrl: image
+	    }
+	let customIcon = L.icon(iconOptions);
+	let markerOptions = {
+	    <?php if ((bool) get_option('geolocation_wp_pin')) { ?>
+		icon: customIcon,
+	    <?php } ?>
+	       clickable: false,
+	       draggable: false
+	    }
+	let myMarker = {};
+
+	if (isPublic === '0') {
+	    document.getElementById('geolocation-public').setAttribute('checked', false);
 	} else {
-	        document.addEventListener('DOMContentLoaded', fn);
+	    document.getElementById('geolocation-public').setAttribute('checked', true);
 	}
-    }
-    ready(() => {
-                var hasLocation = false;
-                var postLatitude  = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
-                var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
-                var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
-                var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
-                var zoom = '<?php echo $zoom; ?>';
-                var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
-		var iconOptions = {
-		       iconUrl: image
-		    }
-		var customIcon = L.icon(iconOptions);
-		var markerOptions = {
-                    <?php if ((bool) get_option('geolocation_wp_pin')) { ?>
-                        icon: customIcon,
-                    <?php } ?>
-		       clickable: false,
-		       draggable: false
-	     	    }
-		var myMarker = {};
 
-                if (isPublic === '0')
-		    document.getElementById('geolocation-public').setAttribute('checked', false);
-                else
-		    document.getElementById('geolocation-public').setAttribute('checked', true);
+	if (isGeoEnabled === '0') {
+	    disableGeo();
+	} else {
+	    enableGeo();
+	}
 
-                if (isGeoEnabled === '0')
-                    disableGeo();
-                else
-                    enableGeo();
+	let lat_lng = [0.00, 0.00];
+	let map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
+	let myMapBounds = [];
+	L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
+	}).addTo(map);
+	myMarker = L.marker(lat_lng, markerOptions).addTo(map);
+	map.setView(myMarker.getLatLng(),map.getZoom()); 
+	if ((postLatitude !== '') && (postLongitude !== '')) {
+	    lat_lng = [postLatitude, postLongitude];
+	    myMarker.setLatLng(lat_lng);
+	    map.setView(myMarker.getLatLng(),map.getZoom()); 
+	    hasLocation = true;
+	    document.getElementById('geolocation-latitude').value = postLatitude;
+	    document.getElementById('geolocation-latitude').value = postLongitude;
+	    reverseGeocode(postLatitude, postLongitude);
+	}
+	let currentAddress;
+	let customAddress = false;
+	document.getElementById('geolocation-address').addEventListener('click', event => {
+	    currentAddress = document.getElementById('geolocation-address').value;
+	    if (currentAddress !== '')
+		document.getElementById('geolocation-address').value='';
+	});
+	document.getElementById('geolocation-load').addEventListener('click', event => {
+	    if (document.getElementById('geolocation-address').value !== '') {
+		customAddress = true;
+		currentAddress = document.getElementById('geolocation-address').value;
+		geocode(currentAddress);
+	    }
+	});
+	document.getElementById('geolocation-address').addEventListener('keyup', function(e) {
+	    if (e.key === 'Enter')
+		document.getElementById('geolocation-load').click();
+	});
+	document.getElementById('geolocation-enabled').addEventListener('click', event => {
+	    enableGeo();
+	});
+	document.getElementById('geolocation-disabled').addEventListener('click', event => {
+	    disableGeo();
+	});
+})
+		
+function geocode(address) {
+	let request = new XMLHttpRequest();
+	request.open('GET'
+		    ,'<?php echo get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address
+		    , true);
+	request.onload = function() {
+		if (this.status >= 200 && this.status < 400) {
+		     // Success!
+		     let data = JSON.parse(this.response);
+		     //console.log(data);
+		     document.getElementById('geolocation-latitude').value=data[0].lat;
+		     document.getElementById('geolocation-longitude').value=data[0].lon;
+		     lat_lng = [data[0].lat, data[0].lon];
+		     //console.log(lat_lng);
+		     myMarker.setLatLng(lat_lng);
+		     map.setView(myMarker.getLatLng(),map.getZoom()); 
+		     hasLocation = true;
+		} else {
+		     // error
+		}
+	};
+	request.send();
+}
 
-                var lat_lng = [0.00, 0.00];
-        	var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
-        	var myMapBounds = [];
-		L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
-     			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
-    		}).addTo(map);
-                myMarker = L.marker(lat_lng, markerOptions).addTo(map);
-		map.setView(myMarker.getLatLng(),map.getZoom()); 
-                if ((postLatitude !== '') && (postLongitude !== '')) {
-                    var lat_lng = [postLatitude, postLongitude];
-		    myMarker.setLatLng(lat_lng);
-		    map.setView(myMarker.getLatLng(),map.getZoom()); 
-                    hasLocation = true;
-		    document.getElementById('geolocation-latitude').value=postLatitude;
-		    document.getElementById('geolocation-latitude').value=postLongitude;
-                    reverseGeocode(postLatitude, postLongitude);
-                }
-                var currentAddress;
-                var customAddress = false;
-		document.getElementById('geolocation-address').addEventListener('click', event => {
-                    currentAddress = document.getElementById('geolocation-address').value;
-                    if (currentAddress !== '')
-		    	document.getElementById('geolocation-address').value='';
-                });
-		document.getElementById('geolocation-load').addEventListener('click', event => {
-                    if (document.getElementById('geolocation-address').value !== '') {
-                        customAddress = true;
-                        currentAddress = document.getElementById('geolocation-address').value;
-                        geocode(currentAddress);
-                    }
-                });
-		document.getElementById('geolocation-address').addEventListener('keyup', function(e) {
-		    if (e.keyCode === 13)
-		        document.getElementById('geolocation-load').click();
-		});
-		document.getElementById('geolocation-enabled').addEventListener('click', event => {
-                    enableGeo();
-                });
-		document.getElementById('geolocation-disabled').addEventListener('click', event => {
-                    disableGeo();
-                });
-                function geocode(address) {
-			var request = new XMLHttpRequest();
-			request.open('GET'
-				    ,'<?php echo get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address
-				    , true);
-			request.onload = function() {
-				if (this.status >= 200 && this.status < 400) {
-				     // Success!
-				     var data = JSON.parse(this.response);
-				     //console.log(data);
-				     document.getElementById('geolocation-latitude').value=data[0].lat;
-				     document.getElementById('geolocation-longitude').value=data[0].lon;
-                    		     lat_lng = [data[0].lat, data[0].lon];
-				     //console.log(lat_lng);
-				     myMarker.setLatLng(lat_lng);
-				     map.setView(myMarker.getLatLng(),map.getZoom()); 
-                    		     hasLocation = true;
-				} else {
-				     // error
-				}
-		        };
-		        request.send();
-                }
-                function reverseGeocode(lat, lon) {
-			var request = new XMLHttpRequest();
-			request.open('GET'
-				    ,'<?php echo get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon
-				    , true);
-			request.onload = function() {
-				if (this.status >= 200 && this.status < 400) {
-				     // Success!
-				     var data = JSON.parse(this.response);
-				     //console.log(data);
-                        	     document.getElementById('geolocation-address').value = data.display_name;
-				} else {
-				     // error
-				}
-		        };
-		        request.send();
-                }
-                function enableGeo() {
-			document.getElementById('geolocation-address').removeAttribute('disabled');
-			document.getElementById('geolocation-load').removeAttribute('disabled');
-			document.getElementById('geolocation-map').style.filter = '';
-			document.getElementById('geolocation-map').style.opacity = '';
-			document.getElementById('geolocation-map').style.MozOpacity = '';
-			document.getElementById('geolocation-public').removeAttribute('disabled');
-			document.getElementById('geolocation-map').removeAttribute('readonly');
-			document.getElementById('geolocation-disabled').removeAttribute('checked');
-		    	document.getElementById('geolocation-enabled').setAttribute('checked', true);
-                    if (isPublic === '1')
-		        document.getElementById('geolocation-public').setAttribute('checked', true);
-                }
-                function disableGeo() {
-		    	document.getElementById('geolocation-address').setAttribute('disabled', 'disabled');
-		    	document.getElementById('geolocation-load').setAttribute('disabled', 'disabled');
-			document.getElementById('geolocation-map').style.filter = 'alpha(opacity=50)';
-			document.getElementById('geolocation-map').style.opacity = '0.5';
-			document.getElementById('geolocation-map').style.MozOpacity = '0.5';
-		    	document.getElementById('geolocation-public').setAttribute('disabled', 'disabled');
-		    	document.getElementById('geolocation-map').setAttribute('readonly', 'readonly');
-			document.getElementById('geolocation-enabled').removeAttribute('checked');
-		    	document.getElementById('geolocation-disabled').setAttribute('checked', true);
-                    if (isPublic === '1')
-		        document.getElementById('geolocation-public').setAttribute('checked', true);
-                }
-      });
-    </script>
+function reverseGeocode(lat, lon) {
+	let request = new XMLHttpRequest();
+	request.open('GET'
+		    ,'<?php echo get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon
+		    , true);
+	request.onload = function() {
+		if (this.status >= 200 && this.status < 400) {
+		     // Success!
+		     let data = JSON.parse(this.response);
+		     //console.log(data);
+		     document.getElementById('geolocation-address').value = data.display_name;
+		} else {
+		     // error
+		}
+	};
+	request.send();
+}
+
+function enableGeo() {
+	document.getElementById('geolocation-address').removeAttribute('disabled');
+	document.getElementById('geolocation-load').removeAttribute('disabled');
+	document.getElementById('geolocation-map').style.filter = '';
+	document.getElementById('geolocation-map').style.opacity = '';
+	document.getElementById('geolocation-map').style.MozOpacity = '';
+	document.getElementById('geolocation-public').removeAttribute('disabled');
+	document.getElementById('geolocation-map').removeAttribute('readonly');
+	document.getElementById('geolocation-disabled').removeAttribute('checked');
+	document.getElementById('geolocation-enabled').setAttribute('checked', true);
+    if (isPublic === '1')
+	document.getElementById('geolocation-public').setAttribute('checked', true);
+}
+
+function disableGeo() {
+	document.getElementById('geolocation-address').setAttribute('disabled', 'disabled');
+	document.getElementById('geolocation-load').setAttribute('disabled', 'disabled');
+	document.getElementById('geolocation-map').style.filter = 'alpha(opacity=50)';
+	document.getElementById('geolocation-map').style.opacity = '0.5';
+	document.getElementById('geolocation-map').style.MozOpacity = '0.5';
+	document.getElementById('geolocation-public').setAttribute('disabled', 'disabled');
+	document.getElementById('geolocation-map').setAttribute('readonly', 'readonly');
+	document.getElementById('geolocation-enabled').removeAttribute('checked');
+	document.getElementById('geolocation-disabled').setAttribute('checked', true);
+    if (isPublic === '1')
+	document.getElementById('geolocation-public').setAttribute('checked', true);
+}
+</script>
 <?php
 }
 
