@@ -51,9 +51,6 @@ function add_my_scripts()
 }
 require_once(GEOLOCATION__PLUGIN_DIR.'geolocation.settings.php');
 
-// remember the chosen map provider as stored in the settings
-$mapProvider = get_option('geolocation_provider');
-
 function plugin_upgrade_completed($upgrader_object, $options)
 {
     $our_plugin = plugin_basename(__FILE__);
@@ -70,7 +67,7 @@ function plugin_upgrade_completed($upgrader_object, $options)
 // display custom admin notice
 function geolocation_custom_admin_notice()
 {
-    if (!get_option('geolocation_google_maps_api_key') and $mapProvider == 'google') { ?>
+    if (!get_option('geolocation_google_maps_api_key') and get_option('geolocation_provider') == 'google') { ?>
         <div class="notice notice-error">
             <p><?php _e('Google Maps API key is missing for', 'geolocation'); ?> <a href="options-general.php?page=geolocation">Geolocation</a>!</p>
         </div>
@@ -180,7 +177,7 @@ function admin_init()
 function admin_head()
 {
     // To do: add support for multiple Map API providers
-    switch ($mapProvider) {
+    switch (get_option('geolocation_provider')) {
         case 'google':
             admin_head_google();
             break;
@@ -194,157 +191,141 @@ function admin_head_osm()
     global $post;
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom');
-    ?>
-    
-    <link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>"/>
-    <script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
-    <script type="text/javascript">
-    
-    document.addEventListener('DOMContentLoaded', function () {
-        let hasLocation = false;
-        let postLatitude  = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
-        let postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
-        let isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
-        let isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
-        let zoom = '<?php echo $zoom; ?>';
-        let image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
-        let iconOptions = {
-               iconUrl: image
-            }
-        let customIcon = L.icon(iconOptions);
-        let markerOptions = {
-            <?php if ((bool) get_option('geolocation_wp_pin')) { ?>
-            icon: customIcon,
-            <?php } ?>
-               clickable: false,
-               draggable: false
-            }
-        let myMarker = {};
-    
-        if (isPublic === '0') {
-            document.getElementById('geolocation-public').setAttribute('checked', false);
-        } else {
-            document.getElementById('geolocation-public').setAttribute('checked', true);
-        }
-    
-        if (isGeoEnabled === '0') {
-            disableGeo();
-        } else {
-            enableGeo();
-        }
-    
-        let lat_lng = [0.00, 0.00];
-        let map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
-        let myMapBounds = [];
-        L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
-        }).addTo(map);
-        myMarker = L.marker(lat_lng, markerOptions).addTo(map);
-        map.setView(myMarker.getLatLng(),map.getZoom()); 
-        if ((postLatitude !== '') && (postLongitude !== '')) {
-            lat_lng = [postLatitude, postLongitude];
-            myMarker.setLatLng(lat_lng);
-            map.setView(myMarker.getLatLng(),map.getZoom()); 
-            hasLocation = true;
-            document.getElementById('geolocation-latitude').value = postLatitude;
-            document.getElementById('geolocation-latitude').value = postLongitude;
-            reverseGeocode(postLatitude, postLongitude);
-        }
-        let currentAddress;
-        let customAddress = false;
-        document.getElementById('geolocation-address').addEventListener('click', event => {
-            currentAddress = document.getElementById('geolocation-address').value;
-            if (currentAddress !== '')
-            document.getElementById('geolocation-address').value='';
+
+    echo '        <link rel="stylesheet" href="'.get_osm_leaflet_css_url().'"/>';
+    echo '        <script src="'.get_osm_leaflet_js_url().'"></script>'; ?>
+<script type="text/javascript">
+        var $j = jQuery.noConflict();
+        $j(function() {
+            $j(document).ready(function() {
+                var hasLocation = false;
+                var postLatitude  = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
+                var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
+                var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
+                var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
+                var zoom = '<?php echo $zoom; ?>';
+                var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
+		var iconOptions = {
+		       iconUrl: image
+		    }
+		var customIcon = L.icon(iconOptions);
+		var markerOptions = {
+                    <?php if ((bool) get_option('geolocation_wp_pin')) { ?>
+                        icon: customIcon,
+                    <?php } ?>
+		       clickable: false,
+		       draggable: false
+	     	    }
+		var myMarker ={};
+
+                if (isPublic === '0')
+                    $j("#geolocation-public").attr('checked', false);
+                else
+                    $j("#geolocation-public").attr('checked', true);
+
+                if (isGeoEnabled === '0')
+                    disableGeo();
+                else
+                    enableGeo();
+
+
+                var lat_lng = [0.00, 0.00];
+        	var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
+        	var myMapBounds = [];
+		L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
+     			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
+    		}).addTo(map);
+                myMarker = L.marker(lat_lng, markerOptions).addTo(map);
+		map.setView(myMarker.getLatLng(),map.getZoom()); 
+                if ((postLatitude !== '') && (postLongitude !== '')) {
+                    var lat_lng = [postLatitude, postLongitude];
+		    myMarker.setLatLng(lat_lng);
+		    map.setView(myMarker.getLatLng(),map.getZoom()); 
+                    hasLocation = true;
+                    $j("#geolocation-latitude").val(postLatitude);
+                    $j("#geolocation-longitude").val(postLongitude);
+                    reverseGeocode(postLatitude, postLongitude);
+                }
+                var currentAddress;
+                var customAddress = false;
+                $j("#geolocation-address").click(function() {
+                    currentAddress = $j(this).val();
+                    if (currentAddress !== '')
+                        $j("#geolocation-address").val('');
+                });
+
+                $j("#geolocation-load").click(function() {
+                    if ($j("#geolocation-address").val() !== '') {
+                        customAddress = true;
+                        currentAddress = $j("#geolocation-address").val();
+                        geocode(currentAddress);
+                    }
+                });
+
+                $j("#geolocation-address").keyup(function(e) {
+                    if (e.keyCode === 13)
+                        $j("#geolocation-load").click();
+                });
+
+                $j("#geolocation-enabled").click(function() {
+                    enableGeo();
+                });
+
+                $j("#geolocation-disabled").click(function() {
+                    disableGeo();
+                });
+
+                function geocode(address) {
+			$j.getJSON('<?php echo get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, function(data) {
+                    		$j("#geolocation-latitude").val(data[0].lat);
+                    		$j("#geolocation-longitude").val(data[0].lon);
+                    		lat_lng = [data[0].lat, data[0].lon];
+
+				myMarker.setLatLng(lat_lng);
+				map.setView(myMarker.getLatLng(),map.getZoom()); 
+                    		hasLocation = true;
+                	});
+                }
+
+                function reverseGeocode(lat, lon) {
+			$j.getJSON('<?php echo get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon, function(data) {
+				console.log(data);
+				$j("#geolocation-address").val(data.display_name);
+			});
+                }
+
+                function enableGeo() {
+                    $j("#geolocation-address").removeAttr('disabled');
+                    $j("#geolocation-load").removeAttr('disabled');
+                    $j("#geolocation-map").css('filter', '');
+                    $j("#geolocation-map").css('opacity', '');
+                    $j("#geolocation-map").css('-moz-opacity', '');
+                    $j("#geolocation-public").removeAttr('disabled');
+                    $j("#geolocation-map").removeAttr('readonly');
+                    $j("#geolocation-disabled").removeAttr('checked');
+                    $j("#geolocation-enabled").attr('checked', 'checked');
+
+                    if (isPublic === '1')
+                        $j("#geolocation-public").attr('checked', 'checked');
+                }
+
+                function disableGeo() {
+                    $j("#geolocation-address").attr('disabled', 'disabled');
+                    $j("#geolocation-load").attr('disabled', 'disabled');
+                    $j("#geolocation-map").css('filter', 'alpha(opacity=50)');
+                    $j("#geolocation-map").css('opacity', '0.5');
+                    $j("#geolocation-map").css('-moz-opacity', '0.5');
+                    $j("#geolocation-map").attr('readonly', 'readonly');
+                    $j("#geolocation-public").attr('disabled', 'disabled');
+
+                    $j("#geolocation-enabled").removeAttr('checked');
+                    $j("#geolocation-disabled").attr('checked', 'checked');
+
+                    if (isPublic === '1')
+                        $j("#geolocation-public").attr('checked', 'checked');
+                }
+            });
         });
-        document.getElementById('geolocation-load').addEventListener('click', event => {
-            if (document.getElementById('geolocation-address').value !== '') {
-            customAddress = true;
-            currentAddress = document.getElementById('geolocation-address').value;
-            geocode(currentAddress);
-            }
-        });
-        document.getElementById('geolocation-address').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter')
-            document.getElementById('geolocation-load').click();
-        });
-        document.getElementById('geolocation-enabled').addEventListener('click', event => {
-            enableGeo();
-        });
-        document.getElementById('geolocation-disabled').addEventListener('click', event => {
-            disableGeo();
-        });
-    })
-            
-    function geocode(address) {
-        let request = new XMLHttpRequest();
-        request.open('GET'
-                ,'<?php echo get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address
-                , true);
-        request.onload = function() {
-            if (this.status >= 200 && this.status < 400) {
-                 // Success!
-                 let data = JSON.parse(this.response);
-                 //console.log(data);
-                 document.getElementById('geolocation-latitude').value=data[0].lat;
-                 document.getElementById('geolocation-longitude').value=data[0].lon;
-                 lat_lng = [data[0].lat, data[0].lon];
-                 //console.log(lat_lng);
-                 myMarker.setLatLng(lat_lng);
-                 map.setView(myMarker.getLatLng(),map.getZoom()); 
-                 hasLocation = true;
-            } else {
-                 // error
-            }
-        };
-        request.send();
-    }
-    
-    function reverseGeocode(lat, lon) {
-        let request = new XMLHttpRequest();
-        request.open('GET'
-                ,'<?php echo get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat='+lat+'&lon='+lon
-                , true);
-        request.onload = function() {
-            if (this.status >= 200 && this.status < 400) {
-                 // Success!
-                 let data = JSON.parse(this.response);
-                 //console.log(data);
-                 document.getElementById('geolocation-address').value = data.display_name;
-            } else {
-                 // error
-            }
-        };
-        request.send();
-    }
-    
-    function enableGeo() {
-        document.getElementById('geolocation-address').removeAttribute('disabled');
-        document.getElementById('geolocation-load').removeAttribute('disabled');
-        document.getElementById('geolocation-map').style.filter = '';
-        document.getElementById('geolocation-map').style.opacity = '';
-        document.getElementById('geolocation-map').style.MozOpacity = '';
-        document.getElementById('geolocation-public').removeAttribute('disabled');
-        document.getElementById('geolocation-map').removeAttribute('readonly');
-        document.getElementById('geolocation-disabled').removeAttribute('checked');
-        document.getElementById('geolocation-enabled').setAttribute('checked', true);
-        if (isPublic === '1')
-        document.getElementById('geolocation-public').setAttribute('checked', true);
-    }
-    
-    function disableGeo() {
-        document.getElementById('geolocation-address').setAttribute('disabled', 'disabled');
-        document.getElementById('geolocation-load').setAttribute('disabled', 'disabled');
-        document.getElementById('geolocation-map').style.filter = 'alpha(opacity=50)';
-        document.getElementById('geolocation-map').style.opacity = '0.5';
-        document.getElementById('geolocation-map').style.MozOpacity = '0.5';
-        document.getElementById('geolocation-public').setAttribute('disabled', 'disabled');
-        document.getElementById('geolocation-map').setAttribute('readonly', 'readonly');
-        document.getElementById('geolocation-enabled').removeAttribute('checked');
-        document.getElementById('geolocation-disabled').setAttribute('checked', true);
-        if (isPublic === '1')
-        document.getElementById('geolocation-public').setAttribute('checked', true);
-    }
     </script>
 <?php
 }
@@ -553,7 +534,7 @@ function add_geo_support()
     if ((esc_attr((string) get_option('geolocation_map_display')) <> 'plain') || (is_user_logged_in())) {
 
         // To do: add support for multiple Map API providers
-        switch ($mapProvider) {
+        switch (get_option('geolocation_provider')) {
             case 'google':
                 add_geo_support_google($posts);
                 break;
@@ -679,89 +660,99 @@ function add_geo_support_osm($posts)
     echo '<link rel="stylesheet" href="'.get_osm_leaflet_css_url().'"/>';
     echo '<script src="'.get_osm_leaflet_js_url().'"></script>';
 
-    $zoom = (int) get_option('geolocation_default_zoom');?>
-    <script type="text/javascript">
-    function ready(fn) {
-    	if (document.readyState != 'loading'){
-        	fn();
-	} else {
-	        document.addEventListener('DOMContentLoaded', fn);
-	}
-    }
-    ready(() => {
-    		var map = L.map(document.getElementById("map")).setView([51.505, -0.09], <?php echo $zoom; ?>);
-        	var myMapBounds = [];
-	    	L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
-     			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors' 
-    		}).addTo(map);
+    $zoom = (int) get_option('geolocation_default_zoom');
+    echo '<script type="text/javascript">
+			var $j = jQuery.noConflict();		    
+			$j(function(){
+        		var map = L.map(document.getElementById("map")).setView([51.505, -0.09], ' . $zoom.');
+        		var myMapBounds = [];
+			L.tileLayer(\''.get_osm_tiles_url().'\', {
+     				attribution: \'&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors\' 
+    			}).addTo(map);
 
-		var allowDisappear = true;
-		var cancelDisappear = false;
+				var allowDisappear = true;
+				var cancelDisappear = false;
 
 		var iconOptions = {
-			iconUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>'
+		       iconUrl: \'' . esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) . '\'
 		    }
 		var customIcon = L.icon(iconOptions);
-		var markerOptions = {
-<?php           if ((bool) get_option('geolocation_wp_pin')) { ?>
-     	       	       icon: customIcon,';
-<?php           } 	?>
-     		       clickable: false,
+		var markerOptions = {';
+                    if ((bool) get_option('geolocation_wp_pin')) { 
+     echo '	       	       icon: customIcon,';
+     }
+     echo '		       clickable: false,
 		       draggable: false
 	     	    }
-		var geolocationLinks = document.querySelectorAll('.geolocation-link');
 
-		for (var i = 0; i < geolocationLinks.length; i++) {
-		    geolocationLinks[i].addEventListener('mouseover', function() {
-	            	var lat = this.getAttribute('name').split(',')[0];
-	            	var lng = this.getAttribute('name').split(',')[1];
-	            	var lat_lng = [lat, lng];
-	            	L.marker(lat_lng, markerOptions).addTo(map);
-	            	myMapBounds.push(lat_lng);                              
-	            	map.fitBounds(myMapBounds);                             
-	            	map.setZoom(<?php echo $zoom; ?>);
-			const rect = this.getBoundingClientRect();
-			const top = rect.top + window.scrollY + 20;
-			const left = rect.left + window.scrollX;
+				$j(".geolocation-link").mouseover(function(){
+					$j("#map").stop(true, true);
+					var lat = $j(this).attr("name").split(",")[0];
+					var lng = $j(this).attr("name").split(",")[1];
+					var lat_lng = [lat, lng];
+        			L.marker(lat_lng, markerOptions).addTo(map).bindPopup("xyz");
+					map.setZoom('. $zoom.');
+        				myMapBounds.push(lat_lng);				
+					map.fitBounds(myMapBounds);				
+					map.setZoom('. $zoom.');
 
-	            	document.querySelector('#map').style.opacity = 1;
-	            	document.querySelector('#map').style.zIndex = '99';
-	            	document.querySelector('#map').style.visibility = 'visible';
-			document.querySelector("#map").style.top = top + "px";
-			document.querySelector("#map").style.left = left + "px";
-
-	            	allowDisappear = false;
-		    });
-
-		    geolocationLinks[i].addEventListener('mouseout', function() {
-		        allowDisappear = true;
-		        cancelDisappear = false;
-		        setTimeout(function() {
-		            if((allowDisappear) && (!cancelDisappear)) {
-		                document.querySelector('#map').style.opacity = 0;
-		                document.querySelector('#map').style.zIndex = '-1';
-		                allowDisappear = true;
-		                cancelDisappear = false;
-		            }
-		        }, 800);
-		    });
-		}
-
-		document.querySelector("#map").addEventListener("mouseover", function(){
-			    allowDisappear = false;
-			        cancelDisappear = true;
-			        this.style.visibility = "visible";
-		});
-
-		document.querySelector("#map").addEventListener("mouseout", function(){
-			    allowDisappear = true;
-			        cancelDisappear = false;
-			        document.querySelectorAll(".geolocation-link").forEach(el => el.dispatchEvent(new Event("mouseout")));
-		});
-
-});
-	</script>
-<?php
+					var offset = $j(this).offset();
+					$j("#map").fadeTo(250, 1);
+					$j("#map").css("z-index", "99");
+					$j("#map").css("visibility", "visible");
+					$j("#map").css("top", offset.top + 20);
+					$j("#map").css("left", offset.left);
+					
+					allowDisappear = false;
+					$j("#map").css("visibility", "visible");
+				});
+			
+				$j(".geolocation-link").mouseout(function(){
+					allowDisappear = true;
+					cancelDisappear = false;
+					setTimeout(function() {
+						if((allowDisappear) && (!cancelDisappear))
+						{
+							$j("#map").fadeTo(500, 0, function() {
+								$j("#map").css("z-index", "-1");
+								allowDisappear = true;
+								cancelDisappear = false;
+							});
+						}
+				    },800);
+				});
+			
+				$j(".geolocation-link").mouseover(function(){
+				});
+			
+				$j(".geolocation-link").mouseout(function(){
+					allowDisappear = true;
+					cancelDisappear = false;
+					setTimeout(function() {
+						if((allowDisappear) && (!cancelDisappear))
+						{
+							$j("#map").fadeTo(500, 0, function() {
+								$j("#map").css("z-index", "-1");
+								allowDisappear = true;
+								cancelDisappear = false;
+							});
+						}
+				    },800);
+				});
+			
+				$j("#map").mouseover(function(){
+					allowDisappear = false;
+					cancelDisappear = true;
+					$j("#map").css("visibility", "visible");
+				});
+				
+				$j("#map").mouseout(function(){
+					allowDisappear = true;
+					cancelDisappear = false;
+					$j(".geolocation-link").mouseout();
+				});
+			});
+	</script>';
 }
 
 function geo_has_shortcode($content)
@@ -787,7 +778,7 @@ function display_location($content)
 function display_location_page($content)
 {
     // To do: add support for multiple Map API providers
-    switch ($mapProvider) {
+    switch (get_option('geolocation_provider')) {
         case 'google':
             return display_location_page_google($content);
         case 'osm':
@@ -830,8 +821,7 @@ function display_location_page_osm($content)
             )
         )
     );
-    //$zoom = (int) get_option('geolocation_default_zoom');
-    $zoom = 1;
+    $zoom = (int) get_option('geolocation_default_zoom');
     $script = $script."<script src=\"".get_osm_leaflet_js_url()."\"></script>"; 
     $script = $script."<script type=\"text/javascript\">
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom.");
@@ -1059,7 +1049,7 @@ function pullJSON_osm($latitude, $longitude)
 	$jsonfile = curl_exec($ch);
 	curl_close($ch);
 	$decoded = json_decode($jsonfile, true);
-	return $decoded;
+    	return $decoded;
 }
 function pullJSON_google($latitude, $longitude)
 {
@@ -1090,7 +1080,7 @@ function reverse_geocode($latitude, $longitude)
     $country = '';
     //
     // To do: add support for multiple Map API providers
-    switch ($mapProvider) {
+    switch (get_option('geolocation_provider')) {
         case 'google':
             	$json = pullJSON_google($latitude, $longitude);
      		foreach ($json->results as $result) {
@@ -1108,11 +1098,11 @@ function reverse_geocode($latitude, $longitude)
     		}
             	break;
         case 'osm':
-            $json = pullJSON_osm($latitude, $longitude);
-            $city = $json["address"]["city"];
-            $state = $json["address"]["suburb"];
-            $country = $json["address"]["country"];
-            break;
+            	$json = pullJSON_osm($latitude, $longitude);
+		$city = $json["address"]["city"];
+		$state = $json["address"]["suburb"];
+		$country = $json["address"]["country"];
+            	break;
     }    
    return buildAddress($city, $state, $country);
 }
