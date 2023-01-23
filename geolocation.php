@@ -67,12 +67,11 @@ function plugin_upgrade_completed($upgrader_object, $options)
 // display custom admin notice
 function geolocation_custom_admin_notice()
 {
-    if (!get_option('geolocation_google_maps_api_key') and get_option('geolocation_provider') == 'google') { ?>
+      if (!get_option('geolocation_google_maps_api_key') and get_option('geolocation_provider') == 'google') { ?>
         <div class="notice notice-error">
             <p><?php _e('Google Maps API key is missing for', 'geolocation'); ?> <a href="options-general.php?page=geolocation">Geolocation</a>!</p>
         </div>
-    <?php
-    }
+<?php }
 }
 
 add_action('admin_notices', 'geolocation_custom_admin_notice');

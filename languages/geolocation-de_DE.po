@@ -9,46 +9,46 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-01-22 18:38+0000\n"
+"PO-Revision-Date: 2023-01-23 12:16+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "Language: de-DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1038
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1037
 msgid " Addresses have been updated!"
 msgstr "Die Adressen wurden aktualisiert"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:60
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:63
 msgid "After the post."
 msgstr "Nach dem Artikel."
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:59
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:62
 msgid "Before the post."
 msgstr "Vor dem Artikel."
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:86
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:89
 msgid "Block"
 msgstr "Haus"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:84
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:87
 msgid "City"
 msgstr "Stadt"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:82
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:85
 msgid "Country"
 msgstr "Land/Staat"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:78
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:81
 msgid "Default Zoom Level"
 msgstr "Standard Zoom Darstellung"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:50
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:53
 msgid "Dimensions"
 msgstr "Ma&szlig;e"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:98
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:101
 msgid "Dimensions Page"
 msgstr "Ma&szlig;e Seite"
 
@@ -57,22 +57,22 @@ msgid "Displays post geotag information on an embedded map."
 msgstr ""
 "Stellt die Geoinformationen des Artikels auf einer eingebetteten Karte dar."
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:95
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:94
 msgid "Enter your address"
 msgstr "Geben Sie ihre Adresse ein"
 
 #. Name of the plugin
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:83 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:120
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:82 
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:119
 msgid "Geolocation"
 msgstr "Geolocation"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:44 
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:47 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.php:137
 msgid "Geolocation Plugin Settings"
 msgstr "Geolocation Plugin Einstellungen"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:80
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:83
 msgid "Globe"
 msgstr "Welt"
 
@@ -80,12 +80,12 @@ msgstr "Welt"
 msgid "Google Maps API key is missing for"
 msgstr "Der Google Maps API Schl&uuml;ssel fehlt f&uuml;r"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:53 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:101
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:56 
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:104
 msgid "Height"
 msgstr "H&ouml;he"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:65
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:68
 msgid "How would you like your maps to be displayed?"
 msgstr "Wie sollen Ihre Karten dargestellt werden?"
 
@@ -97,77 +97,91 @@ msgstr "https://wordpress.org/extend/plugins/geolocation/"
 msgid "https://www.yann-michel.de/geolocation"
 msgstr "https://www.yann-michel.de/geolocation"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:138
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:141
 msgid "Leaflet CSS"
 msgstr "Leaflet CSS"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:134
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:137
 msgid "Leaflet JS"
 msgstr "Leaflet JS"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:97
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:96
 msgid "Load"
 msgstr "Laden"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:126
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:129
 msgid "Make use of proxy plugin."
 msgstr "Funktionen des Proxy-Plugins verwenden."
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:142
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:145
 msgid "Nominatim (Geocoding)"
 msgstr "Nominatim (Geocoding)"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:108
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:107
 msgid "Off"
 msgstr "Aus"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:106
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:105
 msgid "On"
 msgstr "Ein"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:68
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:71
 msgid "Plain text."
 msgstr "Schlichter Text"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:57
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:60
 msgid "Position"
 msgstr "Position"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:976 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:979
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:975 
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:978
 msgid "Posted from "
 msgstr "Geschrieben aus "
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:103
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:102
 msgid "Public"
 msgstr "&Ouml;ffentlich"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:162
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:165
 msgid "Save Changes"
 msgstr "&Auml;nderungen speichern"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:94
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:97
 msgid "Show your support for WordPress by using the WordPress map pin."
 msgstr ""
 "Zeig Deine Unterst&uuml;tzung f&uuml;r WordPress indem Du den Pin benutzt."
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:70
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:73
 msgid "Simple link w/hover."
 msgstr "Einfache Verkn&uuml;pfung  mit einblendbarer Karte."
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:83
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:86
 msgid "State"
 msgstr "Bundesland"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:85
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:88
 msgid "Street"
 msgstr "Stra&szlig;e"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:130
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:44
+msgid ""
+"Thank you for using the geolocation plugin. I would appreciate your <a "
+"href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" "
+"target=\"_blank\">feedback</a>, and I am also open to <a href=\"https:"
+"//wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\">"
+"suggestions</a>."
+msgstr ""
+"Danke f&uuml;r die Benutzung des geolocation plugins. &Uuml;ber <a "
+"href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" "
+"target=\"_blank\">Feedback</a> oder den <a href=\"https://wordpress."
+"org/support/plugin/geolocation/#new-topic\" target=\"_blank\"> Vorschlag von "
+"Ideen</a> w&uuml;rde ich mich freuen."
+
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:133
 msgid "Tiles url (Caching)"
 msgstr "Kachel URL (Caching)"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:156
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:159
 msgid ""
 "Update all addresses from posts that have location information<br>(only once "
 "this setup is saved)."
@@ -175,20 +189,20 @@ msgstr ""
 "Alle Adressen f&uuml;r Artikel mit Geodaten neu ableiten.<br>(Einmalig beim "
 "Speichern dieses Setup.)"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:125
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:128
 msgid "Use Proxy"
 msgstr "Proxy verwenden"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:149
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:152
 msgid "Used Language for Adresses"
 msgstr "Genutzte Sprache f&uumlr die gezeigten Adressen"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:61
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:64
 msgid "Wherever I put the shortcode: "
 msgstr "Wo immer auch die folgende Markierung steht: "
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:52 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:100
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:55 
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:103
 msgid "Width"
 msgstr "Breite"
 

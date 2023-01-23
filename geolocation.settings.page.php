@@ -40,6 +40,9 @@ function geolocation_settings_page()
             margin: 0 5px 0 2px;
         }
     </style>
+    <div class="notice notice-info">
+        <p><?php _e( 'Thank you for using the geolocation plugin. I would appreciate your <a href="https://wordpress.org/support/plugin/geolocation/reviews/#new-post" target="_blank">feedback</a>, and I am also open to <a href="https://wordpress.org/support/plugin/geolocation/#new-topic" target="_blank">suggestions</a>.', 'geolocation' ); ?></p>
+    </div>
     <div class="wrap">
         <h2><?php _e('Geolocation Plugin Settings', 'geolocation'); ?></h2>
     </div>
