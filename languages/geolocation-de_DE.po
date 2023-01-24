@@ -9,14 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-01-23 12:16+0000\n"
+"PO-Revision-Date: 2023-01-24 12:44+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "Language: de-DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Loco https://localise.biz/"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1037
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1046
 msgid " Addresses have been updated!"
 msgstr "Die Adressen wurden aktualisiert"
 
@@ -57,13 +57,13 @@ msgid "Displays post geotag information on an embedded map."
 msgstr ""
 "Stellt die Geoinformationen des Artikels auf einer eingebetteten Karte dar."
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:94
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:103
 msgid "Enter your address"
 msgstr "Geben Sie ihre Adresse ein"
 
 #. Name of the plugin
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:82 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:119
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:91 
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:128
 msgid "Geolocation"
 msgstr "Geolocation"
 
@@ -76,7 +76,7 @@ msgstr "Geolocation Plugin Einstellungen"
 msgid "Globe"
 msgstr "Welt"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:72
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:81
 msgid "Google Maps API key is missing for"
 msgstr "Der Google Maps API Schl&uuml;ssel fehlt f&uuml;r"
 
@@ -105,7 +105,7 @@ msgstr "Leaflet CSS"
 msgid "Leaflet JS"
 msgstr "Leaflet JS"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:96
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:105
 msgid "Load"
 msgstr "Laden"
 
@@ -117,11 +117,11 @@ msgstr "Funktionen des Proxy-Plugins verwenden."
 msgid "Nominatim (Geocoding)"
 msgstr "Nominatim (Geocoding)"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:107
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:116
 msgid "Off"
 msgstr "Aus"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:105
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:114
 msgid "On"
 msgstr "Ein"
 
@@ -133,14 +133,18 @@ msgstr "Schlichter Text"
 msgid "Position"
 msgstr "Position"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:975 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:978
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:984 
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:987
 msgid "Posted from "
 msgstr "Geschrieben aus "
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:102
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:111
 msgid "Public"
 msgstr "&Ouml;ffentlich"
+
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:56
+msgid "Review"
+msgstr "Bewertung"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:165
 msgid "Save Changes"
@@ -162,6 +166,10 @@ msgstr "Bundesland"
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:88
 msgid "Street"
 msgstr "Stra&szlig;e"
+
+#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:57
+msgid "Support"
+msgstr "Support"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:44
 msgid ""
