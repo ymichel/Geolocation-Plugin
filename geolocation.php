@@ -51,6 +51,15 @@ function add_my_scripts()
 }
 require_once(GEOLOCATION__PLUGIN_DIR.'geolocation.settings.php');
 
+function geolocation_append_support_and_faq_links( $links_array, $plugin_file_name ) {
+    if ( strpos( $plugin_file_name, basename(__FILE__) ) ) {
+        $links_array[] = '<a href="https://wordpress.org/support/plugin/geolocation/reviews/#new-post" target="_blank">' . __('Review', 'geolocation') . '</a>';
+        $links_array[] = '<a href="https://wordpress.org/support/plugin/geolocation/#new-topic" target="_blank">' . __('Support', 'geolocation') . '</a>';
+    }
+    return $links_array;
+}
+add_filter( 'plugin_row_meta', 'geolocation_append_support_and_faq_links', 10, 2 );
+
 function plugin_upgrade_completed($upgrader_object, $options)
 {
     $our_plugin = plugin_basename(__FILE__);
