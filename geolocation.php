@@ -60,6 +60,16 @@ function geolocation_append_support_and_faq_links( $links_array, $plugin_file_na
 }
 add_filter( 'plugin_row_meta', 'geolocation_append_support_and_faq_links', 10, 2 );
 
+function geolocation_customizer_action_links( $links_array, $plugin_file_name ) {
+
+    if ( strpos( $plugin_file_name, basename(__FILE__) ) ) {
+                $config_link = '<a href="options-general.php?page=geolocation">'.__('Settings', 'geolocation') .'</a>';
+                array_unshift( $links_array, $config_link );
+    }
+    return $links_array;
+}
+add_action( 'plugin_action_links', 'geolocation_customizer_action_links', 10, 2 );
+
 function plugin_upgrade_completed($upgrader_object, $options)
 {
     $our_plugin = plugin_basename(__FILE__);

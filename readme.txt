@@ -39,6 +39,7 @@ If you struggle while installing it or have feature requests, please feel free t
 
 = 1.3 =
 * code cleanup
+* enhancing plugin options in install functionality
 * partially removal of jQuery usage
 
 = 1.2 =
