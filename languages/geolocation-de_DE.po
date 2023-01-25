@@ -1,20 +1,5 @@
 # Copyright (C) 2019 Geolocation
 # This file is distributed under the same license as the Geolocation package.
-msgid ""
-msgstr ""
-"Project-Id-Version: Geolocation 0.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Geolocation-"
-"Plugin\n"
-"POT-Creation-Date: 2019-02-16 08:20:05+00:00\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-01-25 08:59+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: German\n"
-"Language: de-DE\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Loco https://localise.biz/"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1056
 msgid " Addresses have been updated!"
@@ -52,22 +37,18 @@ msgstr "Ma&szlig;e"
 msgid "Dimensions Page"
 msgstr "Ma&szlig;e Seite"
 
-#. Description of the plugin
+#: Description of the plugin
 msgid "Displays post geotag information on an embedded map."
-msgstr ""
-"Stellt die Geoinformationen des Artikels auf einer eingebetteten Karte dar."
+msgstr "Stellt die Geoinformationen des Artikels auf einer eingebetteten Karte dar."
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:113
 msgid "Enter your address"
 msgstr "Geben Sie ihre Adresse ein"
 
-#. Name of the plugin
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:101 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:138
+#: Name of the plugin
 msgid "Geolocation"
 msgstr "Geolocation"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:47 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.php:137
 msgid "Geolocation Plugin Settings"
 msgstr "Geolocation Plugin Einstellungen"
@@ -81,7 +62,6 @@ msgid "Google Maps API key is missing for"
 msgstr "Der Google Maps API Schl&uuml;ssel fehlt f&uuml;r"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:56 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:104
 msgid "Height"
 msgstr "H&ouml;he"
 
@@ -89,11 +69,11 @@ msgstr "H&ouml;he"
 msgid "How would you like your maps to be displayed?"
 msgstr "Wie sollen Ihre Karten dargestellt werden?"
 
-#. URI of the plugin
+#: URI of the plugin
 msgid "https://wordpress.org/extend/plugins/geolocation/"
 msgstr "https://wordpress.org/extend/plugins/geolocation/"
 
-#. Author URI of the plugin
+#: Author URI of the plugin
 msgid "https://www.yann-michel.de/geolocation"
 msgstr "https://www.yann-michel.de/geolocation"
 
@@ -134,7 +114,6 @@ msgid "Position"
 msgstr "Position"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:994 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:997
 msgid "Posted from "
 msgstr "Geschrieben aus "
 
@@ -156,8 +135,7 @@ msgstr "Einstellungen"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:97
 msgid "Show your support for WordPress by using the WordPress map pin."
-msgstr ""
-"Zeig Deine Unterst&uuml;tzung f&uuml;r WordPress indem Du den Pin benutzt."
+msgstr "Zeig Deine Unterst&uuml;tzung f&uuml;r WordPress indem Du den Pin benutzt."
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:73
 msgid "Simple link w/hover."
@@ -176,30 +154,16 @@ msgid "Support"
 msgstr "Support"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:44
-msgid ""
-"Thank you for using the geolocation plugin. I would appreciate your <a "
-"href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" "
-"target=\"_blank\">feedback</a>, and I am also open to <a href=\"https:"
-"//wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\">"
-"suggestions</a>."
-msgstr ""
-"Danke f&uuml;r die Benutzung des geolocation plugins. &Uuml;ber <a "
-"href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" "
-"target=\"_blank\">Feedback</a> oder den <a href=\"https://wordpress."
-"org/support/plugin/geolocation/#new-topic\" target=\"_blank\"> Vorschlag von "
-"Ideen</a> w&uuml;rde ich mich freuen."
+msgid "Thank you for using the geolocation plugin. I would appreciate your <a href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" target=\"_blank\">feedback</a>, and I am also open to <a href=\"https://wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\">suggestions</a>."
+msgstr "Danke f&uuml;r die Benutzung des geolocation plugins. &Uuml;ber <a href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" target=\"_blank\">Feedback</a> oder den <a href=\"https://wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\"> Vorschlag von Ideen</a> w&uuml;rde ich mich freuen."
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:133
 msgid "Tiles url (Caching)"
 msgstr "Kachel URL (Caching)"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:159
-msgid ""
-"Update all addresses from posts that have location information<br>(only once "
-"this setup is saved)."
-msgstr ""
-"Alle Adressen f&uuml;r Artikel mit Geodaten neu ableiten.<br>(Einmalig beim "
-"Speichern dieses Setup.)"
+msgid "Update all addresses from posts that have location information<br>(only once this setup is saved)."
+msgstr "Alle Adressen f&uuml;r Artikel mit Geodaten neu ableiten.<br>(Einmalig beim Speichern dieses Setup.)"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:128
 msgid "Use Proxy"
@@ -214,10 +178,9 @@ msgid "Wherever I put the shortcode: "
 msgstr "Wo immer auch die folgende Markierung steht: "
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:55 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:103
 msgid "Width"
 msgstr "Breite"
 
-#. Author of the plugin
+#: Author of the plugin
 msgid "Yann Michel"
 msgstr "Yann Michel"

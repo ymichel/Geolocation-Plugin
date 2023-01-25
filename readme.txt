@@ -40,7 +40,6 @@ If you struggle while installing it or have feature requests, please feel free t
 = 1.3 =
 * code cleanup
 * enhancing plugin options in install functionality
-* partially removal of jQuery usage
 
 = 1.2 =
 * introduce dynamic preview in settings page to directly see the effect instead of displaying fixed images
