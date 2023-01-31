@@ -142,7 +142,7 @@ function geolocation_settings_page()
 		     <td><?php echo get_osm_leaflet_css_url(); ?></td>
                 </tr>
                 <tr>
-		<th><?php _e('Nominatim (Geocoding)', 'geolocation') ?></th>
+		<th><?php _e('Nominatim ([Reverse-]Geocoding)', 'geolocation') ?></th>
 		     <td><?php echo get_osm_nominatim_url(); ?></td>
                 </tr>
              </table>

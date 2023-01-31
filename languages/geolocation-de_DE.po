@@ -94,8 +94,8 @@ msgid "Make use of proxy plugin."
 msgstr "Funktionen des Proxy-Plugins verwenden."
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:145
-msgid "Nominatim (Geocoding)"
-msgstr "Nominatim (Geocoding)"
+msgid "Nominatim ([Reverse-]Geocoding)"
+msgstr "Nominatim ([Reverse-]Geocoding)"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:126
 msgid "Off"

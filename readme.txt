@@ -4,7 +4,7 @@ Tags: geolocation, maps, geotag, google maps, travel, osm, Reise, location based
 Requires at least: 6.0
 Requires PHP: 7.1
 Tested up to: 6.1
-Stable tag: 1.3
+Stable tag: 1.4
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location where a post was created.
 
@@ -36,6 +36,9 @@ If you struggle while installing it or have feature requests, please feel free t
 3. Showing all posts providing location information
 
 == Changelog ==
+
+= 1.4 =
+* translations
 
 = 1.3 =
 * code cleanup
