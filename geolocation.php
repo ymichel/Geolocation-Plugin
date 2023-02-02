@@ -50,8 +50,8 @@ function add_my_scripts()
     );
 }
 require_once(GEOLOCATION__PLUGIN_DIR.'geolocation.settings.php');
-require_once(GEOLOCATION__PLUGIN_DIR.'geolocation_provider_google.php');
-require_once(GEOLOCATION__PLUGIN_DIR.'geolocation_provider_osm.php');
+require_once(GEOLOCATION__PLUGIN_DIR.'geolocation.map-provider_google.php');
+require_once(GEOLOCATION__PLUGIN_DIR.'geolocation.map-provider_osm.php');
 
 function geolocation_append_support_and_faq_links( $links_array, $plugin_file_name ) {
     if ( strpos( $plugin_file_name, basename(__FILE__) ) ) {
