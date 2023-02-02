@@ -71,7 +71,7 @@ function default_settings()
     update_option('geolocation_updateAddresses', false);
     default_setting('geolocation_map_width_page', '600');
     default_setting('geolocation_map_height_page', '300');
-    default_setting('geolocation_provider', 'google');
+    default_setting('geolocation_provider', 'osm');
     default_setting('geolocation_shortcode', '[geolocation]');
     default_setting('geolocation_osm_use_proxy', false);
     default_setting('geolocation_osm_tiles_url', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png');

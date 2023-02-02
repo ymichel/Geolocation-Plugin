@@ -39,6 +39,7 @@ If you struggle while installing it or have feature requests, please feel free t
 
 = 1.4 =
 * translations
+* split funcitons by providers
 
 = 1.3 =
 * code cleanup
