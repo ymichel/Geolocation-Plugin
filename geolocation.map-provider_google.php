@@ -4,9 +4,9 @@ function admin_head_google()
 {
     global $post;
     $post_id = $post->ID;
-    $zoom = (int) get_option('geolocation_default_zoom');
-    echo '		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key("?").'"></script>'; ?>
+    $zoom = (int) get_option('geolocation_default_zoom');?>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>"></script>'; ?>
     <script type="text/javascript">
         var $j = jQuery.noConflict();
         $j(function() {
@@ -190,33 +190,32 @@ function add_geo_support_google($posts)
     default_settings();
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
-    $post_count = count($posts);
-    echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js'.get_google_maps_api_key("?").'"></script>
+    $post_count = count($posts);?>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>"></script>
 	<script type="text/javascript">
 		var $j = jQuery.noConflict();
 		$j(function(){
 			var center = new google.maps.LatLng(0.0, 0.0);
 			var myOptions = {
-		      zoom: ' . $zoom.',
+		      zoom: <?php echo $zoom; ?>,
 		      center: center,
 		      mapTypeId: google.maps.MapTypeId.ROADMAP
 		    }
 		    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-		    var image = "' . esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))).'";
-		    var shadow = new google.maps.MarkerImage("' . plugins_url('img/wp_pin_shadow.png', __FILE__).'",
+		    var image = "<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>";
+		    var shadow = new google.maps.MarkerImage("<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__); ?>",
 		    	new google.maps.Size(39, 23),
 				new google.maps.Point(0, 0),
 				new google.maps.Point(12, 25));
 		    var marker = new google.maps.Marker({
 					position: center, 
 					map: map, 
-					title:"Post Location"';
-    if ((bool) get_option('geolocation_wp_pin')) {
-        echo ',
-					icon: image,
-					shadow: shadow';
-    }
-    echo '});
+ <?php   if ((bool) get_option('geolocation_wp_pin')) { ?>
+ 					icon: image,
+					shadow: shadow,
+ <?php   } ?>
+                    title:"Post Location"
+                }
 			
 			var allowDisappear = true;
 			var cancelDisappear = false;
@@ -286,8 +285,8 @@ function add_geo_support_google($posts)
 				window.location = "https://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
 			});
 		});
-	</script>';
-}
+	</script>
+<?php }
 
 function display_location_page_google($content)
 {
