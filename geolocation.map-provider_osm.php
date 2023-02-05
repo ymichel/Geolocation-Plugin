@@ -181,11 +181,9 @@ function add_geo_support_osm($posts)
                 var lng = $j(this).attr("name").split(",")[1];
                 var lat_lng = [lat, lng];
                 L.marker(lat_lng, markerOptions).addTo(map).bindPopup("xyz");
-                map.setZoom('<?php echo $zoom; ?>');
                 myMapBounds.push(lat_lng);
-                map.fitBounds(myMapBounds);
-                map.setZoom('<?php echo $zoom; ?>');
-
+                map.setView(new L.LatLng(lat, lng), <?php echo $zoom; ?>);
+                
                 var offset = $j(this).offset();
                 $j("#map").fadeTo(250, 1);
                 $j("#map").css("z-index", "99");
