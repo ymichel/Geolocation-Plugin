@@ -119,7 +119,7 @@ function admin_head_google()
                             if (status === google.maps.GeocoderStatus.OK) {
                                 placeMarker(results[0].geometry.location);
                                 if (!hasLocation) {
-//TODO check                                    map.setZoom(16);
+                                    //TODO check   map.setZoom(16);
                                     hasLocation = true;
                                 }
                             }
@@ -204,9 +204,10 @@ function add_geo_support_google($posts)
 		    var map = new google.maps.Map(document.getElementById("map"), myOptions);
 		    var image = "<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>";
 		    var shadow = new google.maps.MarkerImage("<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__); ?>",
-		    	new google.maps.Size(39, 23),
-				new google.maps.Point(0, 0),
-				new google.maps.Point(12, 25));
+		    	    new google.maps.Size(39, 23),
+				    new google.maps.Point(0, 0),
+				    new google.maps.Point(12, 25)
+                );
 		    var marker = new google.maps.Marker({
 					position: center, 
 					map: map, 
@@ -215,7 +216,7 @@ function add_geo_support_google($posts)
 					shadow: shadow,
  <?php   } ?>
                     title:"Post Location"
-                }
+                });
 			
 			var allowDisappear = true;
 			var cancelDisappear = false;
