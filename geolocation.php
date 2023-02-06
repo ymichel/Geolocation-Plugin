@@ -99,11 +99,11 @@ add_action('admin_notices', 'geolocation_custom_admin_notice');
 
 function geolocation_add_custom_box()
 {
-	    if (function_exists('add_meta_box')) {
-		            add_meta_box('geolocation_sectionid', __('Geolocation', 'geolocation'), 'geolocation_inner_custom_box', 'post', 'advanced');
-			        } else {
-					        add_action('dbx_post_advanced', 'geolocation_old_custom_box');
-						    }
+	if (function_exists('add_meta_box')) {
+	    add_meta_box('geolocation_sectionid', __('Geolocation', 'geolocation'), 'geolocation_inner_custom_box', 'post', 'advanced');
+	} else {
+	    add_action('dbx_post_advanced', 'geolocation_old_custom_box');
+    }
 }
 
 function geolocation_inner_custom_box()
@@ -163,23 +163,22 @@ function geolocation_save_postdata($post_id)
 
     $latitude = clean_coordinate($_POST['geolocation-latitude']);
     $longitude = clean_coordinate($_POST['geolocation-longitude']);
-    $address = reverse_geocode($latitude, $longitude);
-    $public = $_POST['geolocation-public'];
-    $on = $_POST['geolocation-on'];
-
     if ((!empty($latitude)) && (!empty($longitude))) {
         update_post_meta($post_id, 'geo_latitude', $latitude);
         update_post_meta($post_id, 'geo_longitude', $longitude);
 
+        $address = reverse_geocode($latitude, $longitude);
         if ($address != '') {
             update_post_meta($post_id, 'geo_address', $address);
         }
-        if ($on) {
+
+        if ($_POST['geolocation-on']) {
             update_post_meta($post_id, 'geo_enabled', 1);
         } else {
             update_post_meta($post_id, 'geo_enabled', 0);
         }
-        if ($public) {
+
+        if ($_POST['geolocation-public']) {
             update_post_meta($post_id, 'geo_public', 1);
         } else {
             update_post_meta($post_id, 'geo_public', 0);
