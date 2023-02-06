@@ -107,43 +107,46 @@ function geolocation_add_custom_box()
 }
 
 function geolocation_inner_custom_box()
-{
-	    echo '<input type="hidden" id="geolocation_nonce" name="geolocation_nonce" value="'.
-		            wp_create_nonce(plugin_basename(__FILE__)).'" />';
-	        echo '
+{?>
+	    <input type="hidden" id="geolocation_nonce" name="geolocation_nonce" value="<?php echo wp_create_nonce(plugin_basename(__FILE__)); ?>" />
 		<label class="screen-reader-text" for="geolocation-address">Geolocation</label>
-		<div class="taghint">' . __('Enter your address', 'geolocation').'</div>
+		<div class="taghint"><?php echo __('Enter your address', 'geolocation'); ?></div>
 		<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
-		<input id="geolocation-load" type="button" class="button geolocationadd" value="' . __('Load', 'geolocation').'" tabindex="3" />
+		<input id="geolocation-load" type="button" class="button geolocationadd" value="<?php echo  __('Load', 'geolocation'); ?>" tabindex="3" />
 		<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
 		<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
+		<input type="hidden" id="image-latitude" name="image-latitude" />
+		<input type="hidden" id="image-longitude" name="image-longitude" />
 		<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:265px;height:200px;margin-top:5px;"></div>
 		<div style="margin:5px 0 0 0;">
 			<input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
-			<label for="geolocation-public">' . __('Public', 'geolocation').'</label>
+			<label for="geolocation-public"><?php echo  __('Public', 'geolocation'); ?></label>
 			<div style="float:right">
 				<input id="geolocation-enabled" name="geolocation-on" type="radio" value="1" />
-				<label for="geolocation-enabled">' . __('On', 'geolocation').'</label>
+				<label for="geolocation-enabled"><?php echo  __('On', 'geolocation'); ?></label>
 				<input id="geolocation-disabled" name="geolocation-on" type="radio" value="0" />
-				<label for="geolocation-disabled">' . __('Off', 'geolocation').'</label>
+				<label for="geolocation-disabled"><?php echo  __('Off', 'geolocation'); ?></label>
 			</div>
 		</div>
-	';
+<?php
 }
 
 /* Prints the edit form for pre-WordPress 2.5 post/page */
 function geolocation_old_custom_box()
-{
-	    echo '<div class="dbx-b-ox-wrapper">'."\n";
-	        echo '<fieldset id="geolocation_fieldsetid" class="dbx-box">'."\n";
-	        echo '<div class="dbx-h-andle-wrapper"><h3 class="dbx-handle">'.
-			        __('Geolocation', 'geolocation')."</h3></div>";
-
-		    echo '<div class="dbx-c-ontent-wrapper"><div class="dbx-content">';
-
-		    geolocation_inner_custom_box();
-
-		        echo "</div></div></fieldset></div>\n";
+{?>
+	<div class="dbx-b-ox-wrapper">
+    <fieldset id="geolocation_fieldsetid" class="dbx-box">
+	    <div class="dbx-h-andle-wrapper">
+            <h3 class="dbx-handle"><?php echo__('Geolocation', 'geolocation'); ?></h3>
+        </div>
+        <div class="dbx-c-ontent-wrapper"><div class="dbx-content">
+        <?php
+    	    geolocation_inner_custom_box();
+        ?>
+        </div></div>
+    </fieldset>
+    </div>
+<?php
 }
 
 
