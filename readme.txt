@@ -1,6 +1,6 @@
 === Geolocation ===
 Contributors: frsh, mdawaffe, automattic, ymichel
-Tags: geolocation, maps, geotag, google maps, travel, osm, Reise, location based, location, Karte, journey, geo, GPS
+Tags: geolocation, maps, geotag, GPS, travel, location, journey
 Requires at least: 6.0
 Requires PHP: 7.1
 Tested up to: 6.1
