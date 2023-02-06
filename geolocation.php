@@ -137,7 +137,7 @@ function geolocation_old_custom_box()
 	<div class="dbx-b-ox-wrapper">
     <fieldset id="geolocation_fieldsetid" class="dbx-box">
 	    <div class="dbx-h-andle-wrapper">
-            <h3 class="dbx-handle"><?php echo__('Geolocation', 'geolocation'); ?></h3>
+            <h3 class="dbx-handle"><?php echo __('Geolocation', 'geolocation'); ?></h3>
         </div>
         <div class="dbx-c-ontent-wrapper"><div class="dbx-content">
         <?php
