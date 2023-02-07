@@ -3,7 +3,7 @@
 Plugin Name: Geolocation
 Plugin URI: https://wordpress.org/extend/plugins/geolocation/
 Description: Displays post geotag information on an embedded map.
-Version: 1.5.1
+Version: 1.5.2
 Author: Yann Michel
 Author URI: https://www.yann-michel.de/geolocation
 Text Domain: geolocation
@@ -167,7 +167,7 @@ function geolocation_save_postdata($post_id)
     if ((empty($latitude)) || (empty($longitude))) {
         //check the featured image for geodata if no data was available in the post already
         $post_img_id = get_post_thumbnail_id();
-        if ($post_imd_id !== false) {
+        if ($post_img_id !== false) {
 
             $orig_img_path = wp_get_original_image_path($post_img_id, false);
             if ($orig_img_path !== false) {
