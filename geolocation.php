@@ -167,31 +167,33 @@ function geolocation_save_postdata($post_id)
     if ((empty($latitude)) || (empty($longitude))) {
         //check the featured image for geodata if no data was available in the post already
         $post_img_id = get_post_thumbnail_id();
-        $orig_img_path = wp_get_original_image_path( $post_img_id, false );
-        if ($orig_img_path != false) {
-            $exif = exif_read_data($orig_img_path);
+        if ($post_imd_id !== false) {
 
-            if (isset($exif["GPSLatitude"])){
-                $GPSLatitude = $exif["GPSLatitude"];
-                $GPSLatitude_g = explode("/", $GPSLatitude[0]);
-                $GPSLatitude_m = explode("/", $GPSLatitude[1]);
-                $GPSLatitude_s = explode("/", $GPSLatitude[2]);
-                $GPSLat_g = $GPSLatitude_g[0] / $GPSLatitude_g[1];
-                $GPSLat_m = $GPSLatitude_m[0] / $GPSLatitude_m[1];
-                $GPSLat_s = $GPSLatitude_s[0] / $GPSLatitude_s[1];
-                $latitude = $GPSLat_g + ($GPSLat_m + ($GPSLat_s / 60)) /60; 
-            }
-            if (isset($exif["GPSLongitude"])){
-                $GPSLongitude = $exif["GPSLongitude"];
-                $GPSLongitude_g = explode("/", $GPSLongitude[0]);
-                $GPSLongitude_m = explode("/", $GPSLongitude[1]);
-                $GPSLongitude_s = explode("/", $GPSLongitude[2]);
-                $GPSLon_g = $GPSLongitude_g[0] / $GPSLongitude_g[1];
-                $GPSLon_m = $GPSLongitude_m[0] / $GPSLongitude_m[1];
-                $GPSLon_s = $GPSLongitude_s[0] / $GPSLongitude_s[1];
-                $longitude = $GPSLon_g + ($GPSLon_m + ($GPSLon_s / 60)) /60; 
-            }
+            $orig_img_path = wp_get_original_image_path($post_img_id, false);
+            if ($orig_img_path !== false) {
+                $exif = exif_read_data($orig_img_path);
 
+                if (isset($exif["GPSLatitude"])) {
+                    $GPSLatitude = $exif["GPSLatitude"];
+                    $GPSLatitude_g = explode("/", $GPSLatitude[0]);
+                    $GPSLatitude_m = explode("/", $GPSLatitude[1]);
+                    $GPSLatitude_s = explode("/", $GPSLatitude[2]);
+                    $GPSLat_g = $GPSLatitude_g[0] / $GPSLatitude_g[1];
+                    $GPSLat_m = $GPSLatitude_m[0] / $GPSLatitude_m[1];
+                    $GPSLat_s = $GPSLatitude_s[0] / $GPSLatitude_s[1];
+                    $latitude = $GPSLat_g + ($GPSLat_m + ($GPSLat_s / 60)) / 60;
+                }
+                if (isset($exif["GPSLongitude"])) {
+                    $GPSLongitude = $exif["GPSLongitude"];
+                    $GPSLongitude_g = explode("/", $GPSLongitude[0]);
+                    $GPSLongitude_m = explode("/", $GPSLongitude[1]);
+                    $GPSLongitude_s = explode("/", $GPSLongitude[2]);
+                    $GPSLon_g = $GPSLongitude_g[0] / $GPSLongitude_g[1];
+                    $GPSLon_m = $GPSLongitude_m[0] / $GPSLongitude_m[1];
+                    $GPSLon_s = $GPSLongitude_s[0] / $GPSLongitude_s[1];
+                    $longitude = $GPSLon_g + ($GPSLon_m + ($GPSLon_s / 60)) / 60;
+                }
+            }
         }
     }
 
