@@ -14,6 +14,7 @@ function admin_head_osm()
                 var hasLocation = false;
                 var postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
                 var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
+                var postAddress = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_address', true)); ?>';            
                 var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
                 var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
                 var zoom = '<?php echo $zoom; ?>';
@@ -57,7 +58,8 @@ function admin_head_osm()
                     hasLocation = true;
                     $j("#geolocation-latitude").val(postLatitude);
                     $j("#geolocation-longitude").val(postLongitude);
-                    reverseGeocode(postLatitude, postLongitude);
+                    $j("#geolocation-address").val(postAddress);
+                    // skip when starting: reverseGeocode(postLatitude, postLongitude);
                 }
                 var currentAddress;
                 var customAddress = false;
