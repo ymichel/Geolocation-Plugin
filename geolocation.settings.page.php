@@ -6,12 +6,6 @@ function geolocation_settings_page()
     }
 
     default_settings();
-    $zoomImage = (string) get_option('geolocation_default_zoom');
-    if ((bool) get_option('geolocation_wp_pin')) {
-        $zoomImage = 'wp_' . $zoomImage . '.png';
-    } else {
-        $zoomImage = $zoomImage . '.png';
-    }
     echo '<link rel="stylesheet" href="' . get_osm_leaflet_css_url() . '"/>';
     echo '<script src="' . get_osm_leaflet_js_url() . '"></script>';
 ?>
