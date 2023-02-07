@@ -59,7 +59,9 @@ function admin_head_osm()
                     $j("#geolocation-latitude").val(postLatitude);
                     $j("#geolocation-longitude").val(postLongitude);
                     $j("#geolocation-address").val(postAddress);
-                    // skip when starting: reverseGeocode(postLatitude, postLongitude);
+		    // skip when available: 
+		    if (postAddress === '') 
+		  	reverseGeocode(postLatitude, postLongitude);
                 }
                 var currentAddress;
                 var customAddress = false;
