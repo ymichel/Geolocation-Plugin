@@ -4,9 +4,9 @@ function admin_head_google()
 {
     global $post;
     $post_id = $post->ID;
-    $zoom = (int) get_option('geolocation_default_zoom');?>
+    $zoom = (int) get_option('geolocation_default_zoom'); ?>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>"></script>'; ?>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>"></script>'; ?>
     <script type="text/javascript">
         var $j = jQuery.noConflict();
         $j(function() {
@@ -190,103 +190,101 @@ function add_geo_support_google($posts)
     default_settings();
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
-    $post_count = count($posts);?>
+    $post_count = count($posts); ?>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>"></script>
-	<script type="text/javascript">
-		var $j = jQuery.noConflict();
-		$j(function(){
-			var center = new google.maps.LatLng(0.0, 0.0);
-			var myOptions = {
-		      zoom: <?php echo $zoom; ?>,
-		      center: center,
-		      mapTypeId: google.maps.MapTypeId.ROADMAP
-		    }
-		    var map = new google.maps.Map(document.getElementById("map"), myOptions);
-		    var image = "<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>";
-		    var shadow = new google.maps.MarkerImage("<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__); ?>",
-		    	    new google.maps.Size(39, 23),
-				    new google.maps.Point(0, 0),
-				    new google.maps.Point(12, 25)
-                );
-		    var marker = new google.maps.Marker({
-					position: center, 
-					map: map, 
- <?php   if ((bool) get_option('geolocation_wp_pin')) { ?>
- 					icon: image,
-					shadow: shadow,
- <?php   } ?>
-                    title:"Post Location"
-                });
-			
-			var allowDisappear = true;
-			var cancelDisappear = false;
-		    
-			$j(".geolocation-link").mouseover(function(){
-				$j("#map").stop(true, true);
-				var lat = $j(this).attr("name").split(",")[0];
-				var lng = $j(this).attr("name").split(",")[1];
-				var latlng = new google.maps.LatLng(lat, lng);
-				placeMarker(latlng);
-				
-				var offset = $j(this).offset();
-				$j("#map").fadeTo(250, 1);
-				$j("#map").css("z-index", "99");
-				$j("#map").css("visibility", "visible");
-				$j("#map").css("top", offset.top + 20);
-				$j("#map").css("left", offset.left);
-				
-				allowDisappear = false;
-				$j("#map").css("visibility", "visible");
-			});
-			
-			$j(".geolocation-link").mouseover(function(){
-			});
-			
-			$j(".geolocation-link").mouseout(function(){
-				allowDisappear = true;
-				cancelDisappear = false;
-				setTimeout(function() {
-					if((allowDisappear) && (!cancelDisappear))
-					{
-						$j("#map").fadeTo(500, 0, function() {
-							$j("#map").css("z-index", "-1");
-							allowDisappear = true;
-							cancelDisappear = false;
-						});
-					}
-			    },800);
-			});
-			
-			$j("#map").mouseover(function(){
-				allowDisappear = false;
-				cancelDisappear = true;
-				$j("#map").css("visibility", "visible");
-			});
-			
-			$j("#map").mouseout(function(){
-				allowDisappear = true;
-				cancelDisappear = false;
-				$j(".geolocation-link").mouseout();
-			});
-			
-			function placeMarker(location) {
-				map.setZoom(' . $zoom.');
-				marker.setPosition(location);
-				map.setCenter(location);
-			}
-			
-			google.maps.event.addListener(map, "center_changed", function() {
-          			// 5 seconds after the center of the map has changed, pan back to the
-          			// marker.
-          			window.setTimeout(function() {
-          			  map.panTo(marker.getPosition());
-          			}, 5000);
-        		});
-			google.maps.event.addListener(map, "click", function() {
-				window.location = "https://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
-			});
-		});
-	</script>
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        $j(function() {
+            var center = new google.maps.LatLng(0.0, 0.0);
+            var myOptions = {
+                zoom: <?php echo $zoom; ?>,
+                center: center,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            var map = new google.maps.Map(document.getElementById("map"), myOptions);
+            var image = "<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>";
+            var shadow = new google.maps.MarkerImage("<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__); ?>",
+                new google.maps.Size(39, 23),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(12, 25)
+            );
+            var marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                <?php if ((bool) get_option('geolocation_wp_pin')) { ?>
+                    icon: image,
+                    shadow: shadow,
+                <?php   } ?>
+                title: "Post Location"
+            });
+
+            var allowDisappear = true;
+            var cancelDisappear = false;
+
+            $j(".geolocation-link").mouseover(function() {
+                $j("#map").stop(true, true);
+                var lat = $j(this).attr("name").split(",")[0];
+                var lng = $j(this).attr("name").split(",")[1];
+                var latlng = new google.maps.LatLng(lat, lng);
+                placeMarker(latlng);
+
+                var offset = $j(this).offset();
+                $j("#map").fadeTo(250, 1);
+                $j("#map").css("z-index", "99");
+                $j("#map").css("visibility", "visible");
+                $j("#map").css("top", offset.top + 20);
+                $j("#map").css("left", offset.left);
+
+                allowDisappear = false;
+                $j("#map").css("visibility", "visible");
+            });
+
+            $j(".geolocation-link").mouseover(function() {});
+
+            $j(".geolocation-link").mouseout(function() {
+                allowDisappear = true;
+                cancelDisappear = false;
+                setTimeout(function() {
+                    if ((allowDisappear) && (!cancelDisappear)) {
+                        $j("#map").fadeTo(500, 0, function() {
+                            $j("#map").css("z-index", "-1");
+                            allowDisappear = true;
+                            cancelDisappear = false;
+                        });
+                    }
+                }, 800);
+            });
+
+            $j("#map").mouseover(function() {
+                allowDisappear = false;
+                cancelDisappear = true;
+                $j("#map").css("visibility", "visible");
+            });
+
+            $j("#map").mouseout(function() {
+                allowDisappear = true;
+                cancelDisappear = false;
+                $j(".geolocation-link").mouseout();
+            });
+
+            function placeMarker(location) {
+                map.setZoom(' . $zoom.');
+                marker.setPosition(location);
+                map.setCenter(location);
+            }
+
+            google.maps.event.addListener(map, "center_changed", function() {
+                // 5 seconds after the center of the map has changed, pan back to the
+                // marker.
+                window.setTimeout(function() {
+                    map.panTo(marker.getPosition());
+                }, 5000);
+            });
+            google.maps.event.addListener(map, "click", function() {
+                window.location = "https://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
+            });
+        });
+    </script>
 <?php }
 
 function display_location_page_google($content)
@@ -326,7 +324,7 @@ function display_location_page_google($content)
         )
     );
 
-    $script = $script."<script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js'".get_google_maps_api_key("?")."'\"></script>
+    $script = $script . "<script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js'" . get_google_maps_api_key("?") . "'\"></script>
 <script type=\"text/javascript\">
       var map = new google.maps.Map(
         document.getElementById('mymap'), {
@@ -341,24 +339,24 @@ function display_location_page_google($content)
         $post_id = (int) get_the_ID();
         $postLatitude = (string) get_post_meta($post_id, 'geo_latitude', true);
         $postLongitude = (string) get_post_meta($post_id, 'geo_longitude', true);
-        $script = $script."
+        $script = $script . "
       marker = new google.maps.Marker({
-            position: new google.maps.LatLng(" . $postLatitude.",".$postLongitude."),
+            position: new google.maps.LatLng(" . $postLatitude . "," . $postLongitude . "),
             map: map
       });
       bounds.extend(marker.position);";
         $counter = $counter + 1;
     }
     wp_reset_postdata();
-    $script = $script."
+    $script = $script . "
        map.fitBounds(bounds);
 </script>";
 
     if ($counter > 0) {
         $width = esc_attr((string) get_option('geolocation_map_width_page'));
         $height = esc_attr((string) get_option('geolocation_map_height_page'));
-        $html = $html.'<div id="mymap" class="geolocation-map" style="width:'.$width.'px;height:'.$height.'px;"></div>';
-        $html = $html.$script;
+        $html = $html . '<div id="mymap" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+        $html = $html . $script;
     }
     $content = str_replace((string) get_option('geolocation_shortcode'), $html, $content);
     return $content;
@@ -366,7 +364,7 @@ function display_location_page_google($content)
 
 function pullJSON_google($latitude, $longitude)
 {
-    $url = "https://maps.googleapis.com/maps/api/geocode/json".get_google_maps_api_key("?")."&language=".getSiteLang()."&latlng=".$latitude.",".$longitude;
+    $url = "https://maps.googleapis.com/maps/api/geocode/json" . get_google_maps_api_key("?") . "&language=" . getSiteLang() . "&latlng=" . $latitude . "," . $longitude;
     $decoded = json_decode(wp_remote_get($url)['body']);
     return $decoded;
 }
@@ -375,7 +373,7 @@ function get_google_maps_api_key($sep)
 {
     $apikey = (string) get_option('geolocation_google_maps_api_key');
     if ($apikey != "") {
-        return $sep.'key='.$apikey;
+        return $sep . 'key=' . $apikey;
     }
     return '';
 }

@@ -14,7 +14,7 @@ function admin_head_osm()
                 var hasLocation = false;
                 var postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
                 var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
-                var postAddress = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_address', true)); ?>';            
+                var postAddress = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_address', true)); ?>';
                 var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
                 var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
                 var zoom = '<?php echo $zoom; ?>';
@@ -59,9 +59,9 @@ function admin_head_osm()
                     $j("#geolocation-latitude").val(postLatitude);
                     $j("#geolocation-longitude").val(postLongitude);
                     $j("#geolocation-address").val(postAddress);
-		    // skip when available: 
-		    if (postAddress === '') 
-		  	reverseGeocode(postLatitude, postLongitude);
+                    // skip when available: 
+                    if (postAddress === '')
+                        reverseGeocode(postLatitude, postLongitude);
                 }
                 var currentAddress;
                 var customAddress = false;
@@ -187,7 +187,7 @@ function add_geo_support_osm($posts)
                 L.marker(lat_lng, markerOptions).addTo(map).bindPopup("xyz");
                 myMapBounds.push(lat_lng);
                 map.setView(new L.LatLng(lat, lng), <?php echo $zoom; ?>);
-                
+
                 var offset = $j(this).offset();
                 $j("#map").fadeTo(250, 1);
                 $j("#map").css("z-index", "99");
