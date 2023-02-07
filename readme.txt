@@ -4,7 +4,7 @@ Tags: geolocation, maps, geotag, GPS, travel, location, journey
 Requires at least: 6.0
 Requires PHP: 7.1
 Tested up to: 6.1
-Stable tag: 1.4
+Stable tag: 1.5
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location where a post was created.
 
@@ -36,6 +36,10 @@ If you struggle while installing it or have feature requests, please feel free t
 3. Showing all posts providing location information
 
 == Changelog ==
+
+= 1.5 =
+* new function: when there is no geoinformation at a particular post, the plugin tries to receive it from the featured image gps data instead.
+* code cleanup
 
 = 1.4 =
 * translations
