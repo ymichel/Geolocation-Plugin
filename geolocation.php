@@ -177,7 +177,7 @@ function geolocation_save_postdata($post_id)
             if ($orig_img_path !== false) {
                 $exif = exif_read_data($orig_img_path);
 
-                if (isset($exif["GPSLatitude"]) && (isset($exif["GPSLongitude"])) {
+                if ((isset($exif["GPSLatitude"]) && (isset($exif["GPSLongitude"]))) {
                     $GPSLatitude = $exif["GPSLatitude"];
                     $GPSLatitude_g = explode("/", $GPSLatitude[0]);
                     $GPSLatitude_m = explode("/", $GPSLatitude[1]);
