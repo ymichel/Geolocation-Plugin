@@ -346,7 +346,7 @@ function pullJSON_osm($latitude, $longitude)
 	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 	$jsonfile = curl_exec($ch);
 	curl_close($ch);
-	$decoded = json_decode($jsonfile, true);
+	$decoded = json_decode((string) $jsonfile, true);
 	return $decoded;
 }
 
