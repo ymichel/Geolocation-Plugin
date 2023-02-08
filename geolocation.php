@@ -177,8 +177,8 @@ function geolocation_save_postdata($post_id)
             if ($orig_img_path !== false) {
                 $exif = exif_read_data($orig_img_path);
 
-                if ((isset($exif["GPSLatitude"]) && (isset($exif["GPSLongitude"]))) {
-                    $GPSLatitude = $exif["GPSLatitude"];
+                if ( (isset($exif["GPSLatitude"])) and (isset($exif["GPSLongitude"])) ){
+                    $GPSLatitude = $exif["GPSLatitude"]; 
                     $GPSLatitude_g = explode("/", $GPSLatitude[0]);
                     $GPSLatitude_m = explode("/", $GPSLatitude[1]);
                     $GPSLatitude_s = explode("/", $GPSLatitude[2]);
@@ -186,7 +186,7 @@ function geolocation_save_postdata($post_id)
                     $GPSLat_m = $GPSLatitude_m[0] / $GPSLatitude_m[1];
                     $GPSLat_s = $GPSLatitude_s[0] / $GPSLatitude_s[1];
                     $latitude = $GPSLat_g + ($GPSLat_m + ($GPSLat_s / 60)) / 60;
-		    
+
                     $GPSLongitude = $exif["GPSLongitude"];
                     $GPSLongitude_g = explode("/", $GPSLongitude[0]);
                     $GPSLongitude_m = explode("/", $GPSLongitude[1]);
@@ -195,7 +195,7 @@ function geolocation_save_postdata($post_id)
                     $GPSLon_m = $GPSLongitude_m[0] / $GPSLongitude_m[1];
                     $GPSLon_s = $GPSLongitude_s[0] / $GPSLongitude_s[1];
                     $longitude = $GPSLon_g + ($GPSLon_m + ($GPSLon_s / 60)) / 60;
-                }
+		}    
             }
         }
     }
