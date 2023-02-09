@@ -4,31 +4,33 @@
 function admin_head_osm()
 {
 	global $post;
-	$post_id = $post->ID;
-	$zoom = (int) get_option('geolocation_default_zoom'); ?>
+	$post_id = $post->ID;?>
+<?php /**
 	<link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>" />
-	<script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
+     <script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
+	*/?>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', function() {
+			document.addEventListener('DOMContentLoaded', function() {
 			let hasLocation = false;
 			let postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
 			let postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
 			let isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
 			var postAddress = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_address', true)); ?>';
 			let isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
-			let zoom = '<?php echo $zoom; ?>';
+			let zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
 			let image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
 			let iconOptions = {
 				iconUrl: image
-			}
+			};
 			let customIcon = L.icon(iconOptions);
 			let markerOptions = {
 				<?php if ((bool) get_option('geolocation_wp_pin')) { ?>
 					icon: customIcon,
-				<?php } ?>
-				clickable: false,
+				<?php } ?>clickable: false,
 				draggable: false
-			}
+			};
 			let myMarker = {};
 
 			if (isPublic === '0') {
@@ -43,23 +45,20 @@ function admin_head_osm()
 				enableGeo();
 			}
 
-			let lat_lng = [51.505, -0.09];
-			let map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
+			let map = L.map("geolocation-map").setView([52.5162778, 13.3733267], zoomlevel);
 			L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
-			myMarker = L.marker(lat_lng, markerOptions).addTo(map);
+			myMarker = L.marker([52.5162778, 13.3733267], markerOptions).addTo(map);
 			map.setView(myMarker.getLatLng(), map.getZoom());
 			if ((postLatitude !== '') && (postLongitude !== '')) {
-				lat_lng = [postLatitude, postLongitude];
-				console.log('postLatitude: ' + postLatitude + ', postLongitude: ' + postLongitude + ', zoom: ' + map.getZoom());
-				myMarker.setLatLng(lat_lng);
-				map.setView(myMarker.getLatLng(), map.getZoom());
+				myMarker.setLatLng([postLatitude, postLongitude]);
+				map.setView(myMarker.getLatLng(), zoomlevel);
 				hasLocation = true;
 				document.getElementById('geolocation-latitude').value = postLatitude;
 				document.getElementById('geolocation-latitude').value = postLongitude;
-				if (postLatitude !== '') {
-					$j("#geolocation-address").val(postAddress);
+				if (postAddress !== '') {
+					document.getElementById('geolocation-address').value = postAddress;
 				} else {
 					reverseGeocode(postLatitude, postLongitude);
 				}
@@ -75,7 +74,7 @@ function admin_head_osm()
 				if (document.getElementById('geolocation-address').value !== '') {
 					customAddress = true;
 					currentAddress = document.getElementById('geolocation-address').value;
-					//geocode(currentAddress);
+					geocode(currentAddress);
 				}
 			});
 			document.getElementById('geolocation-address').addEventListener('keyup', function(e) {
@@ -96,11 +95,9 @@ function admin_head_osm()
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
 						let data = JSON.parse(this.response);
-						//console.log(data);
 						document.getElementById('geolocation-latitude').value = data[0].lat;
 						document.getElementById('geolocation-longitude').value = data[0].lon;
 						lat_lng = [data[0].lat, data[0].lon];
-						//console.log(lat_lng);
 						myMarker.setLatLng(lat_lng);
 						map.setView(myMarker.getLatLng(), map.getZoom());
 						hasLocation = true;
@@ -118,7 +115,6 @@ function admin_head_osm()
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
 						let data = JSON.parse(this.response);
-						console.log(data);
 						document.getElementById('geolocation-address').value = data.display_name;
 					} else {
 						// error
@@ -380,7 +376,8 @@ function get_osm_leaflet_js_url()
 		$leaflet_js_url     = apply_filters('osm_tiles_proxy_get_leaflet_js_url', $leaflet_js_url);
 		return $leaflet_js_url;
 	} else {
-		$param = (string) get_option('geolocation_osm_leaflet_js_url');
+		//$param = (string) get_option('geolocation_osm_leaflet_js_url');
+        $param = "/wp-content/plugins/geolocation/js/leaflet.js";
 		return $param;
 	}
 }
@@ -391,7 +388,8 @@ function get_osm_leaflet_css_url()
 		$leaflet_css_url    = apply_filters('osm_tiles_proxy_get_leaflet_css_url', $leaflet_css_url);
 		return $leaflet_css_url;
 	} else {
-		$param = (string) get_option('geolocation_osm_leaflet_css_url');
+		//$param = (string) get_option('geolocation_osm_leaflet_css_url');
+		$param = "/wp-content/plugins/geolocation/js/leaflet.css";
 		return $param;
 	}
 }

@@ -26,8 +26,7 @@ function admin_head_osm()
                 var markerOptions = {
                     <?php if ((bool) get_option('geolocation_wp_pin')) { ?>
                         icon: customIcon,
-                    <?php } ?>
-                    clickable: false,
+                    <?php } ?>clickable: false,
                     draggable: false
                 }
                 var myMarker = {};
@@ -43,9 +42,8 @@ function admin_head_osm()
                     enableGeo();
 
 
-                var lat_lng = [0.00, 0.00];
+                var lat_lng = [52.5162778, 13.3733267]
                 var map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
-                var myMapBounds = [];
                 L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
@@ -363,7 +361,8 @@ function get_osm_leaflet_js_url()
         $leaflet_js_url     = apply_filters('osm_tiles_proxy_get_leaflet_js_url', $leaflet_js_url);
         return $leaflet_js_url;
     } else {
-        $param = (string) get_option('geolocation_osm_leaflet_js_url');
+        //$param = (string) get_option('geolocation_osm_leaflet_js_url');
+        $param = "/wp-content/plugins/geolocation/js/leaflet.js";
         return $param;
     }
 }
@@ -374,7 +373,8 @@ function get_osm_leaflet_css_url()
         $leaflet_css_url    = apply_filters('osm_tiles_proxy_get_leaflet_css_url', $leaflet_css_url);
         return $leaflet_css_url;
     } else {
-        $param = (string) get_option('geolocation_osm_leaflet_css_url');
+        //$param = (string) get_option('geolocation_osm_leaflet_css_url');
+        $param = "/wp-content/plugins/geolocation/js/leaflet.css";
         return $param;
     }
 }

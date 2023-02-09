@@ -165,7 +165,6 @@ function geolocation_settings_page()
         <script types="text/javascript">
             var file;
             var zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
-            var path = '<?php echo esc_js(plugins_url('img/zoom/', __FILE__)); ?>';
 
             var lat_lng = [52.5162778, 13.3733267];
             var map = {}
