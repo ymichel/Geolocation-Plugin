@@ -58,8 +58,11 @@ function admin_head_osm()
                     hasLocation = true;
                     $j("#geolocation-latitude").val(postLatitude);
                     $j("#geolocation-longitude").val(postLongitude);
-                    $j("#geolocation-address").val(postAddress);
-                    reverseGeocode(postLatitude, postLongitude);
+                    if (postLatitude !== '') {
+                        $j("#geolocation-address").val(postAddress);
+                    } else {
+                        reverseGeocode(postLatitude, postLongitude);
+                    }
                 }
                 var currentAddress;
                 var customAddress = false;
