@@ -5,12 +5,8 @@ function admin_head_osm()
 {
 	global $post;
 	$post_id = $post->ID;?>
-<?php /**
 	<link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>" />
-     <script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
-	*/?>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
-	<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
