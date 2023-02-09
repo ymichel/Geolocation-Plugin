@@ -37,15 +37,14 @@ function admin_head_osm()
 				document.getElementById('geolocation-public').setAttribute('checked', true);
 			}
 
-			if (isGeoEnabled === '0') {
+ 			if (isGeoEnabled === '0') {
 				disableGeo();
 			} else {
 				enableGeo();
-			}
+			} 
 
-			let lat_lng = [0.00, 0.00];
+			let lat_lng = [51.505, -0.09];
 			let map = L.map(document.getElementById('geolocation-map')).setView(lat_lng, zoom);
-			let myMapBounds = [];
 			L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
@@ -53,13 +52,14 @@ function admin_head_osm()
 			map.setView(myMarker.getLatLng(), map.getZoom());
 			if ((postLatitude !== '') && (postLongitude !== '')) {
 				lat_lng = [postLatitude, postLongitude];
+				console.log('postLatitude: ' + postLatitude + ', postLongitude: ' + postLongitude + ', zoom: ' + map.getZoom());
 				myMarker.setLatLng(lat_lng);
 				map.setView(myMarker.getLatLng(), map.getZoom());
 				hasLocation = true;
 				document.getElementById('geolocation-latitude').value = postLatitude;
 				document.getElementById('geolocation-latitude').value = postLongitude;
 				document.getElementById('geolocation-address').value = postAddress;
-				reverseGeocode(postLatitude, postLongitude);
+				//reverseGeocode(postLatitude, postLongitude);
 			}
 			let currentAddress;
 			let customAddress = false;
@@ -72,7 +72,7 @@ function admin_head_osm()
 				if (document.getElementById('geolocation-address').value !== '') {
 					customAddress = true;
 					currentAddress = document.getElementById('geolocation-address').value;
-					geocode(currentAddress);
+					//geocode(currentAddress);
 				}
 			});
 			document.getElementById('geolocation-address').addEventListener('keyup', function(e) {
@@ -115,7 +115,7 @@ function admin_head_osm()
 				if (this.status >= 200 && this.status < 400) {
 					// Success!
 					let data = JSON.parse(this.response);
-					//console.log(data);
+					console.log(data);
 					document.getElementById('geolocation-address').value = data.display_name;
 				} else {
 					// error
@@ -177,7 +177,6 @@ function add_geo_support_osm($posts)
 		}
 		ready(() => {
 			var map = L.map(document.getElementById("map")).setView([51.505, -0.09], <?php echo $zoom; ?>);
-			var myMapBounds = [];
 			L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
@@ -204,7 +203,6 @@ function add_geo_support_osm($posts)
 					var lng = this.getAttribute('name').split(',')[1];
 					var lat_lng = [lat, lng];
 					L.marker(lat_lng, markerOptions).addTo(map);
-					myMapBounds.push(lat_lng);
 					map.setView(new L.LatLng(lat, lng), <?php echo $zoom; ?>);
 
 					const rect = this.getBoundingClientRect();
