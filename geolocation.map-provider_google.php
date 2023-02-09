@@ -1,4 +1,13 @@
 <?php
+add_action('wp_enqueue_scripts', 'add_my_scripts');
+function add_my_scripts()
+{
+    wp_enqueue_script(
+        'geolocation',
+        get_template_directory_uri() . '/js/jquery.elementReady.js',
+        array('jquery')
+    );
+}
 
 function admin_head_google()
 {

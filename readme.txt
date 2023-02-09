@@ -40,7 +40,7 @@ If you struggle while installing it or have feature requests, please feel free t
 
 = 1.6 = 
 * reducing calls for reverseGeocode
-* preparing removal of jQuery for OpenStreetMap usage (vanilla JavaScript)
+* removal of jQuery for OpenStreetMap usage (vanilla JavaScript)
 * embedding leaflet js and css to ommit external request to 3rd parties
 
 = 1.5.3 =

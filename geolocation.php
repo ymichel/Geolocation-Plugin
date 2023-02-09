@@ -40,15 +40,6 @@ admin_init();
 register_activation_hook(__FILE__, 'activate');
 register_uninstall_hook(__FILE__, 'uninstall');
 
-add_action('wp_enqueue_scripts', 'add_my_scripts');
-function add_my_scripts()
-{
-    wp_enqueue_script(
-        'geolocation',
-        get_template_directory_uri() . '/js/jquery.elementReady.js',
-        array('jquery')
-    );
-}
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_google.php');
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_osm.php');
