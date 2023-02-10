@@ -39,9 +39,12 @@ If you struggle while installing it or have feature requests, please feel free t
 == Changelog ==
 
 = 1.6 = 
-* reducing calls for reverseGeocode
-* removal of jQuery for OpenStreetMap usage (vanilla JavaScript)
+* removal of jQuery usage for OpenStreetMap (vanilla JavaScript)
+* reducing calls for reverseGeocode in OpenStreetMap
 * embedding leaflet js and css to ommit external request to 3rd parties
+* adjusting google maps scripts to reflect latest API changes
+* removing orphaned js-lib
+* fixing several minor bugs including code cleanup
 
 = 1.5.3 =
 * bugfix for deriving the geodata from the featured image
