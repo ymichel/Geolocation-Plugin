@@ -4,7 +4,7 @@ function add_my_scripts()
 {
     wp_enqueue_script(
         'geolocation',
-        get_template_directory_uri() . '/js/jquery.elementReady.js',
+        plugins_url('js/jquery.elementReady.js', __FILE__),
         array('jquery')
     );
 }
@@ -205,7 +205,12 @@ function add_geo_support_google($posts)
     $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
     $post_count = count($posts); ?>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>"></script>
+    <script type="text/javascript">
+        function initMap() {
+            //console.log("google maps is ready.");
+        }
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>&callback=initMap"></script>
     <script type="text/javascript">
         var $j = jQuery.noConflict();
         $j(function() {
@@ -337,9 +342,8 @@ function display_location_page_google($content)
             )
         )
     );
-
-    $script = $script . "<script type=\"text/javascript\" src=\"//maps.googleapis.com/maps/api/js'" . get_google_maps_api_key("?") . "'\"></script>
-<script type=\"text/javascript\">
+ 
+    $script = $script . "<script type=\"text/javascript\">
       var map = new google.maps.Map(
         document.getElementById('mymap'), {
           mapTypeId: google.maps.MapTypeId.ROADMAP

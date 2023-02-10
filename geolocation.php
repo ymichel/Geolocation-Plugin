@@ -41,7 +41,16 @@ register_activation_hook(__FILE__, 'activate');
 register_uninstall_hook(__FILE__, 'uninstall');
 
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
-require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_google.php');
+
+// To do: add support for multiple Map API providers
+switch (get_option('geolocation_provider')) {
+    case 'google':
+        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_google.php');
+        break;
+        //case 'osm':
+        //    require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_osm.php');
+        //    break;
+}
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_osm.php');
 
 function geolocation_append_support_and_faq_links($links_array, $plugin_file_name)
@@ -168,8 +177,8 @@ function geolocation_save_postdata($post_id)
             if ($orig_img_path !== false) {
                 $exif = exif_read_data($orig_img_path);
 
-                if ( (isset($exif["GPSLatitude"])) and (isset($exif["GPSLongitude"])) ){
-                    $GPSLatitude = $exif["GPSLatitude"]; 
+                if ((isset($exif["GPSLatitude"])) and (isset($exif["GPSLongitude"]))) {
+                    $GPSLatitude = $exif["GPSLatitude"];
                     $GPSLatitude_g = explode("/", $GPSLatitude[0]);
                     $GPSLatitude_m = explode("/", $GPSLatitude[1]);
                     $GPSLatitude_s = explode("/", $GPSLatitude[2]);
@@ -186,7 +195,7 @@ function geolocation_save_postdata($post_id)
                     $GPSLon_m = $GPSLongitude_m[0] / $GPSLongitude_m[1];
                     $GPSLon_s = $GPSLongitude_s[0] / $GPSLongitude_s[1];
                     $longitude = $GPSLon_g + ($GPSLon_m + ($GPSLon_s / 60)) / 60;
-		}    
+                }
             }
         }
     }
