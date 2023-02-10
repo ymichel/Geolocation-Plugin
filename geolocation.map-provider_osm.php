@@ -65,6 +65,9 @@ function admin_head_osm()
 				} else {
 					reverseGeocode(postLatitude, postLongitude);
 				}
+				setTimeout(function () {
+   					map.invalidateSize(true);
+				}, 100);
 			}
 			let currentAddress;
 			let customAddress = false;
@@ -98,6 +101,7 @@ function admin_head_osm()
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
 						let data = JSON.parse(this.response);
+						console.log(data);
 						document.getElementById('geolocation-latitude').value = data[0].lat;
 						document.getElementById('geolocation-longitude').value = data[0].lon;
 						lat_lng = [data[0].lat, data[0].lon];
@@ -350,16 +354,6 @@ function pullJSON_osm($latitude, $longitude)
 	return $decoded;
 }
 
-// function reverse_geocode($latitude, $longitude)
-// {
-// 	$json = pullJSON($latitude, $longitude);
-// 	$city = $json["address"]["city"];
-// 	$state = $json["address"]["suburb"];
-// 	$country = $json["address"]["country"];
-
-// 	return buildAddress($city, $state, $country);
-// }
-
 include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 function get_osm_tiles_url()
@@ -380,7 +374,7 @@ function get_osm_leaflet_js_url()
 		return $leaflet_js_url;
 	} else {
 		//$param = (string) get_option('geolocation_osm_leaflet_js_url');
-        $param = "/wp-content/plugins/geolocation/js/leaflet.js";
+        $param = plugins_url('js/leaflet.js',__FILE__);
 		return $param;
 	}
 }
@@ -392,7 +386,7 @@ function get_osm_leaflet_css_url()
 		return $leaflet_css_url;
 	} else {
 		//$param = (string) get_option('geolocation_osm_leaflet_css_url');
-		$param = "/wp-content/plugins/geolocation/js/leaflet.css";
+        $param = plugins_url('js/leaflet.css',__FILE__);
 		return $param;
 	}
 }

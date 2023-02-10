@@ -15,13 +15,18 @@ function admin_head_google()
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom'); ?>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>"></script>'; ?>
+    <script type="text/javascript">
+        function initMap() {
+            //console.log("google maps is ready.");
+        }
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>&callback=initMap"></script>
     <script type="text/javascript">
         var $j = jQuery.noConflict();
         $j(function() {
             $j(document).ready(function() {
                 var hasLocation = false;
-                var center = new google.maps.LatLng(0.0, 0.0);
+                var center = new google.maps.LatLng(52.5162778, 13.3733267);
                 var postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
                 var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
                 var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
@@ -128,13 +133,13 @@ function admin_head_google()
                             if (status === google.maps.GeocoderStatus.OK) {
                                 placeMarker(results[0].geometry.location);
                                 if (!hasLocation) {
-                                    //TODO check   map.setZoom(16);
+                                    map.setZoom(<?php echo $zoom; ?>);
                                     hasLocation = true;
                                 }
                             }
                         });
                     }
-                    $j("#geodata").html(latitude + ', ' + longitude);
+                    $j("#geodata").html(postLatitude + ', ' + postLongitude);
                 }
 
                 function reverseGeocode(location) {
