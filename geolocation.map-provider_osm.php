@@ -4,9 +4,9 @@
 function admin_head_osm()
 {
 	global $post;
-	$post_id = $post->ID;?>
+	$post_id = $post->ID; ?>
 	<link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>" />
-    <script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
+	<script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -31,8 +31,8 @@ function admin_head_osm()
 			let markerOptions = {
 				<?php if ((bool) get_option('geolocation_wp_pin')) { ?>
 					icon: customIcon,
-				<?php } ?>clickable: false,
-				draggable: false
+					<?php } ?>clickable: false,
+					draggable: false
 			};
 			let myMarker = {};
 
@@ -65,10 +65,11 @@ function admin_head_osm()
 				} else {
 					reverseGeocode(postLatitude, postLongitude);
 				}
-				setTimeout(function () {
-   					map.invalidateSize(true);
-				}, 100);
 			}
+			setTimeout(function() {
+				map.invalidateSize(true);
+			}, 100);
+
 			let currentAddress;
 			let customAddress = false;
 			document.getElementById('geolocation-address').addEventListener('click', event => {
@@ -374,7 +375,7 @@ function get_osm_leaflet_js_url()
 		return $leaflet_js_url;
 	} else {
 		//$param = (string) get_option('geolocation_osm_leaflet_js_url');
-        $param = plugins_url('js/leaflet.js',__FILE__);
+		$param = plugins_url('js/leaflet.js', __FILE__);
 		return $param;
 	}
 }
@@ -386,7 +387,7 @@ function get_osm_leaflet_css_url()
 		return $leaflet_css_url;
 	} else {
 		//$param = (string) get_option('geolocation_osm_leaflet_css_url');
-        $param = plugins_url('js/leaflet.css',__FILE__);
+		$param = plugins_url('js/leaflet.css', __FILE__);
 		return $param;
 	}
 }
