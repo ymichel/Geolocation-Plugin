@@ -1,14 +1,6 @@
 <?php
-add_action('wp_enqueue_scripts', 'add_my_scripts');
-function add_my_scripts()
-{
-    wp_enqueue_script(
-        'geolocation',
-        plugins_url('js/jquery.elementReady.js', __FILE__),
-        array('jquery')
-    );
-}
 
+/** This is the provider specific pool for the provider "google maps". **/
 function admin_head_google()
 {
     global $post;
@@ -22,178 +14,185 @@ function admin_head_google()
     </script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>&callback=initMap"></script>
     <script type="text/javascript">
-        var $j = jQuery.noConflict();
-        $j(function() {
-            $j(document).ready(function() {
-                var hasLocation = false;
-                var center = new google.maps.LatLng(52.5162778, 13.3733267);
-                var postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
-                var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
-                var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
-                var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
+        function ready(fn) {
+            if (document.readyState != 'loading') {
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+        ready(() => {
+            var hasLocation = false;
+            var center = new google.maps.LatLng(52.5162778, 13.3733267);
+            var postLatitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_latitude', true)); ?>';
+            var postLongitude = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_longitude', true)); ?>';
+            var postAddress = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_address', true)); ?>';
+            var isPublic = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_public', true)); ?>';
+            var isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
 
-                if (isPublic === '0')
-                    $j("#geolocation-public").attr('checked', false);
-                else
-                    $j("#geolocation-public").attr('checked', true);
+            if (isPublic === '0') {
+                document.getElementById('geolocation-public').setAttribute('checked', false);
+            } else {
+                document.getElementById('geolocation-public').setAttribute('checked', true);
+            }
 
-                if (isGeoEnabled === '0')
-                    disableGeo();
-                else
-                    enableGeo();
+            if (isGeoEnabled === '0') {
+                disableGeo();
+            } else {
+                enableGeo();
+            }
 
-                if ((postLatitude !== '') && (postLongitude !== '')) {
-                    center = new google.maps.LatLng(postLatitude, postLongitude);
-                    hasLocation = true;
-                    $j("#geolocation-latitude").val(center.lat());
-                    $j("#geolocation-longitude").val(center.lng());
+
+            if ((postLatitude !== '') && (postLongitude !== '')) {
+                center = new google.maps.LatLng(postLatitude, postLongitude);
+                hasLocation = true;
+                document.getElementById('geolocation-latitude').value = postLatitude;
+                document.getElementById('geolocation-longitude').value = postLongitude;
+                if (postAddress !== '') {
+                    document.getElementById('geolocation-address').value = postAddress;
+                } else {
                     reverseGeocode(center);
                 }
 
-                var myOptions = {
-                    'zoom': <?php echo $zoom; ?>,
-                    'center': center,
-                    'mapTypeId': google.maps.MapTypeId.ROADMAP
-                };
-                var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
-                var shadow = new google.maps.MarkerImage('<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))); ?>',
-                    new google.maps.Size(39, 23),
-                    new google.maps.Point(0, 0),
-                    new google.maps.Point(12, 25));
+            }
 
-                var map = new google.maps.Map(document.getElementById('geolocation-map'), myOptions);
-                var marker = new google.maps.Marker({
-                    position: center,
-                    map: map,
-                    title: 'Post Location'
-                    <?php if ((bool) get_option('geolocation_wp_pin')) { ?>,
-                        icon: image,
-                        shadow: shadow
-                    <?php } ?>
-                });
+            var myOptions = {
+                'zoom': <?php echo $zoom; ?>,
+                'center': center,
+                'mapTypeId': google.maps.MapTypeId.ROADMAP
+            };
+            var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
+            var shadow = new google.maps.MarkerImage('<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))); ?>',
+                new google.maps.Size(39, 23),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(12, 25));
 
-                if ((!hasLocation) && (google.loader.ClientLocation)) {
-                    center = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
-                    reverseGeocode(center);
-                } else if (!hasLocation) {
-                    map.setZoom(1);
-                }
+            var map = new google.maps.Map(document.getElementById('geolocation-map'), myOptions);
+            var marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                title: 'Post Location'
+                <?php if ((bool) get_option('geolocation_wp_pin')) { ?>,
+                    icon: image,
+                    shadow: shadow
+                <?php } ?>
+            });
 
-                google.maps.event.addListener(map, 'click', function(event) {
-                    placeMarker(event.latLng);
-                });
+            if ((!hasLocation) && (google.loader.ClientLocation)) {
+                center = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
+                reverseGeocode(center);
+            } else if (!hasLocation) {
+                map.setZoom(1);
+            }
 
-                var currentAddress;
-                var customAddress = false;
-                $j("#geolocation-address").click(function() {
-                    currentAddress = $j(this).val();
-                    if (currentAddress !== '')
-                        $j("#geolocation-address").val('');
-                });
+            google.maps.event.addListener(map, 'click', function(event) {
+                placeMarker(event.latLng);
+            });
 
-                $j("#geolocation-load").click(function() {
-                    if ($j("#geolocation-address").val() !== '') {
-                        customAddress = true;
-                        currentAddress = $j("#geolocation-address").val();
-                        geocode(currentAddress);
-                    }
-                });
-
-                $j("#geolocation-address").keyup(function(e) {
-                    if (e.keyCode === 13)
-                        $j("#geolocation-load").click();
-                });
-
-                $j("#geolocation-enabled").click(function() {
-                    enableGeo();
-                });
-
-                $j("#geolocation-disabled").click(function() {
-                    disableGeo();
-                });
-
-                function placeMarker(location) {
-                    marker.setPosition(location);
-                    map.setCenter(location);
-                    if ((location.lat() !== '') && (location.lng() !== '')) {
-                        $j("#geolocation-latitude").val(location.lat());
-                        $j("#geolocation-longitude").val(location.lng());
-                    }
-
-                    if (!customAddress)
-                        reverseGeocode(location);
-                }
-
-                function geocode(address) {
-                    var geocoder = new google.maps.Geocoder();
-                    if (geocoder) {
-                        geocoder.geocode({
-                            "address": address
-                        }, function(results, status) {
-                            if (status === google.maps.GeocoderStatus.OK) {
-                                placeMarker(results[0].geometry.location);
-                                if (!hasLocation) {
-                                    map.setZoom(<?php echo $zoom; ?>);
-                                    hasLocation = true;
-                                }
-                            }
-                        });
-                    }
-                    $j("#geodata").html(postLatitude + ', ' + postLongitude);
-                }
-
-                function reverseGeocode(location) {
-                    var geocoder = new google.maps.Geocoder();
-                    if (geocoder) {
-                        geocoder.geocode({
-                            "latLng": location
-                        }, function(results, status) {
-                            if (status === google.maps.GeocoderStatus.OK) {
-                                if (results[1]) {
-                                    var address = results[1].formatted_address;
-                                    if (address === "") {
-                                        address = results[7].formatted_address;
-                                    } else {
-                                        $j("#geolocation-address").val(address);
-                                        placeMarker(location);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-
-                function enableGeo() {
-                    $j("#geolocation-address").removeAttr('disabled');
-                    $j("#geolocation-load").removeAttr('disabled');
-                    $j("#geolocation-map").css('filter', '');
-                    $j("#geolocation-map").css('opacity', '');
-                    $j("#geolocation-map").css('-moz-opacity', '');
-                    $j("#geolocation-public").removeAttr('disabled');
-                    $j("#geolocation-map").removeAttr('readonly');
-                    $j("#geolocation-disabled").removeAttr('checked');
-                    $j("#geolocation-enabled").attr('checked', 'checked');
-
-                    if (isPublic === '1')
-                        $j("#geolocation-public").attr('checked', 'checked');
-                }
-
-                function disableGeo() {
-                    $j("#geolocation-address").attr('disabled', 'disabled');
-                    $j("#geolocation-load").attr('disabled', 'disabled');
-                    $j("#geolocation-map").css('filter', 'alpha(opacity=50)');
-                    $j("#geolocation-map").css('opacity', '0.5');
-                    $j("#geolocation-map").css('-moz-opacity', '0.5');
-                    $j("#geolocation-map").attr('readonly', 'readonly');
-                    $j("#geolocation-public").attr('disabled', 'disabled');
-
-                    $j("#geolocation-enabled").removeAttr('checked');
-                    $j("#geolocation-disabled").attr('checked', 'checked');
-
-                    if (isPublic === '1')
-                        $j("#geolocation-public").attr('checked', 'checked');
+            var currentAddress;
+            var customAddress = false;
+            document.getElementById('geolocation-address').addEventListener('click', event => {
+                currentAddress = document.getElementById('geolocation-address').value;
+                if (currentAddress !== '')
+                    document.getElementById('geolocation-address').value = '';
+            });
+            document.getElementById('geolocation-load').addEventListener('click', event => {
+                if (document.getElementById('geolocation-address').value !== '') {
+                    customAddress = true;
+                    currentAddress = document.getElementById('geolocation-address').value;
+                    geocode(currentAddress);
                 }
             });
+            document.getElementById('geolocation-address').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter')
+                    document.getElementById('geolocation-load').click();
+            });
+            document.getElementById('geolocation-enabled').addEventListener('click', event => {
+                enableGeo();
+            });
+            document.getElementById('geolocation-disabled').addEventListener('click', event => {
+                disableGeo();
+            });
+
+            function placeMarker(location) {
+                marker.setPosition(location);
+                map.setCenter(location);
+                if ((location.lat() !== '') && (location.lng() !== '')) {
+                    document.getElementById('geolocation-latitude').value = location.lat();
+                    document.getElementById('geolocation-longitude').value = location.lng();
+                    //console.log(location);
+                }
+
+                if (!customAddress)
+                    reverseGeocode(location);
+            }
+
+            function geocode(address) {
+                var geocoder = new google.maps.Geocoder();
+                if (geocoder) {
+                    geocoder.geocode({
+                        "address": address
+                    }, function(results, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            placeMarker(results[0].geometry.location);
+                            if (!hasLocation) {
+                                map.setZoom(<?php echo $zoom; ?>);
+                                hasLocation = true;
+                            }
+                        }
+                    });
+                }
+                //document.querySelector("#geodata").innerHTML = postLatitude + ', ' + postLongitude;
+            }
+
+            function reverseGeocode(location) {
+                var geocoder = new google.maps.Geocoder();
+                if (geocoder) {
+                    geocoder.geocode({
+                        "latLng": location
+                    }, function(results, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            if (results[1]) {
+                                var address = results[1].formatted_address;
+                                if (address === "") {
+                                    address = results[7].formatted_address;
+                                } else {
+                                    document.getElementById('geolocation-address').value = address;
+                                    placeMarker(location);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            function enableGeo() {
+                document.getElementById('geolocation-address').removeAttribute('disabled');
+                document.getElementById('geolocation-load').removeAttribute('disabled');
+                document.getElementById('geolocation-map').style.filter = '';
+                document.getElementById('geolocation-map').style.opacity = '';
+                document.getElementById('geolocation-map').style.MozOpacity = '';
+                document.getElementById('geolocation-public').removeAttribute('disabled');
+                document.getElementById('geolocation-map').removeAttribute('readonly');
+                document.getElementById('geolocation-disabled').removeAttribute('checked');
+                document.getElementById('geolocation-enabled').setAttribute('checked', true);
+                if (isPublic === '1')
+                    document.getElementById('geolocation-public').setAttribute('checked', true);
+            }
+
+            function disableGeo() {
+                document.getElementById('geolocation-address').setAttribute('disabled', 'disabled');
+                document.getElementById('geolocation-load').setAttribute('disabled', 'disabled');
+                document.getElementById('geolocation-map').style.filter = 'alpha(opacity=50)';
+                document.getElementById('geolocation-map').style.opacity = '0.5';
+                document.getElementById('geolocation-map').style.MozOpacity = '0.5';
+                document.getElementById('geolocation-public').setAttribute('disabled', 'disabled');
+                document.getElementById('geolocation-map').setAttribute('readonly', 'readonly');
+                document.getElementById('geolocation-enabled').removeAttribute('checked');
+                document.getElementById('geolocation-disabled').setAttribute('checked', true);
+                if (isPublic === '1')
+                    document.getElementById('geolocation-public').setAttribute('checked', true);
+            }
         });
     </script>
 <?php
@@ -202,9 +201,10 @@ function admin_head_google()
 function add_geo_support_google($posts)
 {
     default_settings();
-    $zoom = (int) get_option('geolocation_default_zoom');
     global $post_count;
-    $post_count = count($posts); ?>
+    $post_count = count($posts);
+
+    $zoom = (int) get_option('geolocation_default_zoom'); ?>
     <script type="text/javascript">
         function initMap() {
             //console.log("google maps is ready.");
@@ -212,8 +212,14 @@ function add_geo_support_google($posts)
     </script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>&callback=initMap"></script>
     <script type="text/javascript">
-        var $j = jQuery.noConflict();
-        $j(function() {
+        function ready(fn) {
+            if (document.readyState != 'loading') {
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+        ready(() => {
             var center = new google.maps.LatLng(0.0, 0.0);
             var myOptions = {
                 zoom: <?php echo $zoom; ?>,
@@ -240,54 +246,57 @@ function add_geo_support_google($posts)
             var allowDisappear = true;
             var cancelDisappear = false;
 
-            $j(".geolocation-link").mouseover(function() {
-                $j("#map").stop(true, true);
-                var lat = $j(this).attr("name").split(",")[0];
-                var lng = $j(this).attr("name").split(",")[1];
-                var latlng = new google.maps.LatLng(lat, lng);
-                placeMarker(latlng);
+            var geolocationLinks = document.querySelectorAll('.geolocation-link');
 
-                var offset = $j(this).offset();
-                $j("#map").fadeTo(250, 1);
-                $j("#map").css("z-index", "99");
-                $j("#map").css("visibility", "visible");
-                $j("#map").css("top", offset.top + 20);
-                $j("#map").css("left", offset.left);
+            for (var i = 0; i < geolocationLinks.length; i++) {
+                geolocationLinks[i].addEventListener('mouseover', function() {
+                    //TODO? $j("#map").stop(true, true);
+                    var lat = this.getAttribute('name').split(',')[0];
+                    var lng = this.getAttribute('name').split(',')[1];
+                    var latlng = new google.maps.LatLng(lat, lng);
+                    placeMarker(latlng);
 
-                allowDisappear = false;
-                $j("#map").css("visibility", "visible");
-            });
+                    const rect = this.getBoundingClientRect();
+                    const top = rect.top + window.scrollY + 20;
+                    const left = rect.left + window.scrollX;
 
-            $j(".geolocation-link").mouseover(function() {});
+                    document.querySelector('#map').style.opacity = 1;
+                    document.querySelector('#map').style.zIndex = '99';
+                    document.querySelector('#map').style.visibility = 'visible';
+                    document.querySelector("#map").style.top = top + "px";
+                    document.querySelector("#map").style.left = left + "px";
 
-            $j(".geolocation-link").mouseout(function() {
-                allowDisappear = true;
-                cancelDisappear = false;
-                setTimeout(function() {
-                    if ((allowDisappear) && (!cancelDisappear)) {
-                        $j("#map").fadeTo(500, 0, function() {
-                            $j("#map").css("z-index", "-1");
+                    allowDisappear = false;
+                });
+
+                geolocationLinks[i].addEventListener('mouseout', function() {
+                    allowDisappear = true;
+                    cancelDisappear = false;
+                    setTimeout(function() {
+                        if ((allowDisappear) && (!cancelDisappear)) {
+                            document.querySelector('#map').style.opacity = 0;
+                            document.querySelector('#map').style.zIndex = '-1';
                             allowDisappear = true;
                             cancelDisappear = false;
-                        });
-                    }
-                }, 800);
-            });
+                        }
+                    }, 800);
+                });
+            }
 
-            $j("#map").mouseover(function() {
+            document.querySelector("#map").addEventListener("mouseover", function() {
                 allowDisappear = false;
                 cancelDisappear = true;
-                $j("#map").css("visibility", "visible");
+                this.style.visibility = "visible";
             });
 
-            $j("#map").mouseout(function() {
+            document.querySelector("#map").addEventListener("mouseout", function() {
                 allowDisappear = true;
                 cancelDisappear = false;
-                $j(".geolocation-link").mouseout();
+                document.querySelectorAll(".geolocation-link").forEach(el => el.dispatchEvent(new Event("mouseout")));
             });
 
             function placeMarker(location) {
-                map.setZoom(' . $zoom.');
+                map.setZoom(<?php echo $zoom; ?>);
                 marker.setPosition(location);
                 map.setCenter(location);
             }
@@ -342,7 +351,7 @@ function display_location_page_google($content)
             )
         )
     );
- 
+
     $script = $script . "<script type=\"text/javascript\">
       var map = new google.maps.Map(
         document.getElementById('mymap'), {

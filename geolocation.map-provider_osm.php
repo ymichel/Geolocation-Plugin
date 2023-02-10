@@ -59,7 +59,7 @@ function admin_head_osm()
 				map.setView(myMarker.getLatLng(), zoomlevel);
 				hasLocation = true;
 				document.getElementById('geolocation-latitude').value = postLatitude;
-				document.getElementById('geolocation-latitude').value = postLongitude;
+				document.getElementById('geolocation-longitude').value = postLongitude;
 				if (postAddress !== '') {
 					document.getElementById('geolocation-address').value = postAddress;
 				} else {
@@ -169,11 +169,9 @@ function add_geo_support_osm($posts)
 	global $post_count;
 	$post_count = count($posts);
 
-
-	echo '<link rel="stylesheet" href="' . get_osm_leaflet_css_url() . '"/>';
-	echo '<script src="' . get_osm_leaflet_js_url() . '"></script>';
-
 	$zoom = (int) get_option('geolocation_default_zoom'); ?>
+	<link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>"/>
+	<script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {

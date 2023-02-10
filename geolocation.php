@@ -117,8 +117,6 @@ function geolocation_inner_custom_box()
     <input id="geolocation-load" type="button" class="button geolocationadd" value="<?php echo  __('Load', 'geolocation'); ?>" tabindex="3" />
     <input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
     <input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
-    <input type="hidden" id="image-latitude" name="image-latitude" />
-    <input type="hidden" id="image-longitude" name="image-longitude" />
     <div id="geolocation-map" style="border:solid 1px #c6c6c6;width:<?php echo esc_attr((string) get_option('geolocation_map_width')); ?>px;height:<?php echo esc_attr((string) get_option('geolocation_map_height')); ?>px;margin-top:5px;"></div>
     <div style="margin:5px 0 0 0;">
         <input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
