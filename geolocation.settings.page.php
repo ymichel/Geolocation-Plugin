@@ -9,6 +9,13 @@ function geolocation_settings_page()
 ?>
     <link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>"/>
     <script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
+    <script type="text/javascript">
+        function initMap() {
+            //console.log("google maps is ready.");
+        }
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key("?"); ?>&callback=initMap"></script>
+    
     <style type="text/css">
         #preload {
             display: none;
@@ -162,81 +169,185 @@ function geolocation_settings_page()
             <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'geolocation') ?>" alt="" />
         </p>
         <script types="text/javascript">
-            var file;
-            var zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
+            var zoomlevel;
+            var provider;
 
             var lat_lng = [52.5162778, 13.3733267];
-            var map = {}
-            var myMapBounds = [];
+            var osm_map = {};
+            var image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
+            var shadow = new google.maps.MarkerImage("<?php echo plugins_url('img/wp_pin_shadow.png', __FILE__); ?>",
+                new google.maps.Size(39, 23),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(12, 25)
+            );
 
-            var iconOptions = {
-                iconUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>'
+            var osm_iconOptions = {
+                iconUrl: image
             }
-            var customIcon = L.icon(iconOptions);
-            var markerOptions = {}
-            var myMarker = {};
+            var osmCustomIcon = L.icon(osm_iconOptions);
+            var osmMarkerOptions = {}
+            var osmMarker = {};
+
+            var google_map = {};
+            var googleCenter = new google.maps.LatLng(lat_lng[0], lat_lng[1]);
+            var googleOptions = {};
+            var googleMarker = {};
 
             function setMarkerOptions() {
+                //console.log("setMarkerOptions");
                 if (document.getElementById("geolocation_wp_pin").checked) {
-                    markerOptions = {
-                        icon: customIcon,
-                        clickable: false,
-                        draggable: false
+                    switch (provider) {
+                        case 'google':
+                            googleOptions = {
+                                zoom: zoomlevel,
+                                center: googleCenter,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+                            googleMarker = new google.maps.Marker({
+                                position: googleCenter,
+                                map: google_map,
+                                icon: image,
+                                shadow: shadow,
+                                title: "Post Location"
+                            });
+                            break;
+                    
+                        case 'osm':
+                            osmMarkerOptions = {
+                                icon: osmCustomIcon,
+                                clickable: false,
+                                draggable: false
+                            }
+                            osmMarker = L.marker(lat_lng, osmMarkerOptions).addTo(osm_map);
+                            break;
                     }
+                    
                 } else {
-                    markerOptions = {
-                        clickable: false,
-                        draggable: false
+                    switch (provider) {
+                        case 'google':
+                            googleOptions = {
+                                zoom: zoomlevel,
+                                center: googleCenter,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+                            googleMarker = new google.maps.Marker({
+                                position: googleCenter,
+                                map: google_map,
+                                title: "Post Location"
+                            });
+                            break;
+                    
+                        case 'osm':
+                            osmMarkerOptions = {
+                                clickable: false,
+                                draggable: false
+                            }
+                            osmMarker = L.marker(lat_lng, osmMarkerOptions).addTo(osm_map);
+                            break;
                     }
+                    
                 }
             }
 
-            function initializeMap() {
-                map = L.map(document.getElementById("map")).setView(lat_lng, zoomlevel);
-                myMapBounds = [];
-                L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
-                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
+            function clearMap() {
+                //console.log("clearMap");
+                if (osm_map && osm_map.remove) {
+                    osm_map.off();
+                    osm_map.remove();
+                }
+                if (google_map && google_map.remove) {
+                    google_map.off();
+                    google_map.remove();
+                }
 
-                setMarkerOptions();
-                myMarker = L.marker(lat_lng, markerOptions).addTo(map);
-                map.setView(myMarker.getLatLng(), zoomlevel);
             }
 
-            function updatePin() {
+            function initializeMap() {
+                //console.log("initializeMap");
+                switch (provider) {
+                        case 'google':
+                            google_map = new google.maps.Map(document.getElementById("map"), googleOptions);
+                            break;
+                    
+                        case 'osm':
+                            osm_map = L.map(document.getElementById("map")).setView(lat_lng, zoomlevel);
+                            L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(osm_map);
+                            break;
+                }                
                 setMarkerOptions();
-                if (myMarker != undefined) {
-                    map.removeLayer(myMarker);
-                };
-                myMarker = L.marker(lat_lng, markerOptions).addTo(map);
-                map.setView(myMarker.getLatLng(), zoomlevel);
                 updateMap();
             }
 
+            function updatePin() {
+                //console.log("updatePin");
+                setMarkerOptions();
+                switch (provider) {
+                        case 'google':
+                            google_map.setZoom(zoomlevel);
+                            googleMarker.setPosition(googleCenter);
+                            google_map.setCenter(googleCenter);
+                            break;
+                    
+                        case 'osm':
+                            if (osmMarker != undefined) {
+                                osm_map.removeLayer(osmMarker);
+                            };
+                            osmMarker = L.marker(lat_lng, osmMarkerOptions).addTo(osm_map);
+                            osm_map.setView(osmMarker.getLatLng(), zoomlevel);
+                            break;
+                }
+                clearMap();
+                initializeMap();
+            }
+
             function updateMap() {
-                map.setView(myMarker.getLatLng(), zoomlevel);
+                //console.log("updateMap");
+                switch (provider) {
+                        case 'google':
+                            google_map.setZoom(zoomlevel);
+                            googleMarker.setPosition(googleCenter);
+                            google_map.setCenter(googleCenter);
+                            break;
+                    
+                        case 'osm':
+                            osm_map.setView(osmMarker.getLatLng(), zoomlevel);
+                            break;
+                }
             }
 
             function swap_zoom_sample(id) {
-                zoomlevel = document.getElementById(id).value;
+                //console.log("swap_zoom_sample("+id+")");
+                zoomlevel = parseInt(document.getElementById(id).value);
+                //console.log("       value: "+ zoomlevel);
                 updateMap();
             }
 
             function providerSelected(value) {
-                if (value == "google") {
-                    document.getElementsByClassName("google-apikey")[0].style.display = "";
-                    document.getElementsByClassName("osm-urls")[0].style.display = "none";
-                } else {
-                    document.getElementsByClassName("google-apikey")[0].style.display = "none";
-                    document.getElementsByClassName("osm-urls")[0].style.display = "";
+                //console.log("providerSelected("+value+")");
+                if (value != provider) {
+                    clearMap();
+                    initializeMap();
                 }
+                provider = value;
+                switch (provider) {
+                        case 'google':
+                            document.getElementsByClassName("google-apikey")[0].style.display = "";
+                            document.getElementsByClassName("osm-urls")[0].style.display = "none";
+                            break;
+                    
+                        case 'osm':
+                            document.getElementsByClassName("google-apikey")[0].style.display = "none";
+                            document.getElementsByClassName("osm-urls")[0].style.display = "";
+                            break;
+                }
+                initializeMap();
             }
 
             function initializeForm() {
+                //console.log("initializeForm");
                 var provider = document.getElementById("geolocation_provider").value;
-                providerSelected(provider);
                 zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
-                initializeMap();
+                providerSelected(provider);
             }
 
             document.addEventListener("DOMContentLoaded", initializeForm());
