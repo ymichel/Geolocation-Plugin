@@ -41,8 +41,15 @@ register_activation_hook(__FILE__, 'activate');
 register_uninstall_hook(__FILE__, 'uninstall');
 
 require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
-require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_osm.php');
-require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_google.php');
+// To do: add support for multiple Map API providers
+switch (get_option('geolocation_provider')) {
+    case 'google':
+        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_google.php');
+        break;
+    case 'osm':
+        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_osm.php');
+        break;
+}
 
 function geolocation_append_support_and_faq_links($links_array, $plugin_file_name)
 {
