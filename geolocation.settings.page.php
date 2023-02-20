@@ -334,9 +334,8 @@ function geolocation_settings_page()
 
             function providerSelected(value) {
                 //console.log("providerSelected("+value+")");
-                if (value != provider) {
+                if (provider && value != provider) {
                     clearMap();
-                    initializeMap();
                 }
                 provider = value;
                 switch (provider) {
@@ -355,9 +354,9 @@ function geolocation_settings_page()
 
             function initializeForm() {
                 //console.log("initializeForm");
-                var provider = document.getElementById("geolocation_provider").value;
+                var newProvider = document.getElementById("geolocation_provider").value;
                 zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
-                providerSelected(provider);
+                providerSelected(newProvider);
             }
 
             document.addEventListener("DOMContentLoaded", initializeForm());
