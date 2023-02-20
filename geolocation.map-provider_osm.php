@@ -24,9 +24,17 @@ function admin_head_osm()
 			let isGeoEnabled = '<?php echo esc_js((string) get_post_meta($post_id, 'geo_enabled', true)); ?>';
 			let zoomlevel = <?php echo (int) esc_attr((string) get_option('geolocation_default_zoom')); ?>;
 			let image = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>';
+            let shadow = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))); ?>';
 			let iconOptions = {
-				iconUrl: image
-			};
+				iconUrl: image,
+				shadowUrl: shadow,
+                iconSize:     [25, 34],
+                shadowSize:   [39, 23],
+                iconAnchor:   [5, 34], 
+                shadowAnchor: [3, 25], 
+                popupAnchor:  [12, -30]
+            }
+
 			let customIcon = L.icon(iconOptions);
 			let markerOptions = {
 				<?php if ((bool) get_option('geolocation_wp_pin')) { ?>
@@ -190,7 +198,13 @@ function add_geo_support_osm($posts)
 			var cancelDisappear = false;
 
 			var iconOptions = {
-				iconUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>'
+				iconUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))); ?>',
+				shadowUrl: '<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))); ?>',
+                iconSize:     [25, 34],
+                shadowSize:   [39, 23],
+                iconAnchor:   [5, 34], 
+                shadowAnchor: [3, 25], 
+                popupAnchor:  [12, -30]
 			}
 			var customIcon = L.icon(iconOptions);
 			var markerOptions = {
@@ -301,9 +315,16 @@ function display_location_page_osm($content)
         	attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
         }).addTo(mymap);
         var image = '" . esc_js(esc_url(plugins_url('img/wp_pin.png', __FILE__))) . "';
-	var iconOptions = {
-	       iconUrl: image
-	    }
+		var shadow = '" . esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))) . "';
+		var iconOptions = {
+			iconUrl: image,
+			shadowUrl: shadow,
+            iconSize:     [25, 34],
+            shadowSize:   [39, 23],
+            iconAnchor:   [5, 34], 
+            shadowAnchor: [3, 25], 
+            popupAnchor:  [12, -30]
+		};
 	var customIcon = L.icon(iconOptions);
 	var markerOptions = {";
 	if ((bool) get_option('geolocation_wp_pin')) {

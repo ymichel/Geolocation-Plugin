@@ -183,9 +183,16 @@ function geolocation_settings_page()
                 new google.maps.Point(0, 0),
                 new google.maps.Point(12, 25)
             );
+            var shadowUrl = '<?php echo esc_js(esc_url(plugins_url('img/wp_pin_shadow.png', __FILE__))); ?>';
 
             var osm_iconOptions = {
-                iconUrl: image
+				iconUrl: image,
+				shadowUrl: shadowUrl,
+                iconSize:     [25, 34],
+                shadowSize:   [39, 23],
+                iconAnchor:   [5, 34], 
+                shadowAnchor: [3, 25], 
+                popupAnchor:  [12, -30]
             }
             var osmCustomIcon = L.icon(osm_iconOptions);
             var osmMarkerOptions = {}
