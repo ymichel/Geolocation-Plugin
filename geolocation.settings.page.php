@@ -259,19 +259,6 @@ function geolocation_settings_page()
                 }
             }
 
-            function clearMap() {
-                //console.log("clearMap");
-                if (osm_map && osm_map.remove) {
-                    osm_map.off();
-                    osm_map.remove();
-                }
-                if (google_map && google_map.remove) {
-                    google_map.off();
-                    google_map.remove();
-                }
-
-            }
-
             function initializeMap() {
                 //console.log("initializeMap");
                 switch (provider) {
@@ -296,6 +283,10 @@ function geolocation_settings_page()
                             google_map.setZoom(zoomlevel);
                             googleMarker.setPosition(googleCenter);
                             google_map.setCenter(googleCenter);
+                            if (google_map && google_map.remove) {
+                                google_map.off();
+                                google_map.remove();
+                            } 
                             break;
                     
                         case 'osm':
@@ -304,9 +295,12 @@ function geolocation_settings_page()
                             };
                             osmMarker = L.marker(lat_lng, osmMarkerOptions).addTo(osm_map);
                             osm_map.setView(osmMarker.getLatLng(), zoomlevel);
+                            if (osm_map && osm_map.remove) {
+                                osm_map.off();
+                                osm_map.remove();
+                            }
                             break;
                 }
-                clearMap();
                 initializeMap();
             }
 
@@ -334,20 +328,34 @@ function geolocation_settings_page()
 
             function providerSelected(value) {
                 //console.log("providerSelected("+value+")");
-                if (provider && value != provider) {
-                    clearMap();
+                if (provider && value != provider) {                    
+                    switch (provider) {
+                            case 'google':
+                                if (osm_map && osm_map.remove) {
+                                    osm_map.off();
+                                    osm_map.remove();
+                                }
+                                break;
+                        
+                            case 'osm':
+                                if (google_map && google_map.remove) {
+                                    google_map.off();
+                                    google_map.remove();
+                                }
+                                break;
+                    }
                 }
                 provider = value;
                 switch (provider) {
-                        case 'google':
-                            document.getElementsByClassName("google-apikey")[0].style.display = "";
-                            document.getElementsByClassName("osm-urls")[0].style.display = "none";
-                            break;
-                    
-                        case 'osm':
-                            document.getElementsByClassName("google-apikey")[0].style.display = "none";
-                            document.getElementsByClassName("osm-urls")[0].style.display = "";
-                            break;
+                    case 'google':
+                        document.getElementsByClassName("google-apikey")[0].style.display = "";
+                        document.getElementsByClassName("osm-urls")[0].style.display = "none";
+                        break;
+                        
+                    case 'osm':
+                        document.getElementsByClassName("google-apikey")[0].style.display = "none";
+                        document.getElementsByClassName("osm-urls")[0].style.display = "";
+                        break;
                 }
                 initializeMap();
             }
