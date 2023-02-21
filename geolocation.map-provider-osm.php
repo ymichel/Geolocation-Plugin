@@ -1,18 +1,20 @@
 <?php
-
-
-/** 
+/**
  * OSM
- * 
- * This is the provider specific pool for the provider "open streetmaps (osm)". 
- * 
+ *
+ * This is the provider specific pool for the provider "open streetmaps (osm)".
+ *
  * @category Components
  * @package geolocation
  * @author Yann Michel <geolocation@yann-michel.de>
  * @license GPL2
- * 
  */
 
+/**
+ * admin_head_osm
+ *
+ * @return void
+ */
 function admin_head_osm() {
 	global $post;
 	$post_id = $post->ID; ?>
@@ -182,6 +184,12 @@ function admin_head_osm() {
 	<?php
 }
 
+/**
+ * add_geo_support_osm
+ *
+ * @param [type] $posts
+ * @return void
+ */
 function add_geo_support_osm( $posts ) {
 	default_settings();
 	global $post_count;
@@ -279,6 +287,12 @@ function add_geo_support_osm( $posts ) {
 	<?php
 }
 
+/**
+ * display_location_page_osm
+ *
+ * @param [type] $content
+ * @return void
+ */
 function display_location_page_osm( $content ) {
 	global $post;
 	$html = '';
@@ -372,6 +386,13 @@ function display_location_page_osm( $content ) {
 	return $content;
 }
 
+/**
+ * pullJSON_osm
+ *
+ * @param [type] $latitude
+ * @param [type] $longitude
+ * @return void
+ */
 function pullJSON_osm( $latitude, $longitude ) {
 	$json = esc_url( get_osm_nominatim_url() ) . '/reverse?format=json&accept-language=' . getSiteLang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1';
 	$ch   = curl_init( $json );
@@ -385,6 +406,11 @@ function pullJSON_osm( $latitude, $longitude ) {
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
+/**
+ * get_osm_tiles_url
+ *
+ * @return void
+ */
 function get_osm_tiles_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
 		$proxy_cached_url = apply_filters( 'osm_tiles_proxy_get_proxy_url', $proxy_cached_url );
@@ -395,6 +421,11 @@ function get_osm_tiles_url() {
 	}
 }
 
+/**
+ * get_osm_leaflet_js_url
+ *
+ * @return void
+ */
 function get_osm_leaflet_js_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
 		$leaflet_js_url = apply_filters( 'osm_tiles_proxy_get_leaflet_js_url', $leaflet_js_url );
@@ -405,6 +436,11 @@ function get_osm_leaflet_js_url() {
 	}
 }
 
+/**
+ * get_osm_leaflet_css_url
+ *
+ * @return void
+ */
 function get_osm_leaflet_css_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
 		$leaflet_css_url = apply_filters( 'osm_tiles_proxy_get_leaflet_css_url', $leaflet_css_url );
@@ -415,6 +451,11 @@ function get_osm_leaflet_css_url() {
 	}
 }
 
+/**
+ * get_osm_nominatim_url
+ *
+ * @return void
+ */
 function get_osm_nominatim_url() {
 	$param = (string) get_option( 'geolocation_osm_nominatim_url' );
 	return $param;
