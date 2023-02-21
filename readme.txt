@@ -41,6 +41,7 @@ If you struggle while installing it or have feature requests, please feel free t
 = 1.7 = 
 * enabling live preview of all settings in settings panel
 * fixing custom image incl. shadow, i.e, WP-pin display
+* enforcing WPCS rules 
 
 = 1.6 = 
 * removal of jQuery usage (vanilla JavaScript)

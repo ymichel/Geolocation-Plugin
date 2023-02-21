@@ -11,7 +11,7 @@ function admin_head_google() {
 			//console.log("google maps is ready.");
 		}
 	</script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key( '?' ); ?>&callback=initMap"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo esc_js( get_google_maps_api_key( '?' ) ); ?>&callback=initMap"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -56,7 +56,7 @@ function admin_head_google() {
 			}
 
 			var myOptions = {
-				'zoom': <?php echo $zoom; ?>,
+				'zoom': <?php echo esc_js( $zoom ); ?>,
 				'center': center,
 				'mapTypeId': google.maps.MapTypeId.ROADMAP
 			};
@@ -136,7 +136,7 @@ function admin_head_google() {
 						if (status === google.maps.GeocoderStatus.OK) {
 							placeMarker(results[0].geometry.location);
 							if (!hasLocation) {
-								map.setZoom(<?php echo $zoom; ?>);
+								map.setZoom(<?php echo esc_js( $zoom ); ?>);
 								hasLocation = true;
 							}
 						}
@@ -210,7 +210,7 @@ function add_geo_support_google( $posts ) {
 			//console.log("google maps is ready.");
 		}
 	</script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo get_google_maps_api_key( '?' ); ?>&callback=initMap"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo esc_js( get_google_maps_api_key( '?' ) ); ?>&callback=initMap"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -222,13 +222,13 @@ function add_geo_support_google( $posts ) {
 		ready(() => {
 			var center = new google.maps.LatLng(0.0, 0.0);
 			var myOptions = {
-				zoom: <?php echo $zoom; ?>,
+				zoom: <?php echo esc_js( $zoom ); ?>,
 				center: center,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			}
 			var map = new google.maps.Map(document.getElementById("map"), myOptions);
 			var image = "<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ); ?>";
-			var shadow = new google.maps.MarkerImage("<?php echo plugins_url( 'img/wp_pin_shadow.png', __FILE__ ); ?>",
+			var shadow = new google.maps.MarkerImage("<?php echo esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ); ?>",
 				new google.maps.Size(39, 23),
 				new google.maps.Point(0, 0),
 				new google.maps.Point(12, 25)
@@ -296,7 +296,7 @@ function add_geo_support_google( $posts ) {
 			});
 
 			function placeMarker(location) {
-				map.setZoom(<?php echo $zoom; ?>);
+				map.setZoom(<?php echo esc_js( $zoom ); ?>);
 				marker.setPosition(location);
 				map.setCenter(location);
 			}

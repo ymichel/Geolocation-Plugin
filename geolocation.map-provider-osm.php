@@ -104,7 +104,7 @@ function admin_head_osm() {
 
 			function geocode(address) {
 				let request = new XMLHttpRequest();
-				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, true);
+				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/search?format=json&accept-language=\'<?php echo esc_js( getSiteLang() ); ?>\'&limit=1&q=' + address, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
@@ -125,7 +125,7 @@ function admin_head_osm() {
 
 			function reverseGeocode(lat, lon) {
 				let request = new XMLHttpRequest();
-				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat=' + lat + '&lon=' + lon, true);
+				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/reverse?format=json&accept-language=\'<?php echo esc_js( getSiteLang() ); ?>\'&lat=' + lat + '&lon=' + lon, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
@@ -188,8 +188,8 @@ function add_geo_support_osm( $posts ) {
 			}
 		}
 		ready(() => {
-			var map = L.map(document.getElementById("map")).setView([51.505, -0.09], <?php echo $zoom; ?>);
-			L.tileLayer('<?php echo get_osm_tiles_url(); ?>', {
+			var map = L.map(document.getElementById("map")).setView([51.505, -0.09], <?php echo esc_js( $zoom ); ?>);
+			L.tileLayer('<?php echo esc_url( get_osm_tiles_url() ); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
 
@@ -221,7 +221,7 @@ function add_geo_support_osm( $posts ) {
 					var lng = this.getAttribute('name').split(',')[1];
 					var lat_lng = [lat, lng];
 					L.marker(lat_lng, markerOptions).addTo(map);
-					map.setView(new L.LatLng(lat, lng), <?php echo $zoom; ?>);
+					map.setView(new L.LatLng(lat, lng), <?php echo esc_js( $zoom ); ?>);
 
 					const rect = this.getBoundingClientRect();
 					const top = rect.top + window.scrollY + 20;
