@@ -12,6 +12,11 @@
  * 
  */
 
+ /**
+  * Print the admin header for Google Maps usage.
+  *
+  * @return void
+  */
 function admin_head_google() {
 	global $post;
 	$post_id = $post->ID;
@@ -209,6 +214,12 @@ function admin_head_google() {
 	<?php
 }
 
+/**
+ * Add_needed funtcionality for using geolocation for map links.
+ *
+ * @param [type] $posts Your posts.
+ * @return void
+ */
 function add_geo_support_google( $posts ) {
 	default_settings();
 	global $post_count;
@@ -326,6 +337,12 @@ function add_geo_support_google( $posts ) {
 	</script>
 <?php }
 
+/**
+ * Display_all location on a map inside a page.
+ *
+ * @param [type] $content the content to be shown.
+ * @return mixed
+ */
 function display_location_page_google( $content ) {
 	global $post;
 	$html = '';
@@ -399,12 +416,25 @@ function display_location_page_google( $content ) {
 	return $content;
 }
 
+/** 
+ * Pull the JSON for the given geoinformation.
+ *
+ * @param [type] $latitude The Latitude.
+ * @param [type] $longitude The Longitude.
+ * @return void
+ */
 function pullJSON_google( $latitude, $longitude ) {
 	$url     = 'https://maps.googleapis.com/maps/api/geocode/json' . get_google_maps_api_key( '?' ) . '&language=' . getSiteLang() . '&latlng=' . $latitude . ',' . $longitude;
 	$decoded = json_decode( wp_remote_get( $url )['body'] );
 	return $decoded;
 }
 
+/**
+ * Get the stored Google Maps API key.
+ *
+ * @param [type] $sep The Seperator.
+ * @return void
+ */
 function get_google_maps_api_key( $sep ) {
 	$apikey = (string) get_option( 'geolocation_google_maps_api_key' );
 	if ( $apikey != '' ) {

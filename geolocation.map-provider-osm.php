@@ -70,7 +70,7 @@ function admin_head_osm() {
 			}
 
 			let map = L.map("geolocation-map").setView([52.5162778, 13.3733267], zoomlevel);
-			L.tileLayer('<?php echo esc_url( get_osm_tiles_url() ); ?>', {
+			L.tileLayer('<?php echo esc_js( get_osm_tiles_url() ); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
 			myMarker = L.marker([52.5162778, 13.3733267], markerOptions).addTo(map);
@@ -187,7 +187,7 @@ function admin_head_osm() {
 /**
  * Add_needed funtcionality for using geolocation for map links.
  *
- * @param [type] $posts your posts
+ * @param [type] $posts Your posts.
  * @return void
  */
 function add_geo_support_osm( $posts ) {
@@ -209,7 +209,7 @@ function add_geo_support_osm( $posts ) {
 		}
 		ready(() => {
 			var map = L.map(document.getElementById("map")).setView([51.505, -0.09], <?php echo esc_js( $zoom ); ?>);
-			L.tileLayer('<?php echo esc_url( get_osm_tiles_url() ); ?>', {
+			L.tileLayer('<?php echo esc_js( get_osm_tiles_url() ); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
 
@@ -290,7 +290,7 @@ function add_geo_support_osm( $posts ) {
 /**
  * Display_all location on a map inside a page.
  *
- * @param [type] $content the content to be shown
+ * @param [type] $content the content to be shown.
  * @return mixed
  */
 function display_location_page_osm( $content ) {
@@ -361,13 +361,13 @@ function display_location_page_osm( $content ) {
 	$post_query = new WP_Query( $pargs );
 	while ( $post_query->have_posts() ) {
 		$post_query->the_post();
-		$postTitle     = get_the_title();
+		$post_title     = get_the_title();
 		$post_id       = (int) get_the_ID();
-		$postLatitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
-		$postLongitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
+		$post_latitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
+		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
 		$script        = $script . '
-        lat_lng = [' . $postLatitude . ',' . $postLongitude . "];
-        L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"" . esc_attr( (string) get_permalink( $post_id ) ) . '">' . $postTitle . "</a>');
+        lat_lng = [' . $post_latitude . ',' . $post_longitude . "];
+        L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"" . esc_attr( (string) get_permalink( $post_id ) ) . '">' . $post_title . "</a>');
         myMapBounds.push(lat_lng);";
 		$counter       = $counter + 1;
 	}
@@ -389,8 +389,8 @@ function display_location_page_osm( $content ) {
 /**
  * Pull the JSON for the given geoinformation.
  *
- * @param [type] $latitude
- * @param [type] $longitude
+ * @param [type] $latitude The Latitude.
+ * @param [type] $longitude The Longitude.
  * @return mixed
  */
 function pullJSON_osm( $latitude, $longitude ) {
