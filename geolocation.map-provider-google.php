@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Google Maps
  *
@@ -9,7 +8,6 @@
  * @package geolocation
  * @author Yann Michel <geolocation@yann-michel.de>
  * @license GPL2
- *
  */
 
 /**
@@ -425,7 +423,7 @@ function display_location_page_google( $content ) {
  * @return mixed
  */
 function pull_json_google( $latitude, $longitude ) {
-	$url     = 'https://maps.googleapis.com/maps/api/geocode/json' . get_google_maps_api_key( '?' ) . '&language=' . getSiteLang() . '&latlng=' . $latitude . ',' . $longitude;
+	$url     = 'https://maps.googleapis.com/maps/api/geocode/json' . get_google_maps_api_key( '?' ) . '&language=' . get_site_lang() . '&latlng=' . $latitude . ',' . $longitude;
 	$decoded = json_decode( wp_remote_get( $url )['body'] );
 	return $decoded;
 }

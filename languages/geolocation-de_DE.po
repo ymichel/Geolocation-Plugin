@@ -171,7 +171,7 @@ msgstr "Proxy verwenden"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:152
 msgid "Used Language for Adresses"
-msgstr "Genutzte Sprache f&uumlr die gezeigten Adressen"
+msgstr "Genutzte Sprache f&uuml;r die gezeigten Adressen"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:64
 msgid "Wherever I put the shortcode: "

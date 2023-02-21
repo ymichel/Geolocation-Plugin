@@ -118,7 +118,7 @@ function admin_head_osm() {
 
 			function geocode(address) {
 				let request = new XMLHttpRequest();
-				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/search?format=json&accept-language=\'<?php echo esc_js( getSiteLang() ); ?>\'&limit=1&q=' + address, true);
+				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/search?format=json&accept-language=\'<?php echo esc_js( get_site_lang() ); ?>\'&limit=1&q=' + address, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
@@ -139,7 +139,7 @@ function admin_head_osm() {
 
 			function reverseGeocode(lat, lon) {
 				let request = new XMLHttpRequest();
-				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/reverse?format=json&accept-language=\'<?php echo esc_js( getSiteLang() ); ?>\'&lat=' + lat + '&lon=' + lon, true);
+				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/reverse?format=json&accept-language=\'<?php echo esc_js( get_site_lang() ); ?>\'&lat=' + lat + '&lon=' + lon, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
@@ -304,7 +304,7 @@ function display_location_page_osm( $content ) {
 	$category_id = get_cat_ID( $category );
 	$counter     = 0;
 
-	$pargs = array(
+	$pargs  = array(
 		'post_type'      => 'post',
 		'cat'            => $category_id,
 		'posts_per_page' => -1,
@@ -393,7 +393,7 @@ function display_location_page_osm( $content ) {
  * @return mixed
  */
 function pull_json_osm( $latitude, $longitude ) {
-	$json = esc_url( get_osm_nominatim_url() ) . '/reverse?format=json&accept-language=' . getSiteLang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1';
+	$json = esc_url( get_osm_nominatim_url() . '/reverse?format=json&accept-language=' . get_site_lang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1' );
 	$ch   = curl_init( $json );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 	curl_setopt( $ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );
@@ -412,7 +412,7 @@ require_once ABSPATH . 'wp-admin/includes/plugin.php';
  */
 function get_osm_tiles_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
-		$proxy_cached_url = apply_filters( 'osm_tiles_proxy_get_proxy_url', $proxy_cached_url );
+		$proxy_cached_url = apply_filters( 'osm_tiles_proxy_get_proxy_url', '' );
 		return $proxy_cached_url;
 	} else {
 		$param = (string) get_option( 'geolocation_osm_tiles_url' );
@@ -427,7 +427,7 @@ function get_osm_tiles_url() {
  */
 function get_osm_leaflet_js_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
-		$leaflet_js_url = apply_filters( 'osm_tiles_proxy_get_leaflet_js_url', $leaflet_js_url );
+		$leaflet_js_url = apply_filters( 'osm_tiles_proxy_get_leaflet_js_url', '' );
 		return $leaflet_js_url;
 	} else {
 		$param = plugins_url( 'js/leaflet.js', __FILE__ );
@@ -442,7 +442,7 @@ function get_osm_leaflet_js_url() {
  */
 function get_osm_leaflet_css_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
-		$leaflet_css_url = apply_filters( 'osm_tiles_proxy_get_leaflet_css_url', $leaflet_css_url );
+		$leaflet_css_url = apply_filters( 'osm_tiles_proxy_get_leaflet_css_url', '' );
 		return $leaflet_css_url;
 	} else {
 		$param = plugins_url( 'js/leaflet.css', __FILE__ );
