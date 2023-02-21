@@ -406,7 +406,7 @@ function reverse_geocode( $latitude, $longitude ) {
 	// To do: add support for multiple Map API providers
 	switch ( get_option( 'geolocation_provider' ) ) {
 		case 'google':
-			$json = pullJSON_google( $latitude, $longitude );
+			$json = pull_json_google( $latitude, $longitude );
 			foreach ( $json->results as $result ) {
 				foreach ( $result->address_components as $addressPart ) {
 					if ( in_array( 'political', $addressPart->types ) ) {
@@ -422,7 +422,7 @@ function reverse_geocode( $latitude, $longitude ) {
 			}
 			break;
 		case 'osm':
-			$json    = pullJSON_osm( $latitude, $longitude );
+			$json    = pull_json_osm( $latitude, $longitude );
 			$city    = $json['address']['city'];
 			$state   = $json['address']['suburb'];
 			$country = $json['address']['country'];

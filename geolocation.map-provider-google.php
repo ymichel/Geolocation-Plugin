@@ -1,22 +1,22 @@
 <?php
 
-/** 
+/**
  * Google Maps
- * 
+ *
  * This is the provider specific pool for the provider "Google Maps".
- * 
+ *
  * @category Components
  * @package geolocation
  * @author Yann Michel <geolocation@yann-michel.de>
  * @license GPL2
- * 
+ *
  */
 
- /**
-  * Print the admin header for Google Maps usage.
-  *
-  * @return void
-  */
+/**
+ * Print the admin header for Google Maps usage.
+ *
+ * @return void
+ */
 function admin_head_google() {
 	global $post;
 	$post_id = $post->ID;
@@ -39,8 +39,8 @@ function admin_head_google() {
 		ready(() => {
 			var hasLocation = false;
 			var center = new google.maps.LatLng(52.5162778, 13.3733267);
-			var postLatitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_latitude', true ) ); ?>';
-			var postLongitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_longitude', true ) ); ?>';
+			var post_latitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_latitude', true ) ); ?>';
+			var post_longitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_longitude', true ) ); ?>';
 			var postAddress = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_address', true ) ); ?>';
 			var isPublic = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_public', true ) ); ?>';
 			var isGeoEnabled = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_enabled', true ) ); ?>';
@@ -58,11 +58,11 @@ function admin_head_google() {
 			}
 
 
-			if ((postLatitude !== '') && (postLongitude !== '')) {
-				center = new google.maps.LatLng(postLatitude, postLongitude);
+			if ((post_latitude !== '') && (post_longitude !== '')) {
+				center = new google.maps.LatLng(post_latitude, post_longitude);
 				hasLocation = true;
-				document.getElementById('geolocation-latitude').value = postLatitude;
-				document.getElementById('geolocation-longitude').value = postLongitude;
+				document.getElementById('geolocation-latitude').value = post_latitude;
+				document.getElementById('geolocation-longitude').value = post_longitude;
 				if (postAddress !== '') {
 					document.getElementById('geolocation-address').value = postAddress;
 				} else {
@@ -87,7 +87,8 @@ function admin_head_google() {
 				position: center,
 				map: map,
 				<?php
-				if ( (bool) get_option( 'geolocation_wp_pin' ) ) {?>
+				if ( (bool) get_option( 'geolocation_wp_pin' ) ) {
+					?>
 					icon: image,
 					shadow: shadow,
 				<?php } ?>
@@ -158,7 +159,7 @@ function admin_head_google() {
 						}
 					});
 				}
-				//document.querySelector("#geodata").innerHTML = postLatitude + ', ' + postLongitude;
+				//document.querySelector("#geodata").innerHTML = post_latitude + ', ' + post_longitude;
 			}
 
 			function reverseGeocode(location) {
@@ -390,16 +391,16 @@ function display_location_page_google( $content ) {
 	$post_query = new WP_Query( $pargs );
 	while ( $post_query->have_posts() ) {
 		$post_query->the_post();
-		$post_id       = (int) get_the_ID();
-		$postLatitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
-		$postLongitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
-		$script        = $script . '
+		$post_id        = (int) get_the_ID();
+		$post_latitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
+		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
+		$script         = $script . '
       marker = new google.maps.Marker({
-            position: new google.maps.LatLng(' . $postLatitude . ',' . $postLongitude . '),
+            position: new google.maps.LatLng(' . $post_latitude . ',' . $post_longitude . '),
             map: map
       });
       bounds.extend(marker.position);';
-		$counter       = $counter + 1;
+		++$counter;
 	}
 	wp_reset_postdata();
 	$script = $script . '
@@ -416,14 +417,14 @@ function display_location_page_google( $content ) {
 	return $content;
 }
 
-/** 
+/**
  * Pull the JSON for the given geoinformation.
  *
  * @param [type] $latitude The Latitude.
  * @param [type] $longitude The Longitude.
- * @return void
+ * @return mixed
  */
-function pullJSON_google( $latitude, $longitude ) {
+function pull_json_google( $latitude, $longitude ) {
 	$url     = 'https://maps.googleapis.com/maps/api/geocode/json' . get_google_maps_api_key( '?' ) . '&language=' . getSiteLang() . '&latlng=' . $latitude . ',' . $longitude;
 	$decoded = json_decode( wp_remote_get( $url )['body'] );
 	return $decoded;
@@ -433,11 +434,11 @@ function pullJSON_google( $latitude, $longitude ) {
  * Get the stored Google Maps API key.
  *
  * @param [type] $sep The Seperator.
- * @return void
+ * @return string
  */
 function get_google_maps_api_key( $sep ) {
 	$apikey = (string) get_option( 'geolocation_google_maps_api_key' );
-	if ( $apikey != '' ) {
+	if ( $apikey ) {
 		return $sep . 'key=' . $apikey;
 	}
 	return '';

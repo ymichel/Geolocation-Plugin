@@ -328,7 +328,6 @@ function display_location_page_osm( $content ) {
 			),
 		),
 	);
-	// $zoom = (int) get_option('geolocation_default_zoom');
 	$zoom   = 1;
 	$script = $script . '<script src="' . esc_js( get_osm_leaflet_js_url() ) . '"></script>';
 	$script = $script . "<script type=\"text/javascript\">
@@ -362,14 +361,14 @@ function display_location_page_osm( $content ) {
 	while ( $post_query->have_posts() ) {
 		$post_query->the_post();
 		$post_title     = get_the_title();
-		$post_id       = (int) get_the_ID();
+		$post_id        = (int) get_the_ID();
 		$post_latitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
 		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
-		$script        = $script . '
+		$script         = $script . '
         lat_lng = [' . $post_latitude . ',' . $post_longitude . "];
         L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"" . esc_attr( (string) get_permalink( $post_id ) ) . '">' . $post_title . "</a>');
         myMapBounds.push(lat_lng);";
-		$counter       = $counter + 1;
+		++$counter;
 	}
 	wp_reset_postdata();
 	$script = $script . '
@@ -393,7 +392,7 @@ function display_location_page_osm( $content ) {
  * @param [type] $longitude The Longitude.
  * @return mixed
  */
-function pullJSON_osm( $latitude, $longitude ) {
+function pull_json_osm( $latitude, $longitude ) {
 	$json = esc_url( get_osm_nominatim_url() ) . '/reverse?format=json&accept-language=' . getSiteLang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1';
 	$ch   = curl_init( $json );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
