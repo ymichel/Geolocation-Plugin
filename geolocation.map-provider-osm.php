@@ -1,6 +1,18 @@
 <?php
 
-/** This is the provider specific pool for the provider "open streetmaps (osm)". **/
+
+/** 
+ * OSM
+ * 
+ * This is the provider specific pool for the provider "open streetmaps (osm)". 
+ * 
+ * @category Components
+ * @package geolocation
+ * @author Yann Michel <geolocation@yann-michel.de>
+ * @license GPL2
+ * 
+ */
+
 function admin_head_osm() {
 	global $post;
 	$post_id = $post->ID; ?>

@@ -1,6 +1,17 @@
 <?php
 
-/** This is the provider specific pool for the provider "google maps". **/
+/** 
+ * Google Maps
+ * 
+ * This is the provider specific pool for the provider "Google Maps".
+ * 
+ * @category Components
+ * @package geolocation
+ * @author Yann Michel <geolocation@yann-michel.de>
+ * @license GPL2
+ * 
+ */
+
 function admin_head_google() {
 	global $post;
 	$post_id = $post->ID;
