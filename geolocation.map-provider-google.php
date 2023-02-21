@@ -70,14 +70,12 @@ function admin_head_google() {
 			var marker = new google.maps.Marker({
 				position: center,
 				map: map,
-				title: 'Post Location'
 				<?php
-				if ( (bool) get_option( 'geolocation_wp_pin' ) ) {
-					?>
-					,
+				if ( (bool) get_option( 'geolocation_wp_pin' ) ) {?>
 					icon: image,
-					shadow: shadow
+					shadow: shadow,
 				<?php } ?>
+				title: 'Post Location'
 			});
 
 			if ((!hasLocation) && (google.loader.ClientLocation)) {
