@@ -1,9 +1,8 @@
 <?php
 
 /** This is the provider specific pool for the provider "google maps". **/
-function admin_head_google()
-{
-    global $post;
+function admin_head_google() {
+    global s$post;
     $post_id = $post->ID;
     $zoom = (int) get_option('geolocation_default_zoom'); ?>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>

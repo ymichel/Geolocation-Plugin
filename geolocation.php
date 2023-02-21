@@ -44,10 +44,10 @@ require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.settings.php');
 // To do: add support for multiple Map API providers
 switch (get_option('geolocation_provider')) {
     case 'google':
-        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_google.php');
+        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider-google.php');
         break;
     case 'osm':
-        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_osm.php');
+        require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider-osm.php');
         break;
 }
 

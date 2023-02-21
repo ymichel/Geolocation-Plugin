@@ -1,8 +1,8 @@
 <?php
 function geolocation_settings_page()
 {
-    require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_google.php');
-    require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider_osm.php');
+    require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider-google.php');
+    require_once(GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider-osm.php');
 
     if ((bool) get_option('geolocation_updateAddresses')) {
         updateGeolocationAddresses();
