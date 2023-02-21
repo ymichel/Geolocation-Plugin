@@ -11,7 +11,7 @@
  */
 
 /**
- * admin_head_osm
+ * Print the admin header for OSM usage.
  *
  * @return void
  */
@@ -185,9 +185,9 @@ function admin_head_osm() {
 }
 
 /**
- * add_geo_support_osm
+ * Add_needed funtcionality for using geolocation for map links.
  *
- * @param [type] $posts
+ * @param [type] $posts your posts
  * @return void
  */
 function add_geo_support_osm( $posts ) {
@@ -288,10 +288,10 @@ function add_geo_support_osm( $posts ) {
 }
 
 /**
- * display_location_page_osm
+ * Display_all location on a map inside a page.
  *
- * @param [type] $content
- * @return void
+ * @param [type] $content the content to be shown
+ * @return mixed
  */
 function display_location_page_osm( $content ) {
 	global $post;
@@ -387,11 +387,11 @@ function display_location_page_osm( $content ) {
 }
 
 /**
- * pullJSON_osm
+ * Pull the JSON for the given geoinformation.
  *
  * @param [type] $latitude
  * @param [type] $longitude
- * @return void
+ * @return mixed
  */
 function pullJSON_osm( $latitude, $longitude ) {
 	$json = esc_url( get_osm_nominatim_url() ) . '/reverse?format=json&accept-language=' . getSiteLang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1';
@@ -407,9 +407,9 @@ function pullJSON_osm( $latitude, $longitude ) {
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
 /**
- * get_osm_tiles_url
+ * Get the tiles url to be used.
  *
- * @return void
+ * @return string
  */
 function get_osm_tiles_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
@@ -422,9 +422,9 @@ function get_osm_tiles_url() {
 }
 
 /**
- * get_osm_leaflet_js_url
+ * Get the Leaflet JS URL to be used.
  *
- * @return void
+ * @return mixed
  */
 function get_osm_leaflet_js_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
@@ -437,9 +437,9 @@ function get_osm_leaflet_js_url() {
 }
 
 /**
- * get_osm_leaflet_css_url
+ * Get the Leaflet CSS URL to be used.
  *
- * @return void
+ * @return mixed
  */
 function get_osm_leaflet_css_url() {
 	if ( ( (bool) get_option( 'geolocation_osm_use_proxy' ) ) && is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
@@ -452,9 +452,9 @@ function get_osm_leaflet_css_url() {
 }
 
 /**
- * get_osm_nominatim_url
+ * Get the OpenStreetmaps Nominatim URL to be used.
  *
- * @return void
+ * @return string
  */
 function get_osm_nominatim_url() {
 	$param = (string) get_option( 'geolocation_osm_nominatim_url' );
