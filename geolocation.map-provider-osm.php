@@ -4,8 +4,8 @@
 function admin_head_osm() {
 	global $post;
 	$post_id = $post->ID; ?>
-	<link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>" />
-	<script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
+	<link rel="stylesheet" href="<?php echo esc_js(get_osm_leaflet_css_url()); ?>" />
+	<script src="<?php echo esc_js(get_osm_leaflet_js_url()); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -104,7 +104,7 @@ function admin_head_osm() {
 
 			function geocode(address) {
 				let request = new XMLHttpRequest();
-				request.open('GET', '<?php echo get_osm_nominatim_url(); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, true);
+				request.open('GET', '<?php echo esc_url(get_osm_nominatim_url()); ?>/search?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&limit=1&q=' + address, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
@@ -125,7 +125,7 @@ function admin_head_osm() {
 
 			function reverseGeocode(lat, lon) {
 				let request = new XMLHttpRequest();
-				request.open('GET', '<?php echo get_osm_nominatim_url(); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat=' + lat + '&lon=' + lon, true);
+				request.open('GET', '<?php echo esc_url(get_osm_nominatim_url()); ?>/reverse?format=json&accept-language=\'<?php echo getSiteLang(); ?>\'&lat=' + lat + '&lon=' + lon, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
@@ -177,8 +177,8 @@ function add_geo_support_osm( $posts ) {
 
 	$zoom = (int) get_option( 'geolocation_default_zoom' );
 	?>
-	<link rel="stylesheet" href="<?php echo get_osm_leaflet_css_url(); ?>"/>
-	<script src="<?php echo get_osm_leaflet_js_url(); ?>"></script>
+	<link rel="stylesheet" href="<?php echo esc_js(get_osm_leaflet_css_url()); ?>"/>
+	<script src="<?php echo esc_js(get_osm_leaflet_js_url()); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -304,12 +304,12 @@ function display_location_page_osm( $content ) {
 	);
 	// $zoom = (int) get_option('geolocation_default_zoom');
 	$zoom   = 1;
-	$script = $script . '<script src="' . get_osm_leaflet_js_url() . '"></script>';
+	$script = $script . '<script src="' . esc_js(get_osm_leaflet_js_url()) . '"></script>';
 	$script = $script . "<script type=\"text/javascript\">
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom . ");
         var myMapBounds = [];
         var lat_lng = [];
-	L.tileLayer('" . get_osm_tiles_url() . "', {
+	L.tileLayer('" . esc_js(get_osm_tiles_url()) . "', {
         	attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
         }).addTo(mymap);
         var image = '" . esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ) . "';
@@ -361,7 +361,7 @@ function display_location_page_osm( $content ) {
 }
 
 function pullJSON_osm( $latitude, $longitude ) {
-	$json = get_osm_nominatim_url() . '/reverse?format=json&accept-language=' . getSiteLang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1';
+	$json = esc_url(get_osm_nominatim_url()) . '/reverse?format=json&accept-language=' . getSiteLang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1';
 	$ch   = curl_init( $json );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 	curl_setopt( $ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );
@@ -388,7 +388,6 @@ function get_osm_leaflet_js_url() {
 		$leaflet_js_url = apply_filters( 'osm_tiles_proxy_get_leaflet_js_url', $leaflet_js_url );
 		return $leaflet_js_url;
 	} else {
-		// $param = (string) get_option('geolocation_osm_leaflet_js_url');
 		$param = plugins_url( 'js/leaflet.js', __FILE__ );
 		return $param;
 	}
@@ -399,7 +398,6 @@ function get_osm_leaflet_css_url() {
 		$leaflet_css_url = apply_filters( 'osm_tiles_proxy_get_leaflet_css_url', $leaflet_css_url );
 		return $leaflet_css_url;
 	} else {
-		// $param = (string) get_option('geolocation_osm_leaflet_css_url');
 		$param = plugins_url( 'js/leaflet.css', __FILE__ );
 		return $param;
 	}
