@@ -20,7 +20,7 @@ function geolocation_settings_page() {
 	require_once GEOLOCATION__PLUGIN_DIR . 'geolocation.map-provider-osm.php';
 
 	if ( (bool) get_option( 'geolocation_updateAddresses' ) ) {
-		updateGeolocationAddresses();
+		update_geolocation_addresses();
 	}
 
 	default_settings();
@@ -115,7 +115,7 @@ function geolocation_settings_page() {
 					<input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16" <?php is_value( 'geolocation_default_zoom', '16' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street"><?php esc_html_e( 'Street', 'geolocation' ); ?></label>
 					<input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18" <?php is_value( 'geolocation_default_zoom', '18' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php esc_html_e( 'Block', 'geolocation' ); ?></label>
 					<br />
-					<?php echo get_geo_div() ; ?>
+					<?php echo get_geo_div(); ?>
 				</td>
 			</tr>
 			<tr valign="top">
@@ -195,7 +195,7 @@ function geolocation_settings_page() {
 			<tr valign="top">
 				<th scope="row"></th>
 				<td class="position">
-					<input type="checkbox" id="geolocation_updateAddresses" name="geolocation_updateAddresses" value="1" <?php is_checked( 'geolocation_updateAddresses' ); ?>><label for="geolocation_updateAddresses"><?php _e( 'Update all addresses from posts that have location information<br>(only once this setup is saved).', 'geolocation' ); ?></label>
+					<input type="checkbox" id="geolocation_updateAddresses" name="geolocation_updateAddresses" value="1" <?php is_checked( 'geolocation_updateAddresses' ); ?>><label for="geolocation_updateAddresses"><?php esc_html_e( 'Update all addresses from posts that have location information (only once this setup is saved).', 'geolocation' ); ?></label>
 				</td>
 			</tr>
 		</table>

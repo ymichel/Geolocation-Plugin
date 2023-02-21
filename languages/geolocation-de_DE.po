@@ -2,8 +2,8 @@
 # This file is distributed under the same license as the Geolocation package.
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1056
-msgid " Addresses have been updated!"
-msgstr "Die Adressen wurden aktualisiert"
+msgid "Addresses have been updated!"
+msgstr "Adressen wurden aktualisiert."
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:63
 msgid "After the post."
@@ -162,8 +162,8 @@ msgid "Tiles url (Caching)"
 msgstr "Kachel URL (Caching)"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:159
-msgid "Update all addresses from posts that have location information<br>(only once this setup is saved)."
-msgstr "Alle Adressen f&uuml;r Artikel mit Geodaten neu ableiten.<br>(Einmalig beim Speichern dieses Setup.)"
+msgid "Update all addresses from posts that have location information (only once this setup is saved)."
+msgstr "Alle Adressen f&uuml;r Artikel mit Geodaten neu ableiten. (Einmalig beim Speichern dieses Setup.)"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:128
 msgid "Use Proxy"
