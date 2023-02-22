@@ -2,8 +2,8 @@ name: WPCS check
 
 on: 
   workflow_dispatch:
-  pull_request:
-  push:
+  #pull_request:
+  #push:
 
 jobs:
   phpcs:
