@@ -381,9 +381,9 @@ function display_location_page_google( $content ) {
 		),
 	);
 
-	$script = $script . "<script type=\"text/javascript\">
+	$script = $script . '<script type="text/javascript">
 	function initMap() { }
-</script>";
+</script>';
 	$script = $script . "<script type=\"text/javascript\">
 	function ready(fn) {
 		if (document.readyState != 'loading') {
@@ -398,17 +398,18 @@ function display_location_page_google( $content ) {
           mapTypeId: google.maps.MapTypeId.ROADMAP
         }
       );
-	  var image = \"" . esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ) . "\"
-	  var shadow = new google.maps.MarkerImage(\"" . esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) . "\",
+	  var image = \"" . esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ) . '"
+	  var shadow = new google.maps.MarkerImage("' . esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) . '",
 	  		new google.maps.Size(39, 23),
 	  		new google.maps.Point(0, 0),
 	  		new google.maps.Point(12, 25)
 	  );
-      var bounds = new google.maps.LatLngBounds();";
+      var bounds = new google.maps.LatLngBounds();';
 
 	$post_query = new WP_Query( $pargs );
 	while ( $post_query->have_posts() ) {
 		$post_query->the_post();
+		$post_title     = get_the_title();
 		$post_id        = (int) get_the_ID();
 		$post_latitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
 		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
@@ -416,12 +417,14 @@ function display_location_page_google( $content ) {
       marker = new google.maps.Marker({
             position: new google.maps.LatLng(' . $post_latitude . ',' . $post_longitude . '),';
 		if ( (bool) get_option( 'geolocation_wp_pin' ) ) {
-			$script         = $script . '
+			$script = $script . '
 			icon: image,
 				shadow: shadow,';
 		}
-			$script         = $script . '
-			map: map
+			$script = $script . '
+			map: map,
+			url: "' . esc_attr( (string) get_permalink( $post_id ) ) . '",
+			title: "' . $post_title . '"
       });
       bounds.extend(marker.position);';
 		++$counter;
