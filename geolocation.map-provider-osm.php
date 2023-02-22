@@ -17,8 +17,8 @@
  */
 function admin_head_osm() {
 	global $post;
-	$post_id = $post->ID; ?>
-	<link rel="stylesheet" href="<?php echo esc_js( get_osm_leaflet_css_url() ); ?>" />
+	$post_id = $post->ID;
+	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), null, 'all' );?>
 	<script src="<?php echo esc_js( get_osm_leaflet_js_url() ); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
@@ -196,8 +196,9 @@ function add_geo_support_osm( $posts ) {
 	$post_count = count( $posts );
 
 	$zoom = (int) get_option( 'geolocation_default_zoom' );
+	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), null, 'all' );
 	?>
-	<link rel="stylesheet" href="<?php echo esc_js( get_osm_leaflet_css_url() ); ?>"/>
+	?>
 	<script src="<?php echo esc_js( get_osm_leaflet_js_url() ); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
