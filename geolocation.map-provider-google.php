@@ -354,7 +354,7 @@ function display_location_page_google( $content ) {
 	$category_id = get_cat_ID( $category );
 	$counter     = 0;
 
-	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, false );
+	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, true );
 
 	$pargs = array(
 		'post_type'      => 'post',
@@ -382,11 +382,28 @@ function display_location_page_google( $content ) {
 	);
 
 	$script = $script . "<script type=\"text/javascript\">
+	function initMap() { }
+</script>";
+	$script = $script . "<script type=\"text/javascript\">
+	function ready(fn) {
+		if (document.readyState != 'loading') {
+			fn();
+		} else {
+			document.addEventListener('DOMContentLoaded', fn);
+		}
+	}
+	ready(() => {
       var map = new google.maps.Map(
         document.getElementById('mymap'), {
           mapTypeId: google.maps.MapTypeId.ROADMAP
         }
       );
+	  var image = \"" . esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ) . "\"
+	  var shadow = new google.maps.MarkerImage(\"" . esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) . "\",
+	  		new google.maps.Size(39, 23),
+	  		new google.maps.Point(0, 0),
+	  		new google.maps.Point(12, 25)
+	  );
       var bounds = new google.maps.LatLngBounds();";
 
 	$post_query = new WP_Query( $pargs );
@@ -397,8 +414,14 @@ function display_location_page_google( $content ) {
 		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
 		$script         = $script . '
       marker = new google.maps.Marker({
-            position: new google.maps.LatLng(' . $post_latitude . ',' . $post_longitude . '),
-            map: map
+            position: new google.maps.LatLng(' . $post_latitude . ',' . $post_longitude . '),';
+		if ( (bool) get_option( 'geolocation_wp_pin' ) ) {
+			$script         = $script . '
+			icon: image,
+				shadow: shadow,';
+		}
+			$script         = $script . '
+			map: map
       });
       bounds.extend(marker.position);';
 		++$counter;
@@ -406,6 +429,7 @@ function display_location_page_google( $content ) {
 	wp_reset_postdata();
 	$script = $script . '
        map.fitBounds(bounds);
+	});
 </script>';
 
 	if ( $counter > 0 ) {
