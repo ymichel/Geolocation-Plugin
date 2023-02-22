@@ -398,7 +398,7 @@ function pull_json_osm( $latitude, $longitude ) {
 	$json = esc_url( get_osm_nominatim_url() . '/reverse?format=json&accept-language=' . get_site_lang() . '&lat=' . $latitude . '&lon=' . $longitude . '&addressdetails=1' );
 	$ch   = curl_init( $json );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );
+	curl_setopt( $ch, CURLOPT_USERAGENT, wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 	$jsonfile = curl_exec( $ch );
 	curl_close( $ch );
 	$decoded = json_decode( (string) $jsonfile, true );

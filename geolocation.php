@@ -196,7 +196,7 @@ function geolocation_old_custom_box() {
  */
 function geolocation_save_postdata( $post_id ) {
 	// Check authorization, permissions, autosave, etc.
-	if ( ( ! wp_verify_nonce( $_POST['geolocation_nonce'], plugin_basename( __FILE__ ) ) ) ||
+	if ( ( ! wp_verify_nonce( wp_unslash( $_POST['geolocation_nonce'], plugin_basename( __FILE__ ) ) ) ) ||
 		( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
 		( ( 'page' === $_POST['post_type'] ) && ( ! current_user_can( 'edit_page', $post_id ) ) ) ||
 		( ! current_user_can( 'edit_post', $post_id ) )
@@ -204,8 +204,8 @@ function geolocation_save_postdata( $post_id ) {
 		return $post_id;
 	}
 
-	$latitude  = clean_coordinate( $_POST['geolocation-latitude'] );
-	$longitude = clean_coordinate( $_POST['geolocation-longitude'] );
+	$latitude  = clean_coordinate( wp_unslash( $_POST['geolocation-latitude'] ) );
+	$longitude = clean_coordinate( wp_unslash( $_POST['geolocation-longitude'] ) );
 
 	if ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) {
 		// check the featured image for geodata if no data was available in the post already.
@@ -247,13 +247,13 @@ function geolocation_save_postdata( $post_id ) {
 			update_post_meta( $post_id, 'geo_address', $address );
 		}
 
-		if ( $_POST['geolocation-on'] ) {
+		if ( wp_unslash( $_POST['geolocation-on'] ) ) {
 			update_post_meta( $post_id, 'geo_enabled', 1 );
 		} else {
 			update_post_meta( $post_id, 'geo_enabled', 0 );
 		}
 
-		if ( $_POST['geolocation-public'] ) {
+		if ( wp_unslash( $_POST['geolocation-public'] ) ) {
 			update_post_meta( $post_id, 'geo_public', 1 );
 		} else {
 			update_post_meta( $post_id, 'geo_public', 0 );
