@@ -322,6 +322,7 @@ function add_geo_div() {
 function add_geo_support() {
 	global $posts;
 	if ( ( esc_attr( (string) get_option( 'geolocation_map_display' ) ) !== 'plain' ) || ( is_user_logged_in() ) ) {
+		wp_enqueue_style( 'geolocation_css', esc_url( plugins_url( 'style.css', __FILE__ ) ), array(), GEOLOCATION__VERSION, 'all' );
 		// To do: add support for multiple Map API providers.
 		switch ( get_option( 'geolocation_provider' ) ) {
 			case 'google':
@@ -332,7 +333,6 @@ function add_geo_support() {
 				break;
 		}
 	}
-	echo '<link type="text/css" rel="stylesheet" href="' . esc_url( plugins_url( 'style.css', __FILE__ ) ) . '" />';
 }
 
 /**
