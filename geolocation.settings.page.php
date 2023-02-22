@@ -24,7 +24,7 @@ function geolocation_settings_page() {
 	}
 
 	default_settings();
-	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), null, 'all' );
+	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
 	?>
 	<script src="<?php echo esc_js( get_osm_leaflet_js_url() ); ?>"></script>
 	<script type="text/javascript">
