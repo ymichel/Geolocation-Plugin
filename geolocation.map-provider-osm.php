@@ -18,8 +18,8 @@
 function admin_head_osm() {
 	global $post;
 	$post_id = $post->ID;
-	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );?>
-	<script src="<?php echo esc_js( get_osm_leaflet_js_url() ); ?>"></script>
+	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
+	wp_enqueue_script( 'osm_leaflet_js', get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, false );?>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -197,8 +197,8 @@ function add_geo_support_osm( $posts ) {
 
 	$zoom = (int) get_option( 'geolocation_default_zoom' );
 	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
+	wp_enqueue_script( 'osm_leaflet_js', get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, false );
 	?>
-	<script src="<?php echo esc_js( get_osm_leaflet_js_url() ); ?>"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -303,9 +303,10 @@ function display_location_page_osm( $content ) {
 	$category    = (string) get_post_meta( $post->ID, 'category', true );
 	$category_id = get_cat_ID( $category );
 	$counter     = 0;
-	
+
 	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
-	
+	wp_enqueue_script( 'osm_leaflet_js', get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, false );
+
 	$pargs  = array(
 		'post_type'      => 'post',
 		'cat'            => $category_id,
@@ -331,7 +332,6 @@ function display_location_page_osm( $content ) {
 		),
 	);
 	$zoom   = 1;
-	$script = $script . '<script src="' . esc_js( get_osm_leaflet_js_url() ) . '"></script>';
 	$script = $script . "<script type=\"text/javascript\">
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom . ");
         var myMapBounds = [];

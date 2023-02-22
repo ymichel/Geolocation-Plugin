@@ -18,14 +18,15 @@
 function admin_head_google() {
 	global $post;
 	$post_id = $post->ID;
-	$zoom    = (int) get_option( 'geolocation_default_zoom' ); ?>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	$zoom    = (int) get_option( 'geolocation_default_zoom' );
+	wp_enqueue_script( 'google_jsapi', 'https://www.google.com/jsapi', array(), GEOLOCATION__VERSION, false );
+	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, false );
+	?>
 	<script type="text/javascript">
 		function initMap() {
 			//console.log("google maps is ready.");
 		}
 	</script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo esc_js( get_google_maps_api_key( '?' ) ); ?>&callback=initMap"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -225,13 +226,13 @@ function add_geo_support_google( $posts ) {
 	$post_count = count( $posts );
 
 	$zoom = (int) get_option( 'geolocation_default_zoom' );
+	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, false );
 	?>
 	<script type="text/javascript">
 		function initMap() {
 			//console.log("google maps is ready.");
 		}
 	</script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo esc_js( get_google_maps_api_key( '?' ) ); ?>&callback=initMap"></script>
 	<script type="text/javascript">
 		function ready(fn) {
 			if (document.readyState != 'loading') {
@@ -352,6 +353,8 @@ function display_location_page_google( $content ) {
 	$category    = (string) get_post_meta( $post->ID, 'category', true );
 	$category_id = get_cat_ID( $category );
 	$counter     = 0;
+
+	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, false );
 
 	$pargs = array(
 		'post_type'      => 'post',

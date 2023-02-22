@@ -25,15 +25,14 @@ function geolocation_settings_page() {
 
 	default_settings();
 	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
+	wp_enqueue_script( 'osm_leaflet_js', get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, false );
+	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, false );
 	?>
-	<script src="<?php echo esc_js( get_osm_leaflet_js_url() ); ?>"></script>
 	<script type="text/javascript">
 		function initMap() {
 			//console.log("google maps is ready.");
 		}
 	</script>
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js<?php echo esc_js( get_google_maps_api_key( '?' ) ); ?>&callback=initMap"></script>
-	
 	<style type="text/css">
 		#preload {
 			display: none;
@@ -204,17 +203,14 @@ function geolocation_settings_page() {
 			<input type="submit" class="button-primary" value="<?php esc_html_e( 'Save Changes', 'geolocation' ); ?>" alt="" />
 		</p>
 		<script types="text/javascript">
+
 			var zoomlevel;
 			var provider;
 
 			var lat_lng = [52.5162778, 13.3733267];
 			var osm_map = {};
 			var image = '<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ); ?>';
-			var shadow = new google.maps.MarkerImage("<?php echo esc_js( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ); ?>",
-				new google.maps.Size(39, 23),
-				new google.maps.Point(0, 0),
-				new google.maps.Point(12, 25)
-			);
+			var shadow =  {};
 			var shadowUrl = '<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) ); ?>';
 
 			var osm_iconOptions = {
@@ -226,17 +222,18 @@ function geolocation_settings_page() {
 				shadowAnchor: [3, 25], 
 				popupAnchor:  [12, -30]
 			}
-			var osmCustomIcon = L.icon(osm_iconOptions);
+			var osmCustomIcon = {};
 			var osmMarkerOptions = {}
 			var osmMarker = {};
 
 			var google_map = {};
-			var googleCenter = new google.maps.LatLng(lat_lng[0], lat_lng[1]);
+			var googleCenter = {};
 			var googleOptions = {};
 			var googleMarker = {};
 
 			function setMarkerOptions() {
 				//console.log("setMarkerOptions");
+				googleCenter = new google.maps.LatLng(lat_lng[0], lat_lng[1]);
 				if (document.getElementById("geolocation_wp_pin").checked) {
 					switch (provider) {
 						case 'google':
@@ -245,6 +242,11 @@ function geolocation_settings_page() {
 								center: googleCenter,
 								mapTypeId: google.maps.MapTypeId.ROADMAP
 							}
+							shadow = new google.maps.MarkerImage("<?php echo esc_js( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ); ?>",
+								new google.maps.Size(39, 23),
+								new google.maps.Point(0, 0),
+								new google.maps.Point(12, 25)
+							);
 							googleMarker = new google.maps.Marker({
 								position: googleCenter,
 								map: google_map,
@@ -255,6 +257,7 @@ function geolocation_settings_page() {
 							break;
 					
 						case 'osm':
+							osmCustomIcon = L.icon(osm_iconOptions);
 							osmMarkerOptions = {
 								icon: osmCustomIcon,
 								clickable: false,
@@ -399,7 +402,17 @@ function geolocation_settings_page() {
 				providerSelected(newProvider);
 			}
 
-			document.addEventListener("DOMContentLoaded", initializeForm());
+			function ready(fn) {
+				if (document.readyState != 'loading') {
+					fn();
+				} else {
+					document.addEventListener('DOMContentLoaded', fn);
+				}
+			}
+			ready(() => {
+				//console.log("ready");
+				initializeForm();
+			});
 		</script>
 	</form>
 	<?php
