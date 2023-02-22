@@ -303,7 +303,9 @@ function display_location_page_osm( $content ) {
 	$category    = (string) get_post_meta( $post->ID, 'category', true );
 	$category_id = get_cat_ID( $category );
 	$counter     = 0;
-
+	
+	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
+	
 	$pargs  = array(
 		'post_type'      => 'post',
 		'cat'            => $category_id,
