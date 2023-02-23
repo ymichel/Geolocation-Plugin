@@ -1,19 +1,14 @@
 <?php
-/**
- * Geolocation
- * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
- *
- * Displays post geotag information on an embedded map.
- *
- * Author URI: https://www.yann-michel.de/geolocation
- * Text Domain: geolocation
- *
- * @category Plugin
- * @package geolocation
- * @author Yann Michel <geolocation@yann-michel.de>
- * @license GPL2
- * @version 1.7.0
- */
+/*
+* Plugin Name: Geolocation
+* Plugin URI: https://wordpress.org/extend/plugins/geolocation/
+* Description: Displays post geotag information on an embedded map.
+* Version: 1.7
+* Author: Yann Michel
+* Author URI: https://www.yann-michel.de/geolocation
+* Text Domain: geolocation
+* License: GPL2
+* */
 
 /*
 	Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
