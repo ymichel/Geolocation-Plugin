@@ -333,6 +333,14 @@ function display_location_page_osm( $content ) {
 	);
 	$zoom   = 1;
 	$script = $script . "<script type=\"text/javascript\">
+	function ready(fn) {
+			if (document.readyState != 'loading') {
+				fn();
+			} else {
+				document.addEventListener('DOMContentLoaded', fn);
+			}
+		}
+		ready(() => {
         var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom . ");
         var myMapBounds = [];
         var lat_lng = [];
@@ -375,6 +383,7 @@ function display_location_page_osm( $content ) {
 	wp_reset_postdata();
 	$script = $script . '
         mymap.fitBounds(myMapBounds);
+		});
 </script>';
 
 	if ( $counter > 0 ) {
