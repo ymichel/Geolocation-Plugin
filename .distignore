@@ -6,3 +6,4 @@
 .distignore
 .gitignore
 .scrutinizer.yml
+.gitattributes
