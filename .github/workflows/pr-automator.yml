@@ -1,13 +1,6 @@
 name: 'PR Automator'
 on:
   workflow_dispatch:
-    types:
-      - opened
-      - edited
-      - converted_to_draft
-      - ready_for_review
-    branches:
-      - master
 
   pull_request:
     types:
@@ -26,4 +19,3 @@ jobs:
         with:
           fail-label: 'needs:feedback'
           pass-label: 'needs:code-review'
-          reviewer: GITHUB_USERNAME
