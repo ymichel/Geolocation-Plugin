@@ -488,15 +488,12 @@ function update_geolocation_addresses() {
  */
 function build_addresses( $city, $state, $country ) {
 	$address = '';
-	if ( ( '' !== $city ) && ( '' !== $state ) && ( '' !== $country ) ) {
-		$address = $city . ', ' . $state . ', ' . $country;
-	} elseif ( ( '' !== $city ) && ( '' !== $state ) ) {
-		$address = $city . ', ' . $state;
-	} elseif ( ( '' !== $state ) && ( '' !== $country ) ) {
-		$address = $state . ', ' . $country;
-	} elseif ( '' !== $country ) {
-		$address = $country;
-	}
+	$address = $city !== '' ? $city . ', ' : '';
+	$address .= $state !== '' ? $state . ', ' : '';
+	$address .= $country !== '' ? $country : '';
+
+	// Remove the trailing comma and space if it exists
+	$address = rtrim($address, ', ');
 	return esc_html( $address );
 }
 
