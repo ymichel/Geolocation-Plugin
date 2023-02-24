@@ -38,6 +38,9 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.7.4 =
+* reverse geocode fixes
+
 = 1.7.3 =
 * sanitizing fixes
 

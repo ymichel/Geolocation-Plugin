@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.7.3
+ * Version: 1.7.4
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -487,13 +487,16 @@ function update_geolocation_addresses() {
  * @return mixed
  */
 function build_addresses( $city, $state, $country ) {
-	$address  = '';
-	$address  = '' !== $city ? $city . ', ' : '';
-	$address .= '' !== $state ? $state . ', ' : '';
-	$address .= '' !== $country ? $country : '';
-
-	// Remove the trailing comma and space if it exists.
-	$address = rtrim( $address, ', ' );
+	$address = '';
+	if (($city != '') && ($state != '') && ($country != '')) {
+	    $address = $city . ', ' . $state . ', ' . $country;
+	} else if (($city != '') && ($state != '')) {
+	    $address = $city . ', ' . $state;
+	} else if (($state != '') && ($country != '')) {
+	    $address = $state . ', ' . $country;
+	} else if ($country != '') {
+	    $address = $country;
+	}
 	return esc_html( $address );
 }
 
