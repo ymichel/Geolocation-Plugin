@@ -19,3 +19,5 @@ jobs:
         with:
           fail-label: 'needs:feedback'
           pass-label: 'needs:code-review'
+    env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
