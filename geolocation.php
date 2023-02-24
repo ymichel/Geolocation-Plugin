@@ -1,14 +1,14 @@
 <?php
-/*
-* Plugin Name: Geolocation
-* Plugin URI: https://wordpress.org/extend/plugins/geolocation/
-* Description: Displays post geotag information on an embedded map.
-* Version: 1.7.2
-* Author: Yann Michel
-* Author URI: https://www.yann-michel.de/geolocation
-* Text Domain: geolocation
-* License: GPL2
-* */
+/**
+ * Plugin Name: Geolocation
+ * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
+ * Description: Displays post geotag information on an embedded map.
+ * Version: 1.7.3
+ * Author: Yann Michel
+ * Author URI: https://www.yann-michel.de/geolocation
+ * Text Domain: geolocation
+ * License: GPL2
+ */
 
 /*
 	Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
@@ -492,7 +492,7 @@ function build_addresses( $city, $state, $country ) {
 	$address .= '' !== $state ? $state . ', ' : '';
 	$address .= '' !== $country ? $country : '';
 
-	// Remove the trailing comma and space if it exists
+	// Remove the trailing comma and space if it exists.
 	$address = rtrim( $address, ', ' );
 	return esc_html( $address );
 }
