@@ -7,7 +7,7 @@ on:
       - converted_to_draft
       - ready_for_review
     branches:
-      - main
+      - master
 
   pull_request:
     types:
