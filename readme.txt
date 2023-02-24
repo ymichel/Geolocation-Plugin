@@ -4,7 +4,7 @@ Tags: geolocation, maps, geotag, GPS, travel, location, journey
 Requires at least: 6.0
 Requires PHP: 7.1
 Tested up to: 6.1
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location where a post was created.
 
