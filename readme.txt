@@ -2,7 +2,7 @@
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, GPS, travel, location, journey
 Requires at least: 6.0
-Requires PHP: 7.1
+Requires PHP: 7.3
 Tested up to: 6.1
 Stable tag: 1.7.4
 
@@ -11,12 +11,12 @@ Easy display of post location information for travelbloggers or anyone who would
 == Description ==
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page or any geo-enabled WordPress mobile applications such as WordPress for iPhone/iPad, WordPress for Android or simply by entering it manually. Simply enable public access to show the location description and a nice map widget. 
 (Unfortunately, the WP-application developers decided to deactivate the feature of storing GPS data in the app but I am hoping for its return.)
-If you have a featured image attached to you post, its gps coordinates are taken into concideration if ther is no geo-information provided already.
+The automated way for you is not to add a photo as featured image to your post. If you have a featured image attached to you post, its gps coordinates are taken into concideration if ther is no geo-information provided already. If you use an iPhone, make sure that you take your photos in jpg. Otherwise the GPS information is stripped from the HEIC when expoerint to JPG and uploading. Furthermore, when using the WP app, make sure you have enabled to keep all metadata in the files that are uploade. Otherwise, the app will remove also the GPS information.
 
 Visitors see a short description of the address either before, after, or at a custom location within the post. Hovering over the address reveals a map that displays the post's exact location. 
-If one would only like to show a textual version without accessing any external services or without showing a map when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location. That way, the external APIs are only used when a logged in user is accessing the site or when a post is being made. If one uses Open Streetmaps as mapprovider in combination with the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/ "proxy plugin for OSM"), the tiles are delivered from the local proxy so that the visitors cannot be tracked from a third party. If no proxy is installed or Google Maps is used as the provider, this is not feasable.
+If one would only like to show a textual version without accessing any external services or without showing a map when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location. That way, the external APIs are only used when a logged in user is accessing the site or when a post is being made. If one uses Open Streetmaps as mapprovider in combination with the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/ "proxy plugin for OSM"), the tiles are delivered from the local proxy so that the visitors cannot be tracked from a third party. If no proxy is installed or Google Maps is used as the provider, this is not feasable, i.e., the tiles are pulled directly from your visitor's browser.
 
-Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. The set of shown locations can be filtered per page, by placing a user defined field called "category" and give it the name (not the slag!) of the category to be shown. This way, you can also hide the location information per post (by chosing the "code option" without using it) and only show an overview map if needed. If the page is not restricted by any of the categories, all locations are shown that were tagged "public"i and "enabled".
+Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. The set of shown locations can be filtered per page, by placing a user defined field called "category" and give it the name (not the slag!) of the category to be shown. This way, you can also hide the location information per post (by chosing the "code option" without using it) and only show an overview map if needed. If the page is not restricted by any of the categories, all locations are shown that were tagged "public" and have the switch set to "enabled".
 
 By default, this plugin uses Open-Streetmap but as an alternative (and backwards-compatibility) google maps can also be used. However, one needs to have a Goole Maps API key to use this plugin with google maps. You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
@@ -27,8 +27,9 @@ If you struggle while installing it or have feature requests, please feel free t
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory. (or simply install it from the official package repo)
 2. Activate the plugin through the 'Plugins' menu in WordPress. In case you would want to use Google Maps, chose Google Map as your provider an insert the Google Maps API key on the Settings > Geolocation page.
 3. Optionally (if you are using OSM as per default setting): Install and activate the [OSM proxy](https://wordpress.org/plugins/osm-tiles-proxy/ "OSM tile proxy") to make use of local delivery without tracking options for the source to your visitors.
-4. Modify the display settings as needed on the Settings > Geolocation page. Most of the settings can directly seen in the OSM preview.
-5. Start posting with geolocation data :-)
+4. Modify the display settings as needed on the Settings > Geolocation page. The chosen settings can directly be seen in the OSM preview of the settings page.
+5. Start posting with geolocation data.
+6. Leave a rating on the plugin-page. :-)
 
 == Screenshots ==
 
