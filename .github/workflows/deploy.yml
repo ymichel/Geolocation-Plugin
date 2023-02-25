@@ -1,11 +1,11 @@
 name: Deploy to WordPress.org
 on:
     workflow_dispatch:
-       tags:
-       - "*"
-    #push:
     #   tags:
-    #  - "*"
+    #   - "*"
+    push:
+       tags:
+      - "*"
 jobs:
     tag:
        name: New tag
