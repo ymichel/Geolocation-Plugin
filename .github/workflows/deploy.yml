@@ -1,11 +1,11 @@
 name: Deploy to WordPress.org
 on:
-    workflow_dispatch:
-       tags:
-       - "*"
-    #push:
+    # workflow_dispatch:
     #   tags:
-    #  - "*"
+    #   - "*"
+    push:
+        tags:
+        - "*"
 jobs:
     tag:
        name: New tag
@@ -18,4 +18,4 @@ jobs:
            SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
            SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
            SLUG: geolocation
-           VERSION: 1.7.4
+           # VERSION: 1.7.4
