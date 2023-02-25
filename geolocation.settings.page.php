@@ -255,7 +255,6 @@ function geolocation_settings_page() {
 								title: "Post Location"
 							});
 							break;
-					
 						case 'osm':
 							osmCustomIcon = L.icon(osm_iconOptions);
 							osmMarkerOptions = {
@@ -266,7 +265,6 @@ function geolocation_settings_page() {
 							osmMarker = L.marker(lat_lng, osmMarkerOptions).addTo(osm_map);
 							break;
 					}
-					
 				} else {
 					switch (provider) {
 						case 'google':
@@ -281,7 +279,6 @@ function geolocation_settings_page() {
 								title: "Post Location"
 							});
 							break;
-					
 						case 'osm':
 							osmMarkerOptions = {
 								clickable: false,
@@ -290,7 +287,6 @@ function geolocation_settings_page() {
 							osmMarker = L.marker(lat_lng, osmMarkerOptions).addTo(osm_map);
 							break;
 					}
-					
 				}
 			}
 
@@ -300,7 +296,6 @@ function geolocation_settings_page() {
 						case 'google':
 							google_map = new google.maps.Map(document.getElementById("map"), googleOptions);
 							break;
-					
 						case 'osm':
 							osm_map = L.map(document.getElementById("map")).setView(lat_lng, zoomlevel);
 							L.tileLayer('<?php echo esc_js( get_osm_tiles_url() ); ?>', {attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(osm_map);
@@ -323,7 +318,6 @@ function geolocation_settings_page() {
 								google_map.remove();
 							} 
 							break;
-					
 						case 'osm':
 							if (osmMarker != undefined) {
 								osm_map.removeLayer(osmMarker);
@@ -347,7 +341,6 @@ function geolocation_settings_page() {
 							googleMarker.setPosition(googleCenter);
 							google_map.setCenter(googleCenter);
 							break;
-					
 						case 'osm':
 							osm_map.setView(osmMarker.getLatLng(), zoomlevel);
 							break;
@@ -371,7 +364,6 @@ function geolocation_settings_page() {
 									osm_map.remove();
 								}
 								break;
-						
 							case 'osm':
 								if (google_map && google_map.remove) {
 									google_map.off();
@@ -386,7 +378,6 @@ function geolocation_settings_page() {
 						document.getElementsByClassName("google-apikey")[0].style.display = "";
 						document.getElementsByClassName("osm-urls")[0].style.display = "none";
 						break;
-						
 					case 'osm':
 						document.getElementsByClassName("google-apikey")[0].style.display = "none";
 						document.getElementsByClassName("osm-urls")[0].style.display = "";
