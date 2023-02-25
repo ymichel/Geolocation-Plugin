@@ -1,8 +1,5 @@
 name: Deploy to WordPress.org
 on:
-    # workflow_dispatch:
-    #   tags:
-    #   - "*"
     push:
         tags:
         - "*"
