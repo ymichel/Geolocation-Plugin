@@ -2,7 +2,7 @@
 Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, GPS, travel, location, journey
 Requires at least: 6.0
-Requires PHP: 7.3
+Requires PHP: 7.1
 Tested up to: 6.1
 Stable tag: 1.7.4
 
