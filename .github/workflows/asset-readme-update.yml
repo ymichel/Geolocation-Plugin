@@ -3,9 +3,6 @@ on:
     workflow_dispatch:
         branches:
         - trunk
-    push:
-        branches:
-        - trunk
 jobs:
     trunk:
         name: Push to trunk
