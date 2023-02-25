@@ -488,14 +488,14 @@ function update_geolocation_addresses() {
  */
 function build_addresses( $city, $state, $country ) {
 	$address = '';
-	if ( ( '' !== $city ) && ( '' !== $state ) && ( '' !== $country ) ) {
-		$address = $city . ', ' . $state . ', ' . $country;
-	} elseif ( ( '' !== $city ) && ( '' !== $state ) ) {
-		$address = $city . ', ' . $state;
-	} elseif ( ( '' !== $state ) && ( '' !== $country ) ) {
-		$address = $state . ', ' . $country;
-	} elseif ( '' !== $country ) {
-		$address = $country;
+	if (($city != '') && ($state != '') && ($country != '')) {
+	    $address = $city . ', ' . $state . ', ' . $country;
+	} else if (($city != '') && ($state != '')) {
+	    $address = $city . ', ' . $state;
+	} else if (($state != '') && ($country != '')) {
+	    $address = $state . ', ' . $country;
+	} else if ($country != '') {
+	    $address = $country;
 	}
 	return esc_html( $address );
 }
