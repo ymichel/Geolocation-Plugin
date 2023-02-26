@@ -7,3 +7,4 @@
 .gitignore
 .scrutinizer.yml
 .gitattributes
+README.md
