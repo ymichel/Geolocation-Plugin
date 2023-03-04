@@ -19,8 +19,8 @@ function admin_head_google() {
 	global $post;
 	$post_id = $post->ID;
 	$zoom    = (int) get_option( 'geolocation_default_zoom' );
-	wp_enqueue_script( 'google_jsapi', 'https://www.google.com/jsapi', array(), GEOLOCATION__VERSION, false );
-	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, false );
+	wp_enqueue_script( 'google_jsapi', 'https://www.google.com/jsapi', array(), GEOLOCATION__VERSION, true );
+	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, true );
 	?>
 	<script type="text/javascript">
 		function initMap() {
@@ -226,7 +226,7 @@ function add_geo_support_google( $posts ) {
 	$post_count = count( $posts );
 
 	$zoom = (int) get_option( 'geolocation_default_zoom' );
-	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, false );
+	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, true );
 	?>
 	<script type="text/javascript">
 		function initMap() {
