@@ -201,6 +201,7 @@ function geolocation_save_postdata( $post_id ) {
 
 	$latitude  = clean_coordinate( $_POST['geolocation-latitude'] );
 	$longitude = clean_coordinate( $_POST['geolocation-longitude'] );
+	$address   = $_POST['geolocation-address'];
 
 	if ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) {
 		// check the featured image for geodata if no data was available in the post already.
@@ -237,7 +238,9 @@ function geolocation_save_postdata( $post_id ) {
 		update_post_meta( $post_id, 'geo_latitude', $latitude );
 		update_post_meta( $post_id, 'geo_longitude', $longitude );
 
-		$address = reverse_geocode( $latitude, $longitude );
+		if ( '' === $address ) {
+			$address = reverse_geocode( $latitude, $longitude );
+		}
 		if ( '' !== $address ) {
 			update_post_meta( $post_id, 'geo_address', $address );
 		}
