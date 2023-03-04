@@ -9,7 +9,6 @@
  * @author Yann Michel <geolocation@yann-michel.de>
  * @license GPL2
  */
-
 /**
  * Print the admin header for Google Maps usage.
  *
