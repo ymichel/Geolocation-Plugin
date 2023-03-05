@@ -39,6 +39,10 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.7.5 =
+* fix: skipping additional reverse geocode when saving if address is already available
+* fix: lib/css usage at footer
+
 = 1.7.4 =
 * reverse geocode fixes
 
