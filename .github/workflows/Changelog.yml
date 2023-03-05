@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: "✏️ Changelog generation"
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: "📥 Check-out"
         uses: actions/checkout@v2
