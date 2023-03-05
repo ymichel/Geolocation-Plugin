@@ -1,7 +1,7 @@
 name: Deploy
 
 on:
-  wprkflow_dispatch:
+  workflow_dispatch:
   
 #  push:
 #    tags:
