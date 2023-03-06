@@ -407,6 +407,8 @@ function display_location_post( $content ) {
 	$address = (string) get_post_meta( $post->ID, 'geo_address', true );
 	if ( empty( $address ) ) {
 		$address = reverse_geocode( $latitude, $longitude );
+		// obviously was missing so add to post for future performance improvement.
+		update_post_meta( $post->ID, 'geo_address', $address );
 	}
 
 	switch ( esc_attr( (string) get_option( 'geolocation_map_display' ) ) ) {
