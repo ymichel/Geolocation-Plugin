@@ -40,6 +40,7 @@ function admin_head_google() {
 			var post_latitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_latitude', true ) ); ?>';
 			var post_longitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_longitude', true ) ); ?>';
 			var postAddress = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_address', true ) ); ?>';
+			var postAddressReverse = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_address_reverse', true ) ); ?>';
 			var isPublic = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_public', true ) ); ?>';
 			var isGeoEnabled = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_enabled', true ) ); ?>';
 
@@ -61,6 +62,7 @@ function admin_head_google() {
 				hasLocation = true;
 				document.getElementById('geolocation-latitude').value = post_latitude;
 				document.getElementById('geolocation-longitude').value = post_longitude;
+				document.getElementById('geolocation-address-reverse').value = postAddressReverse;
 				if (postAddress !== '') {
 					document.getElementById('geolocation-address').value = postAddress;
 				} else {
@@ -137,9 +139,7 @@ function admin_head_google() {
 					document.getElementById('geolocation-longitude').value = location.lng();
 					//console.log(location);
 				}
-
-				if (!customAddress)
-					reverseGeocode(location);
+				reverseGeocode(location);
 			}
 
 			function geocode(address) {
@@ -171,8 +171,10 @@ function admin_head_google() {
 								var address = results[1].formatted_address;
 								if (address === "") {
 									address = results[7].formatted_address;
+									document.getElementById('geolocation-address-reverse').value = address;
 								} else {
 									document.getElementById('geolocation-address').value = address;
+									document.getElementById('geolocation-address-reverse').value = address;
 									placeMarker(location);
 								}
 							}

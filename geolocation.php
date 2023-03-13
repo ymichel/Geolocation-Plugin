@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.7.5
+ * Version: 1.7.6
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -141,6 +141,7 @@ function geolocation_inner_custom_box() {
 	<input type="hidden" id="geolocation_nonce" name="geolocation_nonce" value="<?php echo esc_html( wp_create_nonce( plugin_basename( __FILE__ ) ) ); ?>" />
 	<label class="screen-reader-text" for="geolocation-address">Geolocation</label>
 	<div class="taghint"><?php echo esc_html_e( 'Enter your address', 'geolocation' ); ?></div>
+	<input type="hidden" id="geolocation-address-reverse" name="geolocation-address-reverse" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 	<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 	<input id="geolocation-load" type="button" class="button geolocationadd" value="<?php echo esc_html_e( 'Load', 'geolocation' ); ?>" tabindex="3" />
 	<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
@@ -202,6 +203,7 @@ function geolocation_save_postdata( $post_id ) {
 	$latitude  = clean_coordinate( $_POST['geolocation-latitude'] );
 	$longitude = clean_coordinate( $_POST['geolocation-longitude'] );
 	$address   = $_POST['geolocation-address'];
+	$address_reverse   = $_POST['geolocation-address-reverse'];
 
 	if ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) {
 		// check the featured image for geodata if no data was available in the post already.
@@ -238,12 +240,15 @@ function geolocation_save_postdata( $post_id ) {
 		update_post_meta( $post_id, 'geo_latitude', $latitude );
 		update_post_meta( $post_id, 'geo_longitude', $longitude );
 
-		if ( '' === $address ) {
+		if ( ( '' === $address ) || ( $address === $address_reverse ) ) {
 			$address = reverse_geocode( $latitude, $longitude );
 		}
 		if ( '' !== $address ) {
 			update_post_meta( $post_id, 'geo_address', $address );
 		}
+
+		$address_reverse = reverse_geocode( $latitude, $longitude );
+		update_post_meta( $post_id, 'geo_address_reverse', $address_reverse );
 
 		if ( $_POST['geolocation-on'] ) {
 			update_post_meta( $post_id, 'geo_enabled', 1 );

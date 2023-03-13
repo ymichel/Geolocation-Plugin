@@ -33,6 +33,7 @@ function admin_head_osm() {
 			let postLongitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_longitude', true ) ); ?>';
 			let isPublic = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_public', true ) ); ?>';
 			var postAddress = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_address', true ) ); ?>';
+			var postAddressReverse = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_address_reverse', true ) ); ?>';
 			let isGeoEnabled = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_enabled', true ) ); ?>';
 			let zoomlevel = <?php echo (int) esc_attr( (string) get_option( 'geolocation_default_zoom' ) ); ?>;
 			let image = '<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ); ?>';
@@ -80,6 +81,7 @@ function admin_head_osm() {
 				hasLocation = true;
 				document.getElementById('geolocation-latitude').value = postLatitude;
 				document.getElementById('geolocation-longitude').value = postLongitude;
+				document.getElementById('geolocation-address-reverse').value = postAddressReverse;
 				if (postAddress !== '') {
 					document.getElementById('geolocation-address').value = postAddress;
 				} else {
@@ -129,6 +131,7 @@ function admin_head_osm() {
 						myMarker.setLatLng(lat_lng);
 						map.setView(myMarker.getLatLng(), map.getZoom());
 						hasLocation = true;
+						reverseGeocode(data[0].lat, data[0].lon);
 					} else {
 						// error
 					}
@@ -144,6 +147,7 @@ function admin_head_osm() {
 						// Success!
 						let data = JSON.parse(this.response);
 						document.getElementById('geolocation-address').value = data.display_name;
+						document.getElementById('geolocation-address-reverse').value = data.display_name;
 					} else {
 						// error
 					}

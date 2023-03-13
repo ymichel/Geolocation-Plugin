@@ -4,7 +4,7 @@ Tags: geolocation, maps, geotag, GPS, travel, location, journey
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 6.1
-Stable tag: 1.7.5
+Stable tag: 1.7.6
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location where a post was created.
 
@@ -38,6 +38,9 @@ If you struggle while installing it or have feature requests, please feel free t
 3. Showing all posts providing location information
 
 == Changelog ==
+
+= 1.7.6 = 
+* extending reverse geocoding: if 'load' is used, the name of the location will be determinded automatically. One can overwrite the name however if updating the text-field and saving the post without re-applying the 'load' button.
 
 = 1.7.5 =
 * fix: skipping additional reverse geocode when saving if address is already available
