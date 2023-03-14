@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.7.6
+ * Version: 1.8
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -324,16 +324,37 @@ function add_geo_div() {
  */
 function add_geo_support() {
 	global $posts;
-	if ( ( esc_attr( (string) get_option( 'geolocation_map_display' ) ) !== 'plain' ) || ( is_user_logged_in() ) ) {
-		wp_enqueue_style( 'geolocation_css', esc_url( plugins_url( 'style.css', __FILE__ ) ), array(), GEOLOCATION__VERSION, 'all' );
-		// To do: add support for multiple Map API providers.
-		switch ( get_option( 'geolocation_provider' ) ) {
-			case 'google':
-				add_geo_support_google( $posts );
-				break;
-			case 'osm':
-				add_geo_support_osm( $posts );
-				break;
+	$tmp_posts = $posts;
+	$geo_count = 0;
+	// evaluate if the posts to be shown have geo data.
+	foreach ($tmp_posts as $post) {
+            $latitude  = clean_coordinate( get_post_meta( $post->ID, 'geo_latitude', true ) );
+            $longitude = clean_coordinate( get_post_meta( $post->ID, 'geo_longitude', true ) );
+            $on        = (bool) get_post_meta( $post->ID, 'geo_enabled', true );
+            $public    = (bool) get_post_meta( $post->ID, 'geo_public', true );
+	    if ( !(  empty( $latitude ) 
+	  	|| empty( $longitude )
+		|| '' === $on 
+		|| false === $on 
+		|| '' === $public 
+		|| false === $public 
+	        ) ) {
+		++$geo_count;
+	    }
+	}
+	// only enable geo support if there is geodata available to be shown.
+	if ( $geo_count > 0 ) {
+		if ( ( esc_attr( (string) get_option( 'geolocation_map_display' ) ) !== 'plain' ) || ( is_user_logged_in() ) ) {
+			wp_enqueue_style( 'geolocation_css', esc_url( plugins_url( 'style.css', __FILE__ ) ), array(), GEOLOCATION__VERSION, 'all' );
+			// To do: add support for multiple Map API providers.
+			switch ( get_option( 'geolocation_provider' ) ) {
+				case 'google':
+					add_geo_support_google( $posts );
+					break;
+				case 'osm':
+					add_geo_support_osm( $posts );
+					break;
+			}
 		}
 	}
 }
@@ -375,12 +396,14 @@ function display_location( $content ) {
  * @return mixed
  */
 function display_location_page( $content ) {
-	// To do: add support for multiple Map API providers.
-	switch ( get_option( 'geolocation_provider' ) ) {
-		case 'google':
-			return display_location_page_google( $content );
-		case 'osm':
-			return display_location_page_osm( $content );
+	if ( geo_has_shortcode( $content ) ) {
+		// To do: add support for multiple Map API providers.
+		switch ( get_option( 'geolocation_provider' ) ) {
+			case 'google':
+				return display_location_page_google( $content );
+			case 'osm':
+				return display_location_page_osm( $content );
+		}
 	}
 }
 

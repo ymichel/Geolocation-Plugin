@@ -39,6 +39,9 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.8.0 =
+* conditional load for js-libs for page and posts display (only loaded if geo data is available).
+
 = 1.7.6 = 
 * extending reverse geocoding: if 'load' is used, the name of the location will be determinded automatically. One can overwrite the name however if updating the text-field and saving the post without re-applying the 'load' button.
 
