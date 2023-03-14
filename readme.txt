@@ -39,6 +39,9 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.8.2 =
+* fixing clean_coordinates
+
 = 1.8.1 =
 * fixing add_geo_support
 
