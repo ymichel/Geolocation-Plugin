@@ -29,7 +29,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.8.0' );
+define( 'GEOLOCATION__VERSION', '1.8.2' );
 
 add_action( 'upgrader_process_complete', 'plugin_upgrade_completed', 10, 2 );
 add_action( 'plugins_loaded', 'languages_init' );
