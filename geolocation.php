@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.8.0
+ * Version: 1.8.1
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -328,8 +328,8 @@ function add_geo_support() {
 	$geo_count = 0;
 	// evaluate if the posts to be shown have geo data.
 	foreach ($tmp_posts as $post) {
-            $latitude  = clean_coordinate( get_post_meta( $post->ID, 'geo_latitude', true ) );
-            $longitude = clean_coordinate( get_post_meta( $post->ID, 'geo_longitude', true ) );
+            $latitude  = get_post_meta( $post->ID, 'geo_latitude', true );
+            $longitude = get_post_meta( $post->ID, 'geo_longitude', true );
             $on        = (bool) get_post_meta( $post->ID, 'geo_enabled', true );
             $public    = (bool) get_post_meta( $post->ID, 'geo_public', true );
 	    if ( !(  empty( $latitude ) 
