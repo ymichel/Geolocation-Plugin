@@ -593,7 +593,7 @@ function clean_coordinate( $coordinate ) {
 	if ( null === $matches ) {
 		return '';
 	}
-	return isset( $matches[0]) ? $matches[0] : null;
+	return isset( $matches[0]) ? $matches[0] : '';
 }
 
 /**
