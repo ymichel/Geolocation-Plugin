@@ -87,7 +87,7 @@ function geolocation_settings_page() {
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php esc_html_e( 'How would you like your maps to be displayed?', 'geolocation' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'How would you like your geolocation to be displayed?', 'geolocation' ); ?></th>
 				<td class="display">
 					<input type="radio" id="geolocation_map_display_plain" name="geolocation_map_display" value="plain" <?php is_value( 'geolocation_map_display', 'plain' ); ?>>
 					<label for="geolocation_map_display_plain"><?php esc_html_e( 'Plain text.', 'geolocation' ); ?></label><br />

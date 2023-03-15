@@ -66,8 +66,8 @@ msgid "Height"
 msgstr "H&ouml;he"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:68
-msgid "How would you like your maps to be displayed?"
-msgstr "Wie sollen Ihre Karten dargestellt werden?"
+msgid "How would you like your geolocation to be displayed?"
+msgstr "Wie sollen Ihre Geoinformationen dargestellt werden?"
 
 #: URI of the plugin
 msgid "https://wordpress.org/extend/plugins/geolocation/"
