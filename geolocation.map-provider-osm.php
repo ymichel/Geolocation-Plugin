@@ -236,55 +236,75 @@ function add_geo_support_osm( $posts ) {
 				clickable: false,
 				draggable: false
 			}
-			var geolocationLinks = document.querySelectorAll('.geolocation-link');
+			if ( 'map' == '<?php echo esc_attr( (string) get_option( 'geolocation_map_display' ) ); ?>' ) {
+				var geolocationMaps = document.querySelectorAll('.geolocation-map');
+				var name = {};
+				var postmap = {};
+				for (var i = 0; i < geolocationMaps.length; i++) {
+					name = geolocationMaps[i].getAttribute('name');
+					if ( 'me' !== name ) {
+						postmap = L.map(document.getElementById(geolocationMaps[i].id)).setView([51.505, -0.09], <?php echo esc_js( $zoom ); ?>);
+						L.tileLayer('<?php echo esc_js( get_osm_tiles_url() ); ?>', {
+							attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+						}).addTo(postmap);
+						var lat = name.split(',')[0];
+						var lng = name.split(',')[1];
+						var lat_lng = [lat, lng];
+						L.marker(lat_lng, markerOptions).addTo(postmap);
+						postmap.setView(new L.LatLng(lat, lng), <?php echo esc_js( $zoom ); ?>);
+						console.log( geolocationMaps[i].id);
+					}
+				}
+			} else {
+				var geolocationLinks = document.querySelectorAll('.geolocation-link');
 
-			for (var i = 0; i < geolocationLinks.length; i++) {
-				geolocationLinks[i].addEventListener('mouseover', function() {
-					var lat = this.getAttribute('name').split(',')[0];
-					var lng = this.getAttribute('name').split(',')[1];
-					var lat_lng = [lat, lng];
-					L.marker(lat_lng, markerOptions).addTo(map);
-					map.setView(new L.LatLng(lat, lng), <?php echo esc_js( $zoom ); ?>);
+				for (var i = 0; i < geolocationLinks.length; i++) {
+						geolocationLinks[i].addEventListener('mouseover', function() {
+							var lat = this.getAttribute('name').split(',')[0];
+							var lng = this.getAttribute('name').split(',')[1];
+							var lat_lng = [lat, lng];
+							L.marker(lat_lng, markerOptions).addTo(map);
+							map.setView(new L.LatLng(lat, lng), <?php echo esc_js( $zoom ); ?>);
 
-					const rect = this.getBoundingClientRect();
-					const top = rect.top + window.scrollY + 20;
-					const left = rect.left + window.scrollX;
+							const rect = this.getBoundingClientRect();
+							const top = rect.top + window.scrollY + 20;
+							const left = rect.left + window.scrollX;
 
-					document.querySelector('#map').style.opacity = 1;
-					document.querySelector('#map').style.zIndex = '99';
-					document.querySelector('#map').style.visibility = 'visible';
-					document.querySelector("#map").style.top = top + "px";
-					document.querySelector("#map").style.left = left + "px";
+							document.querySelector('#map').style.opacity = 1;
+							document.querySelector('#map').style.zIndex = '99';
+							document.querySelector('#map').style.visibility = 'visible';
+							document.querySelector("#map").style.top = top + "px";
+							document.querySelector("#map").style.left = left + "px";
 
-					allowDisappear = false;
-				});
+							allowDisappear = false;
+						});
 
-				geolocationLinks[i].addEventListener('mouseout', function() {
-					allowDisappear = true;
-					cancelDisappear = false;
-					setTimeout(function() {
-						if ((allowDisappear) && (!cancelDisappear)) {
-							document.querySelector('#map').style.opacity = 0;
-							document.querySelector('#map').style.zIndex = '-1';
+						geolocationLinks[i].addEventListener('mouseout', function() {
 							allowDisappear = true;
 							cancelDisappear = false;
-						}
-					}, 800);
+							setTimeout(function() {
+								if ((allowDisappear) && (!cancelDisappear)) {
+									document.querySelector('#map').style.opacity = 0;
+									document.querySelector('#map').style.zIndex = '-1';
+									allowDisappear = true;
+									cancelDisappear = false;
+								}
+							}, 800);
+						});
+				}
+
+				document.querySelector("#map").addEventListener("mouseover", function() {
+					allowDisappear = false;
+					cancelDisappear = true;
+					this.style.visibility = "visible";
+				});
+
+				document.querySelector("#map").addEventListener("mouseout", function() {
+					allowDisappear = true;
+					cancelDisappear = false;
+					document.querySelectorAll(".geolocation-link").forEach(el => el.dispatchEvent(new Event("mouseout")));
 				});
 			}
-
-			document.querySelector("#map").addEventListener("mouseover", function() {
-				allowDisappear = false;
-				cancelDisappear = true;
-				this.style.visibility = "visible";
-			});
-
-			document.querySelector("#map").addEventListener("mouseout", function() {
-				allowDisappear = true;
-				cancelDisappear = false;
-				document.querySelectorAll(".geolocation-link").forEach(el => el.dispatchEvent(new Event("mouseout")));
-			});
-
 		});
 	</script>
 	<?php

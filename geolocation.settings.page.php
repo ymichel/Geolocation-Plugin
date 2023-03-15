@@ -93,6 +93,8 @@ function geolocation_settings_page() {
 					<label for="geolocation_map_display_plain"><?php esc_html_e( 'Plain text.', 'geolocation' ); ?></label><br />
 					<input type="radio" id="geolocation_map_display_link" name="geolocation_map_display" value="link" <?php is_value( 'geolocation_map_display', 'link' ); ?>>
 					<label for="geolocation_map_display_link"><?php esc_html_e( 'Simple link w/hover.', 'geolocation' ); ?></label><br />
+					<input type="radio" id="geolocation_map_display_map" name="geolocation_map_display" value="map" <?php is_value( 'geolocation_map_display', 'map' ); ?>>
+					<label for="geolocation_map_display_map"><?php esc_html_e( 'Simple map (static).', 'geolocation' ); ?></label><br />
 					<?php
 					/*
 					?>

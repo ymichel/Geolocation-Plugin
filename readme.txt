@@ -39,6 +39,11 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.9.0 = 
+* reducing the presence of the geo-div on non-geo pages
+* removing orphaned code elements
+* adding new display option: Simple map (static) that is always shown and not only when hovering over the link.
+
 = 1.8.2 =
 * fixing clean_coordinates
 

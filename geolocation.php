@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.8.2
+ * Version: 1.9.0
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -34,7 +34,6 @@ define( 'GEOLOCATION__VERSION', '1.8.2' );
 add_action( 'upgrader_process_complete', 'plugin_upgrade_completed', 10, 2 );
 add_action( 'plugins_loaded', 'languages_init' );
 add_action( 'wp_head', 'add_geo_support' );
-add_action( 'wp_footer', 'add_geo_div' );
 add_action( 'admin_menu', 'add_settings' );
 add_filter( 'the_content', 'display_location', 5 );
 admin_init();
@@ -300,10 +299,10 @@ function admin_head() {
  *
  * @return mixed
  */
-function get_geo_div() {
+function get_geo_div( $id = null, $name = 'me' ) {
 	$width  = esc_attr( (string) get_option( 'geolocation_map_width' ) );
 	$height = esc_attr( (string) get_option( 'geolocation_map_height' ) );
-	return '<div id="map" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+	return '<div id="map'.$id.'" class="geolocation-map" name="'.$name.'" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
 }
 
 /**
@@ -342,8 +341,12 @@ function add_geo_support() {
 		++$geo_count;
 	    }
 	}
+	//$posts_count = count( $tmp_posts );
+	//echo '<hr>' . $geo_count . ' / '.$posts_count.' with geo data.<hr>';
+	
 	// only enable geo support if there is geodata available to be shown.
 	if ( $geo_count > 0 ) {
+		add_action( 'wp_footer', 'add_geo_div' );
 		if ( ( esc_attr( (string) get_option( 'geolocation_map_display' ) ) !== 'plain' ) || ( is_user_logged_in() ) ) {
 			wp_enqueue_style( 'geolocation_css', esc_url( plugins_url( 'style.css', __FILE__ ) ), array(), GEOLOCATION__VERSION, 'all' );
 			// To do: add support for multiple Map API providers.
@@ -446,8 +449,8 @@ function display_location_post( $content ) {
 		case 'link':
 			$html = '<a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" name="' . $latitude . ',' . $longitude . '" onclick="return false;">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . '.</a>';
 			break;
-		case 'full':
-			$html = get_geo_div();
+		case 'map':
+			$html = '<div class="geolocation-plain" id="geolocation' . $post->ID . '">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . ':</div>'.get_geo_div( $post->ID, $latitude.','.$longitude );
 			break;
 		case 'debug':
 			$html = '<pre> $latitude: ' . $latitude . '<br> $longitude: ' . $longitude . '<br> $address: ' . $address . '<br> $on: ' . (string) $on . '<br> $public: ' . (string) $public . '</pre>';

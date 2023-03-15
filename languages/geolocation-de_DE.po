@@ -141,6 +141,9 @@ msgstr "Zeig Deine Unterst&uuml;tzung f&uuml;r WordPress indem Du den Pin benutz
 msgid "Simple link w/hover."
 msgstr "Einfache Verkn&uuml;pfung  mit einblendbarer Karte."
 
+msgid "Simple map (static)."
+msgstr "Einfache Karte (statisch)."
+
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:86
 msgid "State"
 msgstr "Bundesland"
