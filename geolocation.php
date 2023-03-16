@@ -447,7 +447,7 @@ function display_location_post( $content ) {
 			$html = '<div class="geolocation-plain" id="geolocation' . $post->ID . '">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . '.</div>';
 			break;
 		case 'link':
-			$html = '<a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" name="' . $latitude . ',' . $longitude . '" onclick="return false;">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . '.</a>';
+			$html = '<div><a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" name="' . $latitude . ',' . $longitude . '" onclick="return false;">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . '.</a></div>';
 			break;
 		case 'map':
 			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . ':</div>'.get_geo_div( $post->ID, $latitude.','.$longitude );
