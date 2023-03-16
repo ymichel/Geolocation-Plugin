@@ -265,75 +265,94 @@ function add_geo_support_google( $posts ) {
 				<?php } ?>
 				title: "Post Location"
 			});
+                        if ( 'map' == '<?php echo esc_attr( (string) get_option( 'geolocation_map_display' ) ); ?>' ) {
+				var postmap = {};
+				var geolocationMaps = document.querySelectorAll('.geolocation-map');
+				for (var i = 0; i < geolocationMaps.length; i++) {
+					name = geolocationMaps[i].getAttribute('name');
+                                        if ( 'me' !== name ) {
+						postmap = new google.maps.Map(document.getElementById(geolocationMaps[i].id), myOptions);
+						var lat = name.split(',')[0];
+						var lng = name.split(',')[1];
+						var latlng = new google.maps.LatLng(lat, lng);
+						postmap.setZoom(<?php echo esc_js( $zoom ); ?>);
+						marker.setMap(postmap);
+						marker.setPosition(latlng);
+						postmap.setCenter(latlng);
+						//console.log( geolocationMaps[i].id );
+					}
+				}
+                        } else {
 
-			var allowDisappear = true;
-			var cancelDisappear = false;
+				var allowDisappear = true;
+				var cancelDisappear = false;
+	
+				var geolocationLinks = document.querySelectorAll('.geolocation-link');
 
-			var geolocationLinks = document.querySelectorAll('.geolocation-link');
+				for (var i = 0; i < geolocationLinks.length; i++) {
+					geolocationLinks[i].addEventListener('mouseover', function() {
+						//TODO? $j("#map").stop(true, true);
+						var lat = this.getAttribute('name').split(',')[0];
+						var lng = this.getAttribute('name').split(',')[1];
+						var latlng = new google.maps.LatLng(lat, lng);
+						placeMarker(latlng);
 
-			for (var i = 0; i < geolocationLinks.length; i++) {
-				geolocationLinks[i].addEventListener('mouseover', function() {
-					//TODO? $j("#map").stop(true, true);
-					var lat = this.getAttribute('name').split(',')[0];
-					var lng = this.getAttribute('name').split(',')[1];
-					var latlng = new google.maps.LatLng(lat, lng);
-					placeMarker(latlng);
+						const rect = this.getBoundingClientRect();
+						const top = rect.top + window.scrollY + 20;
+						const left = rect.left + window.scrollX;
 
-					const rect = this.getBoundingClientRect();
-					const top = rect.top + window.scrollY + 20;
-					const left = rect.left + window.scrollX;
+						document.querySelector('#map').style.opacity = 1;
+						document.querySelector('#map').style.zIndex = '99';
+						document.querySelector('#map').style.visibility = 'visible';
+						document.querySelector("#map").style.top = top + "px";
+						document.querySelector("#map").style.left = left + "px";
 
-					document.querySelector('#map').style.opacity = 1;
-					document.querySelector('#map').style.zIndex = '99';
-					document.querySelector('#map').style.visibility = 'visible';
-					document.querySelector("#map").style.top = top + "px";
-					document.querySelector("#map").style.left = left + "px";
+						allowDisappear = false;
+					});
 
+					geolocationLinks[i].addEventListener('mouseout', function() {
+						allowDisappear = true;
+						cancelDisappear = false;
+						setTimeout(function() {
+							if ((allowDisappear) && (!cancelDisappear)) {
+								document.querySelector('#map').style.opacity = 0;
+								document.querySelector('#map').style.zIndex = '-1';
+								allowDisappear = true;
+								cancelDisappear = false;
+							}
+						}, 800);
+					});
+				}
+
+				document.querySelector("#map").addEventListener("mouseover", function() {
 					allowDisappear = false;
+					cancelDisappear = true;
+					this.style.visibility = "visible";
 				});
 
-				geolocationLinks[i].addEventListener('mouseout', function() {
+				document.querySelector("#map").addEventListener("mouseout", function() {
 					allowDisappear = true;
 					cancelDisappear = false;
-					setTimeout(function() {
-						if ((allowDisappear) && (!cancelDisappear)) {
-							document.querySelector('#map').style.opacity = 0;
-							document.querySelector('#map').style.zIndex = '-1';
-							allowDisappear = true;
-							cancelDisappear = false;
-						}
-					}, 800);
+					document.querySelectorAll(".geolocation-link").forEach(el => el.dispatchEvent(new Event("mouseout")));
+				});
+
+				function placeMarker(location) {
+					map.setZoom(<?php echo esc_js( $zoom ); ?>);
+					marker.setPosition(location);
+					map.setCenter(location);
+				}
+
+				google.maps.event.addListener(map, "center_changed", function() {
+					// 5 seconds after the center of the map has changed, pan back to the
+					// marker.
+					window.setTimeout(function() {
+						map.panTo(marker.getPosition());
+					}, 5000);
+				});
+				google.maps.event.addListener(map, "click", function() {
+					window.location = "https://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
 				});
 			}
-
-			document.querySelector("#map").addEventListener("mouseover", function() {
-				allowDisappear = false;
-				cancelDisappear = true;
-				this.style.visibility = "visible";
-			});
-
-			document.querySelector("#map").addEventListener("mouseout", function() {
-				allowDisappear = true;
-				cancelDisappear = false;
-				document.querySelectorAll(".geolocation-link").forEach(el => el.dispatchEvent(new Event("mouseout")));
-			});
-
-			function placeMarker(location) {
-				map.setZoom(<?php echo esc_js( $zoom ); ?>);
-				marker.setPosition(location);
-				map.setCenter(location);
-			}
-
-			google.maps.event.addListener(map, "center_changed", function() {
-				// 5 seconds after the center of the map has changed, pan back to the
-				// marker.
-				window.setTimeout(function() {
-					map.panTo(marker.getPosition());
-				}, 5000);
-			});
-			google.maps.event.addListener(map, "click", function() {
-				window.location = "https://maps.google.com/maps?q=" + map.center.lat() + ",+" + map.center.lng();
-			});
 		});
 	</script>
 <?php }

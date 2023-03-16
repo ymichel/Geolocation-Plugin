@@ -252,7 +252,7 @@ function add_geo_support_osm( $posts ) {
 						var lat_lng = [lat, lng];
 						L.marker(lat_lng, markerOptions).addTo(postmap);
 						postmap.setView(new L.LatLng(lat, lng), <?php echo esc_js( $zoom ); ?>);
-						console.log( geolocationMaps[i].id);
+						//console.log( geolocationMaps[i].id);
 					}
 				}
 			} else {
