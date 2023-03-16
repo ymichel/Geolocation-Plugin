@@ -34,8 +34,11 @@ If you struggle while installing it or have feature requests, please feel free t
 == Screenshots ==
 
 1. Editing a post
-2. Viewing the location in a post
-3. Showing all posts providing location information
+2. Viewing the location in a post; setting: plain text
+3. Viewing the location in a post; setting: simple link w/hover
+4. Viewing the location in a post; setting: simple map (static)
+5. Editing a page for embedding a map for all (filtered) locations
+6. Viweing all posts providing location information
 
 == Changelog ==
 
