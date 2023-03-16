@@ -103,7 +103,7 @@ function default_settings() {
 	default_setting( 'geolocation_map_height', '200' );
 	default_setting( 'geolocation_default_zoom', '16' );
 	default_setting( 'geolocation_map_position', 'after' );
-	default_setting( 'geolocation_map_display', 'link' );
+	default_setting( 'geolocation_map_display', 'map' );
 	update_option( 'geolocation_updateAddresses', false );
 	default_setting( 'geolocation_map_width_page', '600' );
 	default_setting( 'geolocation_map_height_page', '300' );
