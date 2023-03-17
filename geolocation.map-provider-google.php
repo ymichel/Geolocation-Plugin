@@ -265,12 +265,12 @@ function add_geo_support_google( $posts ) {
 				<?php } ?>
 				title: "Post Location"
 			});
-                        if ( 'map' == '<?php echo esc_attr( (string) get_option( 'geolocation_map_display' ) ); ?>' ) {
+						if ( 'map' == '<?php echo esc_attr( (string) get_option( 'geolocation_map_display' ) ); ?>' ) {
 				var postmap = {};
 				var geolocationMaps = document.querySelectorAll('.geolocation-map');
 				for (var i = 0; i < geolocationMaps.length; i++) {
 					name = geolocationMaps[i].getAttribute('name');
-                                        if ( 'me' !== name ) {
+										if ( 'me' !== name ) {
 						postmap = new google.maps.Map(document.getElementById(geolocationMaps[i].id), myOptions);
 						var lat = name.split(',')[0];
 						var lng = name.split(',')[1];
@@ -282,7 +282,7 @@ function add_geo_support_google( $posts ) {
 						//console.log( geolocationMaps[i].id );
 					}
 				}
-                        } else {
+						} else {
 
 				var allowDisappear = true;
 				var cancelDisappear = false;

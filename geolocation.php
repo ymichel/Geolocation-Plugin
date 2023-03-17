@@ -199,10 +199,10 @@ function geolocation_save_postdata( $post_id ) {
 		return $post_id;
 	}
 
-	$latitude  = clean_coordinate( $_POST['geolocation-latitude'] );
-	$longitude = clean_coordinate( $_POST['geolocation-longitude'] );
-	$address   = $_POST['geolocation-address'];
-	$address_reverse   = $_POST['geolocation-address-reverse'];
+	$latitude        = clean_coordinate( $_POST['geolocation-latitude'] );
+	$longitude       = clean_coordinate( $_POST['geolocation-longitude'] );
+	$address         = $_POST['geolocation-address'];
+	$address_reverse = $_POST['geolocation-address-reverse'];
 
 	if ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) {
 		// check the featured image for geodata if no data was available in the post already.
@@ -302,7 +302,7 @@ function admin_head() {
 function get_geo_div( $id = null, $name = 'me' ) {
 	$width  = esc_attr( (string) get_option( 'geolocation_map_width' ) );
 	$height = esc_attr( (string) get_option( 'geolocation_map_height' ) );
-	return '<div id="map'.$id.'" class="geolocation-map" name="'.$name.'" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+	return '<div id="map' . $id . '" class="geolocation-map" name="' . $name . '" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
 }
 
 /**
@@ -326,23 +326,21 @@ function add_geo_support() {
 	$tmp_posts = $posts;
 	$geo_count = 0;
 	// evaluate if the posts to be shown have geo data.
-	foreach ($tmp_posts as $post) {
-            $latitude  = get_post_meta( $post->ID, 'geo_latitude', true );
-            $longitude = get_post_meta( $post->ID, 'geo_longitude', true );
-            $on        = (bool) get_post_meta( $post->ID, 'geo_enabled', true );
-            $public    = (bool) get_post_meta( $post->ID, 'geo_public', true );
-	    if ( !(  empty( $latitude ) 
-	  	|| empty( $longitude )
-		|| '' === $on 
-		|| false === $on 
-		|| ( ( '' === $public || false === $public ) && ( !is_user_logged_in() ) )
-	        ) ) {
-		++$geo_count;
-	    }
+	foreach ( $tmp_posts as $post ) {
+			$latitude  = get_post_meta( $post->ID, 'geo_latitude', true );
+			$longitude = get_post_meta( $post->ID, 'geo_longitude', true );
+			$on        = (bool) get_post_meta( $post->ID, 'geo_enabled', true );
+			$public    = (bool) get_post_meta( $post->ID, 'geo_public', true );
+		if ( ! ( empty( $latitude )
+		|| empty( $longitude )
+		|| '' === $on
+		|| false === $on
+		|| ( ( '' === $public || false === $public ) && ( ! is_user_logged_in() ) )
+			) ) {
+			++$geo_count;
+		}
 	}
-	//$posts_count = count( $tmp_posts );
-	//echo '<hr>' . $geo_count . ' / '.$posts_count.' with geo data.<hr>';
-	
+
 	// only enable geo support if there is geodata available to be shown.
 	if ( $geo_count > 0 ) {
 		add_action( 'wp_footer', 'add_geo_div' );
@@ -428,7 +426,7 @@ function display_location_post( $content ) {
 
 	if ( ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) ||
 		( '' === $on || false === $on ) ||
-		( ( '' === $public || false === $public ) && ( !is_user_logged_in() ) )
+		( ( '' === $public || false === $public ) && ( ! is_user_logged_in() ) )
 	) {
 		$content = str_replace( esc_attr( (string) $shortcode ), '', $content );
 		return $content;
@@ -449,7 +447,7 @@ function display_location_post( $content ) {
 			$html = '<div><a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" name="' . $latitude . ',' . $longitude . '" onclick="return false;">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . '.</a></div>';
 			break;
 		case 'map':
-			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . ':</div>'.get_geo_div( $post->ID, $latitude.','.$longitude );
+			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . __( 'Posted from ', 'geolocation' ) . esc_html( $address ) . ':</div>' . get_geo_div( $post->ID, $latitude . ',' . $longitude );
 			break;
 		case 'debug':
 			$html = '<pre> $latitude: ' . $latitude . '<br> $longitude: ' . $longitude . '<br> $address: ' . $address . '<br> $on: ' . (string) $on . '<br> $public: ' . (string) $public . '</pre>';
@@ -523,14 +521,14 @@ function update_geolocation_addresses() {
  */
 function build_addresses( $city, $state, $country ) {
 	$address = '';
-	if (($city != '') && ($state != '') && ($country != '')) {
-	    $address = $city . ', ' . $state . ', ' . $country;
-	} else if (($city != '') && ($state != '')) {
-	    $address = $city . ', ' . $state;
-	} else if (($state != '') && ($country != '')) {
-	    $address = $state . ', ' . $country;
-	} else if ($country != '') {
-	    $address = $country;
+	if ( ( $city != '' ) && ( $state != '' ) && ( $country != '' ) ) {
+		$address = $city . ', ' . $state . ', ' . $country;
+	} elseif ( ( $city != '' ) && ( $state != '' ) ) {
+		$address = $city . ', ' . $state;
+	} elseif ( ( $state != '' ) && ( $country != '' ) ) {
+		$address = $state . ', ' . $country;
+	} elseif ( $country != '' ) {
+		$address = $country;
 	}
 	return esc_html( $address );
 }
@@ -595,7 +593,7 @@ function clean_coordinate( $coordinate ) {
 	if ( null === $matches ) {
 		return '';
 	}
-	return isset( $matches[0]) ? $matches[0] : '';
+	return isset( $matches[0] ) ? $matches[0] : '';
 }
 
 /**
