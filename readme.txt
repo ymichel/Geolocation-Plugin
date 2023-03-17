@@ -49,10 +49,10 @@ If you struggle while installing it or have feature requests, please feel free t
 == Changelog ==
 
 = 1.9.0 = 
-* reducing the presence of the geo-div on non-geo pages
+* eliminating the presence of the geo-div on non-geo pages
 * removing orphaned code elements
 * fixing missing div-tag for geolocation-link
-* fixing 'public' flag: a location is always shown when flag is enabled but when not enabled only to logged in users. 
+* fixing 'public' flag functionality: if geo is switched on, a location is always shown if the flag is enabled but when it is not enabled, the geoinformation is only shown to logged in users. 
 * adding new display option: Simple map (static) that is always shown and not only when hovering over the link.
 
 = 1.8.2 =
