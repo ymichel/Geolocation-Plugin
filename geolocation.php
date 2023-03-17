@@ -12,7 +12,7 @@
 
 /*
 	Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-				2018-2023 Yann Michel (email : geolocation@yann-michel.de)
+	2018-2023 Yann Michel (email : geolocation@yann-michel.de)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as
