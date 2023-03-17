@@ -45,7 +45,7 @@ function admin_head_google() {
 			var isGeoEnabled = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_enabled', true ) ); ?>';
 
 			if (isPublic === '0') {
-				document.getElementById('geolocation-public').setAttribute('checked', false);
+				document.getElementById('geolocation-public').removeAttribute('checked');
 			} else {
 				document.getElementById('geolocation-public').setAttribute('checked', true);
 			}

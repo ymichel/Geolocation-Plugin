@@ -28,17 +28,17 @@ function admin_head_osm() {
 			}
 		}
 		ready(() => {
-			let hasLocation = false;
-			let postLatitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_latitude', true ) ); ?>';
-			let postLongitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_longitude', true ) ); ?>';
-			let isPublic = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_public', true ) ); ?>';
+			var hasLocation = false;
+			var postLatitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_latitude', true ) ); ?>';
+			var postLongitude = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_longitude', true ) ); ?>';
+			var isPublic = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_public', true ) ); ?>';
 			var postAddress = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_address', true ) ); ?>';
 			var postAddressReverse = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_address_reverse', true ) ); ?>';
-			let isGeoEnabled = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_enabled', true ) ); ?>';
-			let zoomlevel = <?php echo (int) esc_attr( (string) get_option( 'geolocation_default_zoom' ) ); ?>;
-			let image = '<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ); ?>';
-			let shadow = '<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) ); ?>';
-			let iconOptions = {
+			var isGeoEnabled = '<?php echo esc_js( (string) get_post_meta( $post_id, 'geo_enabled', true ) ); ?>';
+			var zoomlevel = <?php echo (int) esc_attr( (string) get_option( 'geolocation_default_zoom' ) ); ?>;
+			var image = '<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ); ?>';
+			var shadow = '<?php echo esc_js( esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) ); ?>';
+			var iconOptions = {
 				iconUrl: image,
 				shadowUrl: shadow,
 				iconSize:     [25, 34],
@@ -48,17 +48,17 @@ function admin_head_osm() {
 				popupAnchor:  [12, -30]
 			}
 
-			let customIcon = L.icon(iconOptions);
-			let markerOptions = {
+			var customIcon = L.icon(iconOptions);
+			var markerOptions = {
 				<?php if ( (bool) get_option( 'geolocation_wp_pin' ) ) { ?>
 					icon: customIcon,
 					<?php } ?>clickable: false,
 					draggable: false
 			};
-			let myMarker = {};
+			var myMarker = {};
 
 			if (isPublic === '0') {
-				document.getElementById('geolocation-public').setAttribute('checked', false);
+				document.getElementById('geolocation-public').removeAttribute('checked');
 			} else {
 				document.getElementById('geolocation-public').setAttribute('checked', true);
 			}
@@ -69,7 +69,7 @@ function admin_head_osm() {
 				enableGeo();
 			}
 
-			let map = L.map("geolocation-map").setView([52.5162778, 13.3733267], zoomlevel);
+			var map = L.map("geolocation-map").setView([52.5162778, 13.3733267], zoomlevel);
 			L.tileLayer('<?php echo esc_js( get_osm_tiles_url() ); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
@@ -92,8 +92,8 @@ function admin_head_osm() {
 				map.invalidateSize(true);
 			}, 100);
 
-			let currentAddress;
-			let customAddress = false;
+			var currentAddress;
+			var customAddress = false;
 			document.getElementById('geolocation-address').addEventListener('click', event => {
 				currentAddress = document.getElementById('geolocation-address').value;
 				if (currentAddress !== '')
@@ -118,12 +118,12 @@ function admin_head_osm() {
 			});
 
 			function geocode(address) {
-				let request = new XMLHttpRequest();
+				var request = new XMLHttpRequest();
 				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/search?format=json&accept-language=\'<?php echo esc_js( get_site_lang() ); ?>\'&limit=1&q=' + address, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
-						let data = JSON.parse(this.response);
+						var data = JSON.parse(this.response);
 						console.log(data);
 						document.getElementById('geolocation-latitude').value = data[0].lat;
 						document.getElementById('geolocation-longitude').value = data[0].lon;
@@ -140,12 +140,12 @@ function admin_head_osm() {
 			}
 
 			function reverseGeocode(lat, lon) {
-				let request = new XMLHttpRequest();
+				var request = new XMLHttpRequest();
 				request.open('GET', '<?php echo esc_url( get_osm_nominatim_url() ); ?>/reverse?format=json&accept-language=\'<?php echo esc_js( get_site_lang() ); ?>\'&lat=' + lat + '&lon=' + lon, true);
 				request.onload = function() {
 					if (this.status >= 200 && this.status < 400) {
 						// Success!
-						let data = JSON.parse(this.response);
+						var data = JSON.parse(this.response);
 						document.getElementById('geolocation-address').value = data.display_name;
 						document.getElementById('geolocation-address-reverse').value = data.display_name;
 					} else {
