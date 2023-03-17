@@ -335,8 +335,7 @@ function add_geo_support() {
 	  	|| empty( $longitude )
 		|| '' === $on 
 		|| false === $on 
-		|| '' === $public 
-		|| false === $public 
+		|| ( ( '' === $public || false === $public ) && ( !is_user_logged_in() ) )
 	        ) ) {
 		++$geo_count;
 	    }
@@ -429,7 +428,7 @@ function display_location_post( $content ) {
 
 	if ( ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) ||
 		( '' === $on || false === $on ) ||
-		( '' === $public || false === $public )
+		( ( '' === $public || false === $public ) && ( !is_user_logged_in() ) )
 	) {
 		$content = str_replace( esc_attr( (string) $shortcode ), '', $content );
 		return $content;
