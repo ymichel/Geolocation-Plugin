@@ -376,30 +376,62 @@ function display_location_page_google( $content ) {
 
 	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, true );
 
-	$pargs = array(
-		'post_type'      => 'post',
-		'cat'            => $category_id,
-		'posts_per_page' => -1,
-		'post_status'    => 'publish',
-		'meta_query'     => array(
-			'relation' => 'AND',
-			array(
-				'key'     => 'geo_latitude',
-				'value'   => '0',
-				'compare' => '!=',
+	if ( is_user_logged_in() ) {
+		$pargs = array(
+			'post_type'      => 'post',
+			'cat'            => $category_id,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'geo_latitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_longitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_enabled',
+					'value'   => '1',
+					'compare' => '=',
+				),
 			),
-			array(
-				'key'     => 'geo_longitude',
-				'value'   => '0',
-				'compare' => '!=',
+		);
+	} else {
+		$pargs = array(
+			'post_type'      => 'post',
+			'cat'            => $category_id,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'geo_latitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_longitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_enabled',
+					'value'   => '1',
+					'compare' => '=',
+				),
+				array(
+					'key'     => 'geo_public',
+					'value'   => '1',
+					'compare' => '=',
+				),
 			),
-			array(
-				'key'     => 'geo_public',
-				'value'   => '1',
-				'compare' => '=',
-			),
-		),
-	);
+		);
+	}
 
 	$script = $script . '<script type="text/javascript">
 	function initMap() { }

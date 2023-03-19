@@ -3,8 +3,8 @@ Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: geolocation, maps, geotag, GPS, travel, location, journey
 Requires at least: 6.0
 Requires PHP: 7.3
-Tested up to: 6.1
-Stable tag: 1.9.0
+Tested up to: 6.2
+Stable tag: 1.9.1
 
 Easy display of post location information for travelbloggers or anyone who would like to show the location where a post was created.
 
@@ -48,6 +48,8 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.9.1 = 
+* fixing page display to also reflect 'public' flag accordingly: no logged in user --> only public locations; if logged in --> all locations
 = 1.9.0 = 
 * eliminating the presence of the geo-div on non-geo pages
 * removing orphaned code elements

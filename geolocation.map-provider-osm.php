@@ -330,30 +330,62 @@ function display_location_page_osm( $content ) {
 	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
 	wp_enqueue_script( 'osm_leaflet_js', get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, true );
 
-	$pargs  = array(
-		'post_type'      => 'post',
-		'cat'            => $category_id,
-		'posts_per_page' => -1,
-		'post_status'    => 'publish',
-		'meta_query'     => array(
-			'relation' => 'AND',
-			array(
-				'key'     => 'geo_latitude',
-				'value'   => '0',
-				'compare' => '!=',
+	if ( is_user_logged_in() ) {
+		$pargs  = array(
+			'post_type'      => 'post',
+			'cat'            => $category_id,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'geo_latitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_longitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_enabled',
+					'value'   => '1',
+					'compare' => '=',
+				),
 			),
-			array(
-				'key'     => 'geo_longitude',
-				'value'   => '0',
-				'compare' => '!=',
+		);
+	} else {
+		$pargs  = array(
+			'post_type'      => 'post',
+			'cat'            => $category_id,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'geo_latitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_longitude',
+					'value'   => '0',
+					'compare' => '!=',
+				),
+				array(
+					'key'     => 'geo_enabled',
+					'value'   => '1',
+					'compare' => '=',
+				),
+				array(
+					'key'     => 'geo_public',
+					'value'   => '1',
+					'compare' => '=',
+				),
 			),
-			array(
-				'key'     => 'geo_public',
-				'value'   => '1',
-				'compare' => '=',
-			),
-		),
-	);
+		);
+	}
 	$zoom   = 1;
 	$script = $script . "<script type=\"text/javascript\">
 	function ready(fn) {
