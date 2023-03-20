@@ -23,6 +23,9 @@ build:
             - composer run-script install-codestandards
     nodes:
         analysis:
+            cache:
+                directories:
+                    - vendor/        
             tests:
                 override:
                     -
@@ -52,10 +55,10 @@ filter:
     paths:
         - ./
     excluded_paths:
-        - js/jquery*
         - wpcs/
     dependency_paths:
         - wordpress/
+        - vendor/
 imports:
     - javascript
     - php
