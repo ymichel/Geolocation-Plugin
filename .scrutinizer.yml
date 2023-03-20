@@ -18,7 +18,6 @@ build:
             - composer require --dev phpcompatibility/phpcompatibility-wp
             - composer require --dev phpunit/phpunit
             - composer install --prefer-dist --no-suggest
-            - composer run-script install-codestandards
     nodes:
         analysis:
             cache:
