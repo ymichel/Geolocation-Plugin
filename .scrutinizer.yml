@@ -1,8 +1,7 @@
-
 tools:
     phpcs:
-       config: ".phpcs.xml.dist"
-            standard: "WordPress"
+       config: .phpcs.xml.dist
+            standard: WordPress
 build:
     environment:
         php:
