@@ -11,6 +11,7 @@
 	<!-- Exclude Common Paths. -->
 	<exclude-pattern>*/wpcs/*</exclude-pattern>
 	<exclude-pattern>*/js/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
 
   <!-- Check up to 8 files simultanously. -->
   <arg name="parallel" value="8"/>
