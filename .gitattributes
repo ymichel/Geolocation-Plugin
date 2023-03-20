@@ -10,3 +10,5 @@
 /.scrutinizer.yml export-ignore
 /README.md export-ignore
 /CHANGELOG.md export-ignore
+/composer.json export-ignore
+/phpcs.xml export-ignore

@@ -1,0 +1,21 @@
+{
+    "name": "Geolocation",
+    "type": "wordpress-plugin",
+    "description": "Displays post geotag information on an embedded map"
+    "homepage": "https://www.yann-michel.de/geolocation"
+    "license": "GPL-2",
+    "authors": [
+        {
+            "name": "Yann Michel",
+            "email": "geolocation@yann-michel.de"
+        }
+    ],
+    "scripts": {
+        "install-codestandards": [
+            "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
+        ]
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.7"
+    }
+}

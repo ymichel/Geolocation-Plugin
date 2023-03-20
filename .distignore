@@ -9,3 +9,5 @@
 .gitattributes
 README.md
 CHANGELOG.md
+composer.json
+phpcs.xml
