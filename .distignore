@@ -11,3 +11,4 @@ README.md
 CHANGELOG.md
 composer.json
 phpcs.xml
+.phpcs.xml.dist

@@ -1,8 +1,8 @@
+
 tools:
-    php_code_sniffer:
-        config:
-            standard: WordPress
-    sensiolabs_security_checker: true
+    phpcs:
+       config: ".phpcs.xml.dist"
+            standard: "WordPress"
 build:
     environment:
         php:

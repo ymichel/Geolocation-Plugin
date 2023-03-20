@@ -12,3 +12,4 @@
 /CHANGELOG.md export-ignore
 /composer.json export-ignore
 /phpcs.xml export-ignore
+/.phpcs.xml.dist export-ignore
