@@ -1,8 +1,13 @@
 tools:
+    php_cs_fixer:
+        config_file: .php_cs.dist
+    phpcodesniffer:
+        enabled: true
+        config:
+            standard: WordPress
     php_code_sniffer:
         config:
             standard: WordPress
-    sensiolabs_security_checker: true
 build:
     environment:
         php:
@@ -17,6 +22,7 @@ build:
             - composer require --dev phpcompatibility/phpcompatibility-paragonie
             - composer require --dev phpcompatibility/phpcompatibility-wp
             - composer require --dev phpunit/phpunit
+            - composer require --dev friendsofphp/php-cs-fixer
             - composer install --prefer-dist --no-suggest
     nodes:
         analysis:
@@ -28,28 +34,41 @@ build:
                     - php-scrutinizer-run
                     - js-scrutinizer-run
 checks:
+checks:
     php:
-        avoid_closing_tag: false
-        avoid_superglobals: false
-        no_exit: false
-        psr2_control_structure_declaration: false
-        variable_existence: false
-        verify_access_scope_valid: false
-        verify_argument_usable_as_reference: false
-        verify_property_names: false
-        fix_php_opening_tag: false
-        remove_php_closing_tag: false
-        no_mixed_inline_html: false
-        require_braces_around_control_structures: false
-        security_vulnerabilities: false
-        coding_standard:
-            name: WordPress
+        # enable the PHP analysis
+        enabled: true
+        # run the PHP CS Fixer command before analyzing the code
+        before_commands:
+          - composer install
+        #  - vendor/bin/php-cs-fixer fix
+        # run the PHP_CodeSniffer command to check for coding standards violations
+        override:
+          - vendor/bin/phpcs --standard=WordPress
+
+            #    php:
+            #        avoid_closing_tag: false
+            #        avoid_superglobals: false
+            #        no_exit: false
+            #        psr2_control_structure_declaration: false
+            #        variable_existence: false
+            #        verify_access_scope_valid: false
+            #        verify_argument_usable_as_reference: false
+            #        verify_property_names: false
+            #        fix_php_opening_tag: false
+            #        remove_php_closing_tag: false
+            #        no_mixed_inline_html: false
+            #        require_braces_around_control_structures: false
+            #        security_vulnerabilities: false
+            #        coding_standard:
+            #            name: WordPress
     javascript: true
 filter:
     paths:
         - ./
     excluded_paths:
         - wpcs/
+        - vendor/
     dependency_paths:
         - wordpress/
         - vendor/
