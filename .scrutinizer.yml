@@ -25,13 +25,6 @@ build:
 checks:
 checks:
     php:
-        # enable the PHP analysis
-        enabled: true
-        # run the PHP CS Fixer command before analyzing the code
-        before_commands:
-          - composer install
-        #  - vendor/bin/php-cs-fixer fix
-        # run the PHP_CodeSniffer command to check for coding standards violations
         override:
           - vendor/bin/phpcs --standard=WordPress
 
