@@ -1,5 +1,5 @@
 tools:
-    php_codesniffer:
+    php_code_sniffer:
         config:
             standard: WordPress
 build:
