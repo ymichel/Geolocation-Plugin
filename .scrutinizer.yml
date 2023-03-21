@@ -1,11 +1,5 @@
 tools:
-    php_cs_fixer:
-        config_file: .php_cs.dist
-    phpcodesniffer:
-        enabled: true
-        config:
-            standard: WordPress
-    php_code_sniffer:
+    php_codesniffer:
         config:
             standard: WordPress
 build:
@@ -18,11 +12,6 @@ build:
             - composer require --dev dealerdirect/phpcodesniffer-composer-installer
             - composer require --dev squizlabs/php_codesniffer
             - composer require --dev wp-coding-standards/wpcs
-            - composer require --dev phpcompatibility/php-compatibility
-            - composer require --dev phpcompatibility/phpcompatibility-paragonie
-            - composer require --dev phpcompatibility/phpcompatibility-wp
-            - composer require --dev phpunit/phpunit
-            - composer require --dev friendsofphp/php-cs-fixer
             - composer install --prefer-dist --no-suggest
     nodes:
         analysis:
