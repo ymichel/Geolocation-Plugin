@@ -24,26 +24,22 @@ build:
                     - js-scrutinizer-run
 checks:
 checks:
-    php:
-        override:
-          - vendor/bin/phpcs --standard=WordPress
-
-            #    php:
-            #        avoid_closing_tag: false
-            #        avoid_superglobals: false
-            #        no_exit: false
-            #        psr2_control_structure_declaration: false
-            #        variable_existence: false
-            #        verify_access_scope_valid: false
-            #        verify_argument_usable_as_reference: false
-            #        verify_property_names: false
-            #        fix_php_opening_tag: false
-            #        remove_php_closing_tag: false
-            #        no_mixed_inline_html: false
-            #        require_braces_around_control_structures: false
-            #        security_vulnerabilities: false
-            #        coding_standard:
-            #            name: WordPress
+                php:
+                    avoid_closing_tag: false
+                    avoid_superglobals: false
+                    no_exit: false
+                    psr2_control_structure_declaration: false
+                    variable_existence: false
+                    verify_access_scope_valid: false
+                    verify_argument_usable_as_reference: false
+                    verify_property_names: false
+                    fix_php_opening_tag: false
+                    remove_php_closing_tag: false
+                    no_mixed_inline_html: false
+                    require_braces_around_control_structures: false
+                    security_vulnerabilities: false
+                    coding_standard:
+                        name: WordPress
     javascript: true
 filter:
     paths:
