@@ -3,6 +3,7 @@
 /.git export-ignore
 /.github export-ignore
 /node_modules export-ignore
+/selenium export-ignore
 
 # Files
 /.gitattributes export-ignore

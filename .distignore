@@ -2,6 +2,7 @@
 /.git
 /.github
 /node_modules
+/selenium
 
 .distignore
 .gitignore

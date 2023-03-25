@@ -1,0 +1,1093 @@
+{
+  "id": "7b979d2b-0981-45e2-8c99-3ed2887c05b1",
+  "version": "2.0",
+  "name": "Geolocation",
+  "url": "http://localhost",
+  "tests": [{
+    "id": "8dd2f0f3-f975-474c-9c88-8691e71ccc87",
+    "name": "12 simple test",
+    "commands": [{
+      "id": "fbe0a713-6618-48de-ab8d-a6d98eebe4c0",
+      "comment": "",
+      "command": "open",
+      "target": "/wordpress/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6d6399aa-4529-4802-8a6b-03d095bab34c",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1215",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7e3036dd-8259-4677-a3ea-fff71d60ee5a",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Geolocation ALL",
+      "targets": [
+        ["linkText=Geolocation ALL", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(1) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Geolocation ALL')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/geolocation-all/']", "xpath:href"],
+        ["xpath=//li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Geolocation ALL')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2713067b-50a9-4d68-b910-2f00e15a647e",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Sample Page",
+      "targets": [
+        ["linkText=Sample Page", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(2) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Sample Page')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/sample-page/']", "xpath:href"],
+        ["xpath=//div/div/div/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Sample Page')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "f6aa6039-c437-40e2-bc1b-44ea96dd3874",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5fc32e79-7850-4d08-b4db-5cb8b1a4e1b4",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Post with no GEO",
+      "targets": [
+        ["linkText=Post with no GEO", "linkText"],
+        ["css=.post-109 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Post with no GEO')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[2]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/14/post-with-no-geo/']", "xpath:href"],
+        ["xpath=//li[2]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Post with no GEO')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "25e2da59-bd73-407b-af11-07552c9ec287",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "194995b2-27bb-4a87-86ad-b6bf32a35e55",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Rhone glacier4",
+      "targets": [
+        ["linkText=Rhone glacier4", "linkText"],
+        ["css=.post-107 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Rhone glacier4')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[3]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/13/rhone-glacier4/']", "xpath:href"],
+        ["xpath=//li[3]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Rhone glacier4')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "e4b00871-f228-4d79-aeee-eba200545ce0",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7e4b892c-d04e-4cfb-b5e9-17b7ad10d442",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Test Zossen",
+      "targets": [
+        ["linkText=Test Zossen", "linkText"],
+        ["css=.post-73 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Test Zossen')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[6]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/02/24/test-zossen/']", "xpath:href"],
+        ["xpath=//li[6]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Test Zossen')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "9c18ae14-2391-45c5-b7ae-de7f61a53d27",
+      "comment": "",
+      "command": "click",
+      "target": "id=commentform",
+      "targets": [
+        ["id=commentform", "id"],
+        ["css=#commentform", "css:finder"],
+        ["xpath=//form[@id='commentform']", "xpath:attributes"],
+        ["xpath=//div[@id='respond']/form", "xpath:idRelative"],
+        ["xpath=//div/div/form", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "10353ebb-61c5-4feb-b1dd-47850ae6cab0",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fd65b2cc-99cd-4d99-8ad9-c07168125728",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Hamilton NZ",
+      "targets": [
+        ["linkText=Hamilton NZ", "linkText"],
+        ["css=.post-111 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Hamilton NZ')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/15/bla/']", "xpath:href"],
+        ["xpath=//h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Hamilton NZ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "8f29dd06-278d-435d-9fc7-9379ac03f948",
+    "name": "13 logout",
+    "commands": [{
+      "id": "b5d0ed54-f58a-471e-ad79-8594110b121d",
+      "comment": "",
+      "command": "open",
+      "target": "http://bullseye.home.lan/wordpress/wp-login.php?action=logout",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4d67edcd-af4d-4384-86eb-dfc714d58704",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=log out",
+      "targets": [
+        ["linkText=log out", "linkText"],
+        ["css=a", "css:finder"],
+        ["xpath=//a[contains(text(),'log out')]", "xpath:link"],
+        ["xpath=//body[@id='error-page']/div/p[2]/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/wp-login.php?action=logout&_wpnonce=6f950088f8']", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'log out')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "b505d550-08f0-4ba0-ac7e-0359e6894151",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=← Go to Development",
+      "targets": [
+        ["linkText=← Go to Development", "linkText"],
+        ["css=#backtoblog > a", "css:finder"],
+        ["xpath=//a[contains(text(),'← Go to Development')]", "xpath:link"],
+        ["xpath=//p[@id='backtoblog']/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/']", "xpath:href"],
+        ["xpath=//p[3]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'← Go to Development')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "d70b828c-c46a-48f6-8259-d39e4b9b89b0",
+    "name": "10 login",
+    "commands": [{
+      "id": "e2a4dd68-47b8-47c5-82f1-c2f034810374",
+      "comment": "",
+      "command": "open",
+      "target": "http://bullseye.home.lan/wordpress/wp-login.php?redirect_to=http%3A%2F%2Fbullseye.home.lan%2Fwordpress%2Fwp-admin%2F&reauth=1",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "fb18e32c-46af-4850-b2b4-4837d5c1966b",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1215",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e5de7330-94ec-4b2b-9ea8-3c5893646dde",
+      "comment": "",
+      "command": "click",
+      "target": "id=user_login",
+      "targets": [
+        ["id=user_login", "id"],
+        ["name=log", "name"],
+        ["css=#user_login", "css:finder"],
+        ["xpath=//input[@id='user_login']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/p/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "70f0d586-5f48-4615-b407-1b49236c16b4",
+      "comment": "",
+      "command": "type",
+      "target": "id=user_login",
+      "targets": [
+        ["id=user_login", "id"],
+        ["name=log", "name"],
+        ["css=#user_login", "css:finder"],
+        ["xpath=//input[@id='user_login']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/p/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "Yann"
+    }, {
+      "id": "ce40c082-063a-472a-a674-a29f6fc4dad7",
+      "comment": "",
+      "command": "type",
+      "target": "id=user_pass",
+      "targets": [
+        ["id=user_pass", "id"],
+        ["name=pwd", "name"],
+        ["css=#user_pass", "css:finder"],
+        ["xpath=//input[@id='user_pass']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "TAzJ8q6$UCD0h1aZAx"
+    }, {
+      "id": "8199d918-ab96-43c3-9b15-e65970c9040b",
+      "comment": "",
+      "command": "click",
+      "target": "id=wp-submit",
+      "targets": [
+        ["id=wp-submit", "id"],
+        ["name=wp-submit", "name"],
+        ["css=#wp-submit", "css:finder"],
+        ["xpath=//input[@id='wp-submit']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/p[3]/input", "xpath:idRelative"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "0b10a685-8ac4-48a2-9b38-40597e67672b",
+    "name": "14 simple test",
+    "commands": [{
+      "id": "aa54af63-d0b1-4b3c-b561-cf36503ac719",
+      "comment": "",
+      "command": "open",
+      "target": "/wordpress/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7c29c5ab-d49d-46b0-818b-d2ec97532806",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1215",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d3b08e45-446d-4486-b8cc-f36b87e78280",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Geolocation ALL",
+      "targets": [
+        ["linkText=Geolocation ALL", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(1) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Geolocation ALL')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/geolocation-all/']", "xpath:href"],
+        ["xpath=//li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Geolocation ALL')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "97a7ff87-54f4-4603-aec7-a12c289d569a",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Sample Page",
+      "targets": [
+        ["linkText=Sample Page", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(2) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Sample Page')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/sample-page/']", "xpath:href"],
+        ["xpath=//div/div/div/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Sample Page')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "2c3a146f-eb50-4e12-9844-58903b60c6f2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "647683fc-e562-4f3e-b407-8851713c0561",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Post with no GEO",
+      "targets": [
+        ["linkText=Post with no GEO", "linkText"],
+        ["css=.post-109 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Post with no GEO')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[2]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/14/post-with-no-geo/']", "xpath:href"],
+        ["xpath=//li[2]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Post with no GEO')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "b2d05fc8-7269-46cd-985f-313f3be4660f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d3b56104-2bc8-49a2-ae89-976ae6960010",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Rhone glacier4",
+      "targets": [
+        ["linkText=Rhone glacier4", "linkText"],
+        ["css=.post-107 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Rhone glacier4')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[3]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/13/rhone-glacier4/']", "xpath:href"],
+        ["xpath=//li[3]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Rhone glacier4')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1523402a-b042-453e-b360-d776d9e9752a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "15e36515-1df5-44eb-a6a9-e29967adf6d3",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Test Zossen",
+      "targets": [
+        ["linkText=Test Zossen", "linkText"],
+        ["css=.post-73 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Test Zossen')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[6]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/02/24/test-zossen/']", "xpath:href"],
+        ["xpath=//li[6]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Test Zossen')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "700e9384-af18-4698-8857-559cb9de1940",
+      "comment": "",
+      "command": "click",
+      "target": "id=commentform",
+      "targets": [
+        ["id=commentform", "id"],
+        ["css=#commentform", "css:finder"],
+        ["xpath=//form[@id='commentform']", "xpath:attributes"],
+        ["xpath=//div[@id='respond']/form", "xpath:idRelative"],
+        ["xpath=//div/div/form", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6cab49f6-7b28-45d1-828c-95ffa4a0ece4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "80b58cf6-5f7a-4bca-af59-ee4befe9a42d",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Hamilton NZ",
+      "targets": [
+        ["linkText=Hamilton NZ", "linkText"],
+        ["css=.post-111 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Hamilton NZ')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/15/bla/']", "xpath:href"],
+        ["xpath=//h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Hamilton NZ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "93ef2a3e-880f-4c36-ad7b-e03fa4f1d1b0",
+    "name": "11 switch to osm",
+    "commands": [{
+      "id": "3a6b032a-7469-4882-9460-c2f4fb929f76",
+      "comment": "",
+      "command": "open",
+      "target": "http://bullseye.home.lan/wordpress/wp-admin/options-general.php?page=geolocation.php",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "7ab230d9-6026-4500-9b68-5d42c64e6dd9",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1584",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1df67940-0c76-4d06-bf85-72d6db30729e",
+      "comment": "",
+      "command": "select",
+      "target": "id=geolocation_provider",
+      "targets": [],
+      "value": "label=Open Street Maps"
+    }, {
+      "id": "eea6de79-cd89-413e-a373-b6801a337a60",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "id=geolocation_provider",
+      "targets": [
+        ["id=geolocation_provider", "id"],
+        ["name=geolocation_provider", "name"],
+        ["css=#geolocation_provider", "css:finder"],
+        ["xpath=//select[@id='geolocation_provider']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/table/tbody/tr[7]/td/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "0,-0.515625"
+    }, {
+      "id": "3219fc4b-c718-43f2-bb94-f21de333dd0b",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "id=geolocation_provider",
+      "targets": [
+        ["id=geolocation_provider", "id"],
+        ["name=geolocation_provider", "name"],
+        ["css=#geolocation_provider", "css:finder"],
+        ["xpath=//select[@id='geolocation_provider']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/table/tbody/tr[7]/td/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "0,-0.515625"
+    }, {
+      "id": "bd8979bf-ebfa-4ad0-9135-a66698635b5c",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "id=geolocation_provider",
+      "targets": [
+        ["id=geolocation_provider", "id"],
+        ["name=geolocation_provider", "name"],
+        ["css=#geolocation_provider", "css:finder"],
+        ["xpath=//select[@id='geolocation_provider']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/table/tbody/tr[7]/td/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "0,-0.515625"
+    }, {
+      "id": "77faa2c6-f0af-495c-93fb-6d3cc440b39e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.button-primary",
+      "targets": [
+        ["css=.button-primary", "css:finder"],
+        ["xpath=//input[@value='Save Changes']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/p/input", "xpath:idRelative"],
+        ["xpath=//p/input", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "1e8b49be-1257-4a42-ace1-a175c527af6a",
+    "name": "21 switch to google maps",
+    "commands": [{
+      "id": "6aea055b-9aee-4c07-ae6b-00a7a29f68c0",
+      "comment": "",
+      "command": "open",
+      "target": "http://bullseye.home.lan/wordpress/wp-admin/options-general.php?page=geolocation.php",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0d0ca838-3394-42f2-bf88-746aa359fbda",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1584",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c0013e86-d8ef-4a23-b888-c9b411d9072c",
+      "comment": "",
+      "command": "select",
+      "target": "id=geolocation_provider",
+      "targets": [],
+      "value": "label=Google Maps"
+    }, {
+      "id": "0738148b-8e89-4693-9798-c7eaedeb4fc7",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "id=geolocation_provider",
+      "targets": [
+        ["id=geolocation_provider", "id"],
+        ["name=geolocation_provider", "name"],
+        ["css=#geolocation_provider", "css:finder"],
+        ["xpath=//select[@id='geolocation_provider']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/table/tbody/tr[7]/td/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "0,-0.515625"
+    }, {
+      "id": "9e5ec486-5f28-43ec-bd02-0ac8e6aaa563",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "id=geolocation_provider",
+      "targets": [
+        ["id=geolocation_provider", "id"],
+        ["name=geolocation_provider", "name"],
+        ["css=#geolocation_provider", "css:finder"],
+        ["xpath=//select[@id='geolocation_provider']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/table/tbody/tr[7]/td/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "0,-0.515625"
+    }, {
+      "id": "39b10488-a4b0-46da-b18d-bc00bbc7335b",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "id=geolocation_provider",
+      "targets": [
+        ["id=geolocation_provider", "id"],
+        ["name=geolocation_provider", "name"],
+        ["css=#geolocation_provider", "css:finder"],
+        ["xpath=//select[@id='geolocation_provider']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/table/tbody/tr[7]/td/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": "0,-0.515625"
+    }, {
+      "id": "f9554b33-1520-4365-9191-0a732532e5a5",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.button-primary",
+      "targets": [
+        ["css=.button-primary", "css:finder"],
+        ["xpath=//input[@value='Save Changes']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/p/input", "xpath:idRelative"],
+        ["xpath=//p/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "93d7b615-8537-4923-90c3-22126476a298",
+      "comment": "",
+      "command": "click",
+      "target": "css=.button-primary",
+      "targets": [
+        ["css=.button-primary", "css:finder"],
+        ["xpath=//input[@value='Save Changes']", "xpath:attributes"],
+        ["xpath=//form[@id='settings']/p/input", "xpath:idRelative"],
+        ["xpath=//p/input", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "9b24393f-4232-4191-9998-8e4d023f8793",
+    "name": "20 login",
+    "commands": [{
+      "id": "32a65d1a-96d8-4a2c-a0b6-9cc21f10699c",
+      "comment": "",
+      "command": "open",
+      "target": "http://bullseye.home.lan/wordpress/wp-login.php?redirect_to=http%3A%2F%2Fbullseye.home.lan%2Fwordpress%2Fwp-admin%2F&reauth=1",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b6142d88-cd87-4efa-b1db-cde96b229096",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1215",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e0fe15f0-4831-400e-9800-67e45f683063",
+      "comment": "",
+      "command": "click",
+      "target": "id=user_login",
+      "targets": [
+        ["id=user_login", "id"],
+        ["name=log", "name"],
+        ["css=#user_login", "css:finder"],
+        ["xpath=//input[@id='user_login']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/p/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "dca26cdb-898c-4a5f-a5aa-477f288116bd",
+      "comment": "",
+      "command": "type",
+      "target": "id=user_login",
+      "targets": [
+        ["id=user_login", "id"],
+        ["name=log", "name"],
+        ["css=#user_login", "css:finder"],
+        ["xpath=//input[@id='user_login']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/p/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "Yann"
+    }, {
+      "id": "f11de67c-b27a-4ee1-9665-78ed828a0ac6",
+      "comment": "",
+      "command": "type",
+      "target": "id=user_pass",
+      "targets": [
+        ["id=user_pass", "id"],
+        ["name=pwd", "name"],
+        ["css=#user_pass", "css:finder"],
+        ["xpath=//input[@id='user_pass']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/div/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "TAzJ8q6$UCD0h1aZAx"
+    }, {
+      "id": "6b9b7b46-4a47-48d1-8ec6-2b063b8317c4",
+      "comment": "",
+      "command": "click",
+      "target": "id=wp-submit",
+      "targets": [
+        ["id=wp-submit", "id"],
+        ["name=wp-submit", "name"],
+        ["css=#wp-submit", "css:finder"],
+        ["xpath=//input[@id='wp-submit']", "xpath:attributes"],
+        ["xpath=//form[@id='loginform']/p[3]/input", "xpath:idRelative"],
+        ["xpath=//p[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "8d8b378b-1482-417f-b3f1-749af1878581",
+    "name": "22 simple test",
+    "commands": [{
+      "id": "4c69b940-950e-4a7d-8c98-163ecf316fb1",
+      "comment": "",
+      "command": "open",
+      "target": "/wordpress/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "88e29d62-a599-406c-9bc4-8648eda2550f",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1215",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "18cd337f-f438-4994-9fef-4459fe2670cd",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Geolocation ALL",
+      "targets": [
+        ["linkText=Geolocation ALL", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(1) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Geolocation ALL')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/geolocation-all/']", "xpath:href"],
+        ["xpath=//li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Geolocation ALL')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "f03229e7-1654-435c-926a-d161c398a399",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Sample Page",
+      "targets": [
+        ["linkText=Sample Page", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(2) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Sample Page')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/sample-page/']", "xpath:href"],
+        ["xpath=//div/div/div/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Sample Page')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "ff0016b6-48f8-4320-82de-6b95c9bbdc58",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cf5cafd2-5a6f-49da-bc8e-3263158a8ffc",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Post with no GEO",
+      "targets": [
+        ["linkText=Post with no GEO", "linkText"],
+        ["css=.post-109 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Post with no GEO')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[2]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/14/post-with-no-geo/']", "xpath:href"],
+        ["xpath=//li[2]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Post with no GEO')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "0d583234-c592-426c-8cd7-4e2f361bb417",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5d212229-c459-402e-9ee7-ba2f26640be6",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Rhone glacier4",
+      "targets": [
+        ["linkText=Rhone glacier4", "linkText"],
+        ["css=.post-107 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Rhone glacier4')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[3]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/13/rhone-glacier4/']", "xpath:href"],
+        ["xpath=//li[3]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Rhone glacier4')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "c0311d3b-6d5b-4815-983d-dd4ff6a3c4a9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6390e0c7-cbef-4bca-8c46-ba35601b3652",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Test Zossen",
+      "targets": [
+        ["linkText=Test Zossen", "linkText"],
+        ["css=.post-73 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Test Zossen')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[6]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/02/24/test-zossen/']", "xpath:href"],
+        ["xpath=//li[6]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Test Zossen')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "6af8cfac-6948-45fd-96d0-b7d9700e3ef1",
+      "comment": "",
+      "command": "click",
+      "target": "id=commentform",
+      "targets": [
+        ["id=commentform", "id"],
+        ["css=#commentform", "css:finder"],
+        ["xpath=//form[@id='commentform']", "xpath:attributes"],
+        ["xpath=//div[@id='respond']/form", "xpath:idRelative"],
+        ["xpath=//div/div/form", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2062f7b8-d48c-498c-8e81-fdd320b36da3",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fca3756e-e90f-4296-aea5-1667fee8d82c",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Hamilton NZ",
+      "targets": [
+        ["linkText=Hamilton NZ", "linkText"],
+        ["css=.post-111 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Hamilton NZ')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/15/bla/']", "xpath:href"],
+        ["xpath=//h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Hamilton NZ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "b99605c8-4fbb-4e71-bd1f-e1ef2e4f6a96",
+    "name": "23 logout",
+    "commands": [{
+      "id": "ed494406-5228-4b69-90b7-21a50525de9b",
+      "comment": "",
+      "command": "open",
+      "target": "http://bullseye.home.lan/wordpress/wp-login.php?action=logout",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "067c0aad-d522-4e6c-88c2-e614ea5750d0",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=log out",
+      "targets": [
+        ["linkText=log out", "linkText"],
+        ["css=a", "css:finder"],
+        ["xpath=//a[contains(text(),'log out')]", "xpath:link"],
+        ["xpath=//body[@id='error-page']/div/p[2]/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/wp-login.php?action=logout&_wpnonce=6f950088f8']", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'log out')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "99ad86ab-4712-4421-b707-4c2edd09a5ea",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=← Go to Development",
+      "targets": [
+        ["linkText=← Go to Development", "linkText"],
+        ["css=#backtoblog > a", "css:finder"],
+        ["xpath=//a[contains(text(),'← Go to Development')]", "xpath:link"],
+        ["xpath=//p[@id='backtoblog']/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/']", "xpath:href"],
+        ["xpath=//p[3]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'← Go to Development')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "dc93bb3c-08a4-435a-bc83-7d9993ea5f4a",
+    "name": "24 simple test",
+    "commands": [{
+      "id": "b5ea2d72-9c5f-48ed-a528-5d00ae6d066a",
+      "comment": "",
+      "command": "open",
+      "target": "/wordpress/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "775894ba-41bd-4ace-9190-65b1a09de674",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1050x1215",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "853da388-e8ca-4d4d-b8ab-50b35fcd41d4",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Geolocation ALL",
+      "targets": [
+        ["linkText=Geolocation ALL", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(1) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Geolocation ALL')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/geolocation-all/']", "xpath:href"],
+        ["xpath=//li/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Geolocation ALL')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "8e748685-46ab-49de-90bf-d089a8cd100e",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Sample Page",
+      "targets": [
+        ["linkText=Sample Page", "linkText"],
+        ["css=.wp-block-pages-list__item:nth-child(2) > .wp-block-pages-list__item__link", "css:finder"],
+        ["xpath=//a[contains(text(),'Sample Page')]", "xpath:link"],
+        ["xpath=//div[@id='modal-1-content']/ul/li[2]/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/sample-page/']", "xpath:href"],
+        ["xpath=//div/div/div/ul/li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Sample Page')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "17f87d95-e325-4279-b643-be5c5fe3410c",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "810eecdd-b04b-4ba2-bf29-877e19070da1",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Post with no GEO",
+      "targets": [
+        ["linkText=Post with no GEO", "linkText"],
+        ["css=.post-109 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Post with no GEO')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[2]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/14/post-with-no-geo/']", "xpath:href"],
+        ["xpath=//li[2]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Post with no GEO')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "8ad782bd-14b7-49c1-8250-62ec6e1af014",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "883c1c92-880d-4bfd-bec7-2183bccfcf69",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Rhone glacier4",
+      "targets": [
+        ["linkText=Rhone glacier4", "linkText"],
+        ["css=.post-107 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Rhone glacier4')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[3]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/13/rhone-glacier4/']", "xpath:href"],
+        ["xpath=//li[3]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Rhone glacier4')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "7d7d4b72-2a9d-484d-994c-d67a524a3bef",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "588b6c22-c54f-4eac-9ed9-a676cec5a0f9",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Test Zossen",
+      "targets": [
+        ["linkText=Test Zossen", "linkText"],
+        ["css=.post-73 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Test Zossen')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li[6]/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/02/24/test-zossen/']", "xpath:href"],
+        ["xpath=//li[6]/h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Test Zossen')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "54ecf3f8-44f6-43ed-8bc3-36eda1c94176",
+      "comment": "",
+      "command": "click",
+      "target": "id=commentform",
+      "targets": [
+        ["id=commentform", "id"],
+        ["css=#commentform", "css:finder"],
+        ["xpath=//form[@id='commentform']", "xpath:attributes"],
+        ["xpath=//div[@id='respond']/form", "xpath:idRelative"],
+        ["xpath=//div/div/form", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "fc884b57-0a80-42ad-97b9-5440f83e2c48",
+      "comment": "",
+      "command": "click",
+      "target": "css=.wp-container-3 > .wp-block-site-title > a",
+      "targets": [
+        ["css=.wp-container-3 > .wp-block-site-title > a", "css:finder"],
+        ["xpath=(//a[contains(text(),'Development')])[2]", "xpath:link"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress']", "xpath:href"],
+        ["xpath=//p/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e346947e-7d0f-42d4-bc35-46e552716824",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Hamilton NZ",
+      "targets": [
+        ["linkText=Hamilton NZ", "linkText"],
+        ["css=.post-111 > .wp-block-post-title > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Hamilton NZ')]", "xpath:link"],
+        ["xpath=//main[@id='wp--skip-link--target']/div/ul/li/h2/a", "xpath:idRelative"],
+        ["xpath=//a[@href='http://bullseye.home.lan/wordpress/index.php/2023/03/15/bla/']", "xpath:href"],
+        ["xpath=//h2/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Hamilton NZ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "4382bdb1-b9ef-480d-a6d9-2130ee9d3cf0",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["8dd2f0f3-f975-474c-9c88-8691e71ccc87"]
+  }],
+  "urls": ["http://localhost/"],
+  "plugins": []
+}
