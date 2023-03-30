@@ -23,6 +23,12 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
+**Wordpress (please complete the following information):**
+ - PHP Version
+ - Wordpress Version
+ - Wordpress Theme (active)
+ - Wordpress Plugins (additionally installed)
+
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
