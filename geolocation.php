@@ -396,14 +396,12 @@ function display_location( $content ) {
  * @return mixed
  */
 function display_location_page( $content ) {
-	if ( geo_has_shortcode( $content ) ) {
-		// To do: add support for multiple Map API providers.
-		switch ( get_option( 'geolocation_provider' ) ) {
-			case 'google':
-				return display_location_page_google( $content );
-			case 'osm':
-				return display_location_page_osm( $content );
-		}
+	// To do: add support for multiple Map API providers.
+	switch ( get_option( 'geolocation_provider' ) ) {
+		case 'google':
+			return display_location_page_google( $content );
+		case 'osm':
+			return display_location_page_osm( $content );
 	}
 }
 
