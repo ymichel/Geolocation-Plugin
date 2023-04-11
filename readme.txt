@@ -4,7 +4,7 @@ Tags: Google Maps, openstreet map, GPS, travel, location, journey
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 6.2
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 Simply and lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location where a post was created.
 
 == Description ==
@@ -47,8 +47,12 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.9.2 = 
+* fixing issue with page display
+
 = 1.9.1 = 
 * fixing page display to also reflect 'public' flag accordingly: no logged in user --> only public locations; if logged in --> all locations
+
 = 1.9.0 = 
 * eliminating the presence of the geo-div on non-geo pages
 * removing orphaned code elements
