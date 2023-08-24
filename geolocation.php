@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.9.2
+ * Version: 1.9.3
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -563,9 +563,15 @@ function reverse_geocode( $latitude, $longitude ) {
 			break;
 		case 'osm':
 			$json    = pull_json_osm( $latitude, $longitude );
-			$city    = $json['address']['city'];
-			$state   = $json['address']['suburb'];
-			$country = $json['address']['country'];
+			if ( isset($json['address']['city'])) {
+				$city    = $json['address']['city'];
+			}
+			if ( isset($json['address']['suburb'])) {
+				$state   = $json['address']['suburb'];
+			}
+			if ( isset($json['address']['country'])) {
+				$country = $json['address']['country'];
+			}
 			break;
 	}
 	/**
