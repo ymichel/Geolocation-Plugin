@@ -235,6 +235,7 @@ If you struggle while installing it or have feature requests, please feel free t
 
 = 0.2 =
 * updated Google API calls to recent version
+* taking over ownership for plugin :-)
 
 = 0.1.1 =
 * Added ability to turn geolocation on and off for individual posts.
