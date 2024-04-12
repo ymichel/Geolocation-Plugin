@@ -3,7 +3,7 @@ Contributors: frsh, mdawaffe, automattic, ymichel
 Tags: Google Maps, openstreet map, GPS, travel, location, journey
 Requires at least: 6.0
 Requires PHP: 7.3
-Tested up to: 6.4
+Tested up to: 6.5
 Stable tag: 1.9.3
 Simply and lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location where a post was created.
 
