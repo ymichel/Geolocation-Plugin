@@ -211,7 +211,7 @@ function add_geo_support_osm( $posts ) {
 			}
 		}
 		ready(() => {
-			var map = L.map(document.getElementById("map")).setView([51.505, -0.09], <?php echo esc_js( $zoom ); ?>);
+			var map = L.map(document.getElementById("map"));
 			L.tileLayer('<?php echo esc_js( get_osm_tiles_url() ); ?>', {
 				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
@@ -243,7 +243,7 @@ function add_geo_support_osm( $posts ) {
 				for (var i = 0; i < geolocationMaps.length; i++) {
 					name = geolocationMaps[i].getAttribute('name');
 					if ( 'me' !== name ) {
-						postmap = L.map(document.getElementById(geolocationMaps[i].id)).setView([51.505, -0.09], <?php echo esc_js( $zoom ); ?>);
+						postmap = L.map(document.getElementById(geolocationMaps[i].id));
 						L.tileLayer('<?php echo esc_js( get_osm_tiles_url() ); ?>', {
 							attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 						}).addTo(postmap);
