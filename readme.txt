@@ -1,11 +1,12 @@
 === Geolocation ===
 Contributors: frsh, mdawaffe, automattic, alexterz, ymichel
-Tags: Google Maps, openstreet map, GPS, travel, location, journey
+Tags: map, GPS, travel, location, journey
+License: GPL_2
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 6.5
 Stable tag: 1.9.5
-Simply and lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location where a post was created.
+Lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
 == Description ==
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page.
