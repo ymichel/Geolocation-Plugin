@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.9.4
+ * Version: 1.9.5
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -210,10 +210,10 @@ function geolocation_save_postdata( $post_id ) {
 		if ( 0 !== $post_img_id ) {
 			$orig_img_path = wp_get_original_image_path( $post_img_id, false );
 			if ( false !== $orig_img_path ) {
-				$exif = exif_read_data( $orig_img_path );
+				$exif = exif_read_data( $orig_img_path, 0, true );
 
-				if ( ( isset( $exif['gps_latitude'] ) ) && ( isset( $exif['gps_longitude'] ) ) ) {
-					$gps_latitude   = $exif['gps_latitude'];
+				if ( ( isset( $exif['GPS']['GPSLatitude'] ) ) && ( isset( $exif['GPS']['GPSLongitude'] ) ) ) {
+					$gps_latitude   = $exif['GPS']['GPSLatitude'];
 					$gps_latitude_g = explode( '/', $gps_latitude[0] );
 					$gps_latitude_m = explode( '/', $gps_latitude[1] );
 					$gps_latitude_s = explode( '/', $gps_latitude[2] );
@@ -222,7 +222,7 @@ function geolocation_save_postdata( $post_id ) {
 					$gps_lat_s      = $gps_latitude_s[0] / $gps_latitude_s[1];
 					$latitude       = $gps_lat_g + ( $gps_lat_m + ( $gps_lat_s / 60 ) ) / 60;
 
-					$gps_longitude   = $exif['gps_longitude'];
+					$gps_longitude   = $exif['GPS']['GPSLongitude'];
 					$gps_longitude_g = explode( '/', $gps_longitude[0] );
 					$gps_longitude_m = explode( '/', $gps_longitude[1] );
 					$gps_longitude_s = explode( '/', $gps_longitude[2] );
