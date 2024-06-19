@@ -565,9 +565,13 @@ function reverse_geocode( $latitude, $longitude ) {
 			$json    = pull_json_osm( $latitude, $longitude );
 			if ( isset($json['address']['city'])) {
 				$city    = $json['address']['city'];
+			} else if ( isset($json['address']['town'])) {
+	                        $city    = $json['address']['town'];
 			}
 			if ( isset($json['address']['suburb'])) {
 				$state   = $json['address']['suburb'];
+			} else if ( isset($json['address']['municipality'])) {
+				$state   = $json['address']['municipality'];
 			}
 			if ( isset($json['address']['country'])) {
 				$country = $json['address']['country'];
