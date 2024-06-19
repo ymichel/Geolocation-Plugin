@@ -5,7 +5,7 @@ License: GPL_2
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 6.5
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 Lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
 == Description ==
@@ -47,6 +47,10 @@ If you struggle while installing it or have feature requests, please feel free t
 6. Viweing all posts providing location information
 
 == Changelog ==
+
+= 1.9.6 =
+* enhancing address attribute options for OSM display of locations.
+* fixing nonce array verify in case not yet filled.
 
 = 1.9.5 =
 * fixing GPS location detection from featured image.
