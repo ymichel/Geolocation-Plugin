@@ -191,7 +191,8 @@ function geolocation_old_custom_box() {
  */
 function geolocation_save_postdata( $post_id ) {
 	// Check authorization, permissions, autosave, etc.
-	if ( ( ! wp_verify_nonce( $_POST['geolocation_nonce'], plugin_basename( __FILE__ ) ) ) ||
+	if ( (!isset($_POST['geolocation_nonce']))  ||
+		( ! wp_verify_nonce( $_POST['geolocation_nonce'], plugin_basename( __FILE__ ) ) ) ||
 		( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
 		( ( 'page' === $_POST['post_type'] ) && ( ! current_user_can( 'edit_page', $post_id ) ) ) ||
 		( ! current_user_can( 'edit_post', $post_id ) )
