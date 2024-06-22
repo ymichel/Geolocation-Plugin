@@ -568,9 +568,19 @@ function reverse_geocode( $latitude, $longitude ) {
 				$city    = $json['address']['city'];
 			} else if ( isset($json['address']['town'])) {
 	                        $city    = $json['address']['town'];
+			} else if ( isset($json['address']['village'])) {
+	                        $city    = $json['address']['village'];
+			} else if ( isset($json['address']['hamlet'])) {
+	                        $city    = $json['address']['hamlet'];
+			} else if ( isset($json['address']['isolated_dwelling'])) {
+	                        $city    = $json['address']['isolated_dwelling'];
+			} else if ( isset($json['address']['farm'])) {
+	                        $city    = $json['address']['farm'];
 			}
 			if ( isset($json['address']['suburb'])) {
 				$state   = $json['address']['suburb'];
+			} else if ( isset($json['address']['borough'])) {
+				$state   = $json['address']['borough'];
 			} else if ( isset($json['address']['municipality'])) {
 				$state   = $json['address']['municipality'];
 			}
