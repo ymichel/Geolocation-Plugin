@@ -4,7 +4,7 @@ Tags: map, GPS, travel, location, journey
 License: GPL_2
 Requires at least: 6.0
 Requires PHP: 7.3
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: 1.9.6
 Lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
