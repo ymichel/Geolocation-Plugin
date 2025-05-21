@@ -135,21 +135,10 @@ function geolocation_settings_page() {
 			<tr valign="top">
 				<th scope="row">Maps Provider</th>
 				<td>
+					<?php $provider_option = (string) get_option( 'geolocation_provider' ); ?>
 					<select id="geolocation_provider" name="geolocation_provider" onchange="providerSelected(this.value);">
-						<option value="google" 
-						<?php
-						if ( (string) get_option( 'geolocation_provider' ) === 'google' ) {
-													echo ' selected';
-						}
-						?>
-												>Google Maps</option>
-						<option value="osm" 
-						<?php
-						if ( (string) get_option( 'geolocation_provider' ) === 'osm' ) {
-												echo ' selected';
-						}
-						?>
-											>Open Street Maps</option>
+						<option value="google"<?php if ( $provider_option === 'google' ) { echo ' selected'; } ?>>Google Maps</option>
+						<option value="osm"<?php if ( $provider_option === 'osm' ) { echo ' selected'; } ?>>Open Street Maps</option>
 					</select>
 				</td>
 			</tr>

@@ -136,18 +136,18 @@ function geolocation_add_custom_box() {
  * @return void
  */
 function geolocation_inner_custom_box() {
+	$map_width = esc_attr( (string) get_option( 'geolocation_map_width' ) );
+	$map_height = esc_attr( (string) get_option( 'geolocation_map_height' ) );
 	?>
 	<input type="hidden" id="geolocation_nonce" name="geolocation_nonce" value="<?php echo esc_html( wp_create_nonce( plugin_basename( __FILE__ ) ) ); ?>" />
-	<label class="screen-reader-text" for="geolocation-address">Geolocation</label>
-	<div class="taghint"><?php echo esc_html_e( 'Enter your address', 'geolocation' ); ?></div>
+	<label class="screen-reader-text" for="geolocation-address"><?php esc_html_e( 'Geolocation', 'geolocation' ); ?></label>
+	<div class="taghint"><?php esc_html_e( 'Enter your address', 'geolocation' ); ?></div>
 	<input type="hidden" id="geolocation-address-reverse" name="geolocation-address-reverse" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 	<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
-	<input id="geolocation-load" type="button" class="button geolocationadd" value="<?php echo esc_html_e( 'Load', 'geolocation' ); ?>" tabindex="3" />
+	<input id="geolocation-load" type="button" class="button geolocationadd" value="<?php esc_html_e( 'Load', 'geolocation' ); ?>" tabindex="3" />
 	<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
 	<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
-	<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:<?php echo esc_attr( (string) get_option( 'geolocation_map_width' ) ); ?>px;height:<?php echo esc_attr( (string) get_option( 'geolocation_map_height' ) ); ?>px;margin-top:5px;"></div>
-	<div style="margin:5px 0 0 0;">
-		<input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
+	<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:<?php echo $map_width; ?>px;height:<?php echo $map_height; ?>px;margin-top:5px;"></div>
 		<label for="geolocation-public"><?php echo esc_html_e( 'Public', 'geolocation' ); ?></label>
 		<div style="float:right">
 			<input id="geolocation-enabled" name="geolocation-on" type="radio" value="1" />
@@ -191,29 +191,30 @@ function geolocation_old_custom_box() {
  */
 function geolocation_save_postdata( $post_id ) {
 	// Check authorization, permissions, autosave, etc.
-	if ( (!isset($_POST['geolocation_nonce']))  ||
-		( ! wp_verify_nonce( $_POST['geolocation_nonce'], plugin_basename( __FILE__ ) ) ) ||
+	if (
+		! isset( $_POST['geolocation_nonce'] ) ||
+		! wp_verify_nonce( $_POST['geolocation_nonce'], plugin_basename( __FILE__ ) ) ||
 		( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
-		( ( 'page' === $_POST['post_type'] ) && ( ! current_user_can( 'edit_page', $post_id ) ) ) ||
-		( ! current_user_can( 'edit_post', $post_id ) )
+		( isset($_POST['post_type']) && 'page' === $_POST['post_type'] && ! current_user_can( 'edit_page', $post_id ) ) ||
+		! current_user_can( 'edit_post', $post_id )
 	) {
 		return $post_id;
 	}
 
-	$latitude        = clean_coordinate( $_POST['geolocation-latitude'] );
-	$longitude       = clean_coordinate( $_POST['geolocation-longitude'] );
-	$address         = $_POST['geolocation-address'];
-	$address_reverse = $_POST['geolocation-address-reverse'];
+	$latitude        = isset($_POST['geolocation-latitude']) ? clean_coordinate( $_POST['geolocation-latitude'] ) : '';
+	$longitude       = isset($_POST['geolocation-longitude']) ? clean_coordinate( $_POST['geolocation-longitude'] ) : '';
+	$address         = isset($_POST['geolocation-address']) ? $_POST['geolocation-address'] : '';
+	$address_reverse = isset($_POST['geolocation-address-reverse']) ? $_POST['geolocation-address-reverse'] : '';
 
-	if ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) {
+	if ( empty( $latitude ) || empty( $longitude ) ) {
 		// check the featured image for geodata if no data was available in the post already.
 		$post_img_id = get_post_thumbnail_id();
 		if ( 0 !== $post_img_id ) {
 			$orig_img_path = wp_get_original_image_path( $post_img_id, false );
 			if ( false !== $orig_img_path ) {
-				$exif = exif_read_data( $orig_img_path, 0, true );
+				$exif = @exif_read_data( $orig_img_path, 0, true );
 
-				if ( ( isset( $exif['GPS']['GPSLatitude'] ) ) && ( isset( $exif['GPS']['GPSLongitude'] ) ) ) {
+				if ( isset( $exif['GPS']['GPSLatitude'], $exif['GPS']['GPSLongitude'] ) ) {
 					$gps_latitude   = $exif['GPS']['GPSLatitude'];
 					$gps_latitude_g = explode( '/', $gps_latitude[0] );
 					$gps_latitude_m = explode( '/', $gps_latitude[1] );
@@ -236,31 +237,22 @@ function geolocation_save_postdata( $post_id ) {
 		}
 	}
 
-	if ( ( ! empty( $latitude ) ) && ( ! empty( $longitude ) ) ) {
+	if ( ! empty( $latitude ) && ! empty( $longitude ) ) {
 		update_post_meta( $post_id, 'geo_latitude', $latitude );
 		update_post_meta( $post_id, 'geo_longitude', $longitude );
 
-		if ( ( '' === $address ) || ( $address === $address_reverse ) ) {
+		if ( $address === '' || $address === $address_reverse ) {
 			$address = reverse_geocode( $latitude, $longitude );
 		}
-		if ( '' !== $address ) {
+		if ( $address !== '' ) {
 			update_post_meta( $post_id, 'geo_address', $address );
 		}
 
 		$address_reverse = reverse_geocode( $latitude, $longitude );
 		update_post_meta( $post_id, 'geo_address_reverse', $address_reverse );
 
-		if ( $_POST['geolocation-on'] ) {
-			update_post_meta( $post_id, 'geo_enabled', 1 );
-		} else {
-			update_post_meta( $post_id, 'geo_enabled', 0 );
-		}
-
-		if ( $_POST['geolocation-public'] ) {
-			update_post_meta( $post_id, 'geo_public', 1 );
-		} else {
-			update_post_meta( $post_id, 'geo_public', 0 );
-		}
+		update_post_meta( $post_id, 'geo_enabled', !empty($_POST['geolocation-on']) ? 1 : 0 );
+		update_post_meta( $post_id, 'geo_public', !empty($_POST['geolocation-public']) ? 1 : 0 );
 	}
 
 	return $post_id;
@@ -416,16 +408,15 @@ function display_location_post( $content ) {
 	default_settings();
 	$shortcode = get_option( 'geolocation_shortcode' );
 	global $post;
-	$html = '';
-	settype( $html, 'string' );
 	$latitude  = get_post_meta( $post->ID, 'geo_latitude', true );
 	$longitude = get_post_meta( $post->ID, 'geo_longitude', true );
 	$on        = (bool) get_post_meta( $post->ID, 'geo_enabled', true );
 	$public    = (bool) get_post_meta( $post->ID, 'geo_public', true );
 
-	if ( ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) ||
-		( '' === $on || false === $on ) ||
-		( ( '' === $public || false === $public ) && ( ! is_user_logged_in() ) )
+	if (
+		empty( $latitude ) || empty( $longitude ) ||
+		! $on ||
+		( ! $public && ! is_user_logged_in() )
 	) {
 		$content = str_replace( esc_attr( (string) $shortcode ), '', $content );
 		return $content;
@@ -434,7 +425,6 @@ function display_location_post( $content ) {
 	$address = (string) get_post_meta( $post->ID, 'geo_address', true );
 	if ( empty( $address ) ) {
 		$address = reverse_geocode( $latitude, $longitude );
-		// obviously was missing so add to post for future performance improvement.
 		update_post_meta( $post->ID, 'geo_address', $address );
 	}
 
@@ -451,6 +441,8 @@ function display_location_post( $content ) {
 		case 'debug':
 			$html = '<pre> $latitude: ' . $latitude . '<br> $longitude: ' . $longitude . '<br> $address: ' . $address . '<br> $on: ' . (string) $on . '<br> $public: ' . (string) $public . '</pre>';
 			break;
+		default:
+			$html = '';
 	}
 
 	switch ( esc_attr( (string) get_option( 'geolocation_map_position' ) ) ) {
@@ -465,6 +457,8 @@ function display_location_post( $content ) {
 		case 'shortcode':
 			$content = str_replace( esc_attr( (string) $shortcode ), $html, $content );
 			break;
+		default:
+			// do nothing
 	}
 	return $content;
 }
@@ -607,12 +601,12 @@ function reverse_geocode( $latitude, $longitude ) {
  * @return mixed
  */
 function clean_coordinate( $coordinate ) {
-	$pattern = '/^(\-)?(\d{1,3})\.(\d{1,15})/';
+	$pattern = '/^(-)?(\d{1,3})\.(\d{1,15})/';
 	preg_match( $pattern, $coordinate, $matches );
-	if ( null === $matches ) {
+	if ( empty( $matches ) ) {
 		return '';
 	}
-	return isset( $matches[0] ) ? $matches[0] : '';
+	return $matches[0];
 }
 
 /**
