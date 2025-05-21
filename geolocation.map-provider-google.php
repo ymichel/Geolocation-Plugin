@@ -366,17 +366,15 @@ function add_geo_support_google( $posts ) {
 function display_location_page_google( $content ) {
 	global $post;
 	$html = '';
+	settype( $html, 'string' );
 	$script = '';
-	$category = (string) get_post_meta( $post->ID, 'category', true );
+	settype( $script, 'string' );
+	settype( $category, 'string' );
+	$category    = (string) get_post_meta( $post->ID, 'category', true );
 	$category_id = get_cat_ID( $category );
 	$counter     = 0;
 
 	wp_enqueue_script( 'google_maps_api', 'https://maps.googleapis.com/maps/api/js' . get_google_maps_api_key( '?' ) . '&callback=initMap', array(), GEOLOCATION__VERSION, true );
-
-	$geo_shortcode = (string) get_option( 'geolocation_shortcode' );
-	$use_wp_pin = (bool) get_option( 'geolocation_wp_pin' );
-	$width  = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
-	$height = esc_attr( (string) get_option( 'geolocation_map_height_page' ) );
 
 	if ( is_user_logged_in() ) {
 		$pargs = array(
@@ -435,8 +433,30 @@ function display_location_page_google( $content ) {
 		);
 	}
 
-	$script .= '<script type="text/javascript">\nfunction initMap() { }\n<\/script>';
-	$script .= "<script type=\"text/javascript\">\nfunction ready(fn) {\n\tif (document.readyState != 'loading') {\n\t\tfn();\n\t} else {\n\t\tdocument.addEventListener('DOMContentLoaded', fn);\n\t}\n}\nready(() => {\n      var map = new google.maps.Map(\n        document.getElementById('mymap'), {\n          mapTypeId: google.maps.MapTypeId.ROADMAP\n        }\n      );\n\t  var image = \"" . esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ) . '"\n\t  var shadow = new google.maps.MarkerImage("' . esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) ) . '",\n\t  \tnew google.maps.Size(39, 23),\n\t  \tnew google.maps.Point(0, 0),\n\t  \tnew google.maps.Point(12, 25)\n\t  );\n      var bounds = new google.maps.LatLngBounds();';
+	$script = $script . '<script type="text/javascript">
+	function initMap() { }
+</script>';
+	$script = $script . "<script type=\"text/javascript\">
+	function ready(fn) {
+		if (document.readyState != 'loading') {
+			fn();
+		} else {
+			document.addEventListener('DOMContentLoaded', fn);
+		}
+	}
+	ready(() => {
+      var map = new google.maps.Map(
+        document.getElementById('mymap'), {
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      );
+	  var image = \"" . esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ) . '"
+	  var shadow = new google.maps.MarkerImage("' . esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) . '",
+	  		new google.maps.Size(39, 23),
+	  		new google.maps.Point(0, 0),
+	  		new google.maps.Point(12, 25)
+	  );
+      var bounds = new google.maps.LatLngBounds();';
 
 	$post_query = new WP_Query( $pargs );
 	while ( $post_query->have_posts() ) {
@@ -445,21 +465,35 @@ function display_location_page_google( $content ) {
 		$post_id        = (int) get_the_ID();
 		$post_latitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
 		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
-		$script .= '\n      marker = new google.maps.Marker({\n            position: new google.maps.LatLng(' . $post_latitude . ',' . $post_longitude . '),';
-		if ( $use_wp_pin ) {
-			$script .= '\n\t\ticon: image,\n\t\tshadow: shadow,';
+		$script         = $script . '
+      marker = new google.maps.Marker({
+            position: new google.maps.LatLng(' . $post_latitude . ',' . $post_longitude . '),';
+		if ( (bool) get_option( 'geolocation_wp_pin' ) ) {
+			$script = $script . '
+			icon: image,
+				shadow: shadow,';
 		}
-		$script .= '\n\t\tmap: map,\n\t\turl: "' . esc_attr( (string) get_permalink( $post_id ) ) . '",\n\t\ttitle: "' . $post_title . '"\n      });\n      bounds.extend(marker.position);';
+			$script = $script . '
+			map: map,
+			url: "' . esc_attr( (string) get_permalink( $post_id ) ) . '",
+			title: "' . $post_title . '"
+      });
+      bounds.extend(marker.position);';
 		++$counter;
 	}
 	wp_reset_postdata();
-	$script .= '\n       map.fitBounds(bounds);\n\t});\n<\/script>';
+	$script = $script . '
+       map.fitBounds(bounds);
+	});
+</script>';
 
 	if ( $counter > 0 ) {
-		$html .= '<div id="mymap" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
-		$html .= $script;
+		$width  = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
+		$height = esc_attr( (string) get_option( 'geolocation_map_height_page' ) );
+		$html   = $html . '<div id="mymap" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+		$html   = $html . $script;
 	}
-	$content = str_replace( $geo_shortcode, $html, $content );
+	$content = str_replace( (string) get_option( 'geolocation_shortcode' ), $html, $content );
 	return $content;
 }
 

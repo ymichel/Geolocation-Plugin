@@ -319,18 +319,16 @@ function add_geo_support_osm( $posts ) {
 function display_location_page_osm( $content ) {
 	global $post;
 	$html = '';
+	settype( $html, 'string' );
 	$script = '';
-	$category = (string) get_post_meta( $post->ID, 'category', true );
+	settype( $script, 'string' );
+	settype( $category, 'string' );
+	$category    = (string) get_post_meta( $post->ID, 'category', true );
 	$category_id = get_cat_ID( $category );
-	$counter = 0;
+	$counter     = 0;
 
 	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
 	wp_enqueue_script( 'osm_leaflet_js', get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, true );
-
-	$geo_shortcode = (string) get_option( 'geolocation_shortcode' );
-	$map_width = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
-	$map_height = esc_attr( (string) get_option( 'geolocation_map_height_page' ) );
-	$use_wp_pin = (bool) get_option( 'geolocation_wp_pin' );
 
 	if ( is_user_logged_in() ) {
 		$pargs  = array(
@@ -389,41 +387,40 @@ function display_location_page_osm( $content ) {
 		);
 	}
 	$zoom   = 1;
-	$tiles_url = esc_js( get_osm_tiles_url() );
-	$img_url = esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) );
-	$shadow_url = esc_js( esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) );
-	$script .= "<script type=\"text/javascript\">
+	$script = $script . "<script type=\"text/javascript\">
 	function ready(fn) {
-		if (document.readyState !== 'loading') {
-			fn();
-		} else {
-			document.addEventListener('DOMContentLoaded', fn);
+			if (document.readyState != 'loading') {
+				fn();
+			} else {
+				document.addEventListener('DOMContentLoaded', fn);
+			}
 		}
-	}
-	ready(() => {
-		const mymap = L.map('mapid').setView([51.505, -0.09], $zoom);
-		const myMapBounds = [];
-		let lat_lng = [];
-		L.tileLayer('$tiles_url', {
-			attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors'
-		}).addTo(mymap);
-		const image = '$img_url';
-		const shadow = '$shadow_url';
-		const iconOptions = {
+		ready(() => {
+        var mymap = L.map('mapid').setView([51.505, -0.09], " . $zoom . ");
+        var myMapBounds = [];
+        var lat_lng = [];
+	L.tileLayer('" . esc_js( get_osm_tiles_url() ) . "', {
+        	attribution: '&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors' 
+        }).addTo(mymap);
+        var image = '" . esc_js( esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) ) . "';
+		var shadow = '" . esc_js( esc_url( plugins_url( 'img/wp_pin_shadow.png', __FILE__ ) ) ) . "';
+		var iconOptions = {
 			iconUrl: image,
 			shadowUrl: shadow,
-			iconSize: [25, 34],
-			shadowSize: [39, 23],
-			iconAnchor: [5, 34],
-			shadowAnchor: [3, 25],
-			popupAnchor: [12, -30]
+            iconSize:     [25, 34],
+            shadowSize:   [39, 23],
+            iconAnchor:   [5, 34], 
+            shadowAnchor: [3, 25], 
+            popupAnchor:  [12, -30]
 		};
-		const customIcon = L.icon(iconOptions);
-		const markerOptions = {";
-	if ( $use_wp_pin ) {
-		$script .= 'icon: customIcon,';
+	var customIcon = L.icon(iconOptions);
+	var markerOptions = {";
+	if ( (bool) get_option( 'geolocation_wp_pin' ) ) {
+		$script = $script . '                      icon: customIcon,';
 	}
-	$script .= 'clickable: false, draggable: false};';
+	$script = $script . '	       clickable: false,
+	       draggable: false
+     	    }';
 
 	$post_query = new WP_Query( $pargs );
 	while ( $post_query->have_posts() ) {
@@ -432,20 +429,25 @@ function display_location_page_osm( $content ) {
 		$post_id        = (int) get_the_ID();
 		$post_latitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
 		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
-			$permalink      = esc_attr( (string) get_permalink( $post_id ) );
-		$script .= "\nlat_lng = [" . $post_latitude . "," . $post_longitude . "];
-		L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"$permalink\">' + '$post_title' + '</a>');
-		myMapBounds.push(lat_lng);";
+		$script         = $script . '
+        lat_lng = [' . $post_latitude . ',' . $post_longitude . "];
+        L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"" . esc_attr( (string) get_permalink( $post_id ) ) . '">' . $post_title . "</a>');
+        myMapBounds.push(lat_lng);";
 		++$counter;
 	}
 	wp_reset_postdata();
-	$script .= '\nmymap.fitBounds(myMapBounds);\n});\n<\/script>';
+	$script = $script . '
+        mymap.fitBounds(myMapBounds);
+		});
+</script>';
 
 	if ( $counter > 0 ) {
-		$html .= '<div id="mapid" class="geolocation-map" style="width:' . $map_width . 'px;height:' . $map_height . 'px;"></div>';
-		$html .= $script;
+		$width  = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
+		$height = esc_attr( (string) get_option( 'geolocation_map_height_page' ) );
+		$html   = $html . '<div id="mapid" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+		$html   = $html . $script;
 	}
-	$content = str_replace( $geo_shortcode, $html, $content );
+	$content = str_replace( (string) get_option( 'geolocation_shortcode' ), $html, $content );
 	return $content;
 }
 

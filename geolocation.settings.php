@@ -88,7 +88,7 @@ function unregister_settings() {
  * @return void
  */
 function default_setting( $name, $value ) {
-	if ( get_option( $name ) === false ) {
+	if ( ! get_option( $name ) ) {
 		update_option( $name, $value );
 	}
 }
