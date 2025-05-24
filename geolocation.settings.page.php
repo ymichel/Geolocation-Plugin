@@ -207,7 +207,7 @@ function geolocation_settings_page() {
 		<script types="text/javascript">
 
 			var zoomlevel;
-			var provider;
+			var provider = '<?php echo esc_js( (string) get_option( 'geolocation_provider' ) ); ?>';
 
 			var lat_lng = [52.5162778, 13.3733267];
 			var osm_map = {};
@@ -235,10 +235,10 @@ function geolocation_settings_page() {
 
 			function setMarkerOptions() {
 				//console.log("setMarkerOptions");
-				googleCenter = new google.maps.LatLng(lat_lng[0], lat_lng[1]);
 				if (document.getElementById("geolocation_wp_pin").checked) {
 					switch (provider) {
 						case 'google':
+							googleCenter = new google.maps.LatLng(lat_lng[0], lat_lng[1]);
 							googleOptions = {
 								zoom: zoomlevel,
 								center: googleCenter,
