@@ -57,9 +57,6 @@ function geolocation_settings_page() {
 			margin: 0 5px 0 2px;
 		}
 	</style>
-	<div class="notice notice-info">
-		<p><?php _e( 'Thank you for using the geolocation plugin. I would appreciate your <a href="https://wordpress.org/support/plugin/geolocation/reviews/#new-post" target="_blank">feedback</a>, and I am also open to <a href="https://wordpress.org/support/plugin/geolocation/#new-topic" target="_blank">suggestions</a>.', 'geolocation' ); ?></p>
-	</div>
 	<div class="wrap">
 		<h2><?php esc_html_e( 'Geolocation Plugin Settings', 'geolocation' ); ?></h2>
 	</div>
@@ -116,7 +113,7 @@ function geolocation_settings_page() {
 					<input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16" <?php is_value( 'geolocation_default_zoom', '16' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street"><?php esc_html_e( 'Street', 'geolocation' ); ?></label>
 					<input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18" <?php is_value( 'geolocation_default_zoom', '18' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php esc_html_e( 'Block', 'geolocation' ); ?></label>
 					<br />
-					<?php echo get_geo_div(); ?>
+					<?php get_geo_div(); ?>
 				</td>
 			</tr>
 			<tr valign="top">

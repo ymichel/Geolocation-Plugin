@@ -313,7 +313,7 @@ function get_geo_div( $id = null, $name = 'me' ) {
  */
 function add_geo_div() {
 	if ( ( esc_attr( (string) get_option( 'geolocation_map_display' ) ) !== 'plain' ) ) {
-		echo get_geo_div();
+		return get_geo_div();
 	}
 }
 
