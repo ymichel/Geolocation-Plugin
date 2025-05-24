@@ -5,7 +5,7 @@ License: GPL_2
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 6.8
-Stable tag: 1.9.6
+Stable tag: 1.9.7
 Lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
 == Description ==
