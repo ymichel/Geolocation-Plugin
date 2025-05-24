@@ -29,7 +29,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.8.2' );
+define( 'GEOLOCATION__VERSION', '1.9.7' );
 
 add_action( 'upgrader_process_complete', 'plugin_upgrade_completed', 10, 2 );
 add_action( 'plugins_loaded', 'languages_init' );
@@ -191,10 +191,10 @@ function geolocation_old_custom_box() {
  */
 function geolocation_save_postdata( $post_id ) {
 	// Check authorization, permissions, autosave, etc.
-	if ( (!isset($_POST['geolocation_nonce']))  ||
-		( ! wp_verify_nonce( $_POST['geolocation_nonce'], plugin_basename( __FILE__ ) ) ) ||
+	if ( (!isset(wp_unslash($_POST['geolocation_nonce'])))  ||
+		( ! wp_verify_nonce(wp_unslash($_POST['geolocation_nonce']), plugin_basename( __FILE__ ) ) ) ||
 		( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ||
-		( ( 'page' === $_POST['post_type'] ) && ( ! current_user_can( 'edit_page', $post_id ) ) ) ||
+		( (  isset($_POST['post_type']) && 'page' === $_POST['post_type'] ) && ( ! current_user_can( 'edit_page', $post_id ) ) ) ||
 		( ! current_user_can( 'edit_post', $post_id ) )
 	) {
 		return $post_id;
