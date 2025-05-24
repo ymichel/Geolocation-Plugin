@@ -58,7 +58,7 @@ function geolocation_settings_page() {
 		}
 	</style>
 	<div class="notice notice-info">
-		<p><?php esc_html_e( 'Thank you for using the geolocation plugin. I would appreciate your <a href="https://wordpress.org/support/plugin/geolocation/reviews/#new-post" target="_blank">feedback</a>, and I am also open to <a href="https://wordpress.org/support/plugin/geolocation/#new-topic" target="_blank">suggestions</a>.', 'geolocation' ); ?></p>
+		<p><?php _e( 'Thank you for using the geolocation plugin. I would appreciate your <a href="https://wordpress.org/support/plugin/geolocation/reviews/#new-post" target="_blank">feedback</a>, and I am also open to <a href="https://wordpress.org/support/plugin/geolocation/#new-topic" target="_blank">suggestions</a>.', 'geolocation' ); ?></p>
 	</div>
 	<div class="wrap">
 		<h2><?php esc_html_e( 'Geolocation Plugin Settings', 'geolocation' ); ?></h2>
