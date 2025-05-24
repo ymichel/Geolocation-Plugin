@@ -6,7 +6,6 @@
 
 .distignore
 .gitignore
-.scrutinizer.yml
 .gitattributes
 README.md
 CHANGELOG.md
