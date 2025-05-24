@@ -48,6 +48,9 @@ If you struggle while installing it or have feature requests, please feel free t
 
 == Changelog ==
 
+= 1.9.7 =
+* fixing javascript calls and settings initialization
+
 = 1.9.6 =
 * enhancing address attribute options for OSM display of locations.
 * fixing nonce array verify in case not yet filled.
