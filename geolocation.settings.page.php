@@ -108,13 +108,13 @@ function geolocation_settings_page() {
 			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'Default Zoom Level', 'geolocation' ); ?></th>
 				<td class="zoom">
-					<input type="radio" id="geolocation_default_zoom_globe" name="geolocation_default_zoom" value="1" <?php is_value( 'geolocation_default_zoom', '1' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_globe"><?php esc_html_e( 'Globe', 'geolocation' ); ?></label>
+					<input type="radio" id="geolocation_default_zoom_globe" name="geolocation_default_zoom" value="1" <?php is_value( 'geolocation_default_zoom', '1' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_globe"><?php esc_html_e( 'Globe', 'geolocation' ); ?></label>
 
-					<input type="radio" id="geolocation_default_zoom_country" name="geolocation_default_zoom" value="3" <?php is_value( 'geolocation_default_zoom', '3' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_country"><?php esc_html_e( 'Country', 'geolocation' ); ?></label>
-					<input type="radio" id="geolocation_default_zoom_state" name="geolocation_default_zoom" value="6" <?php is_value( 'geolocation_default_zoom', '6' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_state"><?php esc_html_e( 'State', 'geolocation' ); ?></label>
-					<input type="radio" id="geolocation_default_zoom_city" name="geolocation_default_zoom" value="9" <?php is_value( 'geolocation_default_zoom', '9' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_city"><?php esc_html_e( 'City', 'geolocation' ); ?></label>
-					<input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16" <?php is_value( 'geolocation_default_zoom', '16' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street"><?php esc_html_e( 'Street', 'geolocation' ); ?></label>
-					<input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18" <?php is_value( 'geolocation_default_zoom', '18' ); ?> onclick="javascipt:swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php esc_html_e( 'Block', 'geolocation' ); ?></label>
+					<input type="radio" id="geolocation_default_zoom_country" name="geolocation_default_zoom" value="3" <?php is_value( 'geolocation_default_zoom', '3' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_country"><?php esc_html_e( 'Country', 'geolocation' ); ?></label>
+					<input type="radio" id="geolocation_default_zoom_state" name="geolocation_default_zoom" value="6" <?php is_value( 'geolocation_default_zoom', '6' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_state"><?php esc_html_e( 'State', 'geolocation' ); ?></label>
+					<input type="radio" id="geolocation_default_zoom_city" name="geolocation_default_zoom" value="9" <?php is_value( 'geolocation_default_zoom', '9' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_city"><?php esc_html_e( 'City', 'geolocation' ); ?></label>
+					<input type="radio" id="geolocation_default_zoom_street" name="geolocation_default_zoom" value="16" <?php is_value( 'geolocation_default_zoom', '16' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_street"><?php esc_html_e( 'Street', 'geolocation' ); ?></label>
+					<input type="radio" id="geolocation_default_zoom_block" name="geolocation_default_zoom" value="18" <?php is_value( 'geolocation_default_zoom', '18' ); ?> onclick="swap_zoom_sample(this.id);"><label for="geolocation_default_zoom_block"><?php esc_html_e( 'Block', 'geolocation' ); ?></label>
 					<br />
 					<?php echo get_geo_div(); ?>
 				</td>
@@ -122,7 +122,7 @@ function geolocation_settings_page() {
 			<tr valign="top">
 				<th scope="row"></th>
 				<td class="position">
-					<input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked( 'geolocation_wp_pin' ); ?> onclick="javascript:updatePin();"><label for="geolocation_wp_pin"><?php esc_html_e( 'Show your support for WordPress by using the WordPress map pin.', 'geolocation' ); ?></label>
+					<input type="checkbox" id="geolocation_wp_pin" name="geolocation_wp_pin" value="1" <?php is_checked( 'geolocation_wp_pin' ); ?> onclick="updatePin();"><label for="geolocation_wp_pin"><?php esc_html_e( 'Show your support for WordPress by using the WordPress map pin.', 'geolocation' ); ?></label>
 				</td>
 			</tr>
 			<tr valign="top">
