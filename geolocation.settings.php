@@ -36,25 +36,25 @@ function get_site_lang() {
  * @return void
  */
 function register_settings() {
-	register_setting( 'geolocation-settings-group', 'geolocation_map_width' );
-	register_setting( 'geolocation-settings-group', 'geolocation_map_height' );
-	register_setting( 'geolocation-settings-group', 'geolocation_default_zoom' );
-	register_setting( 'geolocation-settings-group', 'geolocation_map_position' );
-	register_setting( 'geolocation-settings-group', 'geolocation_map_display' );
-	register_setting( 'geolocation-settings-group', 'geolocation_wp_pin' );
-	register_setting( 'geolocation-settings-group', 'geolocation_google_maps_api_key' );
-	register_setting( 'geolocation-settings-group', 'geolocation_updateAddresses' );
-	register_setting( 'geolocation-settings-group', 'geolocation_map_width_page' );
-	register_setting( 'geolocation-settings-group', 'geolocation_map_height_page' );
-	register_setting( 'geolocation-settings-group', 'geolocation_provider' );
-	register_setting( 'geolocation-settings-group', 'geolocation_shortcode' );
-	register_setting( 'geolocation-settings-group', 'geolocation_osm_use_proxy' );
-	register_setting( 'geolocation-settings-group', 'geolocation_osm_tiles_url' );
-	register_setting( 'geolocation-settings-group', 'geolocation_osm_nominatim_url' );
+	register_setting( 'geolocation-settings-group', 'geolocation_map_width', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field'));
+	register_setting( 'geolocation-settings-group', 'geolocation_map_height', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_default_zoom', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_map_position', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_map_display', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_wp_pin', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_google_maps_api_key', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_updateAddresses', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_map_width_page', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_map_height_page', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_provider', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_shortcode', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_osm_use_proxy', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_osm_tiles_url', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
+	register_setting( 'geolocation-settings-group', 'geolocation_osm_nominatim_url', array( 'type'  => 'string', 'sanitize_callback' => 'sanitize_text_field') );
 	unregister_setting( 'geolocation-settings-group', 'geolocation_osm_leaflet_js_url' );
 	delete_option( 'geolocation_osm_leaflet_js_url' );
-	unregister_setting( 'geolocation-settings-group', 'geolocation_osm_leaflet_css_url' );
-	delete_option( 'geolocation_osm_leaflet_css_url' );
+	unregister_setting( 'geolocation-settings-group', 'geolocation_osm_leaflet_css_url');
+	delete_option( 'geolocation_osm_leaflet_css_url');
 }
 
 /**
