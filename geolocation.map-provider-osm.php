@@ -459,13 +459,21 @@ function display_location_page_osm( $content ) {
  * @return mixed
  */
 function pull_json_osm( $latitude, $longitude ) {
-	$json = get_osm_nominatim_url() . '/reverse?format=json&accept-language=' . get_site_lang() . '&lat=' . $latitude . '&lon=' . $longitude;
-	$ch   = curl_init( $json );
-	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );
-	$jsonfile = curl_exec( $ch );
-	curl_close( $ch );
-	$decoded = json_decode( (string) $jsonfile, true );
+	$url = get_osm_nominatim_url() . '/reverse';
+	$curl_post = array(
+		'format'          => 'json',
+		'accept-language' => get_site_lang(),
+		'lat'             => $latitude,
+		'lon'             => $longitude,
+	);
+	$result = wp_remote_post( $url, array(
+		'body'    => $curl_post,
+		'timeout' => 15,
+		'headers' => array(
+			'User-Agent' => $_SERVER['HTTP_USER_AGENT'],
+		),
+	) );
+	$decoded = json_decode( wp_remote_retrieve_body( $result ), true );
 	return $decoded;
 }
 
