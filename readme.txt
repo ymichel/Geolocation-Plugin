@@ -1,7 +1,7 @@
 === Geolocation ===
 Contributors: frsh, mdawaffe, automattic, alexterz, ymichel
 Tags: map, GPS, travel, location, journey
-License: GPL2
+License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 6.8

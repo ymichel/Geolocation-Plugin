@@ -7,7 +7,7 @@
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
- * License: GPL2
+ * License: GPLv2+
  */
 
 /*
