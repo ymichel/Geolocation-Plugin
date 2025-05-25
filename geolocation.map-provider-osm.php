@@ -459,22 +459,26 @@ function display_location_page_osm( $content ) {
  * @return mixed
  */
 function pull_json_osm( $latitude, $longitude ) {
-	$url = get_osm_nominatim_url() . '/reverse';
-	$curl_post = array(
-		'format'          => 'json',
-		'accept-language' => get_site_lang(),
-		'lat'             => $latitude,
-		'lon'             => $longitude,
-	);
-	$result = wp_remote_post( $url, array(
-		'body'    => $curl_post,
-		'timeout' => 15,
-		'headers' => array(
-			'User-Agent' => $_SERVER['HTTP_USER_AGENT'],
-		),
-	) );
-	$decoded = json_decode( wp_remote_retrieve_body( $result ), true );
-	return $decoded;
+    $url = get_osm_nominatim_url() . '/reverse';
+    $args = array(
+        'format'          => 'json',
+        'accept-language' => get_site_lang(),
+        'lat'             => $latitude,
+        'lon'             => $longitude,
+    );
+
+    // Build query string for GET request
+    $request_url = add_query_arg( $args, $url );
+
+    $result = wp_remote_get( $request_url, array(
+        'timeout' => 15,
+        'headers' => array(
+            'User-Agent' => $_SERVER['HTTP_USER_AGENT'],
+        ),
+    ) );
+
+    $decoded = json_decode( wp_remote_retrieve_body( $result ), true );
+    return $decoded;
 }
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
