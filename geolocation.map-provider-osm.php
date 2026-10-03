@@ -6,7 +6,7 @@
  *
  * @category Components
  * @package geolocation
- * @author Yann Michel <geolocation@yann-michel.de>
+ * @author Yann Michel <yann@michelpunkt.de>
  * @license GPL2
  */
 /**
@@ -57,10 +57,11 @@ function admin_head_osm() {
 			};
 			var myMarker = {};
 
-			if (isPublic === '0') {
-				document.getElementById('geolocation-public').removeAttribute('checked');
+			// Only show "public" as checked if it is really stored as 1 (missing meta means not public).
+			if (isPublic === '1') {
+				document.getElementById('geolocation-public').checked = true;
 			} else {
-				document.getElementById('geolocation-public').setAttribute('checked', true);
+				document.getElementById('geolocation-public').checked = false;
 			}
 
 			if (isGeoEnabled === '0') {
@@ -330,62 +331,7 @@ function display_location_page_osm( $content ) {
 	wp_enqueue_style( 'osm_leaflet_css', get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
 	wp_enqueue_script( 'osm_leaflet_js', get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, true );
 
-	if ( is_user_logged_in() ) {
-		$pargs  = array(
-			'post_type'      => 'post',
-			'cat'            => $category_id,
-			'posts_per_page' => -1,
-			'post_status'    => 'publish',
-			'meta_query'     => array(
-				'relation' => 'AND',
-				array(
-					'key'     => 'geo_latitude',
-					'value'   => '0',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => 'geo_longitude',
-					'value'   => '0',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => 'geo_enabled',
-					'value'   => '1',
-					'compare' => '=',
-				),
-			),
-		);
-	} else {
-		$pargs  = array(
-			'post_type'      => 'post',
-			'cat'            => $category_id,
-			'posts_per_page' => -1,
-			'post_status'    => 'publish',
-			'meta_query'     => array(
-				'relation' => 'AND',
-				array(
-					'key'     => 'geo_latitude',
-					'value'   => '0',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => 'geo_longitude',
-					'value'   => '0',
-					'compare' => '!=',
-				),
-				array(
-					'key'     => 'geo_enabled',
-					'value'   => '1',
-					'compare' => '=',
-				),
-				array(
-					'key'     => 'geo_public',
-					'value'   => '1',
-					'compare' => '=',
-				),
-			),
-		);
-	}
+	$pargs = geolocation_page_query_args( $category_id );
 	$zoom   = 1;
 	$script = $script . "<script type=\"text/javascript\">
 	function ready(fn) {
@@ -422,16 +368,21 @@ function display_location_page_osm( $content ) {
 	       draggable: false
      	    }';
 
+	$candidates = 0;
 	$post_query = new WP_Query( $pargs );
 	while ( $post_query->have_posts() ) {
 		$post_query->the_post();
+		$post_id = (int) get_the_ID();
+		++$candidates;
+		if ( ! geolocation_post_is_visible( $post_id ) ) {
+			continue;
+		}
 		$post_title     = get_the_title();
-		$post_id        = (int) get_the_ID();
-		$post_latitude  = (string) get_post_meta( $post_id, 'geo_latitude', true );
-		$post_longitude = (string) get_post_meta( $post_id, 'geo_longitude', true );
+		$post_latitude  = geolocation_js_coordinate( get_post_meta( $post_id, 'geo_latitude', true ) );
+		$post_longitude = geolocation_js_coordinate( get_post_meta( $post_id, 'geo_longitude', true ) );
 		$script         = $script . '
         lat_lng = [' . $post_latitude . ',' . $post_longitude . "];
-        L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"" . esc_attr( (string) get_permalink( $post_id ) ) . '">' . $post_title . "</a>');
+        L.marker(lat_lng, markerOptions).addTo(mymap).bindPopup('<a href=\"" . esc_js( esc_url( (string) get_permalink( $post_id ) ) ) . '">' . esc_js( $post_title ) . "</a>');
         myMapBounds.push(lat_lng);";
 		++$counter;
 	}
@@ -447,7 +398,9 @@ function display_location_page_osm( $content ) {
 		$html   = $html . '<div id="mapid" class="geolocation-map" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
 		$html   = $html . $script;
 	}
-	$content = str_replace( (string) get_option( 'geolocation_shortcode' ), $html, $content );
+	$shortcode_found = ( false !== strpos( $content, (string) get_option( 'geolocation_shortcode' ) ) );
+	$content         = str_replace( (string) get_option( 'geolocation_shortcode' ), $html, $content );
+	$content         = $content . geolocation_page_debug( $category, $category_id, $candidates, $counter, $shortcode_found );
 	return $content;
 }
 
