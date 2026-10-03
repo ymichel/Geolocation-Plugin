@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.9.7
+ * Version: 1.9.9
  * Author: Yann Michel
  * Author URI: https://www.yann-michel.de/geolocation
  * Text Domain: geolocation
@@ -12,7 +12,7 @@
 
 /*
 	Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-	2018-2023 Yann Michel (email : geolocation@yann-michel.de)
+	2018-2026 Yann Michel (email : yann@michelpunkt.de)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as
@@ -29,7 +29,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.8.2' );
+define( 'GEOLOCATION__VERSION', '1.9.9' );
 
 add_action( 'upgrader_process_complete', 'plugin_upgrade_completed', 10, 2 );
 add_action( 'plugins_loaded', 'languages_init' );
@@ -250,13 +250,13 @@ function geolocation_save_postdata( $post_id ) {
 		$address_reverse = reverse_geocode( $latitude, $longitude );
 		update_post_meta( $post_id, 'geo_address_reverse', $address_reverse );
 
-		if ( $_POST['geolocation-on'] ) {
+		if ( ! empty( $_POST['geolocation-on'] ) ) {
 			update_post_meta( $post_id, 'geo_enabled', 1 );
 		} else {
 			update_post_meta( $post_id, 'geo_enabled', 0 );
 		}
 
-		if ( $_POST['geolocation-public'] ) {
+		if ( ! empty( $_POST['geolocation-public'] ) ) {
 			update_post_meta( $post_id, 'geo_public', 1 );
 		} else {
 			update_post_meta( $post_id, 'geo_public', 0 );
@@ -373,6 +373,98 @@ function geo_has_shortcode( $content ) {
 	} else {
 		return true;
 	}
+}
+
+/**
+ * Check if the geo data of a post may be shown to the current visitor.
+ *
+ * Uses the same rules as the single post view (display_location_post):
+ * the stored flags are interpreted as booleans and not compared as strings.
+ *
+ * @param int $post_id The id of the post to check.
+ * @return boolean
+ */
+function geolocation_post_is_visible( $post_id ) {
+	$latitude  = get_post_meta( $post_id, 'geo_latitude', true );
+	$longitude = get_post_meta( $post_id, 'geo_longitude', true );
+	$on        = (bool) get_post_meta( $post_id, 'geo_enabled', true );
+	$public    = (bool) get_post_meta( $post_id, 'geo_public', true );
+
+	if ( empty( $latitude ) || empty( $longitude ) || ! is_numeric( $latitude ) || ! is_numeric( $longitude ) ) {
+		return false;
+	}
+	if ( ! $on ) {
+		return false;
+	}
+	if ( ! $public && ! is_user_logged_in() ) {
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Build the query arguments for the overview map of a page.
+ *
+ * Only posts having coordinates are selected here. Whether a post is shown
+ * is decided afterwards by geolocation_post_is_visible().
+ *
+ * @param int $category_id The id of the category to filter for (0 = all).
+ * @return array
+ */
+function geolocation_page_query_args( $category_id ) {
+	return array(
+		'post_type'      => 'post',
+		'cat'            => $category_id,
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'no_found_rows'  => true,
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'geo_latitude',
+				'compare' => 'EXISTS',
+			),
+			array(
+				'key'     => 'geo_longitude',
+				'compare' => 'EXISTS',
+			),
+		),
+	);
+}
+
+/**
+ * Format a (validated) coordinate for the use inside JavaScript.
+ *
+ * @param mixed $coordinate The coordinate as stored.
+ * @return string
+ */
+function geolocation_js_coordinate( $coordinate ) {
+	return number_format( (float) $coordinate, 7, '.', '' );
+}
+
+/**
+ * Diagnostic output for overview pages, only shown with ?geodebug=1 in the URL.
+ *
+ * @param string $category The category name taken from the custom field.
+ * @param int    $category_id The resolved category id.
+ * @param int    $candidates Number of posts having coordinates.
+ * @param int    $shown Number of posts finally put on the map.
+ * @param bool   $shortcode_found Whether the shortcode was found in the page content.
+ * @return string
+ */
+function geolocation_page_debug( $category, $category_id, $candidates, $shown, $shortcode_found ) {
+	if ( ! isset( $_GET['geodebug'] ) ) {
+		return '';
+	}
+	$info = array(
+		'logged_in'       => is_user_logged_in(),
+		'category'        => $category,
+		'category_id'     => (int) $category_id,
+		'shortcode_found' => (bool) $shortcode_found,
+		'candidates'      => (int) $candidates,
+		'shown'           => (int) $shown,
+	);
+	return '<pre class="geolocation-debug">GEODEBUG ' . esc_html( wp_json_encode( $info ) ) . '</pre>';
 }
 
 /**
