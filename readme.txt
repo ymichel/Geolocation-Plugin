@@ -7,7 +7,7 @@ Requires PHP: 7.3
 Tested up to: 7.1
 Stable tag: 1.10.2
 
-Lightweight display the location information of your post in a map (GDPR compliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
+Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
 == Description ==
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page.
