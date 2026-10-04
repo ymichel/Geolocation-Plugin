@@ -1,5 +1,5 @@
 === Geolocation ===
-Contributors: frsh, mdawaffe, automattic, alexterz, ymichel
+Contributors: ymichel, frsh, mdawaffe, automattic, alexterz
 Tags: map, GPS, travel, location, journey
 License: GPLv2+
 Requires at least: 6.0
@@ -10,6 +10,8 @@ Stable tag: 1.10.2
 Lightweight display the location information of your post in a map (GDPR compliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
 == Description ==
+Maintained by Yann Michel since 2017.
+
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page.
 
 Previously, in all WordPress mobile applications such as WordPress for iPhone/iPad, WordPress for Android this was directly available by activating the gps functionality. Unfortunately, the WP-application developers decided to deactivate the feature of storing GPS data in the app but I am hoping for its return.
