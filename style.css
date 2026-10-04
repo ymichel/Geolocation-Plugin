@@ -2,26 +2,35 @@
 .geolocation-link { color: #333; margin: 0; }
 .geolocation-link:visited { color: #333; margin: 0; }
 */
+
 .geolocation-plain {
     margin: 0;
-    font-size: .8em;
+    font-size: 0.8em;
 }
 
-.geolocation-icon {
-    border: none;
-    margin: 0 5px 0 0;
-}
-
-#map {
+.geolocation-map {
     background: #fff;
-    border: solid 1px #999;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    padding: 20px;
-    visibility: hidden;
+    border: 1px solid #999;
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
-#mapwrap {
+/* The hover popup map (footer div); shown/hidden via JS. */
+#map {
     padding: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-height: 80vh;
+    visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    #map {
+        padding: 10px;
+    }
 }

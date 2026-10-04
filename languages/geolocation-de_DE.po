@@ -5,6 +5,12 @@
 msgid "Addresses have been updated!"
 msgstr "Adressen wurden aktualisiert."
 
+msgid "Addresses are being updated in the background."
+msgstr "Adressen werden im Hintergrund aktualisiert."
+
+msgid "Remove location"
+msgstr "Ort entfernen"
+
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:63
 msgid "After the post."
 msgstr "Nach dem Artikel."

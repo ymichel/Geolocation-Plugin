@@ -2,7 +2,11 @@
 /.git
 /.github
 /node_modules
-/selenium
+/.claude
+/vendor
+/tests
+/js/leaflet.js.map
+.phpunit.result.cache
 
 .distignore
 .gitignore
@@ -12,3 +16,4 @@ CHANGELOG.md
 composer.json
 phpcs.xml
 .phpcs.xml.dist
+phpunit.xml.dist
