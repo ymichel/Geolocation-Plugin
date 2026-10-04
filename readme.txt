@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 
 Lightweight display the location information of your post in a map (GDPR compliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
@@ -27,7 +27,7 @@ Furthermore, there is the option to use the tag [geolocation] also on a page in 
 
 By default, this plugin uses Open-Streetmap but as an alternative (and backwards-compatibility) google maps can also be used. However, one needs to have a Google Maps API key to use this plugin with google maps. You may obtain a key via Google Cloud Platform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
-If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://wordpress.org/support/plugin/geolocation/ "support request") anytime. I am more than happy to help you. Also if you would want to give a [review](https://wordpress.org/support/plugin/geolocation/reviews/ "review") if you are happy with the plugin, I would appreciate the feedback.
+If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://github.com/ymichel/Geolocation-Plugin/issues "support request") anytime. I am more than happy to help you. Also if you would want to give a [review](https://wordpress.org/support/plugin/geolocation/reviews/ "review") if you are happy with the plugin, I would appreciate the feedback.
 
 == Installation ==
 
@@ -48,6 +48,9 @@ If you struggle while installing it or have feature requests, please feel free t
 6. Viewing all posts providing location information
 
 == Changelog ==
+
+= 1.10.2 =
+* the support links now point to the issues of the plugin's GitHub repository.
 
 = 1.10.1 =
 * the author link now points to the plugin's GitHub repository.
