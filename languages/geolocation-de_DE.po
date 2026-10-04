@@ -80,8 +80,8 @@ msgid "https://wordpress.org/extend/plugins/geolocation/"
 msgstr "https://wordpress.org/extend/plugins/geolocation/"
 
 #: Author URI of the plugin
-msgid "https://www.yann-michel.de/geolocation"
-msgstr "https://www.yann-michel.de/geolocation"
+msgid "https://github.com/ymichel/Geolocation-Plugin/"
+msgstr "https://github.com/ymichel/Geolocation-Plugin/"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:141
 msgid "Leaflet CSS"

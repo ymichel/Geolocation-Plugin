@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 
 Lightweight display the location information of your post in a map (GDPR compliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
@@ -48,6 +48,9 @@ If you struggle while installing it or have feature requests, please feel free t
 6. Viewing all posts providing location information
 
 == Changelog ==
+
+= 1.10.1 =
+* the author link now points to the plugin's GitHub repository.
 
 = 1.10.0 =
 * new: a location can be removed from a post in the editor.
