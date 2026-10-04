@@ -50,6 +50,7 @@ function geolocation_get_settings_definition() {
 		'geolocation_provider'            => array( 'string', 'geolocation_sanitize_provider', 'osm' ),
 		'geolocation_shortcode'           => array( 'string', 'sanitize_text_field', '[geolocation]' ),
 		'geolocation_osm_use_proxy'       => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_osm_strict_privacy'  => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_osm_tiles_url'       => array( 'string', 'sanitize_text_field', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' ),
 		'geolocation_osm_nominatim_url'   => array( 'string', 'geolocation_sanitize_url', 'https://nominatim.openstreetmap.org/' ),
 	);

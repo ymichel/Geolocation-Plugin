@@ -86,6 +86,15 @@ msgstr "Usar proxy"
 msgid "Make use of proxy plugin."
 msgstr "Usar o plugin de proxy."
 
+msgid "Strict privacy mode (GDPR)"
+msgstr "Modo de privacidade estrito (LGPD/GDPR)"
+
+msgid "Only show maps if the tiles are delivered by the proxy plugin."
+msgstr "Exibir mapas somente se os blocos forem entregues pelo plugin de proxy."
+
+msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
+msgstr "Se o proxy não estiver disponível, apenas o texto da localização é exibido e os navegadores dos seus visitantes não se conectam a servidores de mapas externos."
+
 msgid "Tiles url (Caching)"
 msgstr "URL dos blocos (cache)"
 
@@ -118,6 +127,9 @@ msgstr "Configurações"
 
 msgid "Google Maps API key is missing for"
 msgstr "A chave de API do Google Maps está faltando para"
+
+msgid "Geolocation: strict privacy mode is active, but the tiles proxy is not available. Only the location text is shown."
+msgstr "Geolocation: o modo de privacidade estrito está ativo, mas o proxy de blocos não está disponível. Apenas o texto da localização é exibido."
 
 msgid "Geolocation"
 msgstr "Geolocalização"

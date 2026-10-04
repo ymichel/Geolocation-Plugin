@@ -12,6 +12,11 @@ use PHPUnit\Framework\TestCase;
  */
 class GeolocationTest extends TestCase {
 
+	const OWN_TILES   = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+	const PROXY_TILES = 'https://example.org/wp-content/cache/osm-tiles/{s}/{z}/{x}/{y}.png';
+	const PROXY_REST  = 'https://example.org/wp-json/osm-tiles-proxy/v1/tiles/{s}/{z}/{x}/{y}.png';
+	const PROXY_FILE  = 'osm-tiles-proxy/osm-tiles-proxy.php';
+
 	/**
 	 * Reset the stubbed WordPress state.
 	 *
@@ -20,6 +25,9 @@ class GeolocationTest extends TestCase {
 	protected function setUp(): void {
 		$GLOBALS['geolocation_test_logged_in'] = false;
 		$GLOBALS['geolocation_test_post_meta'] = array();
+		$GLOBALS['geolocation_test_filters']   = array();
+		$GLOBALS['geolocation_test_plugins']   = array();
+		$GLOBALS['geolocation_test_options']   = array( 'geolocation_osm_tiles_url' => self::OWN_TILES );
 	}
 
 	/**
@@ -148,5 +156,153 @@ class GeolocationTest extends TestCase {
 		$this->set_geo( 3, '53.55', '9.99', '0', '1' );
 		$this->assertTrue( geolocation_post_is_visible( 2 ) );
 		$this->assertFalse( geolocation_post_is_visible( 3 ) );
+	}
+
+	/**
+	 * Switch on the proxy option and mark the proxy plugin as active.
+	 *
+	 * @param array $filters The URLs returned by the proxy plugin's filters.
+	 * @return void
+	 */
+	private function enable_proxy( $filters ) {
+		$GLOBALS['geolocation_test_options']['geolocation_osm_use_proxy'] = '1';
+		$GLOBALS['geolocation_test_plugins']                              = array( self::PROXY_FILE );
+		$GLOBALS['geolocation_test_filters']                              = $filters;
+	}
+
+	/**
+	 * Without the proxy the own tiles URL and the bundled Leaflet are used.
+	 *
+	 * @return void
+	 */
+	public function test_osm_urls_without_proxy() {
+		$this->assertSame( self::OWN_TILES, geolocation_get_osm_tiles_url() );
+		$this->assertStringEndsWith( '/geolocation/js/leaflet.js', geolocation_get_osm_leaflet_js_url() );
+		$this->assertStringEndsWith( '/geolocation/js/leaflet.css', geolocation_get_osm_leaflet_css_url() );
+	}
+
+	/**
+	 * The proxy option alone must not change anything while the proxy plugin is inactive.
+	 *
+	 * @return void
+	 */
+	public function test_osm_urls_with_option_but_inactive_proxy_plugin() {
+		$this->enable_proxy( array( 'osm_tiles_proxy_get_proxy_url' => self::PROXY_TILES ) );
+		$GLOBALS['geolocation_test_plugins'] = array();
+		$this->assertSame( self::OWN_TILES, geolocation_get_osm_tiles_url() );
+		$this->assertStringEndsWith( '/geolocation/js/leaflet.js', geolocation_get_osm_leaflet_js_url() );
+	}
+
+	/**
+	 * With the proxy enabled its cached tiles URL and its Leaflet are used.
+	 *
+	 * @return void
+	 */
+	public function test_osm_urls_with_proxy() {
+		$this->enable_proxy(
+			array(
+				'osm_tiles_proxy_get_proxy_url'       => self::PROXY_TILES,
+				'osm_tiles_proxy_get_proxy_rest_url'  => self::PROXY_REST,
+				'osm_tiles_proxy_get_leaflet_js_url'  => 'https://example.org/proxy/leaflet.js',
+				'osm_tiles_proxy_get_leaflet_css_url' => 'https://example.org/proxy/leaflet.css',
+			)
+		);
+		$this->assertSame( self::PROXY_TILES, geolocation_get_osm_tiles_url() );
+		$this->assertSame( 'https://example.org/proxy/leaflet.js', geolocation_get_osm_leaflet_js_url() );
+		$this->assertSame( 'https://example.org/proxy/leaflet.css', geolocation_get_osm_leaflet_css_url() );
+	}
+
+	/**
+	 * If the proxy's cache is switched off its REST URL is used.
+	 *
+	 * @return void
+	 */
+	public function test_osm_tiles_url_falls_back_to_proxy_rest_url() {
+		$this->enable_proxy(
+			array(
+				'osm_tiles_proxy_get_proxy_url'      => '',
+				'osm_tiles_proxy_get_proxy_rest_url' => self::PROXY_REST,
+			)
+		);
+		$this->assertSame( self::PROXY_REST, geolocation_get_osm_tiles_url() );
+	}
+
+	/**
+	 * A proxy without any usable answer must never leave the maps without tiles or Leaflet.
+	 *
+	 * @return void
+	 */
+	public function test_osm_urls_fall_back_to_own_urls_if_proxy_answers_nothing() {
+		$this->enable_proxy(
+			array(
+				'osm_tiles_proxy_get_proxy_url'       => false,
+				'osm_tiles_proxy_get_proxy_rest_url'  => '',
+				'osm_tiles_proxy_get_leaflet_js_url'  => false,
+				'osm_tiles_proxy_get_leaflet_css_url' => '',
+			)
+		);
+		$this->assertSame( self::OWN_TILES, geolocation_get_osm_tiles_url() );
+		$this->assertStringEndsWith( '/geolocation/js/leaflet.js', geolocation_get_osm_leaflet_js_url() );
+		$this->assertStringEndsWith( '/geolocation/js/leaflet.css', geolocation_get_osm_leaflet_css_url() );
+	}
+
+	/**
+	 * Without the strict privacy mode maps are never blocked.
+	 *
+	 * @return void
+	 */
+	public function test_maps_not_blocked_without_strict_mode() {
+		$GLOBALS['geolocation_test_options']['geolocation_provider'] = 'osm';
+		$this->assertFalse( geolocation_maps_blocked() );
+	}
+
+	/**
+	 * In the strict privacy mode maps are shown as long as the proxy delivers the tiles.
+	 *
+	 * @return void
+	 */
+	public function test_maps_not_blocked_in_strict_mode_with_working_proxy() {
+		$this->enable_proxy( array( 'osm_tiles_proxy_get_proxy_url' => self::PROXY_TILES ) );
+		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'osm';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '1';
+		$this->assertFalse( geolocation_maps_blocked() );
+	}
+
+	/**
+	 * In the strict privacy mode maps are blocked whenever the proxy does not deliver tiles.
+	 *
+	 * @return void
+	 */
+	public function test_maps_blocked_in_strict_mode_without_working_proxy() {
+		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'osm';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '1';
+
+		// The proxy option is switched off.
+		$this->assertTrue( geolocation_maps_blocked() );
+
+		// The proxy option is on, but the proxy plugin is not active.
+		$this->enable_proxy( array( 'osm_tiles_proxy_get_proxy_url' => self::PROXY_TILES ) );
+		$GLOBALS['geolocation_test_plugins'] = array();
+		$this->assertTrue( geolocation_maps_blocked() );
+
+		// The proxy plugin is active, but delivers neither cached nor REST tiles.
+		$this->enable_proxy(
+			array(
+				'osm_tiles_proxy_get_proxy_url'      => '',
+				'osm_tiles_proxy_get_proxy_rest_url' => false,
+			)
+		);
+		$this->assertTrue( geolocation_maps_blocked() );
+	}
+
+	/**
+	 * The strict privacy mode only concerns OpenStreetMap.
+	 *
+	 * @return void
+	 */
+	public function test_maps_not_blocked_for_google() {
+		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'google';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '1';
+		$this->assertFalse( geolocation_maps_blocked() );
 	}
 }

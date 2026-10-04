@@ -111,15 +111,50 @@ function geolocation_osm_use_proxy() {
 }
 
 /**
+ * Ask the OSM tiles proxy plugin for a URL.
+ *
+ * The proxy answers with an empty value if the requested way of delivery is
+ * switched off in its settings, so every result has to be checked.
+ *
+ * @param string $filter The name of the proxy plugin's filter.
+ * @return string The URL or an empty string.
+ */
+function geolocation_osm_proxy_url( $filter ) {
+	$url = apply_filters( $filter, '' );
+	return is_string( $url ) ? trim( $url ) : '';
+}
+
+/**
+ * Get the tiles URL provided by the OSM tiles proxy plugin.
+ *
+ * The proxy's cached URL is preferred, then its REST URL.
+ *
+ * @return string The URL, or an empty string if the proxy is not used or does not deliver tiles.
+ */
+function geolocation_osm_proxy_tiles_url() {
+	if ( ! geolocation_osm_use_proxy() ) {
+		return '';
+	}
+	foreach ( array( 'osm_tiles_proxy_get_proxy_url', 'osm_tiles_proxy_get_proxy_rest_url' ) as $filter ) {
+		$url = geolocation_osm_proxy_url( $filter );
+		if ( '' !== $url ) {
+			return $url;
+		}
+	}
+	return '';
+}
+
+/**
  * Get the tiles url to be used.
+ *
+ * The own tiles URL is the fallback if the proxy does not deliver tiles. Whether
+ * visitors may get maps with that fallback is decided by geolocation_maps_blocked().
  *
  * @return string
  */
 function geolocation_get_osm_tiles_url() {
-	if ( geolocation_osm_use_proxy() ) {
-		return (string) apply_filters( 'osm_tiles_proxy_get_proxy_url', '' );
-	}
-	return (string) get_option( 'geolocation_osm_tiles_url' );
+	$url = geolocation_osm_proxy_tiles_url();
+	return '' !== $url ? $url : (string) get_option( 'geolocation_osm_tiles_url' );
 }
 
 /**
@@ -128,10 +163,8 @@ function geolocation_get_osm_tiles_url() {
  * @return string
  */
 function geolocation_get_osm_leaflet_js_url() {
-	if ( geolocation_osm_use_proxy() ) {
-		return (string) apply_filters( 'osm_tiles_proxy_get_leaflet_js_url', '' );
-	}
-	return plugins_url( 'js/leaflet.js', __FILE__ );
+	$url = geolocation_osm_use_proxy() ? geolocation_osm_proxy_url( 'osm_tiles_proxy_get_leaflet_js_url' ) : '';
+	return '' !== $url ? $url : plugins_url( 'js/leaflet.js', __FILE__ );
 }
 
 /**
@@ -140,10 +173,8 @@ function geolocation_get_osm_leaflet_js_url() {
  * @return string
  */
 function geolocation_get_osm_leaflet_css_url() {
-	if ( geolocation_osm_use_proxy() ) {
-		return (string) apply_filters( 'osm_tiles_proxy_get_leaflet_css_url', '' );
-	}
-	return plugins_url( 'js/leaflet.css', __FILE__ );
+	$url = geolocation_osm_use_proxy() ? geolocation_osm_proxy_url( 'osm_tiles_proxy_get_leaflet_css_url' ) : '';
+	return '' !== $url ? $url : plugins_url( 'js/leaflet.css', __FILE__ );
 }
 
 /**

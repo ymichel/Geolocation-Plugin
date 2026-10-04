@@ -13,6 +13,8 @@
 $GLOBALS['geolocation_test_options']   = array();
 $GLOBALS['geolocation_test_logged_in'] = false;
 $GLOBALS['geolocation_test_post_meta'] = array();
+$GLOBALS['geolocation_test_filters']   = array();
+$GLOBALS['geolocation_test_plugins']   = array();
 
 function plugin_dir_path( $file ) {
 	return dirname( $file ) . '/';
@@ -52,4 +54,21 @@ function esc_html( $text ) {
 	return htmlspecialchars( (string) $text, ENT_QUOTES, 'UTF-8' );
 }
 
+function current_user_can( $capability ) {
+	return true;
+}
+
+function apply_filters( $hook, $value ) {
+	return array_key_exists( $hook, $GLOBALS['geolocation_test_filters'] ) ? $GLOBALS['geolocation_test_filters'][ $hook ] : $value;
+}
+
+function is_plugin_active( $plugin ) {
+	return in_array( $plugin, $GLOBALS['geolocation_test_plugins'], true );
+}
+
+function plugins_url( $path = '', $plugin = '' ) {
+	return 'https://example.org/wp-content/plugins/geolocation/' . ltrim( $path, '/' );
+}
+
 require_once dirname( __DIR__ ) . '/geolocation.php';
+require_once dirname( __DIR__ ) . '/geolocation-map-provider-osm.php';

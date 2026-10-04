@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.10.3
+Stable tag: 1.10.4
 
 Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
@@ -50,6 +50,10 @@ If you struggle while installing it or have feature requests, please feel free t
 6. Viewing all posts providing location information
 
 == Changelog ==
+
+= 1.10.4 =
+* new: strict privacy mode (GDPR) for OpenStreetMap. Maps are only shown if the tiles are delivered by the proxy plugin; otherwise only the location text is shown.
+* maps keep working if the tiles proxy plugin does not provide a tiles URL.
 
 = 1.10.3 =
 * added the German variants (formal, Austria, Switzerland) and completed the German translation.

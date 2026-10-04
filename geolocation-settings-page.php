@@ -34,6 +34,7 @@ function geolocation_settings_page() {
 	$wp_pin              = (bool) get_option( 'geolocation_wp_pin' );
 	$google_maps_api_key = (string) get_option( 'geolocation_google_maps_api_key' );
 	$osm_use_proxy       = (bool) get_option( 'geolocation_osm_use_proxy' );
+	$osm_strict_privacy  = (bool) get_option( 'geolocation_osm_strict_privacy' );
 	$osm_tiles_url       = (string) get_option( 'geolocation_osm_tiles_url' );
 	$osm_nominatim_url   = (string) get_option( 'geolocation_osm_nominatim_url' );
 	$site_lang           = (string) geolocation_get_site_lang();
@@ -172,6 +173,14 @@ function geolocation_settings_page() {
 								</td>
 							</tr>
 						<?php endif; ?>
+						<tr>
+							<th><?php esc_html_e( 'Strict privacy mode (GDPR)', 'geolocation' ); ?></th>
+							<td>
+								<input type="checkbox" id="geolocation_osm_strict_privacy" name="geolocation_osm_strict_privacy" value="1" <?php checked( $osm_strict_privacy ); ?>>
+								<label for="geolocation_osm_strict_privacy"><?php esc_html_e( 'Only show maps if the tiles are delivered by the proxy plugin.', 'geolocation' ); ?></label>
+								<p class="description"><?php esc_html_e( 'If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers.', 'geolocation' ); ?></p>
+							</td>
+						</tr>
 						<tr>
 							<th><label for="geolocation_osm_tiles_url"><?php esc_html_e( 'Tiles url (Caching)', 'geolocation' ); ?></label></th>
 							<td>
