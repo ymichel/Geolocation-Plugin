@@ -106,7 +106,7 @@
 				mapEl.style.opacity    = 1;
 				mapEl.style.zIndex     = '99';
 				mapEl.style.visibility = 'visible';
-				mapEl.style.top        = ( rect.top + window.scrollY + 20 ) + 'px';
+				mapEl.style.top        = ( rect.bottom + window.scrollY + 4 ) + 'px';
 				mapEl.style.left       = ( rect.left + window.scrollX ) + 'px';
 				allowDisappear         = false;
 			} );
