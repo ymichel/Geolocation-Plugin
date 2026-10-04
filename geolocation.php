@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.10.1
+ * Version: 1.10.2
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.10.1' );
+define( 'GEOLOCATION__VERSION', '1.10.2' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -72,7 +72,7 @@ switch ( get_option( 'geolocation_provider' ) ) {
 function geolocation_append_support_and_faq_links( $links_array, $plugin_file_name ) {
 	if ( plugin_basename( __FILE__ ) === $plugin_file_name ) {
 		$links_array[] = '<a href="https://wordpress.org/support/plugin/geolocation/reviews/#new-post" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Review', 'geolocation' ) . '</a>';
-		$links_array[] = '<a href="https://wordpress.org/support/plugin/geolocation/#new-topic" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Support', 'geolocation' ) . '</a>';
+		$links_array[] = '<a href="https://github.com/ymichel/Geolocation-Plugin/issues" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Support', 'geolocation' ) . '</a>';
 	}
 	return $links_array;
 }
