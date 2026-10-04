@@ -1,0 +1,150 @@
+# Translation of the WordPress plugin Geolocation.
+# This file is distributed under the same license as the Geolocation package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Geolocation\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Geolocation Plugin Settings"
+msgstr "Réglages de l’extension Geolocation"
+
+msgid "Dimensions"
+msgstr "Dimensions"
+
+msgid "Width"
+msgstr "Largeur"
+
+msgid "Height"
+msgstr "Hauteur"
+
+msgid "Position"
+msgstr "Position"
+
+msgid "Before the post."
+msgstr "Avant l’article."
+
+msgid "After the post."
+msgstr "Après l’article."
+
+msgid "Wherever I put the shortcode: "
+msgstr "Là où je place le code court : "
+
+msgid "How would you like your geolocation to be displayed?"
+msgstr "Comment souhaitez-vous afficher votre géolocalisation ?"
+
+msgid "Plain text."
+msgstr "Texte brut."
+
+msgid "Simple link w/hover."
+msgstr "Lien simple avec carte au survol."
+
+msgid "Simple map (static)."
+msgstr "Carte simple (statique)."
+
+msgid "Default Zoom Level"
+msgstr "Niveau de zoom par défaut"
+
+msgid "Globe"
+msgstr "Monde"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "State"
+msgstr "Région"
+
+msgid "City"
+msgstr "Ville"
+
+msgid "Street"
+msgstr "Rue"
+
+msgid "Block"
+msgstr "Pâté de maisons"
+
+msgid "Show your support for WordPress by using the WordPress map pin."
+msgstr "Montrez votre soutien à WordPress en utilisant le marqueur de carte WordPress."
+
+msgid "Dimensions Page"
+msgstr "Dimensions sur les pages"
+
+msgid "Maps Provider"
+msgstr "Fournisseur de cartes"
+
+msgid "Google Maps API key"
+msgstr "Clé d’API Google Maps"
+
+msgid "OSM URLs"
+msgstr "URL OSM"
+
+msgid "Use Proxy"
+msgstr "Utiliser le proxy"
+
+msgid "Make use of proxy plugin."
+msgstr "Utiliser l’extension de proxy."
+
+msgid "Tiles url (Caching)"
+msgstr "URL des tuiles (cache)"
+
+msgid "Leaflet JS"
+msgstr "Leaflet JS"
+
+msgid "Leaflet CSS"
+msgstr "Leaflet CSS"
+
+msgid "Nominatim ([Reverse-]Geocoding)"
+msgstr "Nominatim (géocodage [inversé])"
+
+msgid "Used Language for Addresses"
+msgstr "Langue utilisée pour les adresses"
+
+msgid "Update all addresses from posts that have location information (only once this setup is saved)."
+msgstr "Mettre à jour toutes les adresses des articles ayant des informations de localisation (une seule fois, à l’enregistrement de ces réglages)."
+
+msgid "Save Changes"
+msgstr "Enregistrer les modifications"
+
+msgid "Review"
+msgstr "Avis"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Settings"
+msgstr "Réglages"
+
+msgid "Google Maps API key is missing for"
+msgstr "La clé d’API Google Maps est manquante pour"
+
+msgid "Geolocation"
+msgstr "Géolocalisation"
+
+msgid "Enter your address"
+msgstr "Saisissez votre adresse"
+
+msgid "Load"
+msgstr "Charger"
+
+msgid "Remove location"
+msgstr "Supprimer la localisation"
+
+msgid "Public"
+msgstr "Public"
+
+msgid "On"
+msgstr "Activé"
+
+msgid "Off"
+msgstr "Désactivé"
+
+msgid "Posted from "
+msgstr "Publié depuis "
+
+msgid "Addresses are being updated in the background."
+msgstr "Les adresses sont mises à jour en arrière-plan."
+
+msgid "Displays post geotag information on an embedded map."
+msgstr "Affiche les informations de géolocalisation des articles sur une carte intégrée."
