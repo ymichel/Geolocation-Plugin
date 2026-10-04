@@ -10,7 +10,7 @@ Stable tag: 1.10.3
 Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
 == Description ==
-Maintained by Yann Michel since 2017.
+Maintained by [Yann Michel](https://profiles.wordpress.org/ymichel/) since 2017.
 
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page.
 
