@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.10.3
+ * Version: 1.10.4
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.10.3' );
+define( 'GEOLOCATION__VERSION', '1.10.4' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -90,15 +90,42 @@ function geolocation_customizer_action_links( $links_array ) {
 }
 
 /**
- * Display custom admin notice in key is provided.
+ * Check whether maps must not be shown to visitors.
+ *
+ * In the strict privacy mode maps are only shown if the tiles are delivered by
+ * the OSM tiles proxy, so the browsers of the visitors never connect to an
+ * external map server. Without a working proxy only the location text is shown.
+ *
+ * @return boolean
+ */
+function geolocation_maps_blocked() {
+	if ( 'osm' !== get_option( 'geolocation_provider' ) || ! (bool) get_option( 'geolocation_osm_strict_privacy' ) ) {
+		return false;
+	}
+	return ! function_exists( 'geolocation_osm_proxy_tiles_url' ) || '' === geolocation_osm_proxy_tiles_url();
+}
+
+/**
+ * Display the admin notices of this plugin.
  *
  * @return void
  */
 function geolocation_custom_admin_notice() {
-	if ( current_user_can( 'manage_options' ) && 'google' === get_option( 'geolocation_provider' ) && ! get_option( 'geolocation_google_maps_api_key' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$settings_url = admin_url( 'options-general.php?page=geolocation.php' );
+	if ( 'google' === get_option( 'geolocation_provider' ) && ! get_option( 'geolocation_google_maps_api_key' ) ) {
 		?>
 		<div class="notice notice-error">
-			<p><?php esc_html_e( 'Google Maps API key is missing for', 'geolocation' ); ?> <a href="<?php echo esc_url( admin_url( 'options-general.php?page=geolocation.php' ) ); ?>">Geolocation</a>!</p>
+			<p><?php esc_html_e( 'Google Maps API key is missing for', 'geolocation' ); ?> <a href="<?php echo esc_url( $settings_url ); ?>">Geolocation</a>!</p>
+		</div>
+		<?php
+	}
+	if ( geolocation_maps_blocked() ) {
+		?>
+		<div class="notice notice-warning">
+			<p><?php esc_html_e( 'Geolocation: strict privacy mode is active, but the tiles proxy is not available. Only the location text is shown.', 'geolocation' ); ?> <a href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Settings', 'geolocation' ); ?></a></p>
 		</div>
 		<?php
 	}
@@ -524,7 +551,7 @@ function geolocation_display_location_page( $content ) {
 
 	$html   = '';
 	$result = geolocation_get_page_markers();
-	if ( $shortcode_found && ! empty( $result['markers'] ) ) {
+	if ( $shortcode_found && ! empty( $result['markers'] ) && ! geolocation_maps_blocked() ) {
 		geolocation_enqueue_front();
 		$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';
 		$width  = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
@@ -582,7 +609,12 @@ function geolocation_display_location_post( $content ) {
 
 	$html      = '';
 	$posted_at = esc_html__( 'Posted from ', 'geolocation' ) . esc_html( $address );
-	switch ( (string) get_option( 'geolocation_map_display' ) ) {
+	$display   = (string) get_option( 'geolocation_map_display' );
+	if ( in_array( $display, array( 'link', 'map' ), true ) && geolocation_maps_blocked() ) {
+		// Strict privacy mode without a working proxy: show the text only.
+		$display = 'plain';
+	}
+	switch ( $display ) {
 		case 'plain':
 			$html = '<div class="geolocation-plain" id="geolocation' . $post->ID . '">' . $posted_at . '.</div>';
 			wp_enqueue_style( 'geolocation_css', plugins_url( 'style.css', __FILE__ ), array(), GEOLOCATION__VERSION, 'all' );

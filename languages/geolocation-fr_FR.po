@@ -86,6 +86,15 @@ msgstr "Utiliser le proxy"
 msgid "Make use of proxy plugin."
 msgstr "Utiliser l’extension de proxy."
 
+msgid "Strict privacy mode (GDPR)"
+msgstr "Mode de confidentialité strict (RGPD)"
+
+msgid "Only show maps if the tiles are delivered by the proxy plugin."
+msgstr "N’afficher les cartes que si les tuiles sont servies par l’extension de proxy."
+
+msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
+msgstr "Si le proxy n’est pas disponible, seul le texte du lieu est affiché et les navigateurs de vos visiteurs ne se connectent à aucun serveur de cartes externe."
+
 msgid "Tiles url (Caching)"
 msgstr "URL des tuiles (cache)"
 
@@ -118,6 +127,9 @@ msgstr "Réglages"
 
 msgid "Google Maps API key is missing for"
 msgstr "La clé d’API Google Maps est manquante pour"
+
+msgid "Geolocation: strict privacy mode is active, but the tiles proxy is not available. Only the location text is shown."
+msgstr "Geolocation : le mode de confidentialité strict est actif, mais le proxy de tuiles n’est pas disponible. Seul le texte du lieu est affiché."
 
 msgid "Geolocation"
 msgstr "Géolocalisation"

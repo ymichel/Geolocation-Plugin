@@ -104,6 +104,18 @@ msgstr "Google Maps API Schl&uuml;ssel"
 msgid "OSM URLs"
 msgstr "OSM-URLs"
 
+msgid "Strict privacy mode (GDPR)"
+msgstr "Strikter Datenschutzmodus (DSGVO)"
+
+msgid "Only show maps if the tiles are delivered by the proxy plugin."
+msgstr "Karten nur anzeigen, wenn die Kacheln &uuml;ber das Proxy-Plugin ausgeliefert werden."
+
+msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
+msgstr "Ist der Proxy nicht verf&uuml;gbar, wird nur der Ortstext angezeigt und die Browser deiner Besucher bauen keine Verbindung zu externen Kartenservern auf."
+
+msgid "Geolocation: strict privacy mode is active, but the tiles proxy is not available. Only the location text is shown."
+msgstr "Geolocation: Der strikte Datenschutzmodus ist aktiv, aber der Kachel-Proxy ist nicht verf&uuml;gbar. Es wird nur der Ortstext angezeigt."
+
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:129
 msgid "Make use of proxy plugin."
 msgstr "Funktionen des Proxy-Plugins verwenden."
