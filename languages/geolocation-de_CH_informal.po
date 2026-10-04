@@ -37,11 +37,11 @@ msgstr "Standard Zoom Darstellung"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:53
 msgid "Dimensions"
-msgstr "Ma&szlig;e"
+msgstr "Masse"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:101
 msgid "Dimensions Page"
-msgstr "Ma&szlig;e Seite"
+msgstr "Masse Seite"
 
 #: Description of the plugin
 msgid "Displays post geotag information on an embedded map."
@@ -165,7 +165,7 @@ msgstr "Bundesland"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:88
 msgid "Street"
-msgstr "Stra&szlig;e"
+msgstr "Strasse"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:57
 msgid "Support"

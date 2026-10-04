@@ -49,7 +49,7 @@ msgstr "Stellt die Geoinformationen des Artikels auf einer eingebetteten Karte d
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:113
 msgid "Enter your address"
-msgstr "Gib deine Adresse ein"
+msgstr "Geben Sie Ihre Adresse ein"
 
 #: Name of the plugin
 msgid "Geolocation"
@@ -73,7 +73,7 @@ msgstr "H&ouml;he"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:68
 msgid "How would you like your geolocation to be displayed?"
-msgstr "Wie sollen deine Geoinformationen dargestellt werden?"
+msgstr "Wie sollen Ihre Geoinformationen dargestellt werden?"
 
 #: URI of the plugin
 msgid "https://wordpress.org/extend/plugins/geolocation/"
@@ -150,7 +150,7 @@ msgstr "Einstellungen"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:97
 msgid "Show your support for WordPress by using the WordPress map pin."
-msgstr "Zeig deine Unterst&uuml;tzung f&uuml;r WordPress, indem du den Pin benutzt."
+msgstr "Zeigen Sie Ihre Unterst&uuml;tzung f&uuml;r WordPress, indem Sie den Pin benutzen."
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:73
 msgid "Simple link w/hover."
