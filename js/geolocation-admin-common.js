@@ -63,7 +63,8 @@
 			els.addrRev.value = address;
 		}
 
-		els.isPublic.checked = data.isPublic !== '0';
+		// Only show "public" as checked if it is really stored as 1 (missing meta means not public).
+		els.isPublic.checked = data.isPublic === '1';
 		setGeoEnabled( data.isEnabled !== '0' );
 
 		if ( hasLocation ) {

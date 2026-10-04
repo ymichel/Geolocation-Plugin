@@ -7,12 +7,12 @@
     "authors": [
         {
             "name": "Yann Michel",
-            "email": "geolocation@yann-michel.de"
+            "email": "yann@michelpunkt.de"
         }
     ],
     "scripts": {
-        "lint": "phpcs --standard=WordPress --extensions=php --ignore=vendor,tests .",
-        "fix": "phpcbf --standard=WordPress --extensions=php --ignore=vendor,tests .",
+        "lint": "phpcs --standard=WordPress --extensions=php --ignore=vendor,tests,.claude .",
+        "fix": "phpcbf --standard=WordPress --extensions=php --ignore=vendor,tests,.claude .",
         "test": "phpunit"
     },
     "require-dev": {

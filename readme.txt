@@ -58,6 +58,9 @@ If you struggle while installing it or have feature requests, please feel free t
 * fixed the city derived by Google reverse geocoding and the hemisphere of locations read from a featured image.
 * multiple fixes, security hardening and compliance with the WordPress coding standards.
 
+= 1.9.9 =
+* fixing visibility
+
 = 1.9.7 =
 * fixing javascript calls and settings initialization
 

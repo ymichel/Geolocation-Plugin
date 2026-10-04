@@ -6,7 +6,7 @@
  *
  * @category Components
  * @package geolocation
- * @author Yann Michel <geolocation@yann-michel.de>
+ * @author Yann Michel <yann@michelpunkt.de>
  * @license GPLv2+
  */
 

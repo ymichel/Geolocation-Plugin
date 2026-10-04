@@ -12,6 +12,7 @@
 
 $GLOBALS['geolocation_test_options']   = array();
 $GLOBALS['geolocation_test_logged_in'] = false;
+$GLOBALS['geolocation_test_post_meta'] = array();
 
 function plugin_dir_path( $file ) {
 	return dirname( $file ) . '/';
@@ -41,6 +42,10 @@ function get_option( $name, $default_value = false ) {
 
 function is_user_logged_in() {
 	return $GLOBALS['geolocation_test_logged_in'];
+}
+
+function get_post_meta( $post_id, $key = '', $single = false ) {
+	return isset( $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] ) ? $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] : '';
 }
 
 function esc_html( $text ) {

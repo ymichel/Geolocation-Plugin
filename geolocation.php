@@ -14,7 +14,7 @@
 
 /*
 	Copyright 2010 Chris Boyd  (email : chris@chrisboyd.net)
-	2018-2023 Yann Michel (email : geolocation@yann-michel.de)
+	2018-2026 Yann Michel (email : yann@michelpunkt.de)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as
@@ -370,39 +370,79 @@ function geolocation_add_geo_div() {
 }
 
 /**
- * Build the meta query selecting all posts with enabled (and visible) geo data.
+ * Check if the geo data of a post may be shown to the current visitor.
  *
+ * The stored flags are interpreted as booleans and not compared as strings.
+ *
+ * @param int $post_id The id of the post to check.
+ * @return boolean
+ */
+function geolocation_post_is_visible( $post_id ) {
+	$latitude  = geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_latitude', true ) );
+	$longitude = geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_longitude', true ) );
+	$on        = (bool) get_post_meta( $post_id, 'geo_enabled', true );
+	$public    = (bool) get_post_meta( $post_id, 'geo_public', true );
+
+	if ( empty( $latitude ) || empty( $longitude ) || ! $on ) {
+		return false;
+	}
+	return $public || is_user_logged_in();
+}
+
+/**
+ * Build the query arguments for the overview map of a page.
+ *
+ * Only posts having coordinates are selected here. Whether a post is shown
+ * is decided afterwards by geolocation_post_is_visible().
+ *
+ * @param int $category_id The id of the category to filter for (0 = all).
  * @return array
  */
-function geolocation_get_meta_query() {
-	$meta_query = array(
-		'relation' => 'AND',
-		array(
-			'key'     => 'geo_latitude',
-			'value'   => '0',
-			'compare' => '!=',
-		),
-		array(
-			'key'     => 'geo_longitude',
-			'value'   => '0',
-			'compare' => '!=',
-		),
-		array(
-			'key'     => 'geo_enabled',
-			'value'   => '1',
-			'compare' => '=',
+function geolocation_page_query_args( $category_id ) {
+	return array(
+		'post_type'      => 'post',
+		'cat'            => $category_id,
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'no_found_rows'  => true,
+		'meta_query'     => array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'geo_latitude',
+				'compare' => 'EXISTS',
+			),
+			array(
+				'key'     => 'geo_longitude',
+				'compare' => 'EXISTS',
+			),
 		),
 	);
+}
 
-	// Only show public posts if not logged in.
-	if ( ! is_user_logged_in() ) {
-		$meta_query[] = array(
-			'key'     => 'geo_public',
-			'value'   => '1',
-			'compare' => '=',
-		);
+/**
+ * Diagnostic output for overview pages, only shown with ?geodebug=1 in the URL.
+ *
+ * @param string $category The category name taken from the custom field.
+ * @param int    $category_id The resolved category id.
+ * @param int    $candidates Number of posts having coordinates.
+ * @param int    $shown Number of posts finally put on the map.
+ * @param bool   $shortcode_found Whether the shortcode was found in the page content.
+ * @return string
+ */
+function geolocation_page_debug( $category, $category_id, $candidates, $shown, $shortcode_found ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only diagnostic switch.
+	if ( ! isset( $_GET['geodebug'] ) ) {
+		return '';
 	}
-	return $meta_query;
+	$info = array(
+		'logged_in'       => is_user_logged_in(),
+		'category'        => $category,
+		'category_id'     => (int) $category_id,
+		'shortcode_found' => (bool) $shortcode_found,
+		'candidates'      => (int) $candidates,
+		'shown'           => (int) $shown,
+	);
+	return '<pre class="geolocation-debug">GEODEBUG ' . esc_html( wp_json_encode( $info ) ) . '</pre>';
 }
 
 /**
@@ -425,41 +465,38 @@ function geolocation_display_location( $content ) {
  * The posts can be limited to a category by the page's custom field "category".
  * The result is cached until a post is saved or deleted, at most for one hour.
  *
- * @return array
+ * @return array The category, its id, the number of posts having coordinates and the markers.
  */
 function geolocation_get_page_markers() {
 	$category  = (string) get_post_meta( get_the_ID(), 'category', true );
 	$cache_key = 'geolocation_pm_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $category . '|' . ( is_user_logged_in() ? '1' : '0' ) );
-	$markers   = get_transient( $cache_key );
-	if ( is_array( $markers ) ) {
-		return $markers;
+	$result    = get_transient( $cache_key );
+	if ( is_array( $result ) && isset( $result['markers'] ) ) {
+		return $result;
 	}
 
-	$posts   = get_posts(
-		array(
-			'post_type'      => 'post',
-			'cat'            => get_cat_ID( $category ),
-			'posts_per_page' => -1,
-			'post_status'    => 'publish',
-			'meta_query'     => geolocation_get_meta_query(),
-		)
-	);
-	$markers = array();
+	$category_id = get_cat_ID( $category );
+	$posts       = get_posts( geolocation_page_query_args( $category_id ) );
+	$markers     = array();
 	foreach ( $posts as $geo_post ) {
-		$latitude  = geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_latitude', true ) );
-		$longitude = geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_longitude', true ) );
-		if ( '' === $latitude || '' === $longitude ) {
+		if ( ! geolocation_post_is_visible( $geo_post->ID ) ) {
 			continue;
 		}
 		$markers[] = array(
-			'lat'   => (float) $latitude,
-			'lng'   => (float) $longitude,
+			'lat'   => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_latitude', true ) ),
+			'lng'   => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_longitude', true ) ),
 			'url'   => (string) get_permalink( $geo_post ),
 			'title' => html_entity_decode( get_the_title( $geo_post ), ENT_QUOTES, 'UTF-8' ),
 		);
 	}
-	set_transient( $cache_key, $markers, HOUR_IN_SECONDS );
-	return $markers;
+	$result = array(
+		'category'    => $category,
+		'category_id' => $category_id,
+		'candidates'  => count( $posts ),
+		'markers'     => $markers,
+	);
+	set_transient( $cache_key, $result, HOUR_IN_SECONDS );
+	return $result;
 }
 
 /**
@@ -478,21 +515,24 @@ function geolocation_flush_page_markers() {
  * @return mixed
  */
 function geolocation_display_location_page( $content ) {
-	$shortcode = (string) get_option( 'geolocation_shortcode' );
-	if ( '' === $shortcode || false === strpos( $content, $shortcode ) ) {
+	$shortcode       = (string) get_option( 'geolocation_shortcode' );
+	$shortcode_found = '' !== $shortcode && false !== strpos( $content, $shortcode );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only diagnostic switch.
+	if ( ! $shortcode_found && ! isset( $_GET['geodebug'] ) ) {
 		return $content;
 	}
 
-	$html    = '';
-	$markers = geolocation_get_page_markers();
-	if ( ! empty( $markers ) ) {
+	$html   = '';
+	$result = geolocation_get_page_markers();
+	if ( $shortcode_found && ! empty( $result['markers'] ) ) {
 		geolocation_enqueue_front();
 		$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';
 		$width  = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
 		$height = esc_attr( (string) get_option( 'geolocation_map_height_page' ) );
-		$html   = '<div id="' . $map_id . '" class="geolocation-map geolocation-page-map" data-markers="' . esc_attr( wp_json_encode( $markers ) ) . '" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+		$html   = '<div id="' . $map_id . '" class="geolocation-map geolocation-page-map" data-markers="' . esc_attr( wp_json_encode( $result['markers'] ) ) . '" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
 	}
-	return str_replace( $shortcode, $html, $content );
+	$content = geolocation_replace_shortcode( $content, $html );
+	return $content . geolocation_page_debug( $result['category'], $result['category_id'], $result['candidates'], count( $result['markers'] ), $shortcode_found );
 }
 
 /**
@@ -523,14 +563,13 @@ function geolocation_display_location_post( $content ) {
 	if ( ! $post ) {
 		return $content;
 	}
+	if ( ! geolocation_post_is_visible( $post->ID ) ) {
+		return geolocation_replace_shortcode( $content, '' );
+	}
 	$latitude  = geolocation_clean_coordinate( get_post_meta( $post->ID, 'geo_latitude', true ) );
 	$longitude = geolocation_clean_coordinate( get_post_meta( $post->ID, 'geo_longitude', true ) );
 	$on        = (bool) get_post_meta( $post->ID, 'geo_enabled', true );
 	$public    = (bool) get_post_meta( $post->ID, 'geo_public', true );
-
-	if ( empty( $latitude ) || empty( $longitude ) || ! $on || ( ! $public && ! is_user_logged_in() ) ) {
-		return geolocation_replace_shortcode( $content, '' );
-	}
 
 	$address = (string) get_post_meta( $post->ID, 'geo_address', true );
 	if ( '' === $address ) {

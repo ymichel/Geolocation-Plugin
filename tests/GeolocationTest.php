@@ -19,6 +19,7 @@ class GeolocationTest extends TestCase {
 	 */
 	protected function setUp(): void {
 		$GLOBALS['geolocation_test_logged_in'] = false;
+		$GLOBALS['geolocation_test_post_meta'] = array();
 	}
 
 	/**
@@ -97,16 +98,55 @@ class GeolocationTest extends TestCase {
 	}
 
 	/**
-	 * Visitors only get public locations, logged in users get all enabled ones.
+	 * Store the geo data of a test post.
+	 *
+	 * @param int   $post_id The post id.
+	 * @param mixed $latitude The latitude.
+	 * @param mixed $longitude The longitude.
+	 * @param mixed $enabled The enabled flag.
+	 * @param mixed $is_public The public flag.
+	 * @return void
+	 */
+	private function set_geo( $post_id, $latitude, $longitude, $enabled, $is_public ) {
+		$GLOBALS['geolocation_test_post_meta'][ $post_id ] = array(
+			'geo_latitude'  => $latitude,
+			'geo_longitude' => $longitude,
+			'geo_enabled'   => $enabled,
+			'geo_public'    => $is_public,
+		);
+	}
+
+	/**
+	 * Visitors only see enabled and public locations.
 	 *
 	 * @return void
 	 */
-	public function test_meta_query_limits_visitors_to_public_posts() {
-		$keys = array_column( geolocation_get_meta_query(), 'key' );
-		$this->assertSame( array( 'geo_latitude', 'geo_longitude', 'geo_enabled', 'geo_public' ), $keys );
+	public function test_post_is_visible_for_visitors() {
+		$this->set_geo( 1, '53.55', '9.99', '1', '1' );
+		$this->set_geo( 2, '53.55', '9.99', '1', '0' );
+		$this->set_geo( 3, '53.55', '9.99', '0', '1' );
+		$this->set_geo( 4, '53.55', '9.99', '1', '' );
+		$this->set_geo( 5, '', '', '1', '1' );
+		$this->set_geo( 6, 'abc', '9.99', '1', '1' );
+		$this->assertTrue( geolocation_post_is_visible( 1 ) );
+		$this->assertFalse( geolocation_post_is_visible( 2 ) );
+		$this->assertFalse( geolocation_post_is_visible( 3 ) );
+		$this->assertFalse( geolocation_post_is_visible( 4 ) );
+		$this->assertFalse( geolocation_post_is_visible( 5 ) );
+		$this->assertFalse( geolocation_post_is_visible( 6 ) );
+		$this->assertFalse( geolocation_post_is_visible( 99 ) );
+	}
 
+	/**
+	 * Logged in users also see locations which are not public.
+	 *
+	 * @return void
+	 */
+	public function test_post_is_visible_for_logged_in_users() {
 		$GLOBALS['geolocation_test_logged_in'] = true;
-		$keys                                  = array_column( geolocation_get_meta_query(), 'key' );
-		$this->assertSame( array( 'geo_latitude', 'geo_longitude', 'geo_enabled' ), $keys );
+		$this->set_geo( 2, '53.55', '9.99', '1', '0' );
+		$this->set_geo( 3, '53.55', '9.99', '0', '1' );
+		$this->assertTrue( geolocation_post_is_visible( 2 ) );
+		$this->assertFalse( geolocation_post_is_visible( 3 ) );
 	}
 }
