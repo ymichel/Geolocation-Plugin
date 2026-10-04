@@ -1,8 +1,8 @@
 {
-    "name": "yann-michel.de/geolocation",
+    "name": "ymichel/geolocation",
     "type": "wordpress-plugin",
     "description": "Displays post geotag information on an embedded map",
-    "homepage": "https://www.yann-michel.de/geolocation",
+    "homepage": "https://github.com/ymichel/Geolocation-Plugin/",
     "license": "GPL-2.0-or-later",
     "authors": [
         {

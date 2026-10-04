@@ -3,9 +3,9 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.10.0
+ * Version: 1.10.1
  * Author: Yann Michel
- * Author URI: https://www.yann-michel.de/geolocation
+ * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
  * License: GPLv2+
  *
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.10.0' );
+define( 'GEOLOCATION__VERSION', '1.10.1' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
