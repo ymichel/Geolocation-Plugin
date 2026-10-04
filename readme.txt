@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.10.2
+Stable tag: 1.10.3
 
 Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
@@ -50,6 +50,10 @@ If you struggle while installing it or have feature requests, please feel free t
 6. Viewing all posts providing location information
 
 == Changelog ==
+
+= 1.10.3 =
+* added the German variants (formal, Austria, Switzerland) and completed the German translation.
+* added Spanish, French, Italian, Brazilian Portuguese and Dutch translations.
 
 = 1.10.2 =
 * the support links now point to the issues of the plugin's GitHub repository.
