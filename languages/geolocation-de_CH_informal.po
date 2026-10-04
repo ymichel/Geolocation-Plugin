@@ -95,6 +95,15 @@ msgstr "Leaflet JS"
 msgid "Load"
 msgstr "Laden"
 
+msgid "Maps Provider"
+msgstr "Kartenanbieter"
+
+msgid "Google Maps API key"
+msgstr "Google Maps API Schl&uuml;ssel"
+
+msgid "OSM URLs"
+msgstr "OSM-URLs"
+
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:129
 msgid "Make use of proxy plugin."
 msgstr "Funktionen des Proxy-Plugins verwenden."
