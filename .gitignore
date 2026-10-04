@@ -1,2 +1,5 @@
 vendor/
 composer.lock
+.vscode/extensions.json
+.phpunit.result.cache
+.claude/

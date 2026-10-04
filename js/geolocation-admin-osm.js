@@ -1,0 +1,107 @@
+/**
+ * Geolocation: post editor meta box using OpenStreetMap (Leaflet / Nominatim).
+ *
+ * Requires geolocation-admin-common.js.
+ */
+( function () {
+	'use strict';
+
+	var common = window.geolocationAdminCommon;
+	if ( ! common ) {
+		return;
+	}
+
+	common.ready( function () {
+		var map;
+		var marker;
+		var ui = typeof L === 'undefined' ? null : common.init( { geocode: geocode } );
+		if ( ! ui ) {
+			return;
+		}
+
+		var data          = ui.data;
+		var defaultCenter = [ 52.5162778, 13.3733267 ];
+		var markerOptions = {
+			clickable: false,
+			draggable: false
+		};
+		if ( data.usePin ) {
+			markerOptions.icon = L.icon( {
+				iconUrl: data.pinUrl,
+				shadowUrl: data.pinShadowUrl,
+				iconSize: [ 25, 34 ],
+				shadowSize: [ 39, 23 ],
+				iconAnchor: [ 5, 34 ],
+				shadowAnchor: [ 3, 25 ],
+				popupAnchor: [ 12, -30 ]
+			} );
+		}
+
+		function request( path, onSuccess ) {
+			var xhr = new XMLHttpRequest();
+			xhr.open( 'GET', data.nominatimUrl + path, true );
+			xhr.onload = function () {
+				if ( this.status >= 200 && this.status < 400 ) {
+					var result = null;
+					try {
+						result = JSON.parse( this.response );
+					} catch ( e ) {
+						result = null;
+					}
+					onSuccess( result );
+				}
+			};
+			xhr.send();
+		}
+
+		function reverseGeocode( lat, lon ) {
+			request(
+				'/reverse?format=json&accept-language=' + encodeURIComponent( data.language ) + '&lat=' + encodeURIComponent( lat ) + '&lon=' + encodeURIComponent( lon ),
+				function ( result ) {
+					if ( result && result.display_name ) {
+						ui.setAddress( result.display_name );
+					}
+				}
+			);
+		}
+
+		function geocode( address ) {
+			request(
+				'/search?format=json&accept-language=' + encodeURIComponent( data.language ) + '&limit=1&q=' + encodeURIComponent( address ),
+				function ( result ) {
+					if ( ! Array.isArray( result ) || result.length === 0 ) {
+						return;
+					}
+					ui.setPosition( result[0].lat, result[0].lon );
+					marker.setLatLng( [ result[0].lat, result[0].lon ] );
+					map.setView( marker.getLatLng(), map.getZoom() );
+					reverseGeocode( result[0].lat, result[0].lon );
+				}
+			);
+		}
+
+		map    = L.map( ui.els.map ).setView( defaultCenter, data.zoom );
+		marker = L.marker( defaultCenter, markerOptions ).addTo( map );
+		L.tileLayer( data.tilesUrl, {
+			attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+		} ).addTo( map );
+
+		if ( ui.hasLocation ) {
+			marker.setLatLng( [ data.latitude, data.longitude ] );
+			map.setView( marker.getLatLng(), data.zoom );
+			if ( ui.needsAddress ) {
+				reverseGeocode( data.latitude, data.longitude );
+			}
+		}
+
+		// The meta box may be collapsed or hidden at first: re-center once the map gets its size.
+		function recenter() {
+			map.invalidateSize( { animate: false, pan: false } );
+			map.setView( marker.getLatLng(), map.getZoom(), { animate: false } );
+		}
+		setTimeout( recenter, 100 );
+		if ( 'ResizeObserver' in window ) {
+			new ResizeObserver( recenter ).observe( ui.els.map );
+		}
+	} );
+}() );

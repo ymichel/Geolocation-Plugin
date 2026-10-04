@@ -4,35 +4,35 @@ Tags: map, GPS, travel, location, journey
 License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
-Tested up to: 6.8
-Stable tag: 1.9.9
+Tested up to: 7.1
+Stable tag: 1.10.0
 
-Lightweight display the location information of your post in a map (GDPR comliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
+Lightweight display the location information of your post in a map (GDPR compliant). Ideal for travelbloggers or anyone who would like to show the location of a post.
 
 == Description ==
 The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page.
 
 Previously, in all WordPress mobile applications such as WordPress for iPhone/iPad, WordPress for Android this was directly available by activating the gps functionality. Unfortunately, the WP-application developers decided to deactivate the feature of storing GPS data in the app but I am hoping for its return.
 
-The automated way to obtain geoinformation is possible by adding a photo as featured image to your post. If you have a featured image attached to you post, its gps coordinates are taken into concideration if there is no geo-information provided already. If you use an iPhone, make sure that you take your photos in jpg. Otherwise the GPS information is stripped from the HEIC when exporting to JPG and uploading. Furthermore, when using the WP app, make sure you have enabled to keep all metadata in the files that are uploade. Otherwise, the app will remove also the GPS information.
+The automated way to obtain geoinformation is possible by adding a photo as featured image to your post. If you have a featured image attached to you post, its gps coordinates are taken into consideration if there is no geo-information provided already. If you use an iPhone, make sure that you take your photos in jpg. Otherwise the GPS information is stripped from the HEIC when exporting to JPG and uploading. Furthermore, when using the WP app, make sure you have enabled to keep all metadata in the files that are uploaded. Otherwise, the app will remove also the GPS information.
 
 Once there is geoinformation added to any of your posts, visitors see a short description of the address either before, after, or at a custom location within the post. Here, you have three options as shown below: plain, link or static information. 
 When "link" is chosen, hovering over the address reveals a map that displays the post's exact location. 
 If one would only like to show a textual version without accessing any external services or without showing a map when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location. 
 Furthermore, there is an option to statically show the map whenever there is geoinformation available. (see below for examples)
 
-You can chose between two map providers: Google Maps and Open Streetmaps.  If you use Open Streetmaps as mapprovider in combination with the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/ "proxy plugin for OSM"), the tiles are delivered from the local proxy so that the visitors cannot be tracked from a third party. If no proxy is installed or Google Maps is used as the provider, this is not feasable, i.e., the tiles are pulled directly from the map service to your visitor's browser.
+You can choose between two map providers: Google Maps and Open Streetmaps.  If you use Open Streetmaps as mapprovider in combination with the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/ "proxy plugin for OSM"), the tiles are delivered from the local proxy so that the visitors cannot be tracked from a third party. If no proxy is installed or Google Maps is used as the provider, this is not feasible, i.e., the tiles are pulled directly from the map service to your visitor's browser.
 
-Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. The set of shown locations can be filtered per page, by placing a user defined field called "category" and give it the name (not the slag!) of the category to be shown. This way, you can also hide the location information per post (by chosing the "code option" without using it) and only show an overview map if needed. If the page is not restricted by any of the categories, all locations are shown that were tagged "public" and have the switch set to "enabled". (see example below)
+Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. The set of shown locations can be filtered per page, by placing a user defined field called "category" and give it the name (not the slug!) of the category to be shown. This way, you can also hide the location information per post (by choosing the "code option" without using it) and only show an overview map if needed. If the page is not restricted by any of the categories, all locations are shown that were tagged "public" and have the switch set to "enabled". (see example below)
 
-By default, this plugin uses Open-Streetmap but as an alternative (and backwards-compatibility) google maps can also be used. However, one needs to have a Goole Maps API key to use this plugin with google maps. You may obtain a key via google cloud plattform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
+By default, this plugin uses Open-Streetmap but as an alternative (and backwards-compatibility) google maps can also be used. However, one needs to have a Google Maps API key to use this plugin with google maps. You may obtain a key via Google Cloud Platform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
 
 If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://wordpress.org/support/plugin/geolocation/ "support request") anytime. I am more than happy to help you. Also if you would want to give a [review](https://wordpress.org/support/plugin/geolocation/reviews/ "review") if you are happy with the plugin, I would appreciate the feedback.
 
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory. (or simply install it from the official package repo)
-2. Activate the plugin through the 'Plugins' menu in WordPress. In case you would want to use Google Maps, chose Google Map as your provider an insert the Google Maps API key on the Settings > Geolocation page.
+2. Activate the plugin through the 'Plugins' menu in WordPress. In case you would want to use Google Maps, choose Google Maps as your provider and insert the Google Maps API key on the Settings > Geolocation page.
 3. Optionally (if you are using OSM as per default setting): Install and activate the [OSM proxy](https://wordpress.org/plugins/osm-tiles-proxy/ "OSM tile proxy") to make use of local delivery without tracking options for the source to your visitors.
 4. Modify the display settings as needed on the Settings > Geolocation page. The chosen settings can directly be seen in the OSM preview of the settings page.
 5. Start posting with geolocation data.
@@ -45,9 +45,18 @@ If you struggle while installing it or have feature requests, please feel free t
 3. Viewing the location in a post; setting: simple link w/hover
 4. Viewing the location in a post; setting: simple map (static)
 5. Editing a page for embedding a map for all (filtered) locations
-6. Viweing all posts providing location information
+6. Viewing all posts providing location information
 
 == Changelog ==
+
+= 1.10.0 =
+* new: a location can be removed from a post in the editor.
+* new: the OSM tiles and Nominatim URLs can be changed in the settings.
+* scripts and styles are only loaded where a location is shown and maps are created when they scroll into view.
+* addresses are cached and "update all addresses" now runs in the background.
+* updated Leaflet to 1.9.4.
+* fixed the city derived by Google reverse geocoding and the hemisphere of locations read from a featured image.
+* multiple fixes, security hardening and compliance with the WordPress coding standards.
 
 = 1.9.9 =
 * fixing visibility
