@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.11.0
+ * Version: 1.12.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.11.0' );
+define( 'GEOLOCATION__VERSION', '1.12.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -501,7 +501,7 @@ function geolocation_display_location( $content ) {
  */
 function geolocation_get_page_markers() {
 	$category  = (string) get_post_meta( get_the_ID(), 'category', true );
-	$cache_key = 'geolocation_pm_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $category . '|' . ( is_user_logged_in() ? '1' : '0' ) );
+	$cache_key = 'geolocation_pm3_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $category . '|' . ( is_user_logged_in() ? '1' : '0' ) );
 	$result    = get_transient( $cache_key );
 	if ( is_array( $result ) && isset( $result['markers'] ) ) {
 		return $result;
@@ -515,10 +515,14 @@ function geolocation_get_page_markers() {
 			continue;
 		}
 		$markers[] = array(
-			'lat'   => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_latitude', true ) ),
-			'lng'   => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_longitude', true ) ),
-			'url'   => (string) get_permalink( $geo_post ),
-			'title' => html_entity_decode( get_the_title( $geo_post ), ENT_QUOTES, 'UTF-8' ),
+			'lat'     => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_latitude', true ) ),
+			'lng'     => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_longitude', true ) ),
+			'url'     => (string) get_permalink( $geo_post ),
+			'title'   => html_entity_decode( get_the_title( $geo_post ), ENT_QUOTES, 'UTF-8' ),
+			'date'    => (string) get_the_date( '', $geo_post ),
+			'image'   => (string) get_the_post_thumbnail_url( $geo_post, 'medium' ),
+			// Only a manually written excerpt is used; generating one would run the content filters for every post.
+			'excerpt' => has_excerpt( $geo_post ) ? wp_trim_words( wp_strip_all_tags( $geo_post->post_excerpt ), 25 ) : '',
 		);
 	}
 	$result = array(
@@ -558,6 +562,9 @@ function geolocation_display_location_page( $content ) {
 	$result = geolocation_get_page_markers();
 	if ( $shortcode_found && ! empty( $result['markers'] ) && ! geolocation_maps_blocked() ) {
 		geolocation_enqueue_front();
+		// Markers lying close together are grouped on the overview map.
+		wp_enqueue_script( 'geolocation_markercluster' );
+		wp_enqueue_style( 'geolocation_markercluster' );
 		$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';
 		$width  = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
 		$height = esc_attr( (string) get_option( 'geolocation_map_height_page' ) );
