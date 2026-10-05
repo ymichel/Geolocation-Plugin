@@ -83,7 +83,12 @@
 				bounds.extend( marker.getPosition() );
 				return marker;
 			} );
-			if ( markers.length === 1 ) {
+			var zoom = parseInt( el.getAttribute( 'data-zoom' ), 10 );
+			if ( ! isNaN( zoom ) ) {
+				// The zoom level is fixed by the shortcode.
+				map.setCenter( bounds.getCenter() );
+				map.setZoom( zoom );
+			} else if ( markers.length === 1 ) {
 				// A single location would be zoomed in to the maximum by fitBounds().
 				map.setCenter( bounds.getCenter() );
 				map.setZoom( settings.zoom );

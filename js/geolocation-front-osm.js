@@ -75,7 +75,11 @@
 				L.marker( latLng, getMarkerOptions() ).bindPopup( common.buildPopup( item ), { maxWidth: 260, autoPanPaddingTopLeft: [ 50, 10 ] } ).addTo( layer );
 				bounds.push( latLng );
 			} );
-			if ( bounds.length === 1 ) {
+			var zoom = parseInt( el.getAttribute( 'data-zoom' ), 10 );
+			if ( ! isNaN( zoom ) ) {
+				// The zoom level is fixed by the shortcode.
+				map.setView( L.latLngBounds( bounds ).getCenter(), zoom );
+			} else if ( bounds.length === 1 ) {
 				// A single location would be zoomed in to the maximum by fitBounds().
 				map.setView( bounds[0], settings.zoom );
 			} else {

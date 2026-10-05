@@ -422,18 +422,105 @@ function geolocation_post_is_visible( $post_id ) {
 }
 
 /**
+ * Find the plugin's shortcode inside a text.
+ *
+ * A shortcode in square brackets may carry attributes, e.g. [geolocation cat="travel" height="400"].
+ * Any other marker text is matched literally, as in former versions.
+ *
+ * @return string A regular expression, or an empty string if no shortcode is set.
+ */
+function geolocation_shortcode_regex() {
+	$shortcode = trim( (string) get_option( 'geolocation_shortcode' ) );
+	if ( '' === $shortcode ) {
+		return '';
+	}
+	if ( preg_match( '/^\[([^\[\]\s]+)\]$/', $shortcode, $matches ) ) {
+		return '/\[' . preg_quote( $matches[1], '/' ) . '(?:\s+([^\]]*))?\]/';
+	}
+	return '/' . preg_quote( $shortcode, '/' ) . '/';
+}
+
+/**
+ * Clean the attributes of an overview map's shortcode.
+ *
+ * @param mixed $atts The attributes as parsed from the shortcode.
+ * @return array The supported attributes: cat, tag, width, height and zoom. Unused ones are empty.
+ */
+function geolocation_sanitize_map_atts( $atts ) {
+	$atts  = is_array( $atts ) ? array_change_key_case( $atts, CASE_LOWER ) : array();
+	$clean = array(
+		'cat'    => '',
+		'tag'    => '',
+		'width'  => '',
+		'height' => '',
+		'zoom'   => '',
+	);
+	if ( isset( $atts['category'] ) && ! isset( $atts['cat'] ) ) {
+		$atts['cat'] = $atts['category'];
+	}
+	foreach ( array( 'cat', 'tag' ) as $key ) {
+		if ( isset( $atts[ $key ] ) ) {
+			$terms         = array_filter( array_map( 'trim', explode( ',', (string) $atts[ $key ] ) ), 'strlen' );
+			$clean[ $key ] = implode( ',', $terms );
+		}
+	}
+	if ( isset( $atts['width'] ) ) {
+		$width = trim( (string) $atts['width'] );
+		if ( preg_match( '/^(\d{1,3})%$/', $width, $matches ) && $matches[1] >= 10 && $matches[1] <= 100 ) {
+			$clean['width'] = $matches[1] . '%';
+		} elseif ( preg_match( '/^(\d{2,4})(px)?$/', $width, $matches ) && $matches[1] >= 50 ) {
+			$clean['width'] = (int) $matches[1] . 'px';
+		}
+	}
+	if ( isset( $atts['height'] ) && preg_match( '/^(\d{2,4})(px)?$/', trim( (string) $atts['height'] ), $matches ) && $matches[1] >= 50 ) {
+		$clean['height'] = (int) $matches[1] . 'px';
+	}
+	if ( isset( $atts['zoom'] ) && is_numeric( $atts['zoom'] ) ) {
+		$clean['zoom'] = (string) max( 1, min( 19, (int) $atts['zoom'] ) );
+	}
+	return $clean;
+}
+
+/**
+ * Resolve a comma separated list of term names, slugs or ids.
+ *
+ * @param string $terms The list as given in the shortcode.
+ * @param string $taxonomy The taxonomy: category or post_tag.
+ * @return array The ids of the existing terms.
+ */
+function geolocation_get_term_ids( $terms, $taxonomy ) {
+	$ids = array();
+	foreach ( array_filter( array_map( 'trim', explode( ',', (string) $terms ) ), 'strlen' ) as $term ) {
+		$found = false;
+		if ( ctype_digit( $term ) ) {
+			$found = get_term( (int) $term, $taxonomy );
+		}
+		if ( ! $found || is_wp_error( $found ) ) {
+			$found = get_term_by( 'slug', sanitize_title( $term ), $taxonomy );
+		}
+		if ( ! $found ) {
+			$found = get_term_by( 'name', $term, $taxonomy );
+		}
+		if ( $found && ! is_wp_error( $found ) ) {
+			$ids[] = (int) $found->term_id;
+		}
+	}
+	return array_values( array_unique( $ids ) );
+}
+
+/**
  * Build the query arguments for the overview map of a page.
  *
  * Only posts having coordinates are selected here. Whether a post is shown
  * is decided afterwards by geolocation_post_is_visible().
  *
- * @param int $category_id The id of the category to filter for (0 = all).
+ * @param array $category_ids The ids of the categories to filter for (empty = all).
+ * @param array $tag_ids The ids of the tags to filter for (empty = all).
  * @return array
  */
-function geolocation_page_query_args( $category_id ) {
-	return array(
+function geolocation_page_query_args( $category_ids, $tag_ids = array() ) {
+	$args = array(
 		'post_type'      => 'post',
-		'cat'            => $category_id,
 		'posts_per_page' => -1,
 		'post_status'    => 'publish',
 		'no_found_rows'  => true,
@@ -449,6 +536,13 @@ function geolocation_page_query_args( $category_id ) {
 			),
 		),
 	);
+	if ( ! empty( $category_ids ) ) {
+		$args['category__in'] = array_map( 'intval', (array) $category_ids );
+	}
+	if ( ! empty( $tag_ids ) ) {
+		$args['tag__in'] = array_map( 'intval', (array) $tag_ids );
+	}
+	return $args;
 }
 
 /**
@@ -494,22 +588,34 @@ function geolocation_display_location( $content ) {
 /**
  * Collect the locations of all visible posts to be shown on a page's map.
  *
- * The posts can be limited to a category by the page's custom field "category".
+ * The posts can be limited by the shortcode attributes "cat" and "tag". Without a "cat"
+ * attribute the page's custom field "category" (a category name) is used, as in former versions.
  * The result is cached until a post is saved or deleted, at most for one hour.
  *
+ * @param array $atts The cleaned shortcode attributes.
  * @return array The category, its id, the number of posts having coordinates and the markers.
  */
-function geolocation_get_page_markers() {
-	$category  = (string) get_post_meta( get_the_ID(), 'category', true );
-	$cache_key = 'geolocation_pm3_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $category . '|' . ( is_user_logged_in() ? '1' : '0' ) );
+function geolocation_get_page_markers( $atts = array() ) {
+	$categories = isset( $atts['cat'] ) ? (string) $atts['cat'] : '';
+	$tags       = isset( $atts['tag'] ) ? (string) $atts['tag'] : '';
+	$legacy     = false;
+	if ( '' === $categories ) {
+		$categories = (string) get_post_meta( get_the_ID(), 'category', true );
+		$legacy     = true;
+	}
+	$cache_key = 'geolocation_pm4_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $categories . '|' . $tags . '|' . ( is_user_logged_in() ? '1' : '0' ) );
 	$result    = get_transient( $cache_key );
 	if ( is_array( $result ) && isset( $result['markers'] ) ) {
 		return $result;
 	}
 
-	$category_id = get_cat_ID( $category );
-	$posts       = get_posts( geolocation_page_query_args( $category_id ) );
-	$markers     = array();
+	$category_ids = geolocation_get_term_ids( $categories, 'category' );
+	$tag_ids      = geolocation_get_term_ids( $tags, 'post_tag' );
+	// A shortcode filter that matches no existing term must not fall back to showing all posts.
+	// An unknown category in the page's custom field shows all posts, as in former versions.
+	$no_match = ( ! $legacy && '' !== $categories && empty( $category_ids ) ) || ( '' !== $tags && empty( $tag_ids ) );
+	$posts    = $no_match ? array() : get_posts( geolocation_page_query_args( $category_ids, $tag_ids ) );
+	$markers  = array();
 	foreach ( $posts as $geo_post ) {
 		if ( ! geolocation_post_is_visible( $geo_post->ID ) ) {
 			continue;
@@ -526,8 +632,9 @@ function geolocation_get_page_markers() {
 		);
 	}
 	$result = array(
-		'category'    => $category,
-		'category_id' => $category_id,
+		'category'    => $categories,
+		'category_id' => empty( $category_ids ) ? 0 : $category_ids[0],
+		'tag'         => $tags,
 		'candidates'  => count( $posts ),
 		'markers'     => $markers,
 	);
@@ -545,33 +652,70 @@ function geolocation_flush_page_markers() {
 }
 
 /**
- * Replace the shortcode inside a page by a map showing all posts' locations.
+ * Build the overview map for one shortcode of a page.
+ *
+ * @param array $atts The cleaned shortcode attributes.
+ * @param array $result The markers as returned by geolocation_get_page_markers().
+ * @param int   $number The number of the map on the page, starting with 1.
+ * @return string The HTML of the map, or an empty string if there is nothing to show.
+ */
+function geolocation_get_page_map( $atts, $result, $number ) {
+	if ( empty( $result['markers'] ) || geolocation_maps_blocked() ) {
+		return '';
+	}
+	geolocation_enqueue_front();
+	// Markers lying close together are grouped on the overview map.
+	wp_enqueue_script( 'geolocation_markercluster' );
+	wp_enqueue_style( 'geolocation_markercluster' );
+
+	$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';
+	if ( $number > 1 ) {
+		$map_id .= '-' . $number;
+	}
+	$width  = '' !== $atts['width'] ? $atts['width'] : (int) get_option( 'geolocation_map_width_page' ) . 'px';
+	$height = '' !== $atts['height'] ? $atts['height'] : (int) get_option( 'geolocation_map_height_page' ) . 'px';
+	$zoom   = '' !== $atts['zoom'] ? ' data-zoom="' . esc_attr( $atts['zoom'] ) . '"' : '';
+	return '<div id="' . esc_attr( $map_id ) . '" class="geolocation-map geolocation-page-map"' . $zoom . ' data-markers="' . esc_attr( wp_json_encode( $result['markers'] ) ) . '" style="width:' . esc_attr( $width ) . ';height:' . esc_attr( $height ) . ';"></div>';
+}
+
+/**
+ * Replace every shortcode inside a page by a map showing the locations of posts.
  *
  * @param [type] $content The content the functionality shall be provided for.
  * @return mixed
  */
 function geolocation_display_location_page( $content ) {
-	$shortcode       = (string) get_option( 'geolocation_shortcode' );
-	$shortcode_found = '' !== $shortcode && false !== strpos( $content, $shortcode );
+	$regex           = geolocation_shortcode_regex();
+	$shortcode_found = '' !== $regex && 1 === preg_match( $regex, $content );
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only diagnostic switch.
-	if ( ! $shortcode_found && ! isset( $_GET['geodebug'] ) ) {
+	$debug = isset( $_GET['geodebug'] );
+	if ( ! $shortcode_found && ! $debug ) {
 		return $content;
 	}
 
-	$html   = '';
-	$result = geolocation_get_page_markers();
-	if ( $shortcode_found && ! empty( $result['markers'] ) && ! geolocation_maps_blocked() ) {
-		geolocation_enqueue_front();
-		// Markers lying close together are grouped on the overview map.
-		wp_enqueue_script( 'geolocation_markercluster' );
-		wp_enqueue_style( 'geolocation_markercluster' );
-		$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';
-		$width  = esc_attr( (string) get_option( 'geolocation_map_width_page' ) );
-		$height = esc_attr( (string) get_option( 'geolocation_map_height_page' ) );
-		$html   = '<div id="' . $map_id . '" class="geolocation-map geolocation-page-map" data-markers="' . esc_attr( wp_json_encode( $result['markers'] ) ) . '" style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+	$number = 0;
+	$last   = null;
+	if ( $shortcode_found ) {
+		$content = preg_replace_callback(
+			$regex,
+			function ( $matches ) use ( &$number, &$last ) {
+				// Editors may turn straight quotes into typographic ones.
+				$raw  = isset( $matches[1] ) ? str_replace( array( '&#8220;', '&#8221;', '&#8243;', '&quot;', "\u{201C}", "\u{201D}", "\u{2033}" ), '"', $matches[1] ) : '';
+				$atts = geolocation_sanitize_map_atts( '' === $raw ? array() : shortcode_parse_atts( $raw ) );
+				$last = geolocation_get_page_markers( $atts );
+				++$number;
+				return geolocation_get_page_map( $atts, $last, $number );
+			},
+			$content
+		);
 	}
-	$content = geolocation_replace_shortcode( $content, $html );
-	return $content . geolocation_page_debug( $result['category'], $result['category_id'], $result['candidates'], count( $result['markers'] ), $shortcode_found );
+	if ( ! $debug ) {
+		return $content;
+	}
+	if ( null === $last ) {
+		$last = geolocation_get_page_markers();
+	}
+	return $content . geolocation_page_debug( $last['category'], $last['category_id'], $last['candidates'], count( $last['markers'] ), $shortcode_found );
 }
 
 /**
@@ -582,11 +726,17 @@ function geolocation_display_location_page( $content ) {
  * @return string
  */
 function geolocation_replace_shortcode( $content, $replacement ) {
-	$shortcode = (string) get_option( 'geolocation_shortcode' );
-	if ( '' === $shortcode ) {
+	$regex = geolocation_shortcode_regex();
+	if ( '' === $regex ) {
 		return $content;
 	}
-	return str_replace( $shortcode, $replacement, $content );
+	return preg_replace_callback(
+		$regex,
+		function () use ( $replacement ) {
+			return $replacement;
+		},
+		$content
+	);
 }
 
 /**

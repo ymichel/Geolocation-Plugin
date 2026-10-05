@@ -8,6 +8,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Categories as slugs, names or ids, separated by commas."
+msgstr "Categorías como slug, nombre o ID, separadas por comas."
+
+msgid "Tags as slugs, names or ids, separated by commas."
+msgstr "Etiquetas como slug, nombre o ID, separadas por comas."
+
+msgid "Width of the map in pixels or percent."
+msgstr "Ancho del mapa en píxeles o porcentaje."
+
+msgid "Height of the map in pixels."
+msgstr "Alto del mapa en píxeles."
+
+msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
+msgstr "Nivel de zoom fijo de 1 a 19. Sin él, el mapa se ajusta a los marcadores."
+
+msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
+msgstr "Pon el shortcode en una página para mostrar un mapa con las ubicaciones de tus entradas. Los siguientes atributos son opcionales y se pueden combinar."
+
+msgid "Attribute"
+msgstr "Atributo"
+
+msgid "Meaning"
+msgstr "Significado"
+
+msgid "Example"
+msgstr "Ejemplo"
+
+msgid "A page can contain several maps."
+msgstr "Una página puede contener varios mapas."
+
+msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
+msgstr "Sin el atributo \"cat\" se usa el campo personalizado \"category\" de la página."
+
+msgid "Shortcode"
+msgstr "Shortcode"
+
 msgid "Geolocation Plugin Settings"
 msgstr "Ajustes del plugin Geolocation"
 
@@ -31,6 +67,12 @@ msgstr "Después de la entrada."
 
 msgid "Wherever I put the shortcode: "
 msgstr "Donde ponga el shortcode: "
+
+msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat=\"travel\" height=\"400\"]."
+msgstr "En las páginas, el shortcode muestra un mapa de todas las entradas. Atributos opcionales: cat, tag, width, height y zoom, p. ej. [geolocation cat=\"travel\" height=\"400\"]."
+
+msgid "All attributes are explained under \"Help\" at the top right of this page."
+msgstr "Todos los atributos se explican en \"Ayuda\", arriba a la derecha de esta página."
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "¿Cómo quieres que se muestre tu geolocalización?"
@@ -97,6 +139,15 @@ msgstr "Si el proxy no está disponible, solo se muestra el texto de la ubicaci�
 
 msgid "Tiles url (Caching)"
 msgstr "URL de las teselas (caché)"
+
+msgid "Currently used (from the proxy plugin):"
+msgstr "En uso actualmente (del plugin de proxy):"
+
+msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
+msgstr "Alternativa: solo se usa si el proxy está desactivado o no sirve teselas."
+
+msgid "The address the map tiles are loaded from."
+msgstr "La dirección desde la que se cargan las teselas del mapa."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

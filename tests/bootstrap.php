@@ -54,6 +54,10 @@ function esc_html( $text ) {
 	return htmlspecialchars( (string) $text, ENT_QUOTES, 'UTF-8' );
 }
 
+function sanitize_title( $title ) {
+	return strtolower( trim( preg_replace( '/[^A-Za-z0-9]+/', '-', (string) $title ), '-' ) );
+}
+
 function current_user_can( $capability ) {
 	return true;
 }

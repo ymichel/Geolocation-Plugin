@@ -305,4 +305,100 @@ class GeolocationTest extends TestCase {
 		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '1';
 		$this->assertFalse( geolocation_maps_blocked() );
 	}
+
+	/**
+	 * A shortcode in square brackets is found with and without attributes.
+	 *
+	 * @return void
+	 */
+	public function test_shortcode_regex_matches_attributes() {
+		$GLOBALS['geolocation_test_options']['geolocation_shortcode'] = '[geolocation]';
+		$regex = geolocation_shortcode_regex();
+		$this->assertSame( 1, preg_match( $regex, 'a [geolocation] b' ) );
+		$this->assertSame( 1, preg_match( $regex, 'a [geolocation cat="travel" height="400"] b', $matches ) );
+		$this->assertSame( 'cat="travel" height="400"', $matches[1] );
+		$this->assertSame( 0, preg_match( $regex, 'a [geolocations] b' ) );
+		$this->assertSame( 0, preg_match( $regex, 'a [other] b' ) );
+	}
+
+	/**
+	 * A marker text without brackets is matched literally, an empty one never.
+	 *
+	 * @return void
+	 */
+	public function test_shortcode_regex_for_custom_marker_text() {
+		$GLOBALS['geolocation_test_options']['geolocation_shortcode'] = '%%geo.map%%';
+		$this->assertSame( 1, preg_match( geolocation_shortcode_regex(), 'a %%geo.map%% b' ) );
+		$this->assertSame( 0, preg_match( geolocation_shortcode_regex(), 'a %%geoXmap%% b' ) );
+
+		$GLOBALS['geolocation_test_options']['geolocation_shortcode'] = '';
+		$this->assertSame( '', geolocation_shortcode_regex() );
+		$this->assertSame( 'a [geolocation] b', geolocation_replace_shortcode( 'a [geolocation] b', 'X' ) );
+	}
+
+	/**
+	 * Every occurrence of the shortcode is replaced, including its attributes.
+	 *
+	 * @return void
+	 */
+	public function test_replace_shortcode() {
+		$GLOBALS['geolocation_test_options']['geolocation_shortcode'] = '[geolocation]';
+		$this->assertSame( 'a X b X c', geolocation_replace_shortcode( 'a [geolocation] b [geolocation zoom="5"] c', 'X' ) );
+		$this->assertSame( 'a $1 b', geolocation_replace_shortcode( 'a [geolocation] b', '$1' ) );
+	}
+
+	/**
+	 * The attributes of a map are reduced to the supported ones and cleaned.
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_map_atts() {
+		$clean = geolocation_sanitize_map_atts(
+			array(
+				'CAT'     => ' travel , europe ,, ',
+				'tag'     => 'hiking',
+				'width'   => '100%',
+				'height'  => '400',
+				'zoom'    => '6',
+				'onclick' => 'alert(1)',
+			)
+		);
+		$this->assertSame(
+			array(
+				'cat'    => 'travel,europe',
+				'tag'    => 'hiking',
+				'width'  => '100%',
+				'height' => '400px',
+				'zoom'   => '6',
+			),
+			$clean
+		);
+	}
+
+	/**
+	 * Invalid sizes and zoom levels are dropped or limited.
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_map_atts_rejects_invalid_values() {
+		$clean = geolocation_sanitize_map_atts(
+			array(
+				'category' => 'travel',
+				'width'    => '100%;background:url(x)',
+				'height'   => '10',
+				'zoom'     => '99',
+			)
+		);
+		$this->assertSame( 'travel', $clean['cat'] );
+		$this->assertSame( '', $clean['width'] );
+		$this->assertSame( '', $clean['height'] );
+		$this->assertSame( '19', $clean['zoom'] );
+
+		$this->assertSame( '640px', geolocation_sanitize_map_atts( array( 'width' => '640' ) )['width'] );
+		$this->assertSame( '640px', geolocation_sanitize_map_atts( array( 'width' => '640px' ) )['width'] );
+		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'height' => '300;color:red' ) )['height'] );
+		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'width' => '5%' ) )['width'] );
+		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'zoom' => 'max' ) )['zoom'] );
+		$this->assertSame( '', geolocation_sanitize_map_atts( '' )['cat'] );
+	}
 }

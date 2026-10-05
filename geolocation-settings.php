@@ -226,5 +226,8 @@ function geolocation_uninstall() {
  */
 function geolocation_add_settings() {
 	require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-settings-page.php';
-	add_options_page( __( 'Geolocation Plugin Settings', 'geolocation' ), 'Geolocation', 'manage_options', 'geolocation.php', 'geolocation_settings_page' );
+	$hook_suffix = add_options_page( __( 'Geolocation Plugin Settings', 'geolocation' ), 'Geolocation', 'manage_options', 'geolocation.php', 'geolocation_settings_page' );
+	if ( $hook_suffix ) {
+		add_action( 'load-' . $hook_suffix, 'geolocation_add_help_tab' );
+	}
 }
