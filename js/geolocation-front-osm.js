@@ -67,20 +67,21 @@
 		common.forEachPageMap( function ( el, markers ) {
 			var map    = createMap( el );
 			var bounds = [];
+			// Markers lying close together are grouped if the cluster library is loaded.
+			// The radius is half of the library's default, so only markers that would overlap are grouped.
+			var layer  = typeof L.markerClusterGroup === 'function' ? L.markerClusterGroup( { showCoverageOnHover: false, maxClusterRadius: 40 } ) : L.layerGroup();
 			markers.forEach( function ( item ) {
 				var latLng = [ item.lat, item.lng ];
-				var link   = document.createElement( 'a' );
-				link.href        = item.url;
-				link.textContent = item.title;
-				L.marker( latLng, getMarkerOptions() ).addTo( map ).bindPopup( link );
+				L.marker( latLng, getMarkerOptions() ).bindPopup( common.buildPopup( item ), { maxWidth: 260, autoPanPaddingTopLeft: [ 50, 10 ] } ).addTo( layer );
 				bounds.push( latLng );
 			} );
 			if ( bounds.length === 1 ) {
 				// A single location would be zoomed in to the maximum by fitBounds().
 				map.setView( bounds[0], settings.zoom );
 			} else {
-				map.fitBounds( bounds );
+				map.fitBounds( bounds, { padding: [ 30, 30 ] } );
 			}
+			map.addLayer( layer );
 		} );
 	} );
 }() );

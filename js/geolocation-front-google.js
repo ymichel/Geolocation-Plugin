@@ -68,13 +68,20 @@
 		} );
 
 		common.forEachPageMap( function ( el, markers ) {
-			var map    = new google.maps.Map( el, { mapTypeId: google.maps.MapTypeId.ROADMAP } );
-			var bounds = new google.maps.LatLngBounds();
-			markers.forEach( function ( item ) {
+			var map        = new google.maps.Map( el, { mapTypeId: google.maps.MapTypeId.ROADMAP } );
+			var bounds     = new google.maps.LatLngBounds();
+			var infoWindow = new google.maps.InfoWindow();
+			var mapMarkers = markers.map( function ( item ) {
 				var options   = getMarkerOptions( new google.maps.LatLng( item.lat, item.lng ), map );
 				options.title = item.title;
-				options.url   = item.url;
-				bounds.extend( new google.maps.Marker( options ).getPosition() );
+				var marker    = new google.maps.Marker( options );
+				google.maps.event.addListener( marker, 'click', function () {
+					infoWindow.setContent( common.buildPopup( item ) );
+					// Without moving the focus, so the theme does not draw a focus outline around the title.
+					infoWindow.open( { anchor: marker, map: map, shouldFocus: false } );
+				} );
+				bounds.extend( marker.getPosition() );
+				return marker;
 			} );
 			if ( markers.length === 1 ) {
 				// A single location would be zoomed in to the maximum by fitBounds().
@@ -82,6 +89,14 @@
 				map.setZoom( settings.zoom );
 			} else {
 				map.fitBounds( bounds );
+			}
+			// Markers lying close together are grouped if the cluster library is loaded.
+			if ( window.markerClusterer && window.markerClusterer.MarkerClusterer ) {
+				new window.markerClusterer.MarkerClusterer( {
+					map: map,
+					markers: mapMarkers,
+					algorithmOptions: { radius: 40 }
+				} );
 			}
 		} );
 	};

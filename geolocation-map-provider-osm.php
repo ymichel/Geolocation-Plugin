@@ -51,6 +51,10 @@ function geolocation_enqueue_front_osm() {
 	wp_enqueue_script( 'geolocation_front_common', plugins_url( 'js/geolocation-front-common.js', __FILE__ ), array(), GEOLOCATION__VERSION, true );
 	wp_add_inline_script( 'geolocation_front_common', 'var geolocationFront = ' . wp_json_encode( $data ) . ';', 'before' );
 	wp_enqueue_script( 'geolocation_front_osm', plugins_url( 'js/geolocation-front-osm.js', __FILE__ ), array( 'osm_leaflet_js', 'geolocation_front_common' ), GEOLOCATION__VERSION, true );
+	// Only enqueued for the overview map of a page.
+	wp_register_script( 'geolocation_markercluster', plugins_url( 'js/leaflet.markercluster.js', __FILE__ ), array( 'osm_leaflet_js' ), '1.5.3', true );
+	wp_register_style( 'geolocation_markercluster_base', plugins_url( 'js/MarkerCluster.css', __FILE__ ), array(), '1.5.3', 'all' );
+	wp_register_style( 'geolocation_markercluster', plugins_url( 'js/MarkerCluster.Default.css', __FILE__ ), array( 'geolocation_markercluster_base' ), '1.5.3', 'all' );
 }
 
 /**

@@ -121,11 +121,51 @@
 		mapEl.addEventListener( 'mouseout', scheduleHide );
 	}
 
+	// Build the popup of a post on the overview map: image, linked title, date and excerpt.
+	// Everything is inserted as text, so the content of a post can never inject markup.
+	function buildPopup( item ) {
+		var box   = document.createElement( 'div' );
+		var title = document.createElement( 'a' );
+		var extra;
+		box.className = 'geolocation-popup';
+
+		if ( item.image ) {
+			var imageLink = document.createElement( 'a' );
+			var image     = document.createElement( 'img' );
+			imageLink.href = item.url;
+			image.src      = item.image;
+			image.alt      = '';
+			image.loading  = 'lazy';
+			imageLink.appendChild( image );
+			box.appendChild( imageLink );
+		}
+
+		title.className   = 'geolocation-popup-title';
+		title.href        = item.url;
+		title.textContent = item.title;
+		box.appendChild( title );
+
+		if ( item.date ) {
+			extra             = document.createElement( 'span' );
+			extra.className   = 'geolocation-popup-date';
+			extra.textContent = item.date;
+			box.appendChild( extra );
+		}
+		if ( item.excerpt ) {
+			extra             = document.createElement( 'p' );
+			extra.className   = 'geolocation-popup-excerpt';
+			extra.textContent = item.excerpt;
+			box.appendChild( extra );
+		}
+		return box;
+	}
+
 	window.geolocationFrontCommon = {
 		settings: settings,
 		ready: ready,
 		forEachPostMap: forEachPostMap,
 		forEachPageMap: forEachPageMap,
-		initHoverMap: initHoverMap
+		initHoverMap: initHoverMap,
+		buildPopup: buildPopup
 	};
 }() );
