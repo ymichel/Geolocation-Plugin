@@ -140,6 +140,9 @@ msgstr "Saisissez votre adresse"
 msgid "Load"
 msgstr "Charger"
 
+msgid "My location"
+msgstr "Ma position"
+
 msgid "Remove location"
 msgstr "Supprimer la localisation"
 
@@ -151,6 +154,9 @@ msgstr "Activé"
 
 msgid "Off"
 msgstr "Désactivé"
+
+msgid "Your location could not be determined."
+msgstr "Votre position n’a pas pu être déterminée."
 
 msgid "Posted from "
 msgstr "Publié depuis "

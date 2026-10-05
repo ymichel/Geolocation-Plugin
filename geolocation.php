@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.10.4
+ * Version: 1.11.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.10.4' );
+define( 'GEOLOCATION__VERSION', '1.11.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -153,7 +153,9 @@ function geolocation_inner_custom_box() {
 	<input type="hidden" id="geolocation-address-reverse" name="geolocation-address-reverse" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 	<input type="text" id="geolocation-address" name="geolocation-address" class="newtag form-input-tip" size="25" autocomplete="off" value="" />
 	<input id="geolocation-load" type="button" class="button geolocationadd" value="<?php esc_attr_e( 'Load', 'geolocation' ); ?>" />
+	<input id="geolocation-locate" type="button" class="button" value="<?php esc_attr_e( 'My location', 'geolocation' ); ?>" />
 	<input id="geolocation-remove" type="button" class="button" value="<?php esc_attr_e( 'Remove location', 'geolocation' ); ?>" />
+	<span id="geolocation-status" role="status" style="margin-left:5px;"></span>
 	<input type="hidden" id="geolocation-remove-flag" name="geolocation-remove" value="" />
 	<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
 	<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
@@ -352,6 +354,9 @@ function geolocation_get_admin_post_data( $post_id ) {
 			'addressReverse' => (string) get_post_meta( $post_id, 'geo_address_reverse', true ),
 			'isPublic'       => (string) get_post_meta( $post_id, 'geo_public', true ),
 			'isEnabled'      => (string) get_post_meta( $post_id, 'geo_enabled', true ),
+			'i18n'           => array(
+				'locateFailed' => __( 'Your location could not be determined.', 'geolocation' ),
+			),
 		)
 	);
 }
