@@ -160,12 +160,26 @@
 		return box;
 	}
 
+	// The positions of a route: all locations in the order of their posts, oldest first.
+	// Returns an empty list if the map shall not show a route.
+	function getRoute( el, markers ) {
+		if ( el.getAttribute( 'data-route' ) !== '1' || markers.length < 2 ) {
+			return [];
+		}
+		return markers.slice().sort( function ( a, b ) {
+			return ( a.time || 0 ) - ( b.time || 0 );
+		} ).map( function ( item ) {
+			return [ item.lat, item.lng ];
+		} );
+	}
+
 	window.geolocationFrontCommon = {
 		settings: settings,
 		ready: ready,
 		forEachPostMap: forEachPostMap,
 		forEachPageMap: forEachPageMap,
 		initHoverMap: initHoverMap,
-		buildPopup: buildPopup
+		buildPopup: buildPopup,
+		getRoute: getRoute
 	};
 }() );

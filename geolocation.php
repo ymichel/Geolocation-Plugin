@@ -444,7 +444,7 @@ function geolocation_shortcode_regex() {
  * Clean the attributes of an overview map's shortcode.
  *
  * @param mixed $atts The attributes as parsed from the shortcode.
- * @return array The supported attributes: cat, tag, width, height and zoom. Unused ones are empty.
+ * @return array The supported attributes: cat, tag, width, height, zoom and route. Unused ones are empty.
  */
 function geolocation_sanitize_map_atts( $atts ) {
 	$atts  = is_array( $atts ) ? array_change_key_case( $atts, CASE_LOWER ) : array();
@@ -454,6 +454,7 @@ function geolocation_sanitize_map_atts( $atts ) {
 		'width'  => '',
 		'height' => '',
 		'zoom'   => '',
+		'route'  => '',
 	);
 	if ( isset( $atts['category'] ) && ! isset( $atts['cat'] ) ) {
 		$atts['cat'] = $atts['category'];
@@ -477,6 +478,9 @@ function geolocation_sanitize_map_atts( $atts ) {
 	}
 	if ( isset( $atts['zoom'] ) && is_numeric( $atts['zoom'] ) ) {
 		$clean['zoom'] = (string) max( 1, min( 19, (int) $atts['zoom'] ) );
+	}
+	if ( isset( $atts['route'] ) && in_array( strtolower( trim( (string) $atts['route'] ) ), array( '1', 'true', 'yes', 'on' ), true ) ) {
+		$clean['route'] = '1';
 	}
 	return $clean;
 }
@@ -603,7 +607,7 @@ function geolocation_get_page_markers( $atts = array() ) {
 		$categories = (string) get_post_meta( get_the_ID(), 'category', true );
 		$legacy     = true;
 	}
-	$cache_key = 'geolocation_pm4_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $categories . '|' . $tags . '|' . ( is_user_logged_in() ? '1' : '0' ) );
+	$cache_key = 'geolocation_pm5_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $categories . '|' . $tags . '|' . ( is_user_logged_in() ? '1' : '0' ) );
 	$result    = get_transient( $cache_key );
 	if ( is_array( $result ) && isset( $result['markers'] ) ) {
 		return $result;
@@ -626,6 +630,8 @@ function geolocation_get_page_markers( $atts = array() ) {
 			'url'     => (string) get_permalink( $geo_post ),
 			'title'   => html_entity_decode( get_the_title( $geo_post ), ENT_QUOTES, 'UTF-8' ),
 			'date'    => (string) get_the_date( '', $geo_post ),
+			// Used to connect the locations in the order of the posts.
+			'time'    => (int) get_post_time( 'U', true, $geo_post ),
 			'image'   => (string) get_the_post_thumbnail_url( $geo_post, 'medium' ),
 			// Only a manually written excerpt is used; generating one would run the content filters for every post.
 			'excerpt' => has_excerpt( $geo_post ) ? wp_trim_words( wp_strip_all_tags( $geo_post->post_excerpt ), 25 ) : '',
@@ -675,6 +681,7 @@ function geolocation_get_page_map( $atts, $result, $number ) {
 	$width  = '' !== $atts['width'] ? $atts['width'] : (int) get_option( 'geolocation_map_width_page' ) . 'px';
 	$height = '' !== $atts['height'] ? $atts['height'] : (int) get_option( 'geolocation_map_height_page' ) . 'px';
 	$zoom   = '' !== $atts['zoom'] ? ' data-zoom="' . esc_attr( $atts['zoom'] ) . '"' : '';
+	$zoom  .= '' !== $atts['route'] ? ' data-route="1"' : '';
 	return '<div id="' . esc_attr( $map_id ) . '" class="geolocation-map geolocation-page-map"' . $zoom . ' data-markers="' . esc_attr( wp_json_encode( $result['markers'] ) ) . '" style="width:' . esc_attr( $width ) . ';height:' . esc_attr( $height ) . ';"></div>';
 }
 

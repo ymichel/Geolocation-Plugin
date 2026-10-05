@@ -86,6 +86,11 @@
 				map.fitBounds( bounds, { padding: [ 30, 30 ] } );
 			}
 			map.addLayer( layer );
+
+			var route = common.getRoute( el, markers );
+			if ( route.length ) {
+				L.polyline( route, { color: '#2b6cb0', weight: 3, opacity: 0.8, interactive: false } ).addTo( map );
+			}
 		} );
 	} );
 }() );
