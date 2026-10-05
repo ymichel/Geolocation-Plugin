@@ -234,6 +234,13 @@
 			return ( props.context && props.context.postId ) || ( editor && editor.getCurrentPostId ? editor.getCurrentPostId() : 0 );
 		}, [ props.context && props.context.postId ] );
 
+		// The details of the track follow the plugin settings unless the block overrules them.
+		var choices    = [
+			{ value: '', label: i18n.asSettings },
+			{ value: 'show', label: i18n.show },
+			{ value: 'hide', label: i18n.hide }
+		];
+
 		var inspector = el( blockEditor.InspectorControls, null,
 			el( components.PanelBody, { title: i18n.display },
 				el( components.SelectControl, {
@@ -251,6 +258,29 @@
 					__next40pxDefaultSize: true,
 					__nextHasNoMarginBottom: true
 				} )
+			),
+			el( components.PanelBody, { title: i18n.tracks, initialOpen: false },
+				el( components.SelectControl, {
+					label: i18n.figures,
+					value: attributes.figures,
+					options: choices,
+					onChange: function ( value ) {
+						set( { figures: value } );
+					},
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				} ),
+				el( 'div', { style: { height: '16px' } } ),
+				display === 'map' ? el( components.SelectControl, {
+					label: i18n.profile,
+					value: attributes.profile,
+					options: choices,
+					onChange: function ( value ) {
+						set( { profile: value } );
+					},
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				} ) : null
 			),
 			display === 'map' ? el( components.PanelBody, { title: i18n.map },
 				el( components.TextControl, {

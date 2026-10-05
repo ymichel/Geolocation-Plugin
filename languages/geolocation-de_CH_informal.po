@@ -373,3 +373,21 @@ msgstr "Dieser Beitrag hat noch keinen Ort, der angezeigt werden kann. Lege ihn 
 
 msgid "No post with a visible location matches these settings."
 msgstr "Kein Beitrag mit sichtbarem Ort passt zu diesen Einstellungen."
+
+msgid "Tracks"
+msgstr "Strecken"
+
+msgid "Show the key figures of a track: length, ascent, descent and highest point."
+msgstr "Kennzahlen einer Strecke anzeigen: L&auml;nge, Anstieg, Abstieg und h&ouml;chster Punkt."
+
+msgid "Show the elevation profile below the map of a post."
+msgstr "H&ouml;henprofil unter der Karte eines Beitrags anzeigen."
+
+msgid "Key figures of the track"
+msgstr "Kennzahlen der Strecke"
+
+msgid "Show"
+msgstr "Anzeigen"
+
+msgid "Hide"
+msgstr "Ausblenden"

@@ -23,6 +23,21 @@ msgstr "Toont de locatie van het bericht."
 msgid "Preview"
 msgstr "Voorbeeld"
 
+msgid "Tracks"
+msgstr "Tracks"
+
+msgid "Key figures of the track"
+msgstr "Kerncijfers van de track"
+
+msgid "Elevation profile"
+msgstr "Hoogteprofiel"
+
+msgid "Show"
+msgstr "Tonen"
+
+msgid "Hide"
+msgstr "Verbergen"
+
 msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
 msgstr "Hier wordt de locatie van dit bericht getoond, zoals ingesteld in het Geolocation-vak onder de editor."
 
@@ -194,6 +209,12 @@ msgstr "Toon je steun voor WordPress door de WordPress-kaartpin te gebruiken."
 msgid "Dimensions Page"
 msgstr "Afmetingen op pagina’s"
 
+msgid "Show the key figures of a track: length, ascent, descent and highest point."
+msgstr "De kerncijfers van een track tonen: lengte, stijging, daling en hoogste punt."
+
+msgid "Show the elevation profile below the map of a post."
+msgstr "Het hoogteprofiel onder de kaart van een bericht tonen."
+
 msgid "Shorten tracks"
 msgstr "Tracks inkorten"
 
@@ -265,9 +286,6 @@ msgstr "Daling: %s"
 
 msgid "Highest point: %s"
 msgstr "Hoogste punt: %s"
-
-msgid "Elevation profile"
-msgstr "Hoogteprofiel"
 
 msgid "Review"
 msgstr "Beoordeling"
