@@ -8,6 +8,57 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Geolocation Map"
+msgstr "Carte Geolocation"
+
+msgid "Shows the locations of your posts on a map."
+msgstr "Affiche les lieux de vos articles sur une carte."
+
+msgid "Posts"
+msgstr "Articles"
+
+msgid "Categories"
+msgstr "Catégories"
+
+msgid "Tags"
+msgstr "Étiquettes"
+
+msgid "Leave both empty to show all posts with a location."
+msgstr "Laissez les deux vides pour afficher tous les articles ayant un lieu."
+
+msgid "Map"
+msgstr "Carte"
+
+msgid "Width"
+msgstr "Largeur"
+
+msgid "In pixels or percent, e.g. 600 or 100%. Empty: the value from the plugin settings."
+msgstr "En pixels ou en pourcentage, par ex. 600 ou 100%. Vide : la valeur des réglages de l’extension."
+
+msgid "Height in pixels"
+msgstr "Hauteur en pixels"
+
+msgid "Empty: the value from the plugin settings."
+msgstr "Vide : la valeur des réglages de l’extension."
+
+msgid "Fit the map to the markers"
+msgstr "Ajuster la carte aux marqueurs"
+
+msgid "Zoom level"
+msgstr "Niveau de zoom"
+
+msgid "Route"
+msgstr "Itinéraire"
+
+msgid "Connects the locations with a line, in the order of the post dates."
+msgstr "Relie les lieux par une ligne, dans l’ordre des dates des articles."
+
+msgid "The map is shown on the website. Choose the posts and the size in the block settings."
+msgstr "La carte est affichée sur le site. Choisissez les articles et la taille dans les réglages du bloc."
+
+msgid "All posts with a location"
+msgstr "Tous les articles ayant un lieu"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Catégories sous forme de slug, de nom ou d’ID, séparées par des virgules."
 
@@ -22,9 +73,6 @@ msgstr "Hauteur de la carte en pixels."
 
 msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
 msgstr "Niveau de zoom fixe de 1 à 19. Sans lui, la carte est ajustée aux marqueurs."
-
-msgid "Connects the locations with a line, in the order of the post dates."
-msgstr "Relie les lieux par une ligne, dans l’ordre des dates des articles."
 
 msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
 msgstr "Placez le code court dans une page pour afficher une carte avec les lieux de vos articles. Les attributs suivants sont facultatifs et peuvent être combinés."
@@ -47,6 +95,9 @@ msgstr "Une page peut contenir plusieurs cartes."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Sans l’attribut « cat », le champ personnalisé « category » de la page est utilisé."
 
+msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
+msgstr "Dans l’éditeur de blocs, le bloc « Carte Geolocation » offre les mêmes options sans saisir de code court."
+
 msgid "Shortcode"
 msgstr "Code court"
 
@@ -55,9 +106,6 @@ msgstr "Réglages de l’extension Geolocation"
 
 msgid "Dimensions"
 msgstr "Dimensions"
-
-msgid "Width"
-msgstr "Largeur"
 
 msgid "Height"
 msgstr "Hauteur"

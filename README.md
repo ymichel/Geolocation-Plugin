@@ -22,3 +22,7 @@ Put the shortcode on a page to show a map with the locations of your posts. Opti
 Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
 
 The same reference is available in WordPress under "Help" at the top right of the plugin's settings page.
+
+## Block "Geolocation Map"
+
+In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.

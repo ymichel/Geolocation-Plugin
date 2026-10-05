@@ -277,3 +277,51 @@ msgstr "Breite"
 #: Author of the plugin
 msgid "Yann Michel"
 msgstr "Yann Michel"
+
+msgid "Geolocation Map"
+msgstr "Geolocation-Karte"
+
+msgid "Shows the locations of your posts on a map."
+msgstr "Zeigt die Orte der Beitr&auml;ge auf einer Karte."
+
+msgid "Posts"
+msgstr "Beitr&auml;ge"
+
+msgid "Categories"
+msgstr "Kategorien"
+
+msgid "Tags"
+msgstr "Schlagw&ouml;rter"
+
+msgid "Leave both empty to show all posts with a location."
+msgstr "Beide leer lassen, um alle Beitr&auml;ge mit Ort zu zeigen."
+
+msgid "Map"
+msgstr "Karte"
+
+msgid "In pixels or percent, e.g. 600 or 100%. Empty: the value from the plugin settings."
+msgstr "In Pixeln oder Prozent, z. B. 600 oder 100%. Leer: der Wert aus den Plugin-Einstellungen."
+
+msgid "Height in pixels"
+msgstr "H&ouml;he in Pixeln"
+
+msgid "Empty: the value from the plugin settings."
+msgstr "Leer: der Wert aus den Plugin-Einstellungen."
+
+msgid "Fit the map to the markers"
+msgstr "Karte an die Marker anpassen"
+
+msgid "Zoom level"
+msgstr "Zoomstufe"
+
+msgid "Route"
+msgstr "Route"
+
+msgid "The map is shown on the website. Choose the posts and the size in the block settings."
+msgstr "Die Karte wird auf der Website angezeigt. Beitr&auml;ge und Gr&ouml;sse lassen sich in den Block-Einstellungen w&auml;hlen."
+
+msgid "All posts with a location"
+msgstr "Alle Beitr&auml;ge mit Ort"
+
+msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
+msgstr "Im Block-Editor bietet der Block \"Geolocation-Karte\" dieselben Optionen, ohne einen Shortcode zu tippen."
