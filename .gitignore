@@ -3,3 +3,4 @@ composer.lock
 .vscode/extensions.json
 .phpunit.result.cache
 .claude/
+.DS_Store

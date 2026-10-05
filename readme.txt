@@ -60,7 +60,7 @@ Attributes can be combined, and a page can contain several maps. Without the att
 3. Viewing the location in a post; setting: simple link w/hover
 4. Viewing the location in a post; setting: simple map (static)
 5. Editing a page: the shortcode embeds a map of all locations, optional attributes filter the posts and adjust the map
-6. Viewing all posts providing location information
+6. Overview map on a page showing all posts with a location
 7. Overview map with the route between the posts, enabled by the shortcode attribute route="1"
 8. The shortcode attributes are explained in the Help tab of the settings page
 
