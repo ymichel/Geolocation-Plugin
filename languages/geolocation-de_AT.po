@@ -1,10 +1,6 @@
 # Copyright (C) 2019 Geolocation
 # This file is distributed under the same license as the Geolocation package.
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1056
-msgid "Addresses have been updated!"
-msgstr "Adressen wurden aktualisiert."
-
 msgid "Addresses are being updated in the background."
 msgstr "Adressen werden im Hintergrund aktualisiert."
 
@@ -80,10 +76,6 @@ msgstr "H&ouml;he"
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:68
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Wie sollen deine Geoinformationen dargestellt werden?"
-
-#: URI of the plugin
-msgid "https://wordpress.org/extend/plugins/geolocation/"
-msgstr "https://wordpress.org/extend/plugins/geolocation/"
 
 #: Author URI of the plugin
 msgid "https://github.com/ymichel/Geolocation-Plugin/"
@@ -245,10 +237,6 @@ msgstr "Stra&szlig;e"
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:57
 msgid "Support"
 msgstr "Support"
-
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:44
-msgid "Thank you for using the geolocation plugin. I would appreciate your <a href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" target=\"_blank\">feedback</a>, and I am also open to <a href=\"https://wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\">suggestions</a>."
-msgstr "Danke f&uuml;r die Benutzung des geolocation plugins. &Uuml;ber <a href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" target=\"_blank\">Feedback</a> oder den <a href=\"https://wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\"> Vorschlag von Ideen</a> w&uuml;rde ich mich freuen."
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:133
 msgid "Tiles url (Caching)"
