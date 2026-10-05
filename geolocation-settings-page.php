@@ -230,10 +230,20 @@ function geolocation_settings_page() {
 						<tr>
 							<th><label for="geolocation_osm_tiles_url"><?php esc_html_e( 'Tiles url (Caching)', 'geolocation' ); ?></label></th>
 							<td>
-								<input type="text" class="regular-text" id="geolocation_osm_tiles_url" name="geolocation_osm_tiles_url" value="<?php echo esc_attr( $osm_tiles_url ); ?>" />
-								<?php if ( geolocation_get_osm_tiles_url() !== (string) get_option( 'geolocation_osm_tiles_url' ) ) : ?>
-									<br /><code><?php echo esc_html( geolocation_get_osm_tiles_url() ); ?></code>
+								<?php $osm_proxy_tiles_url = geolocation_osm_proxy_tiles_url(); ?>
+								<?php if ( '' !== $osm_proxy_tiles_url ) : ?>
+									<p><strong><?php esc_html_e( 'Currently used (from the proxy plugin):', 'geolocation' ); ?></strong><br /><code><?php echo esc_html( $osm_proxy_tiles_url ); ?></code></p>
 								<?php endif; ?>
+								<input type="text" class="regular-text" id="geolocation_osm_tiles_url" name="geolocation_osm_tiles_url" value="<?php echo esc_attr( $osm_tiles_url ); ?>" />
+								<p class="description">
+									<?php
+									if ( '' !== $osm_proxy_tiles_url ) {
+										esc_html_e( 'Fallback: only used when the proxy is switched off or does not deliver tiles.', 'geolocation' );
+									} else {
+										esc_html_e( 'The address the map tiles are loaded from.', 'geolocation' );
+									}
+									?>
+								</p>
 							</td>
 						</tr>
 						<tr>

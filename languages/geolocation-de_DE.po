@@ -110,6 +110,15 @@ msgstr "Google Maps API Schl&uuml;ssel"
 msgid "OSM URLs"
 msgstr "OSM-URLs"
 
+msgid "Currently used (from the proxy plugin):"
+msgstr "Derzeit verwendet (vom Proxy-Plugin):"
+
+msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
+msgstr "R&uuml;ckfall: wird nur verwendet, wenn der Proxy ausgeschaltet ist oder keine Kacheln liefert."
+
+msgid "The address the map tiles are loaded from."
+msgstr "Die Adresse, von der die Kartenkacheln geladen werden."
+
 msgid "Shortcode"
 msgstr "Shortcode"
 

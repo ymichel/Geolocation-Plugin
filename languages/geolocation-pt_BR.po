@@ -140,6 +140,15 @@ msgstr "Se o proxy não estiver disponível, apenas o texto da localização é 
 msgid "Tiles url (Caching)"
 msgstr "URL dos blocos (cache)"
 
+msgid "Currently used (from the proxy plugin):"
+msgstr "Em uso no momento (do plugin de proxy):"
+
+msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
+msgstr "Alternativa: usada apenas se o proxy estiver desativado ou não entregar blocos."
+
+msgid "The address the map tiles are loaded from."
+msgstr "O endereço de onde os blocos do mapa são carregados."
+
 msgid "Leaflet JS"
 msgstr "Leaflet JS"
 

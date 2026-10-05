@@ -140,6 +140,15 @@ msgstr "Als de proxy niet beschikbaar is, wordt alleen de locatietekst getoond e
 msgid "Tiles url (Caching)"
 msgstr "Tegel-URL (caching)"
 
+msgid "Currently used (from the proxy plugin):"
+msgstr "Momenteel in gebruik (van de proxy-plugin):"
+
+msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
+msgstr "Terugval: wordt alleen gebruikt als de proxy is uitgeschakeld of geen tegels levert."
+
+msgid "The address the map tiles are loaded from."
+msgstr "Het adres waarvandaan de kaarttegels worden geladen."
+
 msgid "Leaflet JS"
 msgstr "Leaflet JS"
 
