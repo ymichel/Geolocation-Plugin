@@ -47,6 +47,7 @@ function geolocation_add_help_tab() {
 	$content .= '</tbody></table>';
 	$content .= '<p>' . esc_html__( 'The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with "cat" to show the route of a single trip.', 'geolocation' ) . ' <code>' . esc_html( '[' . $tag . ' cat="italy-2026" route="1"]' ) . '</code></p>';
 	$content .= '<p>' . esc_html__( 'A page can contain several maps.', 'geolocation' ) . ' ' . esc_html__( 'Without the attribute "cat" the custom field "category" of the page is used.', 'geolocation' ) . '</p>';
+	$content .= '<p>' . esc_html__( 'A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines.', 'geolocation' ) . '</p>';
 	$content .= '<p>' . esc_html__( 'In the block editor the block "Geolocation Map" offers the same options without typing a shortcode.', 'geolocation' ) . '</p>';
 
 	$screen->add_help_tab(
@@ -192,6 +193,13 @@ function geolocation_settings_page() {
 					<input type="number" min="1" name="geolocation_map_width_page" value="<?php echo esc_attr( $map_width_page ); ?>" />px<br />
 					<strong><?php esc_html_e( 'Height', 'geolocation' ); ?>:</strong>
 					<input type="number" min="1" name="geolocation_map_height_page" value="<?php echo esc_attr( $map_height_page ); ?>" />px
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="geolocation_track_trim"><?php esc_html_e( 'Shorten tracks', 'geolocation' ); ?></label></th>
+				<td>
+					<input type="number" min="0" step="50" id="geolocation_track_trim" name="geolocation_track_trim" value="<?php echo esc_attr( (string) (int) get_option( 'geolocation_track_trim' ) ); ?>" />m
+					<p class="description"><?php esc_html_e( 'Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track.', 'geolocation' ); ?></p>
 				</td>
 			</tr>
 			<tr>

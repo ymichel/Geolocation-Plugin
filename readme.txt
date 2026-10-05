@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 
 Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
@@ -44,6 +44,16 @@ Put the shortcode on a page to show a map with the locations of your posts. Opti
 
 Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
 
+= Tracks (GPX) =
+
+A post can carry the track of a GPX file, e.g. the recording of a hike or a bike tour. Choose the file in the Geolocation box of the post editor.
+
+* The file is read in your browser. Only the simplified line of the track is stored with the post; the file itself, its times and elevations are not uploaded.
+* With the display setting "Simple map" the map of the post shows the track.
+* An overview map with `route="1"` draws the tracks as recorded and the gaps between them as dashed lines. The popup of a post shows the length of its track.
+* A post without a location gets the end of its track as location.
+* The setting "Shorten tracks" hides a distance at the start and at the end of every track, e.g. to keep your home address private.
+
 = Block "Geolocation Map" =
 
 In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.
@@ -68,8 +78,14 @@ In the block editor you can insert the block "Geolocation Map" instead of typing
 7. Overview map with the route between the posts, enabled by the shortcode attribute route="1"
 8. The shortcode attributes are explained in the Help tab of the settings page
 9. The block "Geolocation Map" with its settings in the block editor
+10. The track of a GPX file on an overview map, enabled by the shortcode attribute route="1"
 
 == Changelog ==
+
+= 1.14.0 =
+* new: a post can carry the track of a GPX file. The file is read in the browser, only the simplified line is stored.
+* new: the map of a post shows its track; an overview map with route="1" draws the tracks as recorded and the gaps between them as dashed lines.
+* new: the setting "Shorten tracks" hides the start and the end of every track, e.g. to keep a home address private.
 
 = 1.13.0 =
 * new: the block "Geolocation Map" shows the overview map in the block editor without typing a shortcode; posts, size, zoom and route are chosen in the settings of the block.

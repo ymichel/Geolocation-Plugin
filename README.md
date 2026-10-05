@@ -23,6 +23,16 @@ Attributes can be combined, and a page can contain several maps. Without the att
 
 The same reference is available in WordPress under "Help" at the top right of the plugin's settings page.
 
+## Tracks (GPX)
+
+A post can carry the track of a GPX file, e.g. the recording of a hike or a bike tour. Choose the file in the Geolocation box of the post editor.
+
+- The file is read in your browser. Only the simplified line of the track is stored with the post; the file itself, its times and elevations are not uploaded.
+- With the display setting "Simple map" the map of the post shows the track.
+- An overview map with `route="1"` draws the tracks as recorded and the gaps between them as dashed lines. The popup of a post shows the length of its track.
+- A post without a location gets the end of its track as location.
+- The setting "Shorten tracks" hides a distance at the start and at the end of every track, e.g. to keep your home address private.
+
 ## Block "Geolocation Map"
 
 In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.

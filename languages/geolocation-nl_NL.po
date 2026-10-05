@@ -95,6 +95,9 @@ msgstr "Een pagina kan meerdere kaarten bevatten."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Zonder het attribuut \"cat\" wordt het aangepaste veld \"category\" van de pagina gebruikt."
 
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Een bericht kan de track van een GPX-bestand bevatten, gekozen in het Geolocation-vak van de editor. Een kaart met route tekent deze tracks zoals opgenomen en de tussenruimtes als stippellijnen."
+
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "In de blokeditor biedt het blok \"Geolocation-kaart\" dezelfde opties zonder een shortcode te typen."
 
@@ -166,6 +169,12 @@ msgstr "Toon je steun voor WordPress door de WordPress-kaartpin te gebruiken."
 
 msgid "Dimensions Page"
 msgstr "Afmetingen op pagina’s"
+
+msgid "Shorten tracks"
+msgstr "Tracks inkorten"
+
+msgid "Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track."
+msgstr "Verbergt deze afstand aan het begin en het einde van elke track, bijv. om je woonadres privé te houden. 0 toont de hele track."
 
 msgid "Maps Provider"
 msgstr "Kaartaanbieder"
@@ -260,8 +269,23 @@ msgstr "Aan"
 msgid "Off"
 msgstr "Uit"
 
+msgid "Track (GPX)"
+msgstr "Track (GPX)"
+
+msgid "Remove track"
+msgstr "Track verwijderen"
+
+msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
+msgstr "Het bestand wordt in je browser gelezen. Alleen de vereenvoudigde lijn van de track wordt opgeslagen, niet het bestand."
+
 msgid "Your location could not be determined."
 msgstr "Je locatie kon niet worden bepaald."
+
+msgid "No track was found in this file."
+msgstr "In dit bestand is geen track gevonden."
+
+msgid "Track: %s"
+msgstr "Track: %s"
 
 msgid "Posted from "
 msgstr "Geplaatst vanuit "

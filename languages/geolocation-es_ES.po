@@ -95,6 +95,9 @@ msgstr "Una página puede contener varios mapas."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Sin el atributo \"cat\" se usa el campo personalizado \"category\" de la página."
 
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Una entrada puede llevar el recorrido de un archivo GPX, elegido en la caja Geolocation del editor. Un mapa con ruta dibuja estos recorridos tal como se grabaron y los huecos entre ellos con líneas discontinuas."
+
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "En el editor de bloques, el bloque \"Mapa de Geolocation\" ofrece las mismas opciones sin escribir un shortcode."
 
@@ -166,6 +169,12 @@ msgstr "Muestra tu apoyo a WordPress usando el marcador de mapa de WordPress."
 
 msgid "Dimensions Page"
 msgstr "Dimensiones en páginas"
+
+msgid "Shorten tracks"
+msgstr "Acortar recorridos"
+
+msgid "Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track."
+msgstr "Oculta esta distancia al principio y al final de cada recorrido, p. ej. para mantener privada tu dirección. 0 muestra el recorrido completo."
 
 msgid "Maps Provider"
 msgstr "Proveedor de mapas"
@@ -260,8 +269,23 @@ msgstr "Activado"
 msgid "Off"
 msgstr "Desactivado"
 
+msgid "Track (GPX)"
+msgstr "Recorrido (GPX)"
+
+msgid "Remove track"
+msgstr "Eliminar recorrido"
+
+msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
+msgstr "El archivo se lee en tu navegador. Solo se guarda la línea simplificada del recorrido, no el archivo."
+
 msgid "Your location could not be determined."
 msgstr "No se pudo determinar tu ubicación."
+
+msgid "No track was found in this file."
+msgstr "No se ha encontrado ningún recorrido en este archivo."
+
+msgid "Track: %s"
+msgstr "Recorrido: %s"
 
 msgid "Posted from "
 msgstr "Publicado desde "

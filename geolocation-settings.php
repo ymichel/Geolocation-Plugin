@@ -49,6 +49,7 @@ function geolocation_get_settings_definition() {
 		'geolocation_map_height_page'     => array( 'integer', 'absint', '300' ),
 		'geolocation_provider'            => array( 'string', 'geolocation_sanitize_provider', 'osm' ),
 		'geolocation_shortcode'           => array( 'string', 'sanitize_text_field', '[geolocation]' ),
+		'geolocation_track_trim'          => array( 'integer', 'absint', null ),
 		'geolocation_osm_use_proxy'       => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_osm_strict_privacy'  => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_osm_tiles_url'       => array( 'string', 'sanitize_text_field', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' ),
@@ -178,7 +179,7 @@ function geolocation_maybe_upgrade() {
 }
 
 /**
- * Delete the addresses derived by this plugin and its cached lookups.
+ * Delete the addresses derived by this plugin, the tracks of the posts and the cached lookups.
  *
  * The coordinates of the posts are kept as they are standard geo data.
  *
@@ -188,6 +189,8 @@ function geolocation_delete_addresses() {
 	global $wpdb;
 	delete_post_meta_by_key( 'geo_address' );
 	delete_post_meta_by_key( 'geo_address_reverse' );
+	delete_post_meta_by_key( 'geo_track' );
+	delete_post_meta_by_key( 'geo_track_km' );
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- there is no API to delete transients by prefix.
 	$wpdb->query(
 		$wpdb->prepare(

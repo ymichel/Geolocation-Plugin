@@ -28,6 +28,10 @@
 		return options;
 	}
 
+	// Routes and tracks; gaps between recorded tracks are dashed.
+	var lineOptions   = { color: '#2b6cb0', weight: 3, opacity: 0.8, interactive: false };
+	var dashedOptions = { color: '#2b6cb0', weight: 3, opacity: 0.8, interactive: false, dashArray: '2 8' };
+
 	function createMap( el ) {
 		var map = L.map( el );
 		L.tileLayer( settings.tilesUrl, {
@@ -45,10 +49,16 @@
 			return;
 		}
 
-		common.forEachPostMap( function ( el, latLng ) {
+		common.forEachPostMap( function ( el, latLng, track ) {
 			var map = createMap( el );
 			L.marker( latLng, getMarkerOptions() ).addTo( map );
-			map.setView( latLng, settings.zoom );
+			if ( track.length ) {
+				// Show the whole track of the post instead of the surroundings of its location.
+				L.polyline( track, lineOptions ).addTo( map );
+				map.fitBounds( track.concat( [ latLng ] ), { padding: [ 20, 20 ] } );
+			} else {
+				map.setView( latLng, settings.zoom );
+			}
 		} );
 
 		common.initHoverMap( function ( mapEl ) {
@@ -75,6 +85,11 @@
 				L.marker( latLng, getMarkerOptions() ).bindPopup( common.buildPopup( item ), { maxWidth: 260, autoPanPaddingTopLeft: [ 50, 10 ] } ).addTo( layer );
 				bounds.push( latLng );
 			} );
+			var lines = common.getRouteLines( el, markers );
+			lines.solid.forEach( function ( line ) {
+				// The map shall show the tracks completely.
+				bounds = bounds.concat( line );
+			} );
 			var zoom = parseInt( el.getAttribute( 'data-zoom' ), 10 );
 			if ( ! isNaN( zoom ) ) {
 				// The zoom level is fixed by the shortcode.
@@ -87,10 +102,12 @@
 			}
 			map.addLayer( layer );
 
-			var route = common.getRoute( el, markers );
-			if ( route.length ) {
-				L.polyline( route, { color: '#2b6cb0', weight: 3, opacity: 0.8, interactive: false } ).addTo( map );
-			}
+			lines.solid.forEach( function ( line ) {
+				L.polyline( line, lineOptions ).addTo( map );
+			} );
+			lines.dashed.forEach( function ( line ) {
+				L.polyline( line, dashedOptions ).addTo( map );
+			} );
 		} );
 	} );
 }() );

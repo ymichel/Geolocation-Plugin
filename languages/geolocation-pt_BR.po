@@ -95,6 +95,9 @@ msgstr "Uma página pode conter vários mapas."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Sem o atributo \"cat\", é usado o campo personalizado \"category\" da página."
 
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Um post pode ter o trajeto de um arquivo GPX, escolhido na caixa Geolocation do editor. Um mapa com rota desenha esses trajetos como foram gravados e os intervalos entre eles com linhas tracejadas."
+
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "No editor de blocos, o bloco \"Mapa do Geolocation\" oferece as mesmas opções sem digitar um shortcode."
 
@@ -166,6 +169,12 @@ msgstr "Mostre seu apoio ao WordPress usando o marcador de mapa do WordPress."
 
 msgid "Dimensions Page"
 msgstr "Dimensões nas páginas"
+
+msgid "Shorten tracks"
+msgstr "Encurtar trajetos"
+
+msgid "Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track."
+msgstr "Oculta esta distância no início e no fim de cada trajeto, por exemplo para manter seu endereço privado. 0 exibe o trajeto inteiro."
 
 msgid "Maps Provider"
 msgstr "Provedor de mapas"
@@ -260,8 +269,23 @@ msgstr "Ligado"
 msgid "Off"
 msgstr "Desligado"
 
+msgid "Track (GPX)"
+msgstr "Trajeto (GPX)"
+
+msgid "Remove track"
+msgstr "Remover trajeto"
+
+msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
+msgstr "O arquivo é lido no seu navegador. Apenas a linha simplificada do trajeto é armazenada, não o arquivo."
+
 msgid "Your location could not be determined."
 msgstr "Não foi possível determinar sua localização."
+
+msgid "No track was found in this file."
+msgstr "Nenhum trajeto foi encontrado neste arquivo."
+
+msgid "Track: %s"
+msgstr "Trajeto: %s"
 
 msgid "Posted from "
 msgstr "Publicado de "

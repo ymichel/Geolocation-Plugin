@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.13.0
+ * Version: 1.14.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.13.0' );
+define( 'GEOLOCATION__VERSION', '1.14.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -54,6 +54,7 @@ register_uninstall_hook( __FILE__, 'geolocation_uninstall' );
 
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-settings.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-block.php';
+require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-track.php';
 // To do: add support for multiple Map API providers.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':
@@ -172,6 +173,16 @@ function geolocation_inner_custom_box() {
 			<label for="geolocation-disabled"><?php esc_html_e( 'Off', 'geolocation' ); ?></label>
 		</div>
 	</div>
+	<div style="margin:12px 0 0 0;clear:both;">
+		<label for="geolocation-track-file"><strong><?php esc_html_e( 'Track (GPX)', 'geolocation' ); ?></strong></label>
+		<input type="file" id="geolocation-track-file" accept=".gpx,application/gpx+xml" />
+		<input id="geolocation-track-remove" type="button" class="button" value="<?php esc_attr_e( 'Remove track', 'geolocation' ); ?>" />
+		<span id="geolocation-track-status" role="status" style="margin-left:5px;"></span>
+		<input type="hidden" id="geolocation-track" name="geolocation-track" value="" />
+		<input type="hidden" id="geolocation-track-km" name="geolocation-track-km" value="" />
+		<input type="hidden" id="geolocation-track-remove-flag" name="geolocation-track-remove" value="" />
+		<p class="description"><?php esc_html_e( 'The file is read in your browser. Only the simplified line of the track is stored, not the file.', 'geolocation' ); ?></p>
+	</div>
 	<?php
 }
 
@@ -262,6 +273,8 @@ function geolocation_save_postdata( $post_id ) {
 	) {
 		return $post_id;
 	}
+
+	geolocation_save_track( $post_id );
 
 	$latitude        = geolocation_clean_coordinate( geolocation_get_posted_value( 'geolocation-latitude' ) );
 	$longitude       = geolocation_clean_coordinate( geolocation_get_posted_value( 'geolocation-longitude' ) );
@@ -356,8 +369,12 @@ function geolocation_get_admin_post_data( $post_id ) {
 			'addressReverse' => (string) get_post_meta( $post_id, 'geo_address_reverse', true ),
 			'isPublic'       => (string) get_post_meta( $post_id, 'geo_public', true ),
 			'isEnabled'      => (string) get_post_meta( $post_id, 'geo_enabled', true ),
+			'trackKm'        => geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) ),
 			'i18n'           => array(
 				'locateFailed' => __( 'Your location could not be determined.', 'geolocation' ),
+				'trackInvalid' => geolocation_block_text( __( 'No track was found in this file.', 'geolocation' ) ),
+				/* translators: %s: the length of the track, e.g. "42 km". */
+				'trackLength'  => geolocation_block_text( __( 'Track: %s', 'geolocation' ) ),
 			),
 		)
 	);
@@ -385,12 +402,14 @@ function geolocation_enqueue_front() {
  *
  * @param mixed  $id The suffix of the DIV's id, usually the post id.
  * @param string $position The location to be shown as "latitude,longitude", empty for the popup map.
+ * @param array  $track The track to be drawn on the map, as [ latitude, longitude ] pairs.
  * @return string The escaped HTML of the DIV.
  */
-function geolocation_get_geo_div( $id = null, $position = '' ) {
+function geolocation_get_geo_div( $id = null, $position = '', $track = array() ) {
 	$width  = esc_attr( (string) get_option( 'geolocation_map_width' ) );
 	$height = esc_attr( (string) get_option( 'geolocation_map_height' ) );
 	$data   = '' === $position ? '' : ' data-geolocation="' . esc_attr( (string) $position ) . '"';
+	$data  .= empty( $track ) ? '' : ' data-track="' . esc_attr( wp_json_encode( $track ) ) . '"';
 	return '<div id="map' . esc_attr( (string) $id ) . '" class="geolocation-map"' . $data . ' style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
 }
 
@@ -610,7 +629,9 @@ function geolocation_get_page_markers( $atts = array(), $use_custom_field = true
 		$categories = (string) get_post_meta( get_the_ID(), 'category', true );
 		$legacy     = true;
 	}
-	$cache_key = 'geolocation_pm5_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $categories . '|' . $tags . '|' . ( is_user_logged_in() ? '1' : '0' ) . ( $legacy ? '|legacy' : '' ) );
+	// Tracks are only needed for a map showing the route.
+	$tracks    = ! empty( $atts['route'] );
+	$cache_key = 'geolocation_pm6_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $categories . '|' . $tags . '|' . ( is_user_logged_in() ? '1' : '0' ) . ( $legacy ? '|legacy' : '' ) . ( $tracks ? '|tracks' . (int) get_option( 'geolocation_track_trim' ) : '' ) );
 	$result    = get_transient( $cache_key );
 	if ( is_array( $result ) && isset( $result['markers'] ) ) {
 		return $result;
@@ -623,11 +644,13 @@ function geolocation_get_page_markers( $atts = array(), $use_custom_field = true
 	$no_match = ( ! $legacy && '' !== $categories && empty( $category_ids ) ) || ( '' !== $tags && empty( $tag_ids ) );
 	$posts    = $no_match ? array() : get_posts( geolocation_page_query_args( $category_ids, $tag_ids ) );
 	$markers  = array();
+	// The posts having a track, by the index of their marker.
+	$with_track = array();
 	foreach ( $posts as $geo_post ) {
 		if ( ! geolocation_post_is_visible( $geo_post->ID ) ) {
 			continue;
 		}
-		$markers[] = array(
+		$marker = array(
 			'lat'     => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_latitude', true ) ),
 			'lng'     => (float) geolocation_clean_coordinate( get_post_meta( $geo_post->ID, 'geo_longitude', true ) ),
 			'url'     => (string) get_permalink( $geo_post ),
@@ -638,7 +661,20 @@ function geolocation_get_page_markers( $atts = array(), $use_custom_field = true
 			'image'   => (string) get_the_post_thumbnail_url( $geo_post, 'medium' ),
 			// Only a manually written excerpt is used; generating one would run the content filters for every post.
 			'excerpt' => has_excerpt( $geo_post ) ? wp_trim_words( wp_strip_all_tags( $geo_post->post_excerpt ), 25 ) : '',
+			'length'  => geolocation_format_track_length( get_post_meta( $geo_post->ID, 'geo_track_km', true ) ),
 		);
+		if ( $tracks && '' !== $marker['length'] ) {
+			$with_track[ count( $markers ) ] = $geo_post->ID;
+		}
+		$markers[] = $marker;
+	}
+	// The more tracks a map shows, the fewer positions each of them gets.
+	$positions = empty( $with_track ) ? 0 : max( 50, min( GEOLOCATION__TRACK_POINTS, intdiv( GEOLOCATION__TRACK_POINTS_PAGE, count( $with_track ) ) ) );
+	foreach ( $with_track as $index => $track_post_id ) {
+		$track = geolocation_get_track( $track_post_id, $positions );
+		if ( ! empty( $track ) ) {
+			$markers[ $index ]['track'] = $track;
+		}
 	}
 	$result = array(
 		'category'    => $categories,
@@ -801,7 +837,7 @@ function geolocation_display_location_post( $content ) {
 			geolocation_enqueue_front();
 			break;
 		case 'map':
-			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude );
+			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude, geolocation_get_track( $post->ID ) );
 			geolocation_enqueue_front();
 			break;
 		case 'debug':

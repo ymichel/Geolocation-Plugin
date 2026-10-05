@@ -26,6 +26,28 @@
 		return options;
 	}
 
+	// Draw a route or a track; gaps between recorded tracks are dashed.
+	function drawLine( map, line, dashed ) {
+		var options = {
+			map: map,
+			path: line.map( toLatLng ),
+			geodesic: true,
+			clickable: false,
+			strokeColor: '#2b6cb0',
+			strokeOpacity: 0.8,
+			strokeWeight: 3
+		};
+		if ( dashed ) {
+			options.strokeOpacity = 0;
+			options.icons         = [ {
+				icon: { path: 'M 0,-1 0,1', strokeColor: '#2b6cb0', strokeOpacity: 0.8, scale: 3 },
+				offset: '0',
+				repeat: '10px'
+			} ];
+		}
+		return new google.maps.Polyline( options );
+	}
+
 	function getMapOptions( center ) {
 		return {
 			zoom: settings.zoom,
@@ -39,10 +61,20 @@
 			return;
 		}
 
-		common.forEachPostMap( function ( el, latLng ) {
+		common.forEachPostMap( function ( el, latLng, track ) {
 			var position = toLatLng( latLng );
 			var map      = new google.maps.Map( el, getMapOptions( position ) );
 			new google.maps.Marker( getMarkerOptions( position, map ) );
+			if ( track.length ) {
+				// Show the whole track of the post instead of the surroundings of its location.
+				var bounds = new google.maps.LatLngBounds();
+				bounds.extend( position );
+				track.forEach( function ( point ) {
+					bounds.extend( toLatLng( point ) );
+				} );
+				drawLine( map, track, false );
+				map.fitBounds( bounds );
+			}
 		} );
 
 		common.initHoverMap( function ( mapEl ) {
@@ -83,30 +115,31 @@
 				bounds.extend( marker.getPosition() );
 				return marker;
 			} );
+			var lines = common.getRouteLines( el, markers );
+			lines.solid.forEach( function ( line ) {
+				// The map shall show the tracks completely.
+				line.forEach( function ( point ) {
+					bounds.extend( toLatLng( point ) );
+				} );
+			} );
 			var zoom = parseInt( el.getAttribute( 'data-zoom' ), 10 );
 			if ( ! isNaN( zoom ) ) {
 				// The zoom level is fixed by the shortcode.
 				map.setCenter( bounds.getCenter() );
 				map.setZoom( zoom );
-			} else if ( markers.length === 1 ) {
+			} else if ( markers.length === 1 && ! lines.solid.length ) {
 				// A single location would be zoomed in to the maximum by fitBounds().
 				map.setCenter( bounds.getCenter() );
 				map.setZoom( settings.zoom );
 			} else {
 				map.fitBounds( bounds );
 			}
-			var route = common.getRoute( el, markers );
-			if ( route.length ) {
-				new google.maps.Polyline( {
-					map: map,
-					path: route.map( toLatLng ),
-					geodesic: true,
-					clickable: false,
-					strokeColor: '#2b6cb0',
-					strokeOpacity: 0.8,
-					strokeWeight: 3
-				} );
-			}
+			lines.solid.forEach( function ( line ) {
+				drawLine( map, line, false );
+			} );
+			lines.dashed.forEach( function ( line ) {
+				drawLine( map, line, true );
+			} );
 			// Markers lying close together are grouped if the cluster library is loaded.
 			if ( window.markerClusterer && window.markerClusterer.MarkerClusterer ) {
 				new window.markerClusterer.MarkerClusterer( {

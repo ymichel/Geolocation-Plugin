@@ -95,6 +95,9 @@ msgstr "Une page peut contenir plusieurs cartes."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Sans l’attribut « cat », le champ personnalisé « category » de la page est utilisé."
 
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Un article peut porter la trace d’un fichier GPX, choisi dans la boîte Geolocation de l’éditeur. Une carte avec itinéraire dessine ces traces telles qu’enregistrées et les intervalles entre elles en pointillés."
+
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "Dans l’éditeur de blocs, le bloc « Carte Geolocation » offre les mêmes options sans saisir de code court."
 
@@ -166,6 +169,12 @@ msgstr "Montrez votre soutien à WordPress en utilisant le marqueur de carte Wor
 
 msgid "Dimensions Page"
 msgstr "Dimensions sur les pages"
+
+msgid "Shorten tracks"
+msgstr "Raccourcir les traces"
+
+msgid "Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track."
+msgstr "Masque cette distance au début et à la fin de chaque trace, par ex. pour garder votre adresse privée. 0 affiche la trace entière."
 
 msgid "Maps Provider"
 msgstr "Fournisseur de cartes"
@@ -260,8 +269,23 @@ msgstr "Activé"
 msgid "Off"
 msgstr "Désactivé"
 
+msgid "Track (GPX)"
+msgstr "Trace (GPX)"
+
+msgid "Remove track"
+msgstr "Supprimer la trace"
+
+msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
+msgstr "Le fichier est lu dans votre navigateur. Seule la ligne simplifiée de la trace est enregistrée, pas le fichier."
+
 msgid "Your location could not be determined."
 msgstr "Votre position n’a pas pu être déterminée."
+
+msgid "No track was found in this file."
+msgstr "Aucune trace n’a été trouvée dans ce fichier."
+
+msgid "Track: %s"
+msgstr "Trace : %s"
 
 msgid "Posted from "
 msgstr "Publié depuis "
