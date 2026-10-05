@@ -47,6 +47,7 @@ function geolocation_add_help_tab() {
 	$content .= '</tbody></table>';
 	$content .= '<p>' . esc_html__( 'The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with "cat" to show the route of a single trip.', 'geolocation' ) . ' <code>' . esc_html( '[' . $tag . ' cat="italy-2026" route="1"]' ) . '</code></p>';
 	$content .= '<p>' . esc_html__( 'A page can contain several maps.', 'geolocation' ) . ' ' . esc_html__( 'Without the attribute "cat" the custom field "category" of the page is used.', 'geolocation' ) . '</p>';
+	$content .= '<p>' . esc_html__( 'In the block editor the block "Geolocation Map" offers the same options without typing a shortcode.', 'geolocation' ) . '</p>';
 
 	$screen->add_help_tab(
 		array(

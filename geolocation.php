@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.12.0
+ * Version: 1.13.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,10 +31,11 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.12.0' );
+define( 'GEOLOCATION__VERSION', '1.13.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
+add_action( 'init', 'geolocation_register_block' );
 add_action( 'admin_init', 'geolocation_maybe_upgrade' );
 add_action( 'admin_init', 'geolocation_register_settings' );
 add_action( 'admin_menu', 'geolocation_add_settings' );
@@ -52,6 +53,7 @@ register_activation_hook( __FILE__, 'geolocation_activate' );
 register_uninstall_hook( __FILE__, 'geolocation_uninstall' );
 
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-settings.php';
+require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-block.php';
 // To do: add support for multiple Map API providers.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':
@@ -597,17 +599,18 @@ function geolocation_display_location( $content ) {
  * The result is cached until a post is saved or deleted, at most for one hour.
  *
  * @param array $atts The cleaned shortcode attributes.
+ * @param bool  $use_custom_field Whether the page's custom field "category" is used without a "cat" attribute.
  * @return array The category, its id, the number of posts having coordinates and the markers.
  */
-function geolocation_get_page_markers( $atts = array() ) {
+function geolocation_get_page_markers( $atts = array(), $use_custom_field = true ) {
 	$categories = isset( $atts['cat'] ) ? (string) $atts['cat'] : '';
 	$tags       = isset( $atts['tag'] ) ? (string) $atts['tag'] : '';
 	$legacy     = false;
-	if ( '' === $categories ) {
+	if ( '' === $categories && $use_custom_field ) {
 		$categories = (string) get_post_meta( get_the_ID(), 'category', true );
 		$legacy     = true;
 	}
-	$cache_key = 'geolocation_pm5_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $categories . '|' . $tags . '|' . ( is_user_logged_in() ? '1' : '0' ) );
+	$cache_key = 'geolocation_pm5_' . md5( get_option( 'geolocation_markers_version' ) . '|' . $categories . '|' . $tags . '|' . ( is_user_logged_in() ? '1' : '0' ) . ( $legacy ? '|legacy' : '' ) );
 	$result    = get_transient( $cache_key );
 	if ( is_array( $result ) && isset( $result['markers'] ) ) {
 		return $result;
@@ -660,12 +663,13 @@ function geolocation_flush_page_markers() {
 /**
  * Build the overview map for one shortcode of a page.
  *
- * @param array $atts The cleaned shortcode attributes.
- * @param array $result The markers as returned by geolocation_get_page_markers().
- * @param int   $number The number of the map on the page, starting with 1.
+ * @param array  $atts The cleaned shortcode attributes.
+ * @param array  $result The markers as returned by geolocation_get_page_markers().
+ * @param int    $number The number of the map on the page, starting with 1.
+ * @param string $map_id The id of the map's element; by default derived from the number.
  * @return string The HTML of the map, or an empty string if there is nothing to show.
  */
-function geolocation_get_page_map( $atts, $result, $number ) {
+function geolocation_get_page_map( $atts, $result, $number, $map_id = '' ) {
 	if ( empty( $result['markers'] ) || geolocation_maps_blocked() ) {
 		return '';
 	}
@@ -674,9 +678,11 @@ function geolocation_get_page_map( $atts, $result, $number ) {
 	wp_enqueue_script( 'geolocation_markercluster' );
 	wp_enqueue_style( 'geolocation_markercluster' );
 
-	$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';
-	if ( $number > 1 ) {
-		$map_id .= '-' . $number;
+	if ( '' === $map_id ) {
+		$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';
+		if ( $number > 1 ) {
+			$map_id .= '-' . $number;
+		}
 	}
 	$width  = '' !== $atts['width'] ? $atts['width'] : (int) get_option( 'geolocation_map_width_page' ) . 'px';
 	$height = '' !== $atts['height'] ? $atts['height'] : (int) get_option( 'geolocation_map_height_page' ) . 'px';

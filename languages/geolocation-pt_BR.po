@@ -8,6 +8,57 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Geolocation Map"
+msgstr "Mapa do Geolocation"
+
+msgid "Shows the locations of your posts on a map."
+msgstr "Exibe as localizações dos seus posts em um mapa."
+
+msgid "Posts"
+msgstr "Posts"
+
+msgid "Categories"
+msgstr "Categorias"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Leave both empty to show all posts with a location."
+msgstr "Deixe ambos vazios para exibir todos os posts com localização."
+
+msgid "Map"
+msgstr "Mapa"
+
+msgid "Width"
+msgstr "Largura"
+
+msgid "In pixels or percent, e.g. 600 or 100%. Empty: the value from the plugin settings."
+msgstr "Em pixels ou porcentagem, por exemplo 600 ou 100%. Vazio: o valor das configurações do plugin."
+
+msgid "Height in pixels"
+msgstr "Altura em pixels"
+
+msgid "Empty: the value from the plugin settings."
+msgstr "Vazio: o valor das configurações do plugin."
+
+msgid "Fit the map to the markers"
+msgstr "Ajustar o mapa aos marcadores"
+
+msgid "Zoom level"
+msgstr "Nível de zoom"
+
+msgid "Route"
+msgstr "Rota"
+
+msgid "Connects the locations with a line, in the order of the post dates."
+msgstr "Liga as localizações com uma linha, na ordem das datas dos posts."
+
+msgid "The map is shown on the website. Choose the posts and the size in the block settings."
+msgstr "O mapa é exibido no site. Escolha os posts e o tamanho nas configurações do bloco."
+
+msgid "All posts with a location"
+msgstr "Todos os posts com localização"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorias como slug, nome ou ID, separadas por vírgulas."
 
@@ -22,9 +73,6 @@ msgstr "Altura do mapa em pixels."
 
 msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
 msgstr "Nível de zoom fixo de 1 a 19. Sem ele, o mapa é ajustado aos marcadores."
-
-msgid "Connects the locations with a line, in the order of the post dates."
-msgstr "Liga as localizações com uma linha, na ordem das datas dos posts."
 
 msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
 msgstr "Coloque o shortcode em uma página para exibir um mapa com as localizações dos seus posts. Os atributos a seguir são opcionais e podem ser combinados."
@@ -47,6 +95,9 @@ msgstr "Uma página pode conter vários mapas."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Sem o atributo \"cat\", é usado o campo personalizado \"category\" da página."
 
+msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
+msgstr "No editor de blocos, o bloco \"Mapa do Geolocation\" oferece as mesmas opções sem digitar um shortcode."
+
 msgid "Shortcode"
 msgstr "Shortcode"
 
@@ -55,9 +106,6 @@ msgstr "Configurações do plugin Geolocation"
 
 msgid "Dimensions"
 msgstr "Dimensões"
-
-msgid "Width"
-msgstr "Largura"
 
 msgid "Height"
 msgstr "Altura"

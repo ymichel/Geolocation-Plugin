@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.12.0
+Stable tag: 1.13.0
 
 Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
@@ -44,6 +44,10 @@ Put the shortcode on a page to show a map with the locations of your posts. Opti
 
 Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
 
+= Block "Geolocation Map" =
+
+In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.
+
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory. (or simply install it from the official package repo)
@@ -63,8 +67,12 @@ Attributes can be combined, and a page can contain several maps. Without the att
 6. Overview map on a page showing all posts with a location
 7. Overview map with the route between the posts, enabled by the shortcode attribute route="1"
 8. The shortcode attributes are explained in the Help tab of the settings page
+9. The block "Geolocation Map" with its settings in the block editor
 
 == Changelog ==
+
+= 1.13.0 =
+* new: the block "Geolocation Map" shows the overview map in the block editor without typing a shortcode; posts, size, zoom and route are chosen in the settings of the block.
 
 = 1.12.0 =
 * new: the popups on the overview map show the featured image, the date and the excerpt of a post.

@@ -8,6 +8,57 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Geolocation Map"
+msgstr "Geolocation-kaart"
+
+msgid "Shows the locations of your posts on a map."
+msgstr "Toont de locaties van je berichten op een kaart."
+
+msgid "Posts"
+msgstr "Berichten"
+
+msgid "Categories"
+msgstr "Categorieën"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Leave both empty to show all posts with a location."
+msgstr "Laat beide leeg om alle berichten met een locatie te tonen."
+
+msgid "Map"
+msgstr "Kaart"
+
+msgid "Width"
+msgstr "Breedte"
+
+msgid "In pixels or percent, e.g. 600 or 100%. Empty: the value from the plugin settings."
+msgstr "In pixels of procent, bijv. 600 of 100%. Leeg: de waarde uit de plugin-instellingen."
+
+msgid "Height in pixels"
+msgstr "Hoogte in pixels"
+
+msgid "Empty: the value from the plugin settings."
+msgstr "Leeg: de waarde uit de plugin-instellingen."
+
+msgid "Fit the map to the markers"
+msgstr "Kaart aanpassen aan de markers"
+
+msgid "Zoom level"
+msgstr "Zoomniveau"
+
+msgid "Route"
+msgstr "Route"
+
+msgid "Connects the locations with a line, in the order of the post dates."
+msgstr "Verbindt de locaties met een lijn, in de volgorde van de berichtdatums."
+
+msgid "The map is shown on the website. Choose the posts and the size in the block settings."
+msgstr "De kaart wordt op de website getoond. Kies de berichten en de grootte in de blokinstellingen."
+
+msgid "All posts with a location"
+msgstr "Alle berichten met een locatie"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorieën als slug, naam of ID, gescheiden door komma’s."
 
@@ -22,9 +73,6 @@ msgstr "Hoogte van de kaart in pixels."
 
 msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
 msgstr "Vast zoomniveau van 1 tot 19. Zonder dit attribuut wordt de kaart aangepast aan de markers."
-
-msgid "Connects the locations with a line, in the order of the post dates."
-msgstr "Verbindt de locaties met een lijn, in de volgorde van de berichtdatums."
 
 msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
 msgstr "Plaats de shortcode op een pagina om een kaart met de locaties van je berichten te tonen. De volgende attributen zijn optioneel en kunnen worden gecombineerd."
@@ -47,6 +95,9 @@ msgstr "Een pagina kan meerdere kaarten bevatten."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Zonder het attribuut \"cat\" wordt het aangepaste veld \"category\" van de pagina gebruikt."
 
+msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
+msgstr "In de blokeditor biedt het blok \"Geolocation-kaart\" dezelfde opties zonder een shortcode te typen."
+
 msgid "Shortcode"
 msgstr "Shortcode"
 
@@ -55,9 +106,6 @@ msgstr "Instellingen van de Geolocation-plugin"
 
 msgid "Dimensions"
 msgstr "Afmetingen"
-
-msgid "Width"
-msgstr "Breedte"
 
 msgid "Height"
 msgstr "Hoogte"

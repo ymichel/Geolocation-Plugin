@@ -408,4 +408,54 @@ class GeolocationTest extends TestCase {
 		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'route' => 'red' ) )['route'] );
 		$this->assertSame( '', geolocation_sanitize_map_atts( array() )['route'] );
 	}
+
+	/**
+	 * The attributes of the block are turned into the attributes of the shortcode.
+	 *
+	 * @return void
+	 */
+	public function test_block_to_map_atts() {
+		$this->assertSame( array(), geolocation_block_to_map_atts( array() ) );
+		$this->assertSame( array(), geolocation_block_to_map_atts( null ) );
+
+		$atts = geolocation_block_to_map_atts(
+			array(
+				'categories' => array( 3, '7', 0 ),
+				'tags'       => array( 12 ),
+				'width'      => '80%',
+				'height'     => 400,
+				'zoom'       => 6,
+				'route'      => true,
+				'align'      => 'wide',
+			)
+		);
+		$this->assertSame( '3,7', $atts['cat'] );
+		$this->assertSame( '12', $atts['tag'] );
+		$this->assertSame( '80%', $atts['width'] );
+		$this->assertSame( '400', $atts['height'] );
+		$this->assertSame( '6', $atts['zoom'] );
+		$this->assertSame( '1', $atts['route'] );
+
+		// A wide or full aligned block without a width fills its container.
+		$this->assertSame( '100%', geolocation_block_to_map_atts( array( 'align' => 'full' ) )['width'] );
+		$this->assertArrayNotHasKey( 'width', geolocation_block_to_map_atts( array( 'align' => 'left' ) ) );
+
+		// Values are still checked by the sanitizer of the shortcode.
+		$clean = geolocation_sanitize_map_atts(
+			geolocation_block_to_map_atts(
+				array(
+					'categories' => 'travel',
+					'width'      => '100%;color:red',
+					'height'     => 10,
+					'zoom'       => 99,
+					'route'      => false,
+				)
+			)
+		);
+		$this->assertSame( '', $clean['cat'] );
+		$this->assertSame( '', $clean['width'] );
+		$this->assertSame( '', $clean['height'] );
+		$this->assertSame( '19', $clean['zoom'] );
+		$this->assertSame( '', $clean['route'] );
+	}
 }
