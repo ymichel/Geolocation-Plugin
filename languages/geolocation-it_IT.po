@@ -140,6 +140,9 @@ msgstr "Inserisci il tuo indirizzo"
 msgid "Load"
 msgstr "Carica"
 
+msgid "My location"
+msgstr "La mia posizione"
+
 msgid "Remove location"
 msgstr "Rimuovi posizione"
 
@@ -151,6 +154,9 @@ msgstr "Attivo"
 
 msgid "Off"
 msgstr "Disattivo"
+
+msgid "Your location could not be determined."
+msgstr "Non è stato possibile determinare la tua posizione."
 
 msgid "Posted from "
 msgstr "Pubblicato da "

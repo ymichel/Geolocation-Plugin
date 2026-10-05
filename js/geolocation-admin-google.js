@@ -14,7 +14,7 @@
 		var marker;
 		var geocoder;
 		var hasLocation;
-		var ui = ! common || typeof google === 'undefined' || ! google.maps ? null : common.init( { geocode: geocode } );
+		var ui = ! common || typeof google === 'undefined' || ! google.maps ? null : common.init( { geocode: geocode, setLocation: setLocation } );
 		if ( ! ui ) {
 			return;
 		}
@@ -35,6 +35,15 @@
 			map.setCenter( location );
 			ui.setPosition( location.lat(), location.lng() );
 			reverseGeocode( location );
+		}
+
+		// Move the marker to the position reported by the browser.
+		function setLocation( lat, lng ) {
+			placeMarker( new google.maps.LatLng( lat, lng ) );
+			if ( ! hasLocation ) {
+				map.setZoom( data.zoom );
+				hasLocation = true;
+			}
 		}
 
 		function geocode( address ) {
@@ -60,12 +69,16 @@
 		var markerOptions = {
 			position: center,
 			map: map,
+			draggable: true,
 			title: 'Post Location'
 		};
 		if ( data.usePin ) {
 			markerOptions.icon = data.pinUrl;
 		}
 		marker = new google.maps.Marker( markerOptions );
+		google.maps.event.addListener( marker, 'dragend', function ( event ) {
+			placeMarker( event.latLng );
+		} );
 
 		if ( ui.needsAddress ) {
 			reverseGeocode( center );
@@ -79,7 +92,9 @@
 		}
 
 		google.maps.event.addListener( map, 'click', function ( event ) {
-			placeMarker( event.latLng );
+			if ( ui.isEnabled() ) {
+				placeMarker( event.latLng );
+			}
 		} );
 	};
 }() );

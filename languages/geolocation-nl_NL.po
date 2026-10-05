@@ -140,6 +140,9 @@ msgstr "Vul je adres in"
 msgid "Load"
 msgstr "Laden"
 
+msgid "My location"
+msgstr "Mijn locatie"
+
 msgid "Remove location"
 msgstr "Locatie verwijderen"
 
@@ -151,6 +154,9 @@ msgstr "Aan"
 
 msgid "Off"
 msgstr "Uit"
+
+msgid "Your location could not be determined."
+msgstr "Je locatie kon niet worden bepaald."
 
 msgid "Posted from "
 msgstr "Geplaatst vanuit "

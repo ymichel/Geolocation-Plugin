@@ -16,7 +16,8 @@
 		}
 	}
 
-	// Wire the meta box's fields. handlers.geocode( address ) has to look up an address.
+	// Wire the meta box's fields. handlers.geocode( address ) has to look up an address,
+	// handlers.setLocation( lat, lng, recenter ) has to move the marker to a position picked by the user.
 	// Returns null if the meta box is not available.
 	function init( handlers ) {
 		var els = {
@@ -29,6 +30,8 @@
 			addr: document.getElementById( 'geolocation-address' ),
 			addrRev: document.getElementById( 'geolocation-address-reverse' ),
 			load: document.getElementById( 'geolocation-load' ),
+			locate: document.getElementById( 'geolocation-locate' ),
+			status: document.getElementById( 'geolocation-status' ),
 			remove: document.getElementById( 'geolocation-remove' ),
 			removeFlag: document.getElementById( 'geolocation-remove-flag' )
 		};
@@ -44,6 +47,7 @@
 		function setGeoEnabled( enabled ) {
 			els.addr.disabled     = ! enabled;
 			els.load.disabled     = ! enabled;
+			els.locate.disabled   = ! enabled;
 			els.remove.disabled   = ! enabled;
 			els.isPublic.disabled = ! enabled;
 			els.map.style.opacity = enabled ? '' : '0.5';
@@ -51,9 +55,15 @@
 			els.disabled.checked  = ! enabled;
 		}
 
+		// Coordinates are stored with 7 decimals, which is more precise than a map can show.
+		function round( value ) {
+			return String( Math.round( parseFloat( value ) * 1e7 ) / 1e7 );
+		}
+
 		function setPosition( lat, lng ) {
-			els.lat.value         = lat;
-			els.lng.value         = lng;
+			els.lat.value         = round( lat );
+			els.lng.value         = round( lng );
+			els.status.textContent = '';
 			els.removeFlag.value  = '';
 			els.map.style.opacity = '';
 		}
@@ -95,12 +105,29 @@
 		els.disabled.addEventListener( 'click', function () {
 			setGeoEnabled( false );
 		} );
+		// The browser only reveals the position on secure pages (https or localhost).
+		if ( ! navigator.geolocation || window.isSecureContext === false ) {
+			els.locate.style.display = 'none';
+		}
+		els.locate.addEventListener( 'click', function () {
+			els.status.textContent = '';
+			navigator.geolocation.getCurrentPosition(
+				function ( position ) {
+					handlers.setLocation( position.coords.latitude, position.coords.longitude, true );
+				},
+				function () {
+					els.status.textContent = ( data.i18n && data.i18n.locateFailed ) || '';
+				},
+				{ enableHighAccuracy: true, timeout: 15000 }
+			);
+		} );
 		els.remove.addEventListener( 'click', function () {
 			els.lat.value         = '';
 			els.lng.value         = '';
 			els.addr.value        = '';
 			els.addrRev.value     = '';
 			els.removeFlag.value  = '1';
+			els.status.textContent = '';
 			els.map.style.opacity = '0.5';
 		} );
 
@@ -109,6 +136,9 @@
 			els: els,
 			hasLocation: hasLocation,
 			needsAddress: hasLocation && data.address === '',
+			isEnabled: function () {
+				return els.enabled.checked;
+			},
 			setPosition: setPosition,
 			setAddress: setAddress
 		};

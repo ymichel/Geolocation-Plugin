@@ -14,7 +14,7 @@
 	common.ready( function () {
 		var map;
 		var marker;
-		var ui = typeof L === 'undefined' ? null : common.init( { geocode: geocode } );
+		var ui = typeof L === 'undefined' ? null : common.init( { geocode: geocode, setLocation: setLocation } );
 		if ( ! ui ) {
 			return;
 		}
@@ -22,8 +22,7 @@
 		var data          = ui.data;
 		var defaultCenter = [ 52.5162778, 13.3733267 ];
 		var markerOptions = {
-			clickable: false,
-			draggable: false
+			draggable: true
 		};
 		if ( data.usePin ) {
 			markerOptions.icon = L.icon( {
@@ -65,6 +64,16 @@
 			);
 		}
 
+		// Move the marker to a position picked on the map, by dragging or by the browser's location.
+		function setLocation( lat, lng, recenter ) {
+			ui.setPosition( lat, lng );
+			marker.setLatLng( [ lat, lng ] );
+			if ( recenter ) {
+				map.setView( marker.getLatLng(), Math.max( map.getZoom(), data.zoom ) );
+			}
+			reverseGeocode( lat, lng );
+		}
+
 		function geocode( address ) {
 			request(
 				'/search?format=json&accept-language=' + encodeURIComponent( data.language ) + '&limit=1&q=' + encodeURIComponent( address ),
@@ -85,6 +94,16 @@
 		L.tileLayer( data.tilesUrl, {
 			attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
 		} ).addTo( map );
+
+		map.on( 'click', function ( event ) {
+			if ( ui.isEnabled() ) {
+				setLocation( event.latlng.lat, event.latlng.lng, false );
+			}
+		} );
+		marker.on( 'dragend', function () {
+			var position = marker.getLatLng();
+			setLocation( position.lat, position.lng, false );
+		} );
 
 		if ( ui.hasLocation ) {
 			marker.setLatLng( [ data.latitude, data.longitude ] );
