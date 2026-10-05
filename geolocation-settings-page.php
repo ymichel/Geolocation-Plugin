@@ -142,7 +142,7 @@ function geolocation_settings_page() {
 					<label for="geolocation_map_position_after"><?php esc_html_e( 'After the post.', 'geolocation' ); ?></label><br />
 					<input type="radio" id="geolocation_map_position_shortcode" name="geolocation_map_position" value="shortcode" <?php checked( get_option( 'geolocation_map_position' ), 'shortcode' ); ?>>
 					<label for="geolocation_map_position_shortcode">
-						<?php esc_html_e( 'Wherever I put the shortcode: ', 'geolocation' ); ?>
+						<?php esc_html_e( 'Not automatically: only where I put the block "Post Location" or the shortcode: ', 'geolocation' ); ?>
 						<?php echo esc_html( $shortcode ); ?>.
 					</label>
 					<p class="description"><?php esc_html_e( 'On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height, zoom and route, e.g. [geolocation cat="travel" height="400"].', 'geolocation' ); ?> <?php esc_html_e( 'All attributes are explained under "Help" at the top right of this page.', 'geolocation' ); ?></p>

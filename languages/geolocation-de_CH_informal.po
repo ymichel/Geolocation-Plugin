@@ -267,8 +267,8 @@ msgid "Used Language for Addresses"
 msgstr "Genutzte Sprache f&uuml;r die gezeigten Adressen"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:64
-msgid "Wherever I put the shortcode: "
-msgstr "Wo immer auch die folgende Markierung steht: "
+msgid "Not automatically: only where I put the block \"Post Location\" or the shortcode: "
+msgstr "Nicht automatisch: nur dort, wo der Block \"Standort des Beitrags\" oder der Shortcode steht: "
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:55 
 msgid "Width"

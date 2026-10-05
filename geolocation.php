@@ -370,6 +370,8 @@ function geolocation_get_admin_post_data( $post_id ) {
 			'isPublic'       => (string) get_post_meta( $post_id, 'geo_public', true ),
 			'isEnabled'      => (string) get_post_meta( $post_id, 'geo_enabled', true ),
 			'trackKm'        => geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) ),
+			// The author sees the whole track, visitors may see a shortened one.
+			'track'          => geolocation_sanitize_track( get_post_meta( $post_id, 'geo_track', true ) ),
 			'i18n'           => array(
 				'locateFailed' => __( 'Your location could not be determined.', 'geolocation' ),
 				'trackInvalid' => geolocation_block_text( __( 'No track was found in this file.', 'geolocation' ) ),

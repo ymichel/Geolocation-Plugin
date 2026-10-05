@@ -149,8 +149,8 @@ msgstr "Antes do post."
 msgid "After the post."
 msgstr "Depois do post."
 
-msgid "Wherever I put the shortcode: "
-msgstr "Onde eu colocar o shortcode: "
+msgid "Not automatically: only where I put the block \"Post Location\" or the shortcode: "
+msgstr "Não automaticamente: apenas onde eu colocar o bloco \"Localização do post\" ou o shortcode: "
 
 msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height, zoom and route, e.g. [geolocation cat=\"travel\" height=\"400\"]."
 msgstr "Em páginas, o shortcode exibe um mapa de todos os posts. Atributos opcionais: cat, tag, width, height, zoom e route, por exemplo [geolocation cat=\"travel\" height=\"400\"]."

@@ -105,7 +105,8 @@
 		};
 	}
 
-	// Wire the fields of the track. onTrack( points ) is called when a file has been read.
+	// Wire the fields of the track. onTrack( points ) is called when a file has been read,
+	// with an empty list when the track has been removed.
 	function initTrack( onTrack ) {
 		var file       = document.getElementById( 'geolocation-track-file' );
 		var remove     = document.getElementById( 'geolocation-track-remove' );
@@ -152,11 +153,13 @@
 			km.value         = '';
 			removeFlag.value = '1';
 			showLength( '' );
+			onTrack( [] );
 		} );
 	}
 
 	// Wire the meta box's fields. handlers.geocode( address ) has to look up an address,
-	// handlers.setLocation( lat, lng, recenter ) has to move the marker to a position picked by the user.
+	// handlers.setLocation( lat, lng, recenter ) has to move the marker to a position picked by the user,
+	// handlers.showTrack( points ) has to draw the track of the post on the map (an empty list removes it).
 	// Returns null if the meta box is not available.
 	function init( handlers ) {
 		var els = {
@@ -273,15 +276,17 @@
 		// A post without a location gets the end of its track as location.
 		initTrack( function ( points ) {
 			var end = points[ points.length - 1 ];
-			if ( els.lat.value === '' && els.lng.value === '' && els.enabled.checked ) {
+			if ( end && els.lat.value === '' && els.lng.value === '' && els.enabled.checked ) {
 				handlers.setLocation( end[0], end[1], true );
 			}
+			handlers.showTrack( points );
 		} );
 
 		return {
 			data: data,
 			els: els,
 			hasLocation: hasLocation,
+			track: Array.isArray( data.track ) ? data.track : [],
 			needsAddress: hasLocation && data.address === '',
 			isEnabled: function () {
 				return els.enabled.checked;

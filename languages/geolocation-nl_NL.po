@@ -149,8 +149,8 @@ msgstr "Voor het bericht."
 msgid "After the post."
 msgstr "Na het bericht."
 
-msgid "Wherever I put the shortcode: "
-msgstr "Waar ik de shortcode plaats: "
+msgid "Not automatically: only where I put the block \"Post Location\" or the shortcode: "
+msgstr "Niet automatisch: alleen waar ik het blok \"Locatie van het bericht\" of de shortcode plaats: "
 
 msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height, zoom and route, e.g. [geolocation cat=\"travel\" height=\"400\"]."
 msgstr "Op pagina’s toont de shortcode een kaart van alle berichten. Optionele attributen: cat, tag, width, height, zoom en route, bijv. [geolocation cat=\"travel\" height=\"400\"]."

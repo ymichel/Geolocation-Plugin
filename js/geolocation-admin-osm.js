@@ -14,7 +14,8 @@
 	common.ready( function () {
 		var map;
 		var marker;
-		var ui = typeof L === 'undefined' ? null : common.init( { geocode: geocode, setLocation: setLocation } );
+		var trackLine = null;
+		var ui = typeof L === 'undefined' ? null : common.init( { geocode: geocode, setLocation: setLocation, showTrack: showTrack } );
 		if ( ! ui ) {
 			return;
 		}
@@ -74,6 +75,24 @@
 			reverseGeocode( lat, lng );
 		}
 
+		// Show the map section containing the marker and the track.
+		function fitTrack() {
+			map.fitBounds( trackLine.getBounds().extend( marker.getLatLng() ), { padding: [ 20, 20 ], animate: false } );
+		}
+
+		// Draw the track of the post; an empty list removes it.
+		function showTrack( points ) {
+			if ( trackLine ) {
+				map.removeLayer( trackLine );
+				trackLine = null;
+			}
+			if ( points.length > 1 ) {
+				// Not interactive, so a click on the line still sets the location.
+				trackLine = L.polyline( points, { color: '#2b6cb0', weight: 3, opacity: 0.8, interactive: false } ).addTo( map );
+				fitTrack();
+			}
+		}
+
 		function geocode( address ) {
 			request(
 				'/search?format=json&accept-language=' + encodeURIComponent( data.language ) + '&limit=1&q=' + encodeURIComponent( address ),
@@ -116,8 +135,13 @@
 		// The meta box may be collapsed or hidden at first: re-center once the map gets its size.
 		function recenter() {
 			map.invalidateSize( { animate: false, pan: false } );
-			map.setView( marker.getLatLng(), map.getZoom(), { animate: false } );
+			if ( trackLine ) {
+				fitTrack();
+			} else {
+				map.setView( marker.getLatLng(), map.getZoom(), { animate: false } );
+			}
 		}
+		showTrack( ui.track );
 		setTimeout( recenter, 100 );
 		if ( 'ResizeObserver' in window ) {
 			new ResizeObserver( recenter ).observe( ui.els.map );
