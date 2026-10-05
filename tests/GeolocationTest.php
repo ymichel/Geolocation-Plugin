@@ -458,4 +458,140 @@ class GeolocationTest extends TestCase {
 		$this->assertSame( '19', $clean['zoom'] );
 		$this->assertSame( '', $clean['route'] );
 	}
+
+	/**
+	 * A submitted track is reduced to valid positions.
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_track() {
+		$this->assertSame( array(), geolocation_sanitize_track( '' ) );
+		$this->assertSame( array(), geolocation_sanitize_track( 'no json' ) );
+		$this->assertSame( array(), geolocation_sanitize_track( '[[53.5,9.9]]' ) );
+		$this->assertSame( array(), geolocation_sanitize_track( '{"a":"<script>"}' ) );
+
+		$track = geolocation_sanitize_track( '[[53.5511111,9.9936999],[53.5511111,9.9936999],["53.6","10.0"],[91,10],[53.7,181],["x",1],[53.8],"<script>",[53.9,10.3,"extra"]]' );
+		$this->assertSame( array( array( 53.55111, 9.9937 ), array( 53.6, 10.0 ), array( 53.9, 10.3 ) ), $track );
+		$this->assertSame( $track, geolocation_sanitize_track( $track ) );
+	}
+
+	/**
+	 * The length of a track is measured along its positions.
+	 *
+	 * @return void
+	 */
+	public function test_track_length() {
+		// One degree of latitude is about 111.2 km.
+		$this->assertEqualsWithDelta( 111.2, geolocation_track_length( array( array( 50.0, 10.0 ), array( 51.0, 10.0 ) ) ), 0.1 );
+		$this->assertEqualsWithDelta( 222.4, geolocation_track_length( array( array( 50.0, 10.0 ), array( 51.0, 10.0 ), array( 50.0, 10.0 ) ) ), 0.2 );
+		$this->assertSame( 0.0, geolocation_track_length( array() ) );
+	}
+
+	/**
+	 * Simplifying keeps the shape and the ends of a track.
+	 *
+	 * @return void
+	 */
+	public function test_simplify_track() {
+		// A straight line with a sharp corner in the middle.
+		$points = array();
+		for ( $i = 0; $i <= 500; $i++ ) {
+			$points[] = array( 50.0 + $i / 1000, 10.0 );
+		}
+		for ( $i = 1; $i <= 500; $i++ ) {
+			$points[] = array( 50.5, 10.0 + $i / 1000 );
+		}
+		$simple = geolocation_simplify_track( $points, 100 );
+		$this->assertLessThanOrEqual( 100, count( $simple ) );
+		$this->assertSame( $points[0], $simple[0] );
+		$this->assertSame( end( $points ), end( $simple ) );
+		$this->assertContains( array( 50.5, 10.0 ), $simple );
+		$this->assertEqualsWithDelta( geolocation_track_length( $points ), geolocation_track_length( $simple ), 0.01 );
+
+		// A track which is short enough is not changed.
+		$this->assertSame( $points, geolocation_simplify_track( $points, 2000 ) );
+
+		// A winding track is reduced as far as requested.
+		$winding = array();
+		for ( $i = 0; $i < 3000; $i++ ) {
+			$winding[] = array( 50.0 + $i / 10000, 10.0 + sin( $i / 20 ) / 100 );
+		}
+		$this->assertLessThanOrEqual( 120, count( geolocation_simplify_track( $winding, 120 ) ) );
+		$this->assertCount( 2, geolocation_simplify_track( $winding, 1 ) );
+	}
+
+	/**
+	 * Both ends of a track can be cut off.
+	 *
+	 * @return void
+	 */
+	public function test_trim_track() {
+		// About 11 km, one position every 111 metres.
+		$points = array();
+		for ( $i = 0; $i <= 100; $i++ ) {
+			$points[] = array( 50.0 + $i / 1000, 10.0 );
+		}
+		$this->assertSame( $points, geolocation_trim_track( $points, 0 ) );
+
+		$trimmed = geolocation_trim_track( $points, 1000 );
+		$this->assertEqualsWithDelta( 9.1, geolocation_track_length( $trimmed ), 0.3 );
+		$this->assertGreaterThan( 50.008, $trimmed[0][0] );
+		$this->assertLessThan( 50.092, end( $trimmed )[0] );
+		$this->assertGreaterThanOrEqual( 1.0, geolocation_distance( $points[0], $trimmed[0] ) );
+		$this->assertGreaterThanOrEqual( 1.0, geolocation_distance( end( $points ), end( $trimmed ) ) );
+
+		// Nothing is left of a track which is shorter than both cuts.
+		$this->assertSame( array(), geolocation_trim_track( $points, 6000 ) );
+	}
+
+	/**
+	 * Submitted elevations are reduced to valid values.
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_elevation() {
+		$this->assertSame( array(), geolocation_sanitize_elevation( '' ) );
+		$this->assertSame( array(), geolocation_sanitize_elevation( '[1,2,3]' ) );
+		$this->assertSame( array(), geolocation_sanitize_elevation( '{"profile":[100]}' ) );
+		$this->assertSame( array(), geolocation_sanitize_elevation( '{"profile":[100,"<script>",300]}' ) );
+
+		$clean = geolocation_sanitize_elevation( '{"profile":[100.4,"250",99999,-9999],"up":"1200.6","down":-5,"min":"x","extra":"<b>"}' );
+		$this->assertSame( array( 100, 250, 9000, -500 ), $clean['profile'] );
+		$this->assertSame( 1201, $clean['up'] );
+		$this->assertSame( 0, $clean['down'] );
+		$this->assertSame( -500, $clean['min'] );
+		$this->assertSame( 9000, $clean['max'] );
+		$this->assertSame( array( 'profile', 'up', 'down', 'min', 'max' ), array_keys( $clean ) );
+		$this->assertSame( $clean, geolocation_sanitize_elevation( $clean ) );
+
+		// A profile is limited to 400 elevations.
+		$this->assertCount( 400, geolocation_sanitize_elevation( array( 'profile' => range( 1, 1000 ) ) )['profile'] );
+	}
+
+	/**
+	 * The elevation profile is drawn as an SVG image with escaped labels.
+	 *
+	 * @return void
+	 */
+	public function test_elevation_svg() {
+		$labels = array(
+			'title' => 'Elevation <profile>',
+			'min'   => '200 m',
+			'max'   => '1,200 m',
+		);
+		$this->assertSame( '', geolocation_get_elevation_svg( array(), '42 km', 450, $labels ) );
+
+		$svg = geolocation_get_elevation_svg( geolocation_sanitize_elevation( array( 'profile' => array( 200, 1200, 700 ) ) ), '42 km', 450, $labels );
+		$this->assertStringStartsWith( '<svg class="geolocation-elevation"', $svg );
+		$this->assertStringContainsString( 'viewBox="0 0 450 120"', $svg );
+		$this->assertStringContainsString( 'Elevation &lt;profile&gt;', $svg );
+		$this->assertStringNotContainsString( '<profile>', $svg );
+		$this->assertStringContainsString( '>1,200 m</text>', $svg );
+		$this->assertStringContainsString( '>42 km</text>', $svg );
+		// The lowest elevation lies on the base line, the highest at the top, the last position at the right edge.
+		$this->assertStringContainsString( 'd="M0,102 L225,6 L450,54"', $svg );
+
+		// A flat track does not divide by zero; the image is at least 200 pixels wide.
+		$this->assertStringContainsString( 'd="M0,102 L200,102"', geolocation_get_elevation_svg( geolocation_sanitize_elevation( array( 'profile' => array( 5, 5 ) ) ), '1.0 km', 100, $labels ) );
+	}
 }

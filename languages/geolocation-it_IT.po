@@ -14,6 +14,36 @@ msgstr "Mappa Geolocation"
 msgid "Shows the locations of your posts on a map."
 msgstr "Mostra le posizioni dei tuoi articoli su una mappa."
 
+msgid "Post Location"
+msgstr "Posizione dell’articolo"
+
+msgid "Shows the location of the post."
+msgstr "Mostra la posizione dell’articolo."
+
+msgid "Preview"
+msgstr "Anteprima"
+
+msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
+msgstr "Qui viene mostrata la posizione di questo articolo, come definita nel riquadro Geolocation sotto l’editor."
+
+msgid "Display"
+msgstr "Visualizzazione"
+
+msgid "As in the plugin settings"
+msgstr "Come nelle impostazioni del plugin"
+
+msgid "Plain text."
+msgstr "Testo semplice."
+
+msgid "Simple link w/hover."
+msgstr "Link semplice con mappa al passaggio del mouse."
+
+msgid "Simple map (static)."
+msgstr "Mappa semplice (statica)."
+
+msgid "Height"
+msgstr "Altezza"
+
 msgid "Posts"
 msgstr "Articoli"
 
@@ -56,8 +86,11 @@ msgstr "Collega le posizioni con una linea, nell’ordine delle date degli artic
 msgid "The map is shown on the website. Choose the posts and the size in the block settings."
 msgstr "La mappa viene mostrata sul sito. Scegli gli articoli e le dimensioni nelle impostazioni del blocco."
 
-msgid "All posts with a location"
-msgstr "Tutti gli articoli con una posizione"
+msgid "This post has no location to show yet. Set it in the Geolocation box below the editor and save the post."
+msgstr "Questo articolo non ha ancora una posizione da mostrare. Impostala nel riquadro Geolocation sotto l’editor e salva l’articolo."
+
+msgid "No post with a visible location matches these settings."
+msgstr "Nessun articolo con una posizione visibile corrisponde a queste impostazioni."
 
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorie come slug, nome o ID, separate da virgole."
@@ -95,8 +128,14 @@ msgstr "Una pagina può contenere più mappe."
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Senza l’attributo \"cat\" viene usato il campo personalizzato \"category\" della pagina."
 
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Un articolo può avere la traccia di un file GPX, scelto nel riquadro Geolocation dell’editor. Una mappa con percorso disegna queste tracce come registrate e gli spazi tra di esse con linee tratteggiate."
+
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "Nell’editor a blocchi, il blocco \"Mappa Geolocation\" offre le stesse opzioni senza digitare uno shortcode."
+
+msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
+msgstr "In un articolo, il blocco \"Posizione dell’articolo\" mostra la sua posizione dove lo inserisci. L’output automatico prima o dopo l’articolo viene quindi omesso."
 
 msgid "Shortcode"
 msgstr "Shortcode"
@@ -107,9 +146,6 @@ msgstr "Impostazioni del plugin Geolocation"
 msgid "Dimensions"
 msgstr "Dimensioni"
 
-msgid "Height"
-msgstr "Altezza"
-
 msgid "Position"
 msgstr "Posizione"
 
@@ -119,8 +155,8 @@ msgstr "Prima dell’articolo."
 msgid "After the post."
 msgstr "Dopo l’articolo."
 
-msgid "Wherever I put the shortcode: "
-msgstr "Dove inserisco lo shortcode: "
+msgid "Not automatically: only where I put the block \"Post Location\" or the shortcode: "
+msgstr "Non automaticamente: solo dove inserisco il blocco \"Posizione dell’articolo\" o lo shortcode: "
 
 msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height, zoom and route, e.g. [geolocation cat=\"travel\" height=\"400\"]."
 msgstr "Nelle pagine lo shortcode mostra una mappa di tutti gli articoli. Attributi facoltativi: cat, tag, width, height, zoom e route, ad es. [geolocation cat=\"travel\" height=\"400\"]."
@@ -130,15 +166,6 @@ msgstr "Tutti gli attributi sono spiegati in \"Aiuto\", in alto a destra in ques
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Come vuoi che venga mostrata la tua geolocalizzazione?"
-
-msgid "Plain text."
-msgstr "Testo semplice."
-
-msgid "Simple link w/hover."
-msgstr "Link semplice con mappa al passaggio del mouse."
-
-msgid "Simple map (static)."
-msgstr "Mappa semplice (statica)."
 
 msgid "Default Zoom Level"
 msgstr "Livello di zoom predefinito"
@@ -166,6 +193,12 @@ msgstr "Mostra il tuo sostegno a WordPress usando il segnaposto di WordPress."
 
 msgid "Dimensions Page"
 msgstr "Dimensioni nelle pagine"
+
+msgid "Shorten tracks"
+msgstr "Accorcia le tracce"
+
+msgid "Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track."
+msgstr "Nasconde questa distanza all’inizio e alla fine di ogni traccia, ad es. per mantenere privato il tuo indirizzo. 0 mostra l’intera traccia."
 
 msgid "Maps Provider"
 msgstr "Fornitore di mappe"
@@ -221,6 +254,21 @@ msgstr "Aggiorna tutti gli indirizzi degli articoli con informazioni sulla posiz
 msgid "Save Changes"
 msgstr "Salva le modifiche"
 
+msgid "Track: %s"
+msgstr "Traccia: %s"
+
+msgid "Ascent: %s"
+msgstr "Salita: %s"
+
+msgid "Descent: %s"
+msgstr "Discesa: %s"
+
+msgid "Highest point: %s"
+msgstr "Punto più alto: %s"
+
+msgid "Elevation profile"
+msgstr "Profilo altimetrico"
+
 msgid "Review"
 msgstr "Recensione"
 
@@ -260,8 +308,20 @@ msgstr "Attivo"
 msgid "Off"
 msgstr "Disattivo"
 
+msgid "Track (GPX)"
+msgstr "Traccia (GPX)"
+
+msgid "Remove track"
+msgstr "Rimuovi traccia"
+
+msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
+msgstr "Il file viene letto nel tuo browser. Viene salvata solo la linea semplificata della traccia, non il file."
+
 msgid "Your location could not be determined."
 msgstr "Non è stato possibile determinare la tua posizione."
+
+msgid "No track was found in this file."
+msgstr "In questo file non è stata trovata alcuna traccia."
 
 msgid "Posted from "
 msgstr "Pubblicato da "

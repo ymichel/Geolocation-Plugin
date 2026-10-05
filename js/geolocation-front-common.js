@@ -44,7 +44,19 @@
 		observer.observe( el );
 	}
 
-	// One static map per post (display mode "map"): calls create( el, latLng ).
+	// Read a list of positions from an attribute of an element; returns [ [ lat, lng ], ... ].
+	function parseTrack( el ) {
+		var track = [];
+		try {
+			track = JSON.parse( el.getAttribute( 'data-track' ) || '[]' );
+		} catch ( e ) {
+			track = [];
+		}
+		return Array.isArray( track ) && track.length > 1 ? track : [];
+	}
+
+	// One static map per post (display mode "map"): calls create( el, latLng, track ).
+	// The track of the post is an empty list if it has none.
 	function forEachPostMap( create ) {
 		document.querySelectorAll( '.geolocation-map' ).forEach( function ( el ) {
 			var latLng = parseLatLng( el );
@@ -52,7 +64,7 @@
 				return;
 			}
 			whenVisible( el, function () {
-				create( el, latLng );
+				create( el, latLng, parseTrack( el ) );
 			} );
 		} );
 	}
@@ -148,7 +160,7 @@
 		if ( item.date ) {
 			extra             = document.createElement( 'span' );
 			extra.className   = 'geolocation-popup-date';
-			extra.textContent = item.date;
+			extra.textContent = item.date + ( item.length ? ' · ' + item.length : '' );
 			box.appendChild( extra );
 		}
 		if ( item.excerpt ) {
@@ -160,17 +172,42 @@
 		return box;
 	}
 
-	// The positions of a route: all locations in the order of their posts, oldest first.
-	// Returns an empty list if the map shall not show a route.
-	function getRoute( el, markers ) {
-		if ( el.getAttribute( 'data-route' ) !== '1' || markers.length < 2 ) {
-			return [];
+	// The lines of a route: all locations in the order of their posts, oldest first.
+	// Returns { solid: [ line, ... ], dashed: [ line, ... ] }, each line being a list of [ lat, lng ].
+	// Recorded tracks of posts are drawn solid and the gaps between them dashed;
+	// without any track the locations are connected by one solid line.
+	function getRouteLines( el, markers ) {
+		var lines = { solid: [], dashed: [] };
+		if ( el.getAttribute( 'data-route' ) !== '1' ) {
+			return lines;
 		}
-		return markers.slice().sort( function ( a, b ) {
+		var sorted    = markers.slice().sort( function ( a, b ) {
 			return ( a.time || 0 ) - ( b.time || 0 );
-		} ).map( function ( item ) {
-			return [ item.lat, item.lng ];
 		} );
+		var hasTracks = sorted.some( function ( item ) {
+			return Array.isArray( item.track ) && item.track.length > 1;
+		} );
+		if ( ! hasTracks ) {
+			if ( sorted.length > 1 ) {
+				lines.solid.push( sorted.map( function ( item ) {
+					return [ item.lat, item.lng ];
+				} ) );
+			}
+			return lines;
+		}
+		var previousEnd = null;
+		sorted.forEach( function ( item ) {
+			var track = Array.isArray( item.track ) && item.track.length > 1 ? item.track : null;
+			var start = track ? track[0] : [ item.lat, item.lng ];
+			if ( previousEnd ) {
+				lines.dashed.push( [ previousEnd, start ] );
+			}
+			if ( track ) {
+				lines.solid.push( track );
+			}
+			previousEnd = track ? track[ track.length - 1 ] : start;
+		} );
+		return lines;
 	}
 
 	window.geolocationFrontCommon = {
@@ -180,6 +217,6 @@
 		forEachPageMap: forEachPageMap,
 		initHoverMap: initHoverMap,
 		buildPopup: buildPopup,
-		getRoute: getRoute
+		getRouteLines: getRouteLines
 	};
 }() );

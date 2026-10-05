@@ -267,8 +267,8 @@ msgid "Used Language for Addresses"
 msgstr "Genutzte Sprache f&uuml;r die gezeigten Adressen"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:64
-msgid "Wherever I put the shortcode: "
-msgstr "Wo immer auch die folgende Markierung steht: "
+msgid "Not automatically: only where I put the block \"Post Location\" or the shortcode: "
+msgstr "Nicht automatisch: nur dort, wo der Block \"Standort des Beitrags\" oder der Shortcode steht: "
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:55 
 msgid "Width"
@@ -320,8 +320,68 @@ msgstr "Route"
 msgid "The map is shown on the website. Choose the posts and the size in the block settings."
 msgstr "Die Karte wird auf der Website angezeigt. Beitr&auml;ge und Gr&ouml;sse lassen sich in den Block-Einstellungen w&auml;hlen."
 
-msgid "All posts with a location"
-msgstr "Alle Beitr&auml;ge mit Ort"
-
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "Im Block-Editor bietet der Block \"Geolocation-Karte\" dieselben Optionen, ohne einen Shortcode zu tippen."
+
+msgid "Track (GPX)"
+msgstr "Strecke (GPX)"
+
+msgid "Remove track"
+msgstr "Strecke entfernen"
+
+msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
+msgstr "Die Datei wird in Ihrem Browser gelesen. Gespeichert wird nur die vereinfachte Linie der Strecke, nicht die Datei."
+
+msgid "No track was found in this file."
+msgstr "In dieser Datei wurde keine Strecke gefunden."
+
+msgid "Track: %s"
+msgstr "Strecke: %s"
+
+msgid "Shorten tracks"
+msgstr "Strecken k&uuml;rzen"
+
+msgid "Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track."
+msgstr "Blendet diese Distanz am Anfang und am Ende jeder Strecke aus, z. B. um Ihre Wohnadresse privat zu halten. 0 zeigt die ganze Strecke."
+
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Ein Beitrag kann die Strecke einer GPX-Datei tragen, die in der Geolocation-Box des Editors gew&auml;hlt wird. Eine Karte mit Route zeichnet diese Strecken wie aufgezeichnet und die L&uuml;cken dazwischen gestrichelt."
+
+msgid "Post Location"
+msgstr "Standort des Beitrags"
+
+msgid "Shows the location of the post."
+msgstr "Zeigt den Ort des Beitrags."
+
+msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
+msgstr "Hier wird der Ort dieses Beitrags angezeigt, wie er in der Geolocation-Box unter dem Editor festgelegt ist."
+
+msgid "Display"
+msgstr "Anzeige"
+
+msgid "As in the plugin settings"
+msgstr "Wie in den Plugin-Einstellungen"
+
+msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
+msgstr "In einem Beitrag zeigt der Block \"Standort des Beitrags\" dessen Ort an der Stelle, an der er eingef&uuml;gt wird. Die automatische Ausgabe vor oder nach dem Beitrag entf&auml;llt dann."
+
+msgid "Ascent: %s"
+msgstr "Anstieg: %s"
+
+msgid "Descent: %s"
+msgstr "Abstieg: %s"
+
+msgid "Highest point: %s"
+msgstr "H&ouml;chster Punkt: %s"
+
+msgid "Elevation profile"
+msgstr "H&ouml;henprofil"
+
+msgid "Preview"
+msgstr "Vorschau"
+
+msgid "This post has no location to show yet. Set it in the Geolocation box below the editor and save the post."
+msgstr "Dieser Beitrag hat noch keinen Ort, der angezeigt werden kann. Legen Sie ihn in der Geolocation-Box unter dem Editor fest und speichern Sie den Beitrag."
+
+msgid "No post with a visible location matches these settings."
+msgstr "Kein Beitrag mit sichtbarem Ort passt zu diesen Einstellungen."
