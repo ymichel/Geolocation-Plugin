@@ -20,6 +20,9 @@ msgstr "Locatie van het bericht"
 msgid "Shows the location of the post."
 msgstr "Toont de locatie van het bericht."
 
+msgid "Preview"
+msgstr "Voorbeeld"
+
 msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
 msgstr "Hier wordt de locatie van dit bericht getoond, zoals ingesteld in het Geolocation-vak onder de editor."
 
@@ -83,8 +86,11 @@ msgstr "Verbindt de locaties met een lijn, in de volgorde van de berichtdatums."
 msgid "The map is shown on the website. Choose the posts and the size in the block settings."
 msgstr "De kaart wordt op de website getoond. Kies de berichten en de grootte in de blokinstellingen."
 
-msgid "All posts with a location"
-msgstr "Alle berichten met een locatie"
+msgid "This post has no location to show yet. Set it in the Geolocation box below the editor and save the post."
+msgstr "Dit bericht heeft nog geen locatie om te tonen. Stel die in het Geolocation-vak onder de editor in en sla het bericht op."
+
+msgid "No post with a visible location matches these settings."
+msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellingen."
 
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorieën als slug, naam of ID, gescheiden door komma’s."
@@ -248,6 +254,21 @@ msgstr "Werk alle adressen bij van berichten met locatiegegevens (eenmalig, bij 
 msgid "Save Changes"
 msgstr "Wijzigingen opslaan"
 
+msgid "Track: %s"
+msgstr "Track: %s"
+
+msgid "Ascent: %s"
+msgstr "Stijging: %s"
+
+msgid "Descent: %s"
+msgstr "Daling: %s"
+
+msgid "Highest point: %s"
+msgstr "Hoogste punt: %s"
+
+msgid "Elevation profile"
+msgstr "Hoogteprofiel"
+
 msgid "Review"
 msgstr "Beoordeling"
 
@@ -301,9 +322,6 @@ msgstr "Je locatie kon niet worden bepaald."
 
 msgid "No track was found in this file."
 msgstr "In dit bestand is geen track gevonden."
-
-msgid "Track: %s"
-msgstr "Track: %s"
 
 msgid "Posted from "
 msgstr "Geplaatst vanuit "

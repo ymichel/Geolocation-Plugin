@@ -543,4 +543,55 @@ class GeolocationTest extends TestCase {
 		// Nothing is left of a track which is shorter than both cuts.
 		$this->assertSame( array(), geolocation_trim_track( $points, 6000 ) );
 	}
+
+	/**
+	 * Submitted elevations are reduced to valid values.
+	 *
+	 * @return void
+	 */
+	public function test_sanitize_elevation() {
+		$this->assertSame( array(), geolocation_sanitize_elevation( '' ) );
+		$this->assertSame( array(), geolocation_sanitize_elevation( '[1,2,3]' ) );
+		$this->assertSame( array(), geolocation_sanitize_elevation( '{"profile":[100]}' ) );
+		$this->assertSame( array(), geolocation_sanitize_elevation( '{"profile":[100,"<script>",300]}' ) );
+
+		$clean = geolocation_sanitize_elevation( '{"profile":[100.4,"250",99999,-9999],"up":"1200.6","down":-5,"min":"x","extra":"<b>"}' );
+		$this->assertSame( array( 100, 250, 9000, -500 ), $clean['profile'] );
+		$this->assertSame( 1201, $clean['up'] );
+		$this->assertSame( 0, $clean['down'] );
+		$this->assertSame( -500, $clean['min'] );
+		$this->assertSame( 9000, $clean['max'] );
+		$this->assertSame( array( 'profile', 'up', 'down', 'min', 'max' ), array_keys( $clean ) );
+		$this->assertSame( $clean, geolocation_sanitize_elevation( $clean ) );
+
+		// A profile is limited to 400 elevations.
+		$this->assertCount( 400, geolocation_sanitize_elevation( array( 'profile' => range( 1, 1000 ) ) )['profile'] );
+	}
+
+	/**
+	 * The elevation profile is drawn as an SVG image with escaped labels.
+	 *
+	 * @return void
+	 */
+	public function test_elevation_svg() {
+		$labels = array(
+			'title' => 'Elevation <profile>',
+			'min'   => '200 m',
+			'max'   => '1,200 m',
+		);
+		$this->assertSame( '', geolocation_get_elevation_svg( array(), '42 km', 450, $labels ) );
+
+		$svg = geolocation_get_elevation_svg( geolocation_sanitize_elevation( array( 'profile' => array( 200, 1200, 700 ) ) ), '42 km', 450, $labels );
+		$this->assertStringStartsWith( '<svg class="geolocation-elevation"', $svg );
+		$this->assertStringContainsString( 'viewBox="0 0 450 120"', $svg );
+		$this->assertStringContainsString( 'Elevation &lt;profile&gt;', $svg );
+		$this->assertStringNotContainsString( '<profile>', $svg );
+		$this->assertStringContainsString( '>1,200 m</text>', $svg );
+		$this->assertStringContainsString( '>42 km</text>', $svg );
+		// The lowest elevation lies on the base line, the highest at the top, the last position at the right edge.
+		$this->assertStringContainsString( 'd="M0,102 L225,6 L450,54"', $svg );
+
+		// A flat track does not divide by zero; the image is at least 200 pixels wide.
+		$this->assertStringContainsString( 'd="M0,102 L200,102"', geolocation_get_elevation_svg( geolocation_sanitize_elevation( array( 'profile' => array( 5, 5 ) ) ), '1.0 km', 100, $labels ) );
+	}
 }

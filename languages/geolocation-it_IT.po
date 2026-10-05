@@ -20,6 +20,9 @@ msgstr "Posizione dell’articolo"
 msgid "Shows the location of the post."
 msgstr "Mostra la posizione dell’articolo."
 
+msgid "Preview"
+msgstr "Anteprima"
+
 msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
 msgstr "Qui viene mostrata la posizione di questo articolo, come definita nel riquadro Geolocation sotto l’editor."
 
@@ -83,8 +86,11 @@ msgstr "Collega le posizioni con una linea, nell’ordine delle date degli artic
 msgid "The map is shown on the website. Choose the posts and the size in the block settings."
 msgstr "La mappa viene mostrata sul sito. Scegli gli articoli e le dimensioni nelle impostazioni del blocco."
 
-msgid "All posts with a location"
-msgstr "Tutti gli articoli con una posizione"
+msgid "This post has no location to show yet. Set it in the Geolocation box below the editor and save the post."
+msgstr "Questo articolo non ha ancora una posizione da mostrare. Impostala nel riquadro Geolocation sotto l’editor e salva l’articolo."
+
+msgid "No post with a visible location matches these settings."
+msgstr "Nessun articolo con una posizione visibile corrisponde a queste impostazioni."
 
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorie come slug, nome o ID, separate da virgole."
@@ -248,6 +254,21 @@ msgstr "Aggiorna tutti gli indirizzi degli articoli con informazioni sulla posiz
 msgid "Save Changes"
 msgstr "Salva le modifiche"
 
+msgid "Track: %s"
+msgstr "Traccia: %s"
+
+msgid "Ascent: %s"
+msgstr "Salita: %s"
+
+msgid "Descent: %s"
+msgstr "Discesa: %s"
+
+msgid "Highest point: %s"
+msgstr "Punto più alto: %s"
+
+msgid "Elevation profile"
+msgstr "Profilo altimetrico"
+
 msgid "Review"
 msgstr "Recensione"
 
@@ -301,9 +322,6 @@ msgstr "Non è stato possibile determinare la tua posizione."
 
 msgid "No track was found in this file."
 msgstr "In questo file non è stata trovata alcuna traccia."
-
-msgid "Track: %s"
-msgstr "Traccia: %s"
 
 msgid "Posted from "
 msgstr "Pubblicato da "

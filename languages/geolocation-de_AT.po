@@ -320,9 +320,6 @@ msgstr "Route"
 msgid "The map is shown on the website. Choose the posts and the size in the block settings."
 msgstr "Die Karte wird auf der Website angezeigt. Beitr&auml;ge und Gr&ouml;&szlig;e lassen sich in den Block-Einstellungen w&auml;hlen."
 
-msgid "All posts with a location"
-msgstr "Alle Beitr&auml;ge mit Ort"
-
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "Im Block-Editor bietet der Block \"Geolocation-Karte\" dieselben Optionen, ohne einen Shortcode zu tippen."
 
@@ -367,3 +364,24 @@ msgstr "Wie in den Plugin-Einstellungen"
 
 msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
 msgstr "In einem Beitrag zeigt der Block \"Standort des Beitrags\" dessen Ort an der Stelle, an der er eingef&uuml;gt wird. Die automatische Ausgabe vor oder nach dem Beitrag entf&auml;llt dann."
+
+msgid "Ascent: %s"
+msgstr "Anstieg: %s"
+
+msgid "Descent: %s"
+msgstr "Abstieg: %s"
+
+msgid "Highest point: %s"
+msgstr "H&ouml;chster Punkt: %s"
+
+msgid "Elevation profile"
+msgstr "H&ouml;henprofil"
+
+msgid "Preview"
+msgstr "Vorschau"
+
+msgid "This post has no location to show yet. Set it in the Geolocation box below the editor and save the post."
+msgstr "Dieser Beitrag hat noch keinen Ort, der angezeigt werden kann. Lege ihn in der Geolocation-Box unter dem Editor fest und speichere den Beitrag."
+
+msgid "No post with a visible location matches these settings."
+msgstr "Kein Beitrag mit sichtbarem Ort passt zu diesen Einstellungen."

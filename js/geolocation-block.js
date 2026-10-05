@@ -64,24 +64,77 @@
 		} );
 	}
 
-	// The names of the chosen terms, e.g. for the summary inside the placeholder.
-	function TermNames( props ) {
-		var terms = useTerms( props.taxonomy );
-		var names = ( terms || [] ).filter( function ( term ) {
-			return props.value.indexOf( term.id ) !== -1;
-		} ).map( function ( term ) {
-			return term.name;
+	// The preview of a block: a small page of the plugin, shown in a frame, which runs the scripts of the website.
+	// The frame only reacts to the mouse while the block is selected, so a click on it selects the block.
+	function Preview( props ) {
+		var useState  = wp.element.useState;
+		var useEffect = wp.element.useEffect;
+		var useRef    = wp.element.useRef;
+		var frame     = useRef( null );
+		var query     = JSON.stringify( props.attributes );
+		var state     = useState( query );
+		var height    = useState( props.height );
+		// Reload the preview after the post and its meta boxes have been saved.
+		var saving    = wp.data.useSelect( function ( select ) {
+			var editPost = select( 'core/edit-post' );
+			var editor   = select( 'core/editor' );
+			return !! ( ( editPost && editPost.isSavingMetaBoxes && editPost.isSavingMetaBoxes() ) || ( editor && editor.isSavingPost && editor.isSavingPost() ) );
+		}, [] );
+		var version   = useState( 0 );
+		var wasSaving = useRef( false );
+
+		// Wait until the author stops changing the settings.
+		useEffect( function () {
+			var timer = setTimeout( function () {
+				state[1]( query );
+			}, 500 );
+			return function () {
+				clearTimeout( timer );
+			};
+		}, [ query ] );
+
+		useEffect( function () {
+			if ( wasSaving.current && ! saving ) {
+				version[1]( version[0] + 1 );
+			}
+			wasSaving.current = saving;
+		}, [ saving ] );
+
+		// The page inside the frame reports its height.
+		useEffect( function () {
+			var view = frame.current ? frame.current.ownerDocument.defaultView : null;
+			function onMessage( event ) {
+				if ( frame.current && event.source === frame.current.contentWindow && event.data && event.data.geolocationPreviewHeight > 0 ) {
+					height[1]( Math.min( 2000, event.data.geolocationPreviewHeight ) );
+				}
+			}
+			if ( ! view ) {
+				return;
+			}
+			view.addEventListener( 'message', onMessage );
+			return function () {
+				view.removeEventListener( 'message', onMessage );
+			};
+		}, [] );
+
+		return el( 'iframe', {
+			ref: frame,
+			title: i18n.previewTitle,
+			src: settings.preview + '&block=' + props.block + '&post=' + ( props.postId || 0 ) + '&v=' + version[0] + '&atts=' + encodeURIComponent( state[0] ),
+			style: {
+				display: 'block',
+				width: '100%',
+				height: height[0] + 'px',
+				border: 0,
+				pointerEvents: props.isSelected ? 'auto' : 'none'
+			}
 		} );
-		return names.length ? el( 'div', null, props.label + ': ' + names.join( ', ' ) ) : null;
 	}
 
 	function Edit( props ) {
 		var attributes = props.attributes;
 		var set        = props.setAttributes;
-		var filtered   = attributes.categories.length > 0 || attributes.tags.length > 0;
 		var height     = attributes.height >= 50 ? attributes.height : ( settings.height || 300 );
-		var wide       = attributes.align === 'wide' || attributes.align === 'full';
-		var size       = ( attributes.width || ( wide ? '100%' : ( settings.width || 600 ) + 'px' ) ) + ' × ' + height + 'px';
 
 		var inspector = el( blockEditor.InspectorControls, null,
 			el( components.PanelBody, { title: i18n.posts },
@@ -159,16 +212,15 @@
 			)
 		);
 
-		var summary = el( 'div', { className: 'geolocation-block-summary' },
-			filtered ? null : el( 'div', null, i18n.allPosts ),
-			el( TermNames, { label: i18n.categories, taxonomy: 'category', value: attributes.categories } ),
-			el( TermNames, { label: i18n.tags, taxonomy: 'post_tag', value: attributes.tags } ),
-			el( 'div', null, size + ( attributes.zoom ? ' · ' + i18n.zoom + ' ' + attributes.zoom : '' ) + ( attributes.route ? ' · ' + i18n.route : '' ) )
-		);
-
+		if ( ! settings.preview ) {
+			return el( 'div', blockEditor.useBlockProps(),
+				inspector,
+				el( components.Placeholder, { icon: 'location-alt', label: i18n.title, instructions: i18n.placeholder } )
+			);
+		}
 		return el( 'div', blockEditor.useBlockProps(),
 			inspector,
-			el( components.Placeholder, { icon: 'location-alt', label: i18n.title, instructions: i18n.placeholder }, summary )
+			el( Preview, { block: 'map', attributes: attributes, height: height, isSelected: props.isSelected } )
 		);
 	}
 
@@ -177,9 +229,10 @@
 		var attributes = props.attributes;
 		var set        = props.setAttributes;
 		var display    = attributes.display || settings.display;
-		// The address is taken from the Geolocation box of the editor, if the post has one.
-		var field      = document.getElementById( 'geolocation-address' );
-		var address    = field ? field.value : '';
+		var postId     = wp.data.useSelect( function ( select ) {
+			var editor = select( 'core/editor' );
+			return ( props.context && props.context.postId ) || ( editor && editor.getCurrentPostId ? editor.getCurrentPostId() : 0 );
+		}, [ props.context && props.context.postId ] );
 
 		var inspector = el( blockEditor.InspectorControls, null,
 			el( components.PanelBody, { title: i18n.display },
@@ -229,11 +282,15 @@
 			) : null
 		);
 
+		if ( ! settings.preview || ! postId ) {
+			return el( 'div', blockEditor.useBlockProps(),
+				inspector,
+				el( components.Placeholder, { icon: 'location', label: i18n.locationTitle, instructions: i18n.locationHelp } )
+			);
+		}
 		return el( 'div', blockEditor.useBlockProps(),
 			inspector,
-			el( components.Placeholder, { icon: 'location', label: i18n.locationTitle, instructions: i18n.locationHelp },
-				address ? el( 'div', { className: 'geolocation-block-summary' }, address ) : null
-			)
+			el( Preview, { block: 'location', postId: postId, attributes: attributes, height: display === 'map' ? 260 : 60, isSelected: props.isSelected } )
 		);
 	}
 

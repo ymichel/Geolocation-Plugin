@@ -29,16 +29,17 @@ A post can carry the track of a GPX file, e.g. the recording of a hike or a bike
 
 - The file is read in your browser. Only the simplified line of the track is stored with the post; the file itself, its times and elevations are not uploaded.
 - With the display setting "Simple map" the map of the post shows the track; the map in the editor shows it as well.
+- The post shows the key figures of the track: its length and, if the file contains elevations, ascent, descent and highest point. Below a map it also shows the elevation profile.
 - An overview map with `route="1"` draws the tracks as recorded and the gaps between them as dashed lines. The popup of a post shows the length of its track.
 - A post without a location gets the end of its track as location.
 - The setting "Shorten tracks" hides a distance at the start and at the end of every track, e.g. to keep your home address private.
 
 ## Block "Geolocation Map"
 
-In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.
+In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block, and the editor shows the map as a preview. The block can be used in pages and posts.
 
 ## Block "Post Location"
 
-In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The automatic output before or after the post is omitted for posts using the block.
+In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The editor shows a preview of the saved location. The automatic output before or after the post is omitted for posts using the block.
 
 With the position setting "Not automatically" a location is only shown in posts containing the block or the shortcode. Such a post still appears on overview maps if its location is enabled and public.

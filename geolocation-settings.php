@@ -191,6 +191,7 @@ function geolocation_delete_addresses() {
 	delete_post_meta_by_key( 'geo_address_reverse' );
 	delete_post_meta_by_key( 'geo_track' );
 	delete_post_meta_by_key( 'geo_track_km' );
+	delete_post_meta_by_key( 'geo_track_ele' );
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- there is no API to delete transients by prefix.
 	$wpdb->query(
 		$wpdb->prepare(

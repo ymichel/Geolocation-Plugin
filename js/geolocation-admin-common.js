@@ -64,13 +64,52 @@
 		} );
 	}
 
-	// Read the track of a GPX file: { points: [ [ lat, lng ], ... ], km: length } or null.
-	// The track is reduced to at most 1000 positions; times and elevations are not read.
+	// Describe the elevations along a track: { profile: [ metres, ... ], up: ascent, down: descent } or null.
+	// The profile holds 200 elevations at equal distances; distances[ i ] is the way to position i in kilometres.
+	function describeElevation( elevations, distances ) {
+		var total     = distances[ distances.length - 1 ];
+		var profile   = [];
+		var up        = 0;
+		var down      = 0;
+		var reference = elevations[0];
+		var position  = 0;
+		var i, target, span, share;
+		if ( ! ( total > 0 ) ) {
+			return null;
+		}
+		// Small changes are noise of the recording, so only differences of five metres and more are counted.
+		for ( i = 1; i < elevations.length; i++ ) {
+			if ( elevations[ i ] - reference >= 5 ) {
+				up       += elevations[ i ] - reference;
+				reference = elevations[ i ];
+			} else if ( reference - elevations[ i ] >= 5 ) {
+				down     += reference - elevations[ i ];
+				reference = elevations[ i ];
+			}
+		}
+		for ( i = 0; i < 200; i++ ) {
+			target = total * i / 199;
+			while ( position < distances.length - 2 && distances[ position + 1 ] < target ) {
+				position++;
+			}
+			span  = distances[ position + 1 ] - distances[ position ];
+			share = span > 0 ? Math.max( 0, Math.min( 1, ( target - distances[ position ] ) / span ) ) : 0;
+			profile.push( Math.round( elevations[ position ] + ( elevations[ position + 1 ] - elevations[ position ] ) * share ) );
+		}
+		return { profile: profile, up: Math.round( up ), down: Math.round( down ) };
+	}
+
+	// Read the track of a GPX file: { points: [ [ lat, lng ], ... ], km: length, elevation: see above or null } or null.
+	// The track is reduced to at most 1000 positions; times are not read.
 	function parseGpx( text ) {
-		var doc, nodes, i, lat, lng;
-		var points    = [];
-		var km        = 0;
-		var tolerance = 0.00002;
+		var doc, nodes, i, lat, lng, ele;
+		var points     = [];
+		var elevations = [];
+		var distances  = [ 0 ];
+		var hasEle     = true;
+		var zeros      = 0;
+		var km         = 0;
+		var tolerance  = 0.00002;
 		try {
 			doc = new DOMParser().parseFromString( text, 'application/xml' );
 		} catch ( e ) {
@@ -85,6 +124,12 @@
 			lng = parseFloat( nodes[ i ].getAttribute( 'lon' ) );
 			if ( ! isNaN( lat ) && ! isNaN( lng ) && Math.abs( lat ) <= 90 && Math.abs( lng ) <= 180 ) {
 				points.push( [ lat, lng ] );
+				ele = nodes[ i ].getElementsByTagNameNS( '*', 'ele' )[0];
+				ele = ele ? parseFloat( ele.textContent ) : NaN;
+				// A profile needs the elevation of every position.
+				hasEle = hasEle && ! isNaN( ele );
+				zeros += ele === 0 ? 1 : 0;
+				elevations.push( ele );
 			}
 		}
 		if ( points.length < 2 ) {
@@ -92,7 +137,10 @@
 		}
 		for ( i = 1; i < points.length; i++ ) {
 			km += distance( points[ i - 1 ], points[ i ] );
+			distances.push( km );
 		}
+		// Some tools write 0 for positions without a known elevation: such a file has no usable profile.
+		var elevation = hasEle && zeros * 2 < points.length ? describeElevation( elevations, distances ) : null;
 		while ( points.length > 1000 ) {
 			points     = simplify( points, tolerance );
 			tolerance *= 1.3;
@@ -101,7 +149,8 @@
 			points: points.map( function ( point ) {
 				return [ Math.round( point[0] * 1e5 ) / 1e5, Math.round( point[1] * 1e5 ) / 1e5 ];
 			} ),
-			km: km
+			km: km,
+			elevation: elevation
 		};
 	}
 
@@ -113,9 +162,10 @@
 		var status     = document.getElementById( 'geolocation-track-status' );
 		var field      = document.getElementById( 'geolocation-track' );
 		var km         = document.getElementById( 'geolocation-track-km' );
+		var ele        = document.getElementById( 'geolocation-track-ele' );
 		var removeFlag = document.getElementById( 'geolocation-track-remove-flag' );
 		var i18n       = data.i18n || {};
-		if ( ! file || ! remove || ! status || ! field || ! km || ! removeFlag ) {
+		if ( ! file || ! remove || ! status || ! field || ! km || ! ele || ! removeFlag ) {
 			return;
 		}
 
@@ -136,11 +186,13 @@
 				if ( ! track ) {
 					field.value        = '';
 					km.value           = '';
+					ele.value          = '';
 					status.textContent = i18n.trackInvalid || '';
 					return;
 				}
 				field.value      = JSON.stringify( track.points );
 				km.value         = track.km.toFixed( 2 );
+				ele.value        = track.elevation ? JSON.stringify( track.elevation ) : '';
 				removeFlag.value = '';
 				showLength( ( track.km < 10 ? track.km.toFixed( 1 ) : Math.round( track.km ) ) + ' km' );
 				onTrack( track.points );
@@ -151,6 +203,7 @@
 			file.value       = '';
 			field.value      = '';
 			km.value         = '';
+			ele.value        = '';
 			removeFlag.value = '1';
 			showLength( '' );
 			onTrack( [] );

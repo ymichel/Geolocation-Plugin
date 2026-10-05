@@ -20,6 +20,9 @@ msgstr "Localização do post"
 msgid "Shows the location of the post."
 msgstr "Exibe a localização do post."
 
+msgid "Preview"
+msgstr "Pré-visualização"
+
 msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
 msgstr "A localização deste post é exibida aqui, conforme definida na caixa Geolocation abaixo do editor."
 
@@ -83,8 +86,11 @@ msgstr "Liga as localizações com uma linha, na ordem das datas dos posts."
 msgid "The map is shown on the website. Choose the posts and the size in the block settings."
 msgstr "O mapa é exibido no site. Escolha os posts e o tamanho nas configurações do bloco."
 
-msgid "All posts with a location"
-msgstr "Todos os posts com localização"
+msgid "This post has no location to show yet. Set it in the Geolocation box below the editor and save the post."
+msgstr "Este post ainda não tem uma localização para exibir. Defina-a na caixa Geolocation abaixo do editor e salve o post."
+
+msgid "No post with a visible location matches these settings."
+msgstr "Nenhum post com localização visível corresponde a estas configurações."
 
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorias como slug, nome ou ID, separadas por vírgulas."
@@ -248,6 +254,21 @@ msgstr "Atualizar todos os endereços dos posts que têm informações de locali
 msgid "Save Changes"
 msgstr "Salvar alterações"
 
+msgid "Track: %s"
+msgstr "Trajeto: %s"
+
+msgid "Ascent: %s"
+msgstr "Subida: %s"
+
+msgid "Descent: %s"
+msgstr "Descida: %s"
+
+msgid "Highest point: %s"
+msgstr "Ponto mais alto: %s"
+
+msgid "Elevation profile"
+msgstr "Perfil de elevação"
+
 msgid "Review"
 msgstr "Avaliação"
 
@@ -301,9 +322,6 @@ msgstr "Não foi possível determinar sua localização."
 
 msgid "No track was found in this file."
 msgstr "Nenhum trajeto foi encontrado neste arquivo."
-
-msgid "Track: %s"
-msgstr "Trajeto: %s"
 
 msgid "Posted from "
 msgstr "Publicado de "

@@ -59,6 +59,19 @@
     margin: 4px 0 0;
 }
 
+/* Key figures and elevation profile of the track of a post. */
+.geolocation-track-details {
+    margin-top: 4px;
+    font-size: 0.8em;
+}
+
+.geolocation-elevation {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-top: 4px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     #map {

@@ -187,6 +187,146 @@ function geolocation_format_track_length( $km ) {
 }
 
 /**
+ * Turn the submitted or stored elevations of a track into clean values.
+ *
+ * @param mixed $raw The elevations as JSON or as an array with the keys "profile" (elevations in metres at
+ *                   equal distances along the track), "up" and "down" (ascent and descent in metres).
+ * @return array The keys "profile", "up", "down", "min" and "max"; empty if there are no valid elevations.
+ */
+function geolocation_sanitize_elevation( $raw ) {
+	$data = is_string( $raw ) ? json_decode( $raw, true ) : $raw;
+	if ( ! is_array( $data ) || empty( $data['profile'] ) || ! is_array( $data['profile'] ) ) {
+		return array();
+	}
+	$profile = array();
+	foreach ( array_slice( $data['profile'], 0, 400 ) as $value ) {
+		if ( ! is_numeric( $value ) ) {
+			return array();
+		}
+		$profile[] = (int) round( max( -500, min( 9000, (float) $value ) ) );
+	}
+	if ( count( $profile ) < 2 ) {
+		return array();
+	}
+	$clean = array( 'profile' => $profile );
+	foreach ( array( 'up', 'down' ) as $key ) {
+		$clean[ $key ] = isset( $data[ $key ] ) && is_numeric( $data[ $key ] ) ? (int) round( max( 0, min( 500000, (float) $data[ $key ] ) ) ) : 0;
+	}
+	$clean['min'] = min( $profile );
+	$clean['max'] = max( $profile );
+	return $clean;
+}
+
+/**
+ * Get the elevations of the track of a post.
+ *
+ * @param int $post_id The posts id.
+ * @return array As returned by geolocation_sanitize_elevation().
+ */
+function geolocation_get_elevation( $post_id ) {
+	$stored = get_post_meta( $post_id, 'geo_track_ele', true );
+	return empty( $stored ) ? array() : geolocation_sanitize_elevation( $stored );
+}
+
+/**
+ * Get the key figures of the track of a post as text: length, ascent, descent and highest point.
+ *
+ * @param int $post_id The posts id.
+ * @return string An empty string if the post has no track.
+ */
+function geolocation_get_track_summary( $post_id ) {
+	$length = geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) );
+	if ( '' === $length ) {
+		return '';
+	}
+	/* translators: %s: the length of the track, e.g. "42 km". */
+	$parts     = array( sprintf( __( 'Track: %s', 'geolocation' ), $length ) );
+	$elevation = geolocation_get_elevation( $post_id );
+	if ( ! empty( $elevation ) ) {
+		/* translators: %s: metres of ascent, e.g. "1,200 m". */
+		$parts[] = sprintf( __( 'Ascent: %s', 'geolocation' ), number_format_i18n( $elevation['up'] ) . ' m' );
+		/* translators: %s: metres of descent, e.g. "1,200 m". */
+		$parts[] = sprintf( __( 'Descent: %s', 'geolocation' ), number_format_i18n( $elevation['down'] ) . ' m' );
+		/* translators: %s: the elevation of the highest point, e.g. "1,200 m". */
+		$parts[] = sprintf( __( 'Highest point: %s', 'geolocation' ), number_format_i18n( $elevation['max'] ) . ' m' );
+	}
+	return implode( ' · ', $parts );
+}
+
+/**
+ * Draw the elevation profile of a track as an inline SVG image.
+ *
+ * @param array  $elevation The elevations as returned by geolocation_sanitize_elevation().
+ * @param string $length The formatted length of the track, e.g. "42 km".
+ * @param int    $width The width of the image in pixels.
+ * @param array  $labels The texts "title", "min" and "max" (formatted elevations).
+ * @return string The escaped SVG, or an empty string if there is no profile.
+ */
+function geolocation_get_elevation_svg( $elevation, $length, $width, $labels ) {
+	if ( empty( $elevation['profile'] ) || count( $elevation['profile'] ) < 2 ) {
+		return '';
+	}
+	$width  = max( 200, (int) $width );
+	$height = 120;
+	$top    = 6;
+	$bottom = $height - 18;
+	$range  = max( 1, $elevation['max'] - $elevation['min'] );
+	$count  = count( $elevation['profile'] );
+	$points = array();
+	foreach ( $elevation['profile'] as $index => $value ) {
+		$x        = round( $index * $width / ( $count - 1 ), 1 );
+		$y        = round( $bottom - ( $value - $elevation['min'] ) * ( $bottom - $top ) / $range, 1 );
+		$points[] = $x . ',' . $y;
+	}
+	$line = 'M' . implode( ' L', $points );
+	$svg  = '<svg class="geolocation-elevation" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' . esc_attr( $labels['title'] ) . '" viewBox="0 0 ' . $width . ' ' . $height . '" width="' . $width . '" height="' . $height . '">';
+	$svg .= '<title>' . esc_html( $labels['title'] ) . '</title>';
+	$svg .= '<path d="' . esc_attr( $line . ' L' . $width . ',' . $bottom . ' L0,' . $bottom . ' Z' ) . '" fill="#2b6cb0" fill-opacity="0.2"/>';
+	$svg .= '<path d="' . esc_attr( $line ) . '" fill="none" stroke="#2b6cb0" stroke-width="1.5" stroke-linejoin="round"/>';
+	$svg .= '<line x1="0" y1="' . $bottom . '" x2="' . $width . '" y2="' . $bottom . '" stroke="currentColor" stroke-opacity="0.4"/>';
+	$text = '<text font-size="11" fill="currentColor" paint-order="stroke" stroke="#fff" stroke-width="3" stroke-opacity="0.7" ';
+	$svg .= $text . 'x="4" y="' . ( $top + 11 ) . '">' . esc_html( $labels['max'] ) . '</text>';
+	$svg .= $text . 'x="4" y="' . ( $bottom - 5 ) . '">' . esc_html( $labels['min'] ) . '</text>';
+	$svg .= '<text font-size="11" fill="currentColor" x="0" y="' . ( $height - 4 ) . '">0 km</text>';
+	$svg .= '<text font-size="11" fill="currentColor" text-anchor="end" x="' . $width . '" y="' . ( $height - 4 ) . '">' . esc_html( $length ) . '</text>';
+	$svg .= '</svg>';
+	return $svg;
+}
+
+/**
+ * Build the key figures and, for a map, the elevation profile of the track of a post.
+ *
+ * @param int  $post_id The posts id.
+ * @param bool $profile Whether the elevation profile is shown as well.
+ * @param int  $width The width of the map in pixels the profile belongs to.
+ * @return string The HTML, or an empty string if the post has no track.
+ */
+function geolocation_get_track_details( $post_id, $profile = false, $width = 0 ) {
+	$summary = geolocation_get_track_summary( $post_id );
+	if ( '' === $summary ) {
+		return '';
+	}
+	$style = $width > 0 ? ' style="width:' . (int) $width . 'px;max-width:100%;"' : '';
+	$html  = '<div class="geolocation-track-details"' . $style . '>' . esc_html( $summary );
+	if ( $profile ) {
+		$elevation = geolocation_get_elevation( $post_id );
+		if ( ! empty( $elevation ) ) {
+			$html .= geolocation_get_elevation_svg(
+				$elevation,
+				geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) ),
+				$width,
+				array(
+					'title' => __( 'Elevation profile', 'geolocation' ),
+					'min'   => number_format_i18n( $elevation['min'] ) . ' m',
+					'max'   => number_format_i18n( $elevation['max'] ) . ' m',
+				)
+			);
+		}
+	}
+	return $html . '</div>';
+}
+
+/**
  * Store or remove the track submitted with the post editor's meta box.
  *
  * The caller has to check the nonce and the permissions.
@@ -199,6 +339,7 @@ function geolocation_save_track( $post_id ) {
 	if ( '1' === geolocation_get_posted_value( 'geolocation-track-remove' ) ) {
 		delete_post_meta( $post_id, 'geo_track' );
 		delete_post_meta( $post_id, 'geo_track_km' );
+		delete_post_meta( $post_id, 'geo_track_ele' );
 		return;
 	}
 	if ( empty( $_POST['geolocation-track'] ) ) {
@@ -219,6 +360,15 @@ function geolocation_save_track( $post_id ) {
 	}
 	update_post_meta( $post_id, 'geo_track', wp_json_encode( $points ) );
 	update_post_meta( $post_id, 'geo_track_km', round( $length, 2 ) );
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- verified by the caller; JSON, cleaned by geolocation_sanitize_elevation().
+	$elevation = geolocation_sanitize_elevation( isset( $_POST['geolocation-track-ele'] ) ? wp_unslash( $_POST['geolocation-track-ele'] ) : '' );
+	if ( empty( $elevation ) ) {
+		// The new track has no elevations, so the ones of a former track do not apply anymore.
+		delete_post_meta( $post_id, 'geo_track_ele' );
+	} else {
+		update_post_meta( $post_id, 'geo_track_ele', wp_json_encode( $elevation ) );
+	}
 }
 
 /**

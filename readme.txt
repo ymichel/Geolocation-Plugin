@@ -19,8 +19,8 @@ Made for travel blogs, and for everyone who wants to show where a story happened
 * **A location for every post** – search for an address, click on the map, drag the marker or use the position of your device. If a post has no location, the plugin reads it from the GPS data of the featured image.
 * **Three ways to show it** – plain text, a link that reveals a map on hover, or a map. Before the post, after it, or exactly where you place the block or the shortcode.
 * **Overview maps** – all posts of your blog, of a category or of a tag on one map. Popups show the featured image, the date and the excerpt; markers lying close together are grouped.
-* **Routes and GPX tracks** – connect the posts of a trip in the order they were published, and show the recorded track of a hike or a bike tour together with its length.
-* **Blocks and shortcode** – two blocks for the block editor, and a shortcode with attributes for everything else.
+* **Routes and GPX tracks** – connect the posts of a trip in the order they were published, and show the recorded track of a hike or a bike tour with its length, ascent, descent and elevation profile.
+* **Blocks and shortcode** – two blocks with a live preview for the block editor, and a shortcode with attributes for everything else.
 * **Privacy by design** – OpenStreetMap by default, map tiles from your own server, a strict mode that falls back to text, and GPX files that never leave your computer.
 * **Your choice of maps** – OpenStreetMap or Google Maps.
 * **Translated** – English, German, Spanish, French, Italian, Portuguese (Brazil) and Dutch.
@@ -67,17 +67,18 @@ A post can carry the track of a GPX file, e.g. the recording of a hike or a bike
 
 * The file is read in your browser. Only the simplified line of the track is stored with the post; the file itself, its times and elevations are not uploaded.
 * With the display setting "Simple map" the map of the post shows the track; the map in the editor shows it as well.
+* The post shows the key figures of the track: its length and, if the file contains elevations, ascent, descent and highest point. Below a map it also shows the elevation profile.
 * An overview map with `route="1"` draws the tracks as recorded and the gaps between them as dashed lines. The popup of a post shows the length of its track.
 * A post without a location gets the end of its track as location.
 * The setting "Shorten tracks" hides a distance at the start and at the end of every track, e.g. to keep your home address private.
 
 = Block "Geolocation Map" =
 
-In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.
+In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block, and the editor shows the map as a preview. The block can be used in pages and posts.
 
 = Block "Post Location" =
 
-In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The automatic output before or after the post is omitted for posts using the block.
+In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The editor shows a preview of the saved location. The automatic output before or after the post is omitted for posts using the block.
 
 With the position setting "Not automatically" a location is only shown in posts containing the block or the shortcode. Such a post still appears on overview maps if its location is enabled and public.
 
@@ -108,7 +109,9 @@ With the position setting "Not automatically" a location is only shown in posts 
 = 1.14.0 =
 * new: a post can carry the track of a GPX file. The file is read in the browser, only the simplified line is stored.
 * new: the map of a post shows its track; an overview map with route="1" draws the tracks as recorded and the gaps between them as dashed lines.
+* new: a post shows the key figures of its track (length, ascent, descent, highest point) and, below a map, the elevation profile.
 * new: the block "Post Location" shows the location of a post wherever it is placed, with its own display mode and map size.
+* new: both blocks show a live preview in the block editor.
 * new: the setting "Shorten tracks" hides the start and the end of every track, e.g. to keep a home address private.
 
 = 1.13.0 =

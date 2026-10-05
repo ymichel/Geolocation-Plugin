@@ -36,6 +36,7 @@ define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
 add_action( 'init', 'geolocation_register_block' );
+add_action( 'wp_ajax_geolocation_preview', 'geolocation_block_preview' );
 add_action( 'admin_init', 'geolocation_maybe_upgrade' );
 add_action( 'admin_init', 'geolocation_register_settings' );
 add_action( 'admin_menu', 'geolocation_add_settings' );
@@ -180,6 +181,7 @@ function geolocation_inner_custom_box() {
 		<span id="geolocation-track-status" role="status" style="margin-left:5px;"></span>
 		<input type="hidden" id="geolocation-track" name="geolocation-track" value="" />
 		<input type="hidden" id="geolocation-track-km" name="geolocation-track-km" value="" />
+		<input type="hidden" id="geolocation-track-ele" name="geolocation-track-ele" value="" />
 		<input type="hidden" id="geolocation-track-remove-flag" name="geolocation-track-remove" value="" />
 		<p class="description"><?php esc_html_e( 'The file is read in your browser. Only the simplified line of the track is stored, not the file.', 'geolocation' ); ?></p>
 	</div>
@@ -822,6 +824,7 @@ function geolocation_get_location_html( $post, $display = '', $width = 0, $heigh
 	}
 
 	$html      = '';
+	$map_width = $width >= 50 ? (int) $width : (int) get_option( 'geolocation_map_width' );
 	$posted_at = esc_html__( 'Posted from ', 'geolocation' ) . esc_html( $address );
 	if ( ! in_array( $display, array( 'plain', 'link', 'map' ), true ) ) {
 		$display = (string) get_option( 'geolocation_map_display' );
@@ -832,17 +835,17 @@ function geolocation_get_location_html( $post, $display = '', $width = 0, $heigh
 	}
 	switch ( $display ) {
 		case 'plain':
-			$html = '<div class="geolocation-plain" id="geolocation' . $post->ID . '">' . $posted_at . '.</div>';
+			$html = '<div class="geolocation-plain" id="geolocation' . $post->ID . '">' . $posted_at . '.</div>' . geolocation_get_track_details( $post->ID );
 			wp_enqueue_style( 'geolocation_css', plugins_url( 'style.css', __FILE__ ), array(), GEOLOCATION__VERSION, 'all' );
 			break;
 		case 'link':
-			$html = '<div><a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" data-geolocation="' . esc_attr( $latitude . ',' . $longitude ) . '" onclick="return false;">' . $posted_at . '.</a></div>';
+			$html = '<div><a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" data-geolocation="' . esc_attr( $latitude . ',' . $longitude ) . '" onclick="return false;">' . $posted_at . '.</a></div>' . geolocation_get_track_details( $post->ID );
 			// The popup map shown while hovering a location link.
 			add_action( 'wp_footer', 'geolocation_add_geo_div' );
 			geolocation_enqueue_front();
 			break;
 		case 'map':
-			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude, geolocation_get_track( $post->ID ), $width, $height );
+			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude, geolocation_get_track( $post->ID ), $width, $height ) . geolocation_get_track_details( $post->ID, true, $map_width );
 			geolocation_enqueue_front();
 			break;
 		case 'debug':
