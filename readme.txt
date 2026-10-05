@@ -7,29 +7,46 @@ Requires PHP: 7.3
 Tested up to: 7.1
 Stable tag: 1.14.0
 
-Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
+Put your posts on the map: locations, routes and GPX tracks with OpenStreetMap or Google Maps. Privacy-friendly and made for travel blogs.
 
 == Description ==
-Maintained by [Yann Michel](https://profiles.wordpress.org/ymichel/) since 2017.
+**Put your stories on the map.** Geolocation adds a location to your posts and shows it to your readers: as a line of text, as a link that reveals a map, or as a map. Collect your posts on an overview map, connect them to a route and add the GPX tracks of your hikes and bike tours.
 
-The Geolocation plugin allows WordPress users to geotag their posts using the Edit Post page.
+Made for travel blogs, and for everyone who wants to show where a story happened. Maintained by [Yann Michel](https://profiles.wordpress.org/ymichel/) since 2017.
 
-Previously, in all WordPress mobile applications such as WordPress for iPhone/iPad, WordPress for Android this was directly available by activating the gps functionality. Unfortunately, the WP-application developers decided to deactivate the feature of storing GPS data in the app but I am hoping for its return.
+= Highlights =
 
-The automated way to obtain geoinformation is possible by adding a photo as featured image to your post. If you have a featured image attached to you post, its gps coordinates are taken into consideration if there is no geo-information provided already. If you use an iPhone, make sure that you take your photos in jpg. Otherwise the GPS information is stripped from the HEIC when exporting to JPG and uploading. Furthermore, when using the WP app, make sure you have enabled to keep all metadata in the files that are uploaded. Otherwise, the app will remove also the GPS information.
+* **A location for every post** – search for an address, click on the map, drag the marker or use the position of your device. If a post has no location, the plugin reads it from the GPS data of the featured image.
+* **Three ways to show it** – plain text, a link that reveals a map on hover, or a map. Before the post, after it, or exactly where you place the block or the shortcode.
+* **Overview maps** – all posts of your blog, of a category or of a tag on one map. Popups show the featured image, the date and the excerpt; markers lying close together are grouped.
+* **Routes and GPX tracks** – connect the posts of a trip in the order they were published, and show the recorded track of a hike or a bike tour together with its length.
+* **Blocks and shortcode** – two blocks for the block editor, and a shortcode with attributes for everything else.
+* **Privacy by design** – OpenStreetMap by default, map tiles from your own server, a strict mode that falls back to text, and GPX files that never leave your computer.
+* **Your choice of maps** – OpenStreetMap or Google Maps.
+* **Translated** – English, German, Spanish, French, Italian, Portuguese (Brazil) and Dutch.
 
-Once there is geoinformation added to any of your posts, visitors see a short description of the address either before, after, or at a custom location within the post. Here, you have three options as shown below: plain, link or static information. 
-When "link" is chosen, hovering over the address reveals a map that displays the post's exact location. 
-If one would only like to show a textual version without accessing any external services or without showing a map when visitors see a post, one can enable a "plain" mode to prevent external access except for authors to set a particular location. 
-Furthermore, there is an option to statically show the map whenever there is geoinformation available. (see below for examples)
+= Privacy =
 
-You can choose between two map providers: Google Maps and Open Streetmaps.  If you use Open Streetmaps as mapprovider in combination with the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/ "proxy plugin for OSM"), the tiles are delivered from the local proxy so that the visitors cannot be tracked from a third party. If no proxy is installed or Google Maps is used as the provider, this is not feasible, i.e., the tiles are pulled directly from the map service to your visitor's browser.
+The plugin uses OpenStreetMap by default and delivers the map library itself. Together with the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/ "proxy plugin for OSM") the map tiles come from your own server, so the browsers of your visitors do not connect to an external map server.
 
-Furthermore, there is the option to use the tag [geolocation] also on a page in order to provide a map with multiple entries (e.g. from a journey) on one map altogether. The set of shown locations can be filtered per page, by placing a user defined field called "category" and give it the name (not the slug!) of the category to be shown. This way, you can also hide the location information per post (by choosing the "code option" without using it) and only show an overview map if needed. If the page is not restricted by any of the categories, all locations are shown that were tagged "public" and have the switch set to "enabled". (see example below)
+* The **strict privacy mode** only shows maps if the tiles are delivered by the proxy. Otherwise visitors see the location as text.
+* The display mode **plain text** never loads a map for your visitors.
+* Without the proxy, or with Google Maps, the tiles are loaded directly from the map service.
 
-By default, this plugin uses Open-Streetmap but as an alternative (and backwards-compatibility) google maps can also be used. However, one needs to have a Google Maps API key to use this plugin with google maps. You may obtain a key via Google Cloud Platform. Make sure, you have activated "Maps JavaScript API" as well as "Geocoding API".
+= Locations from your photos =
 
-If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://github.com/ymichel/Geolocation-Plugin/issues "support request") anytime. I am more than happy to help you. Also if you would want to give a [review](https://wordpress.org/support/plugin/geolocation/reviews/ "review") if you are happy with the plugin, I would appreciate the feedback.
+A post without a location takes it from the GPS data of its featured image. Two tips for photos taken with a phone:
+
+* On an iPhone, take your photos as JPG. When a HEIC photo is converted for the upload, its GPS data is removed.
+* In the WordPress app, enable the option to keep the metadata of uploaded files.
+
+= Google Maps =
+
+Google Maps needs an API key, which you get from the Google Cloud Platform. Activate the "Maps JavaScript API" and the "Geocoding API" for it.
+
+= Support =
+
+Questions, problems or ideas? Open a [support request](https://github.com/ymichel/Geolocation-Plugin/issues "support request") anytime, I am happy to help. If you like the plugin, a [review](https://wordpress.org/support/plugin/geolocation/reviews/ "review") is very welcome.
 
 = Overview maps on pages =
 
