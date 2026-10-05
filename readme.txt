@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.13.0
+Stable tag: 1.12.0
 
 Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
@@ -63,14 +63,13 @@ Attributes can be combined, and a page can contain several maps. Without the att
 
 == Changelog ==
 
-= 1.13.0 =
-* new: the shortcode of an overview map accepts the attributes cat, tag, width, height and zoom, e.g. [geolocation cat="travel" height="400"].
-* new: a page can contain several overview maps.
-* new: the attributes are explained in the "Help" tab of the settings page.
-
 = 1.12.0 =
 * new: the popups on the overview map show the featured image, the date and the excerpt of a post.
 * new: markers lying close together on the overview map are grouped.
+* new: the shortcode of an overview map accepts the attributes cat, tag, width, height and zoom, e.g. [geolocation cat="travel" height="400"].
+* new: a page can contain several overview maps.
+* new: the attributes are explained in the "Help" tab of the settings page.
+* the settings page explains which tiles URL is in use when the proxy plugin is active.
 
 = 1.11.0 =
 * new: set the location in the editor by clicking on the map or dragging the marker (OpenStreetMap; dragging also with Google Maps).
