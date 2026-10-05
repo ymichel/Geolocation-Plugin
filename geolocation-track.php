@@ -294,24 +294,36 @@ function geolocation_get_elevation_svg( $elevation, $length, $width, $labels ) {
 }
 
 /**
- * Build the key figures and, for a map, the elevation profile of the track of a post.
+ * Check whether a part of the track details is shown: the key figures or the elevation profile.
+ *
+ * @param string $part "figures" or "profile".
+ * @param string $choice "show" or "hide" to overrule the settings, e.g. by a block; anything else for the settings.
+ * @return bool
+ */
+function geolocation_track_shows( $part, $choice = '' ) {
+	if ( in_array( $choice, array( 'show', 'hide' ), true ) ) {
+		return 'show' === $choice;
+	}
+	// Both parts are shown unless they have been switched off in the settings.
+	return '0' !== (string) get_option( 'geolocation_track_' . $part );
+}
+
+/**
+ * Build the key figures and the elevation profile of the track of a post.
  *
  * @param int  $post_id The posts id.
- * @param bool $profile Whether the elevation profile is shown as well.
- * @param int  $width The width of the map in pixels the profile belongs to.
- * @return string The HTML, or an empty string if the post has no track.
+ * @param bool $figures Whether the key figures are shown.
+ * @param bool $profile Whether the elevation profile is shown.
+ * @param int  $width The width of the map in pixels the details belong to, 0 if there is no map.
+ * @return string The HTML, or an empty string if there is nothing to show.
  */
-function geolocation_get_track_details( $post_id, $profile = false, $width = 0 ) {
-	$summary = geolocation_get_track_summary( $post_id );
-	if ( '' === $summary ) {
-		return '';
-	}
-	$style = $width > 0 ? ' style="width:' . (int) $width . 'px;max-width:100%;"' : '';
-	$html  = '<div class="geolocation-track-details"' . $style . '>' . esc_html( $summary );
-	if ( $profile ) {
+function geolocation_get_track_details( $post_id, $figures = true, $profile = false, $width = 0 ) {
+	$summary = $figures ? geolocation_get_track_summary( $post_id ) : '';
+	$image   = '';
+	if ( $profile && '' !== geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) ) ) {
 		$elevation = geolocation_get_elevation( $post_id );
 		if ( ! empty( $elevation ) ) {
-			$html .= geolocation_get_elevation_svg(
+			$image = geolocation_get_elevation_svg(
 				$elevation,
 				geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) ),
 				$width,
@@ -323,7 +335,11 @@ function geolocation_get_track_details( $post_id, $profile = false, $width = 0 )
 			);
 		}
 	}
-	return $html . '</div>';
+	if ( '' === $summary && '' === $image ) {
+		return '';
+	}
+	$style = $width > 0 ? ' style="width:' . (int) $width . 'px;max-width:100%;"' : '';
+	return '<div class="geolocation-track-details"' . $style . '>' . esc_html( $summary ) . $image . '</div>';
 }
 
 /**

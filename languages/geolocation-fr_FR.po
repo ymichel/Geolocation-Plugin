@@ -23,6 +23,21 @@ msgstr "Affiche le lieu de l’article."
 msgid "Preview"
 msgstr "Aperçu"
 
+msgid "Tracks"
+msgstr "Traces"
+
+msgid "Key figures of the track"
+msgstr "Chiffres clés de la trace"
+
+msgid "Elevation profile"
+msgstr "Profil altimétrique"
+
+msgid "Show"
+msgstr "Afficher"
+
+msgid "Hide"
+msgstr "Masquer"
+
 msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
 msgstr "Le lieu de cet article est affiché ici, tel que défini dans la boîte Geolocation sous l’éditeur."
 
@@ -194,6 +209,12 @@ msgstr "Montrez votre soutien à WordPress en utilisant le marqueur de carte Wor
 msgid "Dimensions Page"
 msgstr "Dimensions sur les pages"
 
+msgid "Show the key figures of a track: length, ascent, descent and highest point."
+msgstr "Afficher les chiffres clés d’une trace : longueur, dénivelé positif, dénivelé négatif et point culminant."
+
+msgid "Show the elevation profile below the map of a post."
+msgstr "Afficher le profil altimétrique sous la carte d’un article."
+
 msgid "Shorten tracks"
 msgstr "Raccourcir les traces"
 
@@ -265,9 +286,6 @@ msgstr "Dénivelé négatif : %s"
 
 msgid "Highest point: %s"
 msgstr "Point culminant : %s"
-
-msgid "Elevation profile"
-msgstr "Profil altimétrique"
 
 msgid "Review"
 msgstr "Avis"

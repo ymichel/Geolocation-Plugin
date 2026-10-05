@@ -50,6 +50,8 @@ function geolocation_get_settings_definition() {
 		'geolocation_provider'            => array( 'string', 'geolocation_sanitize_provider', 'osm' ),
 		'geolocation_shortcode'           => array( 'string', 'sanitize_text_field', '[geolocation]' ),
 		'geolocation_track_trim'          => array( 'integer', 'absint', null ),
+		'geolocation_track_figures'       => array( 'string', 'geolocation_sanitize_switch', null ),
+		'geolocation_track_profile'       => array( 'string', 'geolocation_sanitize_switch', null ),
 		'geolocation_osm_use_proxy'       => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_osm_strict_privacy'  => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_osm_tiles_url'       => array( 'string', 'sanitize_text_field', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' ),
@@ -103,6 +105,16 @@ function geolocation_sanitize_position( $value ) {
  */
 function geolocation_sanitize_display( $value ) {
 	return in_array( $value, array( 'plain', 'link', 'map', 'debug' ), true ) ? $value : 'map';
+}
+
+/**
+ * Store a switch which is on by default as "1" or "0", so "off" differs from "never saved".
+ *
+ * @param mixed $value The submitted value.
+ * @return string
+ */
+function geolocation_sanitize_switch( $value ) {
+	return '0' === (string) $value || '' === (string) $value ? '0' : '1';
 }
 
 /**

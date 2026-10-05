@@ -197,8 +197,16 @@ function geolocation_settings_page() {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="geolocation_track_trim"><?php esc_html_e( 'Shorten tracks', 'geolocation' ); ?></label></th>
+				<th scope="row"><?php esc_html_e( 'Tracks', 'geolocation' ); ?></th>
 				<td>
+					<?php // An unchecked box submits nothing, so the hidden field stores "off". ?>
+					<input type="hidden" name="geolocation_track_figures" value="0" />
+					<input type="checkbox" id="geolocation_track_figures" name="geolocation_track_figures" value="1" <?php checked( geolocation_track_shows( 'figures' ) ); ?>>
+					<label for="geolocation_track_figures"><?php esc_html_e( 'Show the key figures of a track: length, ascent, descent and highest point.', 'geolocation' ); ?></label><br />
+					<input type="hidden" name="geolocation_track_profile" value="0" />
+					<input type="checkbox" id="geolocation_track_profile" name="geolocation_track_profile" value="1" <?php checked( geolocation_track_shows( 'profile' ) ); ?>>
+					<label for="geolocation_track_profile"><?php esc_html_e( 'Show the elevation profile below the map of a post.', 'geolocation' ); ?></label><br /><br />
+					<label for="geolocation_track_trim"><strong><?php esc_html_e( 'Shorten tracks', 'geolocation' ); ?>:</strong></label>
 					<input type="number" min="0" step="50" id="geolocation_track_trim" name="geolocation_track_trim" value="<?php echo esc_attr( (string) (int) get_option( 'geolocation_track_trim' ) ); ?>" />m
 					<p class="description"><?php esc_html_e( 'Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track.', 'geolocation' ); ?></p>
 				</td>

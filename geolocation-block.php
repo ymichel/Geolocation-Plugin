@@ -96,6 +96,17 @@ function geolocation_register_block() {
 					'type'    => 'integer',
 					'default' => 0,
 				),
+				// The details of the track: empty for the plugin settings, or "show" / "hide".
+				'figures' => array(
+					'type'    => 'string',
+					'enum'    => array( '', 'show', 'hide' ),
+					'default' => '',
+				),
+				'profile' => array(
+					'type'    => 'string',
+					'enum'    => array( '', 'show', 'hide' ),
+					'default' => '',
+				),
 			),
 			'supports'        => array(
 				'html' => false,
@@ -143,6 +154,11 @@ function geolocation_get_block_data() {
 			array(
 				'locationTitle' => __( 'Post Location', 'geolocation' ),
 				'previewTitle'  => __( 'Preview', 'geolocation' ),
+				'tracks'        => __( 'Tracks', 'geolocation' ),
+				'figures'       => __( 'Key figures of the track', 'geolocation' ),
+				'profile'       => __( 'Elevation profile', 'geolocation' ),
+				'show'          => __( 'Show', 'geolocation' ),
+				'hide'          => __( 'Hide', 'geolocation' ),
 				'locationHelp'  => __( 'The location of this post is shown here, as set in the Geolocation box below the editor.', 'geolocation' ),
 				'display'       => __( 'Display', 'geolocation' ),
 				'asSettings'    => __( 'As in the plugin settings', 'geolocation' ),
@@ -237,7 +253,7 @@ function geolocation_render_location_block( $attributes, $content = '', $block =
 	$display = isset( $attributes['display'] ) ? (string) $attributes['display'] : '';
 	$width   = isset( $attributes['width'] ) ? (int) $attributes['width'] : 0;
 	$height  = isset( $attributes['height'] ) ? (int) $attributes['height'] : 0;
-	$html    = geolocation_get_location_html( $post, $display, $width, $height );
+	$html    = geolocation_get_location_html( $post, $display, $width, $height, $attributes );
 	if ( '' === $html ) {
 		return '';
 	}
@@ -265,7 +281,7 @@ function geolocation_block_preview() {
 		$display = isset( $attributes['display'] ) ? (string) $attributes['display'] : '';
 		$html    = '';
 		if ( $post && current_user_can( 'edit_post', $post->ID ) ) {
-			$html = geolocation_get_location_html( $post, $display, isset( $attributes['width'] ) ? (int) $attributes['width'] : 0, isset( $attributes['height'] ) ? (int) $attributes['height'] : 0 );
+			$html = geolocation_get_location_html( $post, $display, isset( $attributes['width'] ) ? (int) $attributes['width'] : 0, isset( $attributes['height'] ) ? (int) $attributes['height'] : 0, $attributes );
 		}
 		$empty = __( 'This post has no location to show yet. Set it in the Geolocation box below the editor and save the post.', 'geolocation' );
 		if ( 'link' === ( '' === $display ? get_option( 'geolocation_map_display' ) : $display ) ) {

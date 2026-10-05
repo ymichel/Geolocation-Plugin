@@ -23,6 +23,21 @@ msgstr "Muestra la ubicación de la entrada."
 msgid "Preview"
 msgstr "Vista previa"
 
+msgid "Tracks"
+msgstr "Recorridos"
+
+msgid "Key figures of the track"
+msgstr "Datos clave del recorrido"
+
+msgid "Elevation profile"
+msgstr "Perfil de elevación"
+
+msgid "Show"
+msgstr "Mostrar"
+
+msgid "Hide"
+msgstr "Ocultar"
+
 msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
 msgstr "Aquí se muestra la ubicación de esta entrada, tal como está definida en la caja Geolocation debajo del editor."
 
@@ -194,6 +209,12 @@ msgstr "Muestra tu apoyo a WordPress usando el marcador de mapa de WordPress."
 msgid "Dimensions Page"
 msgstr "Dimensiones en páginas"
 
+msgid "Show the key figures of a track: length, ascent, descent and highest point."
+msgstr "Mostrar los datos clave de un recorrido: longitud, ascenso, descenso y punto más alto."
+
+msgid "Show the elevation profile below the map of a post."
+msgstr "Mostrar el perfil de elevación debajo del mapa de una entrada."
+
 msgid "Shorten tracks"
 msgstr "Acortar recorridos"
 
@@ -265,9 +286,6 @@ msgstr "Descenso: %s"
 
 msgid "Highest point: %s"
 msgstr "Punto más alto: %s"
-
-msgid "Elevation profile"
-msgstr "Perfil de elevación"
 
 msgid "Review"
 msgstr "Valoración"

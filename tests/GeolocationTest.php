@@ -594,4 +594,33 @@ class GeolocationTest extends TestCase {
 		// A flat track does not divide by zero; the image is at least 200 pixels wide.
 		$this->assertStringContainsString( 'd="M0,102 L200,102"', geolocation_get_elevation_svg( geolocation_sanitize_elevation( array( 'profile' => array( 5, 5 ) ) ), '1.0 km', 100, $labels ) );
 	}
+
+	/**
+	 * The details of a track are shown unless they are switched off; a block can overrule the settings.
+	 *
+	 * @return void
+	 */
+	public function test_track_switches() {
+		$this->assertSame( '1', geolocation_sanitize_switch( '1' ) );
+		$this->assertSame( '1', geolocation_sanitize_switch( 'on' ) );
+		$this->assertSame( '0', geolocation_sanitize_switch( '0' ) );
+		$this->assertSame( '0', geolocation_sanitize_switch( '' ) );
+		$this->assertSame( '0', geolocation_sanitize_switch( null ) );
+
+		// Never saved: shown.
+		unset( $GLOBALS['geolocation_test_options']['geolocation_track_figures'], $GLOBALS['geolocation_test_options']['geolocation_track_profile'] );
+		$this->assertTrue( geolocation_track_shows( 'figures' ) );
+		$this->assertTrue( geolocation_track_shows( 'profile' ) );
+
+		$GLOBALS['geolocation_test_options']['geolocation_track_figures'] = '0';
+		$GLOBALS['geolocation_test_options']['geolocation_track_profile'] = '1';
+		$this->assertFalse( geolocation_track_shows( 'figures' ) );
+		$this->assertTrue( geolocation_track_shows( 'profile' ) );
+		$this->assertFalse( geolocation_track_shows( 'figures', '' ) );
+		$this->assertFalse( geolocation_track_shows( 'figures', 'anything' ) );
+		$this->assertTrue( geolocation_track_shows( 'figures', 'show' ) );
+		$this->assertFalse( geolocation_track_shows( 'profile', 'hide' ) );
+
+		unset( $GLOBALS['geolocation_test_options']['geolocation_track_figures'], $GLOBALS['geolocation_test_options']['geolocation_track_profile'] );
+	}
 }

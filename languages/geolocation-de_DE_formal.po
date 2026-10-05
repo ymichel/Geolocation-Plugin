@@ -1,10 +1,6 @@
 # Copyright (C) 2019 Geolocation
 # This file is distributed under the same license as the Geolocation package.
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:1056
-msgid "Addresses have been updated!"
-msgstr "Adressen wurden aktualisiert."
-
 msgid "Addresses are being updated in the background."
 msgstr "Adressen werden im Hintergrund aktualisiert."
 
@@ -80,10 +76,6 @@ msgstr "H&ouml;he"
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:68
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Wie sollen Ihre Geoinformationen dargestellt werden?"
-
-#: URI of the plugin
-msgid "https://wordpress.org/extend/plugins/geolocation/"
-msgstr "https://wordpress.org/extend/plugins/geolocation/"
 
 #: Author URI of the plugin
 msgid "https://github.com/ymichel/Geolocation-Plugin/"
@@ -246,10 +238,6 @@ msgstr "Stra&szlig;e"
 msgid "Support"
 msgstr "Support"
 
-#: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:44
-msgid "Thank you for using the geolocation plugin. I would appreciate your <a href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" target=\"_blank\">feedback</a>, and I am also open to <a href=\"https://wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\">suggestions</a>."
-msgstr "Danke f&uuml;r die Benutzung des geolocation plugins. &Uuml;ber <a href=\"https://wordpress.org/support/plugin/geolocation/reviews/#new-post\" target=\"_blank\">Feedback</a> oder den <a href=\"https://wordpress.org/support/plugin/geolocation/#new-topic\" target=\"_blank\"> Vorschlag von Ideen</a> w&uuml;rde ich mich freuen."
-
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:133
 msgid "Tiles url (Caching)"
 msgstr "Kachel URL (Caching)"
@@ -385,3 +373,21 @@ msgstr "Dieser Beitrag hat noch keinen Ort, der angezeigt werden kann. Legen Sie
 
 msgid "No post with a visible location matches these settings."
 msgstr "Kein Beitrag mit sichtbarem Ort passt zu diesen Einstellungen."
+
+msgid "Tracks"
+msgstr "Strecken"
+
+msgid "Show the key figures of a track: length, ascent, descent and highest point."
+msgstr "Kennzahlen einer Strecke anzeigen: L&auml;nge, Anstieg, Abstieg und h&ouml;chster Punkt."
+
+msgid "Show the elevation profile below the map of a post."
+msgstr "H&ouml;henprofil unter der Karte eines Beitrags anzeigen."
+
+msgid "Key figures of the track"
+msgstr "Kennzahlen der Strecke"
+
+msgid "Show"
+msgstr "Anzeigen"
+
+msgid "Hide"
+msgstr "Ausblenden"
