@@ -14,6 +14,33 @@ msgstr "Carte Geolocation"
 msgid "Shows the locations of your posts on a map."
 msgstr "Affiche les lieux de vos articles sur une carte."
 
+msgid "Post Location"
+msgstr "Lieu de l’article"
+
+msgid "Shows the location of the post."
+msgstr "Affiche le lieu de l’article."
+
+msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
+msgstr "Le lieu de cet article est affiché ici, tel que défini dans la boîte Geolocation sous l’éditeur."
+
+msgid "Display"
+msgstr "Affichage"
+
+msgid "As in the plugin settings"
+msgstr "Comme dans les réglages de l’extension"
+
+msgid "Plain text."
+msgstr "Texte brut."
+
+msgid "Simple link w/hover."
+msgstr "Lien simple avec carte au survol."
+
+msgid "Simple map (static)."
+msgstr "Carte simple (statique)."
+
+msgid "Height"
+msgstr "Hauteur"
+
 msgid "Posts"
 msgstr "Articles"
 
@@ -101,6 +128,9 @@ msgstr "Un article peut porter la trace d’un fichier GPX, choisi dans la boît
 msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
 msgstr "Dans l’éditeur de blocs, le bloc « Carte Geolocation » offre les mêmes options sans saisir de code court."
 
+msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
+msgstr "Dans un article, le bloc « Lieu de l’article » affiche son lieu là où vous le placez. L’affichage automatique avant ou après l’article est alors omis."
+
 msgid "Shortcode"
 msgstr "Code court"
 
@@ -109,9 +139,6 @@ msgstr "Réglages de l’extension Geolocation"
 
 msgid "Dimensions"
 msgstr "Dimensions"
-
-msgid "Height"
-msgstr "Hauteur"
 
 msgid "Position"
 msgstr "Position"
@@ -133,15 +160,6 @@ msgstr "Tous les attributs sont expliqués sous « Aide », en haut à droite 
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Comment souhaitez-vous afficher votre géolocalisation ?"
-
-msgid "Plain text."
-msgstr "Texte brut."
-
-msgid "Simple link w/hover."
-msgstr "Lien simple avec carte au survol."
-
-msgid "Simple map (static)."
-msgstr "Carte simple (statique)."
 
 msgid "Default Zoom Level"
 msgstr "Niveau de zoom par défaut"

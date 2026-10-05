@@ -36,3 +36,7 @@ A post can carry the track of a GPX file, e.g. the recording of a hike or a bike
 ## Block "Geolocation Map"
 
 In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.
+
+## Block "Post Location"
+
+In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The automatic output before or after the post is omitted for posts using the block.

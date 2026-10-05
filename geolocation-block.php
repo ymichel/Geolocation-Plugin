@@ -2,7 +2,8 @@
 /**
  * Block
  *
- * The block "Geolocation Map" shows the overview map without typing a shortcode.
+ * The block "Geolocation Map" shows the overview map without typing a shortcode,
+ * the block "Post Location" shows the location of a post wherever it is placed.
  *
  * @category Components
  * @package geolocation
@@ -11,7 +12,7 @@
  */
 
 /**
- * Register the block "Geolocation Map" and its editor script.
+ * Register the blocks "Geolocation Map" and "Post Location" and their editor script.
  *
  * @return void
  */
@@ -72,6 +73,39 @@ function geolocation_register_block() {
 			'render_callback' => 'geolocation_render_block',
 		)
 	);
+	register_block_type(
+		'geolocation/location',
+		array(
+			'api_version'     => 3,
+			'title'           => geolocation_block_text( __( 'Post Location', 'geolocation' ) ),
+			'description'     => geolocation_block_text( __( 'Shows the location of the post.', 'geolocation' ) ),
+			'category'        => 'widgets',
+			'icon'            => 'location',
+			'keywords'        => array( 'geolocation', 'map', 'track' ),
+			'attributes'      => array(
+				'display' => array(
+					'type'    => 'string',
+					'enum'    => array( '', 'plain', 'link', 'map' ),
+					'default' => '',
+				),
+				'width'   => array(
+					'type'    => 'integer',
+					'default' => 0,
+				),
+				'height'  => array(
+					'type'    => 'integer',
+					'default' => 0,
+				),
+			),
+			'supports'        => array(
+				'html' => false,
+			),
+			// Inside a query loop the block shows the location of each post.
+			'uses_context'    => array( 'postId' ),
+			'editor_script'   => 'geolocation_block',
+			'render_callback' => 'geolocation_render_location_block',
+		)
+	);
 }
 
 /**
@@ -93,27 +127,36 @@ function geolocation_block_text( $text ) {
  */
 function geolocation_get_block_data() {
 	return array(
-		'width'  => (int) get_option( 'geolocation_map_width_page' ),
-		'height' => (int) get_option( 'geolocation_map_height_page' ),
-		'i18n'   => array_map(
+		'width'   => (int) get_option( 'geolocation_map_width_page' ),
+		'height'  => (int) get_option( 'geolocation_map_height_page' ),
+		'display' => (string) get_option( 'geolocation_map_display' ),
+		'i18n'    => array_map(
 			'geolocation_block_text',
 			array(
-				'title'       => __( 'Geolocation Map', 'geolocation' ),
-				'posts'       => __( 'Posts', 'geolocation' ),
-				'categories'  => __( 'Categories', 'geolocation' ),
-				'tags'        => __( 'Tags', 'geolocation' ),
-				'postsHelp'   => __( 'Leave both empty to show all posts with a location.', 'geolocation' ),
-				'map'         => __( 'Map', 'geolocation' ),
-				'width'       => __( 'Width', 'geolocation' ),
-				'widthHelp'   => __( 'In pixels or percent, e.g. 600 or 100%. Empty: the value from the plugin settings.', 'geolocation' ),
-				'height'      => __( 'Height in pixels', 'geolocation' ),
-				'heightHelp'  => __( 'Empty: the value from the plugin settings.', 'geolocation' ),
-				'fit'         => __( 'Fit the map to the markers', 'geolocation' ),
-				'zoom'        => __( 'Zoom level', 'geolocation' ),
-				'route'       => __( 'Route', 'geolocation' ),
-				'routeHelp'   => __( 'Connects the locations with a line, in the order of the post dates.', 'geolocation' ),
-				'placeholder' => __( 'The map is shown on the website. Choose the posts and the size in the block settings.', 'geolocation' ),
-				'allPosts'    => __( 'All posts with a location', 'geolocation' ),
+				'locationTitle' => __( 'Post Location', 'geolocation' ),
+				'locationHelp'  => __( 'The location of this post is shown here, as set in the Geolocation box below the editor.', 'geolocation' ),
+				'display'       => __( 'Display', 'geolocation' ),
+				'asSettings'    => __( 'As in the plugin settings', 'geolocation' ),
+				'plain'         => __( 'Plain text.', 'geolocation' ),
+				'link'          => __( 'Simple link w/hover.', 'geolocation' ),
+				'simpleMap'     => __( 'Simple map (static).', 'geolocation' ),
+				'heightOnly'    => __( 'Height', 'geolocation' ),
+				'title'         => __( 'Geolocation Map', 'geolocation' ),
+				'posts'         => __( 'Posts', 'geolocation' ),
+				'categories'    => __( 'Categories', 'geolocation' ),
+				'tags'          => __( 'Tags', 'geolocation' ),
+				'postsHelp'     => __( 'Leave both empty to show all posts with a location.', 'geolocation' ),
+				'map'           => __( 'Map', 'geolocation' ),
+				'width'         => __( 'Width', 'geolocation' ),
+				'widthHelp'     => __( 'In pixels or percent, e.g. 600 or 100%. Empty: the value from the plugin settings.', 'geolocation' ),
+				'height'        => __( 'Height in pixels', 'geolocation' ),
+				'heightHelp'    => __( 'Empty: the value from the plugin settings.', 'geolocation' ),
+				'fit'           => __( 'Fit the map to the markers', 'geolocation' ),
+				'zoom'          => __( 'Zoom level', 'geolocation' ),
+				'route'         => __( 'Route', 'geolocation' ),
+				'routeHelp'     => __( 'Connects the locations with a line, in the order of the post dates.', 'geolocation' ),
+				'placeholder'   => __( 'The map is shown on the website. Choose the posts and the size in the block settings.', 'geolocation' ),
+				'allPosts'      => __( 'All posts with a location', 'geolocation' ),
 			)
 		),
 	);
@@ -168,4 +211,27 @@ function geolocation_render_block( $attributes ) {
 		return '';
 	}
 	return '<div ' . get_block_wrapper_attributes() . '>' . $map . '</div>';
+}
+
+/**
+ * Render the block "Post Location".
+ *
+ * @param array    $attributes The attributes of the block.
+ * @param string   $content The content of the block, which is empty.
+ * @param WP_Block $block The block, providing the post of a query loop.
+ * @return string The HTML of the location, or an empty string if there is nothing to show.
+ */
+function geolocation_render_location_block( $attributes, $content = '', $block = null ) {
+	$post = get_post( $block && ! empty( $block->context['postId'] ) ? (int) $block->context['postId'] : null );
+	if ( ! $post ) {
+		return '';
+	}
+	$display = isset( $attributes['display'] ) ? (string) $attributes['display'] : '';
+	$width   = isset( $attributes['width'] ) ? (int) $attributes['width'] : 0;
+	$height  = isset( $attributes['height'] ) ? (int) $attributes['height'] : 0;
+	$html    = geolocation_get_location_html( $post, $display, $width, $height );
+	if ( '' === $html ) {
+		return '';
+	}
+	return '<div ' . get_block_wrapper_attributes() . '>' . $html . '</div>';
 }

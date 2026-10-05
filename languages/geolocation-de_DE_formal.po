@@ -349,3 +349,21 @@ msgstr "Blendet diese Distanz am Anfang und am Ende jeder Strecke aus, z. B. um 
 
 msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
 msgstr "Ein Beitrag kann die Strecke einer GPX-Datei tragen, die in der Geolocation-Box des Editors gew&auml;hlt wird. Eine Karte mit Route zeichnet diese Strecken wie aufgezeichnet und die L&uuml;cken dazwischen gestrichelt."
+
+msgid "Post Location"
+msgstr "Standort des Beitrags"
+
+msgid "Shows the location of the post."
+msgstr "Zeigt den Ort des Beitrags."
+
+msgid "The location of this post is shown here, as set in the Geolocation box below the editor."
+msgstr "Hier wird der Ort dieses Beitrags angezeigt, wie er in der Geolocation-Box unter dem Editor festgelegt ist."
+
+msgid "Display"
+msgstr "Anzeige"
+
+msgid "As in the plugin settings"
+msgstr "Wie in den Plugin-Einstellungen"
+
+msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
+msgstr "In einem Beitrag zeigt der Block \"Standort des Beitrags\" dessen Ort an der Stelle, an der er eingef&uuml;gt wird. Die automatische Ausgabe vor oder nach dem Beitrag entf&auml;llt dann."

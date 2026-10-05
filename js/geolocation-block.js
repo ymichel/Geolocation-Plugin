@@ -1,7 +1,7 @@
 /**
- * Geolocation: the block "Geolocation Map" for the block editor.
+ * Geolocation: the blocks "Geolocation Map" and "Post Location" for the block editor.
  *
- * The block is rendered by PHP; attributes, title and description are registered there.
+ * The blocks are rendered by PHP; attributes, title and description are registered there.
  * Settings and translated texts are provided by PHP in window.geolocationBlock.
  */
 ( function ( wp ) {
@@ -171,6 +171,79 @@
 			el( components.Placeholder, { icon: 'location-alt', label: i18n.title, instructions: i18n.placeholder }, summary )
 		);
 	}
+
+	// The block "Post Location": the location of the post, wherever the author places it.
+	function EditLocation( props ) {
+		var attributes = props.attributes;
+		var set        = props.setAttributes;
+		var display    = attributes.display || settings.display;
+		// The address is taken from the Geolocation box of the editor, if the post has one.
+		var field      = document.getElementById( 'geolocation-address' );
+		var address    = field ? field.value : '';
+
+		var inspector = el( blockEditor.InspectorControls, null,
+			el( components.PanelBody, { title: i18n.display },
+				el( components.SelectControl, {
+					label: i18n.display,
+					value: attributes.display,
+					options: [
+						{ value: '', label: i18n.asSettings },
+						{ value: 'plain', label: i18n.plain },
+						{ value: 'link', label: i18n.link },
+						{ value: 'map', label: i18n.simpleMap }
+					],
+					onChange: function ( value ) {
+						set( { display: value } );
+					},
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				} )
+			),
+			display === 'map' ? el( components.PanelBody, { title: i18n.map },
+				el( components.TextControl, {
+					label: i18n.width,
+					help: i18n.heightHelp,
+					type: 'number',
+					min: 50,
+					max: 9999,
+					value: attributes.width || '',
+					onChange: function ( value ) {
+						set( { width: parseInt( value, 10 ) || 0 } );
+					},
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				} ),
+				el( components.TextControl, {
+					label: i18n.heightOnly,
+					help: i18n.heightHelp,
+					type: 'number',
+					min: 50,
+					max: 9999,
+					value: attributes.height || '',
+					onChange: function ( value ) {
+						set( { height: parseInt( value, 10 ) || 0 } );
+					},
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
+				} )
+			) : null
+		);
+
+		return el( 'div', blockEditor.useBlockProps(),
+			inspector,
+			el( components.Placeholder, { icon: 'location', label: i18n.locationTitle, instructions: i18n.locationHelp },
+				address ? el( 'div', { className: 'geolocation-block-summary' }, address ) : null
+			)
+		);
+	}
+
+	wp.blocks.registerBlockType( 'geolocation/location', {
+		title: i18n.locationTitle,
+		edit: EditLocation,
+		save: function () {
+			return null;
+		}
+	} );
 
 	wp.blocks.registerBlockType( 'geolocation/map', {
 		title: i18n.title,

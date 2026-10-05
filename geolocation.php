@@ -403,11 +403,13 @@ function geolocation_enqueue_front() {
  * @param mixed  $id The suffix of the DIV's id, usually the post id.
  * @param string $position The location to be shown as "latitude,longitude", empty for the popup map.
  * @param array  $track The track to be drawn on the map, as [ latitude, longitude ] pairs.
+ * @param int    $width The width of the map in pixels, 0 for the width of the settings.
+ * @param int    $height The height of the map in pixels, 0 for the height of the settings.
  * @return string The escaped HTML of the DIV.
  */
-function geolocation_get_geo_div( $id = null, $position = '', $track = array() ) {
-	$width  = esc_attr( (string) get_option( 'geolocation_map_width' ) );
-	$height = esc_attr( (string) get_option( 'geolocation_map_height' ) );
+function geolocation_get_geo_div( $id = null, $position = '', $track = array(), $width = 0, $height = 0 ) {
+	$width  = esc_attr( (string) ( $width >= 50 ? (int) $width : get_option( 'geolocation_map_width' ) ) );
+	$height = esc_attr( (string) ( $height >= 50 ? (int) $height : get_option( 'geolocation_map_height' ) ) );
 	$data   = '' === $position ? '' : ' data-geolocation="' . esc_attr( (string) $position ) . '"';
 	$data  .= empty( $track ) ? '' : ' data-track="' . esc_attr( wp_json_encode( $track ) ) . '"';
 	return '<div id="map' . esc_attr( (string) $id ) . '" class="geolocation-map"' . $data . ' style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
@@ -789,20 +791,19 @@ function geolocation_replace_shortcode( $content, $replacement ) {
 }
 
 /**
- * Show the location of a post according to the settings.
+ * Build the output of the location of a post.
  *
  * The scripts and styles for maps are only enqueued if a location is actually shown.
  *
- * @param string $content The content the functionality shall be provided for.
- * @return string
+ * @param WP_Post $post The post.
+ * @param string  $display How the location is shown: "plain", "link" or "map"; empty for the setting.
+ * @param int     $width The width of the map in pixels, 0 for the width of the settings.
+ * @param int     $height The height of the map in pixels, 0 for the height of the settings.
+ * @return string The HTML, or an empty string if the location may not be shown.
  */
-function geolocation_display_location_post( $content ) {
-	$post = get_post();
-	if ( ! $post ) {
-		return $content;
-	}
+function geolocation_get_location_html( $post, $display = '', $width = 0, $height = 0 ) {
 	if ( ! geolocation_post_is_visible( $post->ID ) ) {
-		return geolocation_replace_shortcode( $content, '' );
+		return '';
 	}
 	$latitude  = geolocation_clean_coordinate( get_post_meta( $post->ID, 'geo_latitude', true ) );
 	$longitude = geolocation_clean_coordinate( get_post_meta( $post->ID, 'geo_longitude', true ) );
@@ -820,7 +821,9 @@ function geolocation_display_location_post( $content ) {
 
 	$html      = '';
 	$posted_at = esc_html__( 'Posted from ', 'geolocation' ) . esc_html( $address );
-	$display   = (string) get_option( 'geolocation_map_display' );
+	if ( ! in_array( $display, array( 'plain', 'link', 'map' ), true ) ) {
+		$display = (string) get_option( 'geolocation_map_display' );
+	}
 	if ( in_array( $display, array( 'link', 'map' ), true ) && geolocation_maps_blocked() ) {
 		// Strict privacy mode without a working proxy: show the text only.
 		$display = 'plain';
@@ -837,12 +840,34 @@ function geolocation_display_location_post( $content ) {
 			geolocation_enqueue_front();
 			break;
 		case 'map':
-			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude, geolocation_get_track( $post->ID ) );
+			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude, geolocation_get_track( $post->ID ), $width, $height );
 			geolocation_enqueue_front();
 			break;
 		case 'debug':
 			$html = '<pre> $latitude: ' . esc_html( $latitude ) . '<br> $longitude: ' . esc_html( $longitude ) . '<br> $address: ' . esc_html( $address ) . '<br> $on: ' . esc_html( (string) $on ) . '<br> $public: ' . esc_html( (string) $public ) . '</pre>';
 			break;
+	}
+	return $html;
+}
+
+/**
+ * Show the location of a post according to the settings.
+ *
+ * @param string $content The content the functionality shall be provided for.
+ * @return string
+ */
+function geolocation_display_location_post( $content ) {
+	$post = get_post();
+	if ( ! $post ) {
+		return $content;
+	}
+	// The block "Post Location" shows the location wherever the author placed it.
+	if ( function_exists( 'has_block' ) && has_block( 'geolocation/location', $post ) ) {
+		return geolocation_replace_shortcode( $content, '' );
+	}
+	$html = geolocation_get_location_html( $post );
+	if ( '' === $html ) {
+		return geolocation_replace_shortcode( $content, '' );
 	}
 
 	switch ( (string) get_option( 'geolocation_map_position' ) ) {

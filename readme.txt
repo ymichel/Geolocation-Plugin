@@ -58,6 +58,10 @@ A post can carry the track of a GPX file, e.g. the recording of a hike or a bike
 
 In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block. The block can be used in pages and posts.
 
+= Block "Post Location" =
+
+In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The automatic output before or after the post is omitted for posts using the block.
+
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory. (or simply install it from the official package repo)
@@ -85,6 +89,7 @@ In the block editor you can insert the block "Geolocation Map" instead of typing
 = 1.14.0 =
 * new: a post can carry the track of a GPX file. The file is read in the browser, only the simplified line is stored.
 * new: the map of a post shows its track; an overview map with route="1" draws the tracks as recorded and the gaps between them as dashed lines.
+* new: the block "Post Location" shows the location of a post wherever it is placed, with its own display mode and map size.
 * new: the setting "Shorten tracks" hides the start and the end of every track, e.g. to keep a home address private.
 
 = 1.13.0 =

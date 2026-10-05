@@ -49,6 +49,7 @@ function geolocation_add_help_tab() {
 	$content .= '<p>' . esc_html__( 'A page can contain several maps.', 'geolocation' ) . ' ' . esc_html__( 'Without the attribute "cat" the custom field "category" of the page is used.', 'geolocation' ) . '</p>';
 	$content .= '<p>' . esc_html__( 'A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines.', 'geolocation' ) . '</p>';
 	$content .= '<p>' . esc_html__( 'In the block editor the block "Geolocation Map" offers the same options without typing a shortcode.', 'geolocation' ) . '</p>';
+	$content .= '<p>' . esc_html__( 'In a post the block "Post Location" shows its location wherever you place it. The automatic output before or after the post is then omitted.', 'geolocation' ) . '</p>';
 
 	$screen->add_help_tab(
 		array(
