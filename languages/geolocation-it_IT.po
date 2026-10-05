@@ -8,6 +8,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Categories as slugs, names or ids, separated by commas."
+msgstr "Categorie come slug, nome o ID, separate da virgole."
+
+msgid "Tags as slugs, names or ids, separated by commas."
+msgstr "Tag come slug, nome o ID, separati da virgole."
+
+msgid "Width of the map in pixels or percent."
+msgstr "Larghezza della mappa in pixel o percentuale."
+
+msgid "Height of the map in pixels."
+msgstr "Altezza della mappa in pixel."
+
+msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
+msgstr "Livello di zoom fisso da 1 a 19. Senza, la mappa viene adattata ai marcatori."
+
+msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
+msgstr "Inserisci lo shortcode in una pagina per mostrare una mappa con le posizioni dei tuoi articoli. I seguenti attributi sono facoltativi e possono essere combinati."
+
+msgid "Attribute"
+msgstr "Attributo"
+
+msgid "Meaning"
+msgstr "Significato"
+
+msgid "Example"
+msgstr "Esempio"
+
+msgid "A page can contain several maps."
+msgstr "Una pagina può contenere più mappe."
+
+msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
+msgstr "Senza l’attributo \"cat\" viene usato il campo personalizzato \"category\" della pagina."
+
+msgid "Shortcode"
+msgstr "Shortcode"
+
 msgid "Geolocation Plugin Settings"
 msgstr "Impostazioni del plugin Geolocation"
 
@@ -31,6 +67,12 @@ msgstr "Dopo l’articolo."
 
 msgid "Wherever I put the shortcode: "
 msgstr "Dove inserisco lo shortcode: "
+
+msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat=\"travel\" height=\"400\"]."
+msgstr "Nelle pagine lo shortcode mostra una mappa di tutti gli articoli. Attributi facoltativi: cat, tag, width, height e zoom, ad es. [geolocation cat=\"travel\" height=\"400\"]."
+
+msgid "All attributes are explained under \"Help\" at the top right of this page."
+msgstr "Tutti gli attributi sono spiegati in \"Aiuto\", in alto a destra in questa pagina."
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Come vuoi che venga mostrata la tua geolocalizzazione?"

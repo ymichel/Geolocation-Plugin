@@ -110,6 +110,48 @@ msgstr "Google Maps API Schl&uuml;ssel"
 msgid "OSM URLs"
 msgstr "OSM-URLs"
 
+msgid "Shortcode"
+msgstr "Shortcode"
+
+msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
+msgstr "F&uuml;ge den Shortcode in eine Seite ein, um eine Karte mit den Orten deiner Beitr&auml;ge anzuzeigen. Die folgenden Attribute sind optional und lassen sich kombinieren."
+
+msgid "Attribute"
+msgstr "Attribut"
+
+msgid "Meaning"
+msgstr "Bedeutung"
+
+msgid "Example"
+msgstr "Beispiel"
+
+msgid "Categories as slugs, names or ids, separated by commas."
+msgstr "Kategorien als Slug, Name oder ID, durch Kommas getrennt."
+
+msgid "Tags as slugs, names or ids, separated by commas."
+msgstr "Schlagw&ouml;rter als Slug, Name oder ID, durch Kommas getrennt."
+
+msgid "Width of the map in pixels or percent."
+msgstr "Breite der Karte in Pixel oder Prozent."
+
+msgid "Height of the map in pixels."
+msgstr "H&ouml;he der Karte in Pixel."
+
+msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
+msgstr "Feste Zoomstufe von 1 bis 19. Ohne Angabe wird die Karte an die Marker angepasst."
+
+msgid "A page can contain several maps."
+msgstr "Eine Seite kann mehrere Karten enthalten."
+
+msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
+msgstr "Ohne das Attribut \"cat\" wird das benutzerdefinierte Feld \"category\" der Seite verwendet."
+
+msgid "All attributes are explained under \"Help\" at the top right of this page."
+msgstr "Alle Attribute sind unter \"Hilfe\" oben rechts auf dieser Seite erkl&auml;rt."
+
+msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat=\"travel\" height=\"400\"]."
+msgstr "Auf Seiten zeigt der Shortcode eine Karte aller Beitr&auml;ge. Optionale Attribute: cat, tag, width, height und zoom, z. B. [geolocation cat=\"travel\" height=\"400\"]."
+
 msgid "Strict privacy mode (GDPR)"
 msgstr "Strikter Datenschutzmodus (DSGVO)"
 

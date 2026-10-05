@@ -11,6 +11,51 @@
  */
 
 /**
+ * Add the help tab explaining the shortcode and its attributes to the settings page.
+ *
+ * @return void
+ */
+function geolocation_add_help_tab() {
+	$screen = get_current_screen();
+	if ( ! $screen ) {
+		return;
+	}
+
+	// The examples use the shortcode as it is configured.
+	$shortcode = trim( (string) get_option( 'geolocation_shortcode' ) );
+	$tag       = preg_match( '/^\[([^\[\]\s]+)\]$/', $shortcode, $matches ) ? $matches[1] : 'geolocation';
+	$rows      = array(
+		'cat'    => array( __( 'Categories as slugs, names or ids, separated by commas.', 'geolocation' ), 'cat="travel,europe"' ),
+		'tag'    => array( __( 'Tags as slugs, names or ids, separated by commas.', 'geolocation' ), 'tag="hiking"' ),
+		'width'  => array( __( 'Width of the map in pixels or percent.', 'geolocation' ), 'width="100%"' ),
+		'height' => array( __( 'Height of the map in pixels.', 'geolocation' ), 'height="400"' ),
+		'zoom'   => array( __( 'Fixed zoom level from 1 to 19. Without it the map is fitted to the markers.', 'geolocation' ), 'zoom="6"' ),
+	);
+
+	$content  = '<p>' . esc_html__( 'Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined.', 'geolocation' ) . '</p>';
+	$content .= '<table class="widefat striped" style="max-width:760px;"><thead><tr>';
+	$content .= '<th>' . esc_html__( 'Attribute', 'geolocation' ) . '</th>';
+	$content .= '<th>' . esc_html__( 'Meaning', 'geolocation' ) . '</th>';
+	$content .= '<th>' . esc_html__( 'Example', 'geolocation' ) . '</th>';
+	$content .= '</tr></thead><tbody>';
+	foreach ( $rows as $attribute => $row ) {
+		$content .= '<tr><td><code>' . esc_html( $attribute ) . '</code></td>';
+		$content .= '<td>' . esc_html( $row[0] ) . '</td>';
+		$content .= '<td style="white-space:nowrap;"><code>' . esc_html( '[' . $tag . ' ' . $row[1] . ']' ) . '</code></td></tr>';
+	}
+	$content .= '</tbody></table>';
+	$content .= '<p>' . esc_html__( 'A page can contain several maps.', 'geolocation' ) . ' ' . esc_html__( 'Without the attribute "cat" the custom field "category" of the page is used.', 'geolocation' ) . '</p>';
+
+	$screen->add_help_tab(
+		array(
+			'id'      => 'geolocation-shortcode',
+			'title'   => __( 'Shortcode', 'geolocation' ),
+			'content' => $content,
+		)
+	);
+}
+
+/**
  * Provide all needed items for the settings page.
  *
  * @return void
@@ -95,6 +140,7 @@ function geolocation_settings_page() {
 						<?php esc_html_e( 'Wherever I put the shortcode: ', 'geolocation' ); ?>
 						<?php echo esc_html( $shortcode ); ?>.
 					</label>
+					<p class="description"><?php esc_html_e( 'On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat="travel" height="400"].', 'geolocation' ); ?> <?php esc_html_e( 'All attributes are explained under "Help" at the top right of this page.', 'geolocation' ); ?></p>
 				</td>
 			</tr>
 			<tr>

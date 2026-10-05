@@ -8,6 +8,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Categories as slugs, names or ids, separated by commas."
+msgstr "Categorieën als slug, naam of ID, gescheiden door komma’s."
+
+msgid "Tags as slugs, names or ids, separated by commas."
+msgstr "Tags als slug, naam of ID, gescheiden door komma’s."
+
+msgid "Width of the map in pixels or percent."
+msgstr "Breedte van de kaart in pixels of procent."
+
+msgid "Height of the map in pixels."
+msgstr "Hoogte van de kaart in pixels."
+
+msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
+msgstr "Vast zoomniveau van 1 tot 19. Zonder dit attribuut wordt de kaart aangepast aan de markers."
+
+msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
+msgstr "Plaats de shortcode op een pagina om een kaart met de locaties van je berichten te tonen. De volgende attributen zijn optioneel en kunnen worden gecombineerd."
+
+msgid "Attribute"
+msgstr "Attribuut"
+
+msgid "Meaning"
+msgstr "Betekenis"
+
+msgid "Example"
+msgstr "Voorbeeld"
+
+msgid "A page can contain several maps."
+msgstr "Een pagina kan meerdere kaarten bevatten."
+
+msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
+msgstr "Zonder het attribuut \"cat\" wordt het aangepaste veld \"category\" van de pagina gebruikt."
+
+msgid "Shortcode"
+msgstr "Shortcode"
+
 msgid "Geolocation Plugin Settings"
 msgstr "Instellingen van de Geolocation-plugin"
 
@@ -31,6 +67,12 @@ msgstr "Na het bericht."
 
 msgid "Wherever I put the shortcode: "
 msgstr "Waar ik de shortcode plaats: "
+
+msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat=\"travel\" height=\"400\"]."
+msgstr "Op pagina’s toont de shortcode een kaart van alle berichten. Optionele attributen: cat, tag, width, height en zoom, bijv. [geolocation cat=\"travel\" height=\"400\"]."
+
+msgid "All attributes are explained under \"Help\" at the top right of this page."
+msgstr "Alle attributen worden uitgelegd onder \"Hulp\" rechtsboven op deze pagina."
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Hoe wil je dat je geolocatie wordt weergegeven?"

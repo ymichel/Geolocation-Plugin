@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.12.0
+Stable tag: 1.13.0
 
 Shows the location of your posts on a map (GDPR compliant). Ideal for travel bloggers and anyone who wants to share where a post was written.
 
@@ -31,6 +31,18 @@ By default, this plugin uses Open-Streetmap but as an alternative (and backwards
 
 If you struggle while installing it or have feature requests, please feel free to drop a [support request](https://github.com/ymichel/Geolocation-Plugin/issues "support request") anytime. I am more than happy to help you. Also if you would want to give a [review](https://wordpress.org/support/plugin/geolocation/reviews/ "review") if you are happy with the plugin, I would appreciate the feedback.
 
+= Overview maps on pages =
+
+Put the shortcode on a page to show a map with the locations of your posts. Optional attributes filter the posts and set the size of the map:
+
+* `cat` – categories, as slugs, names or ids, separated by commas: `[geolocation cat="travel,europe"]`
+* `tag` – tags, as slugs, names or ids, separated by commas: `[geolocation tag="hiking"]`
+* `width` – width in pixels or percent: `[geolocation width="100%"]`
+* `height` – height in pixels: `[geolocation height="400"]`
+* `zoom` – a fixed zoom level from 1 to 19 instead of fitting the map to the markers: `[geolocation zoom="6"]`
+
+Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
+
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory. (or simply install it from the official package repo)
@@ -50,6 +62,11 @@ If you struggle while installing it or have feature requests, please feel free t
 6. Viewing all posts providing location information
 
 == Changelog ==
+
+= 1.13.0 =
+* new: the shortcode of an overview map accepts the attributes cat, tag, width, height and zoom, e.g. [geolocation cat="travel" height="400"].
+* new: a page can contain several overview maps.
+* new: the attributes are explained in the "Help" tab of the settings page.
 
 = 1.12.0 =
 * new: the popups on the overview map show the featured image, the date and the excerpt of a post.
