@@ -110,6 +110,12 @@ msgstr "Google Maps API Schl&uuml;ssel"
 msgid "OSM URLs"
 msgstr "OSM-URLs"
 
+msgid "The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with \"cat\" to show the route of a single trip."
+msgstr "Die Route folgt den Ver&ouml;ffentlichungsdaten der Beitr&auml;ge, der &auml;lteste zuerst, und verbindet die Orte mit geraden Linien. Kombiniere sie mit \"cat\", um die Route einer einzelnen Reise zu zeigen."
+
+msgid "Connects the locations with a line, in the order of the post dates."
+msgstr "Verbindet die Orte mit einer Linie, in der Reihenfolge der Beitragsdaten."
+
 msgid "Currently used (from the proxy plugin):"
 msgstr "Derzeit verwendet (vom Proxy-Plugin):"
 
@@ -158,8 +164,8 @@ msgstr "Ohne das Attribut \"cat\" wird das benutzerdefinierte Feld \"category\" 
 msgid "All attributes are explained under \"Help\" at the top right of this page."
 msgstr "Alle Attribute sind unter \"Hilfe\" oben rechts auf dieser Seite erkl&auml;rt."
 
-msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat=\"travel\" height=\"400\"]."
-msgstr "Auf Seiten zeigt der Shortcode eine Karte aller Beitr&auml;ge. Optionale Attribute: cat, tag, width, height und zoom, z. B. [geolocation cat=\"travel\" height=\"400\"]."
+msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height, zoom and route, e.g. [geolocation cat=\"travel\" height=\"400\"]."
+msgstr "Auf Seiten zeigt der Shortcode eine Karte aller Beitr&auml;ge. Optionale Attribute: cat, tag, width, height, zoom und route, z. B. [geolocation cat=\"travel\" height=\"400\"]."
 
 msgid "Strict privacy mode (GDPR)"
 msgstr "Strikter Datenschutzmodus (DSGVO)"

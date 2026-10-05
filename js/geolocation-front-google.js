@@ -95,6 +95,18 @@
 			} else {
 				map.fitBounds( bounds );
 			}
+			var route = common.getRoute( el, markers );
+			if ( route.length ) {
+				new google.maps.Polyline( {
+					map: map,
+					path: route.map( toLatLng ),
+					geodesic: true,
+					clickable: false,
+					strokeColor: '#2b6cb0',
+					strokeOpacity: 0.8,
+					strokeWeight: 3
+				} );
+			}
 			// Markers lying close together are grouped if the cluster library is loaded.
 			if ( window.markerClusterer && window.markerClusterer.MarkerClusterer ) {
 				new window.markerClusterer.MarkerClusterer( {

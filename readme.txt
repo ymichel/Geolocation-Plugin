@@ -40,6 +40,7 @@ Put the shortcode on a page to show a map with the locations of your posts. Opti
 * `width` – width in pixels or percent: `[geolocation width="100%"]`
 * `height` – height in pixels: `[geolocation height="400"]`
 * `zoom` – a fixed zoom level from 1 to 19 instead of fitting the map to the markers: `[geolocation zoom="6"]`
+* `route` – connects the locations with a line, in the order of the post dates: `[geolocation route="1"]`. Combine it with `cat` to show the route of a single trip: `[geolocation cat="italy-2026" route="1"]`
 
 Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
 
@@ -58,8 +59,10 @@ Attributes can be combined, and a page can contain several maps. Without the att
 2. Viewing the location in a post; setting: plain text
 3. Viewing the location in a post; setting: simple link w/hover
 4. Viewing the location in a post; setting: simple map (static)
-5. Editing a page for embedding a map for all (filtered) locations
+5. Editing a page: the shortcode embeds a map of all locations, optional attributes filter the posts and adjust the map
 6. Viewing all posts providing location information
+7. Overview map with the route between the posts, enabled by the shortcode attribute route="1"
+8. The shortcode attributes are explained in the Help tab of the settings page
 
 == Changelog ==
 
@@ -67,6 +70,7 @@ Attributes can be combined, and a page can contain several maps. Without the att
 * new: the popups on the overview map show the featured image, the date and the excerpt of a post.
 * new: markers lying close together on the overview map are grouped.
 * new: the shortcode of an overview map accepts the attributes cat, tag, width, height and zoom, e.g. [geolocation cat="travel" height="400"].
+* new: the attribute route="1" connects the locations of an overview map with a line, in the order of the post dates.
 * new: a page can contain several overview maps.
 * new: the attributes are explained in the "Help" tab of the settings page.
 * the settings page explains which tiles URL is in use when the proxy plugin is active.

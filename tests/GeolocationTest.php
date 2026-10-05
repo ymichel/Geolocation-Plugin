@@ -360,6 +360,7 @@ class GeolocationTest extends TestCase {
 				'width'   => '100%',
 				'height'  => '400',
 				'zoom'    => '6',
+				'route'   => 'yes',
 				'onclick' => 'alert(1)',
 			)
 		);
@@ -370,6 +371,7 @@ class GeolocationTest extends TestCase {
 				'width'  => '100%',
 				'height' => '400px',
 				'zoom'   => '6',
+				'route'  => '1',
 			),
 			$clean
 		);
@@ -400,5 +402,10 @@ class GeolocationTest extends TestCase {
 		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'width' => '5%' ) )['width'] );
 		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'zoom' => 'max' ) )['zoom'] );
 		$this->assertSame( '', geolocation_sanitize_map_atts( '' )['cat'] );
+		$this->assertSame( '1', geolocation_sanitize_map_atts( array( 'route' => '1' ) )['route'] );
+		$this->assertSame( '1', geolocation_sanitize_map_atts( array( 'route' => 'TRUE' ) )['route'] );
+		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'route' => '0' ) )['route'] );
+		$this->assertSame( '', geolocation_sanitize_map_atts( array( 'route' => 'red' ) )['route'] );
+		$this->assertSame( '', geolocation_sanitize_map_atts( array() )['route'] );
 	}
 }

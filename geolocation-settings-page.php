@@ -30,6 +30,7 @@ function geolocation_add_help_tab() {
 		'width'  => array( __( 'Width of the map in pixels or percent.', 'geolocation' ), 'width="100%"' ),
 		'height' => array( __( 'Height of the map in pixels.', 'geolocation' ), 'height="400"' ),
 		'zoom'   => array( __( 'Fixed zoom level from 1 to 19. Without it the map is fitted to the markers.', 'geolocation' ), 'zoom="6"' ),
+		'route'  => array( __( 'Connects the locations with a line, in the order of the post dates.', 'geolocation' ), 'route="1"' ),
 	);
 
 	$content  = '<p>' . esc_html__( 'Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined.', 'geolocation' ) . '</p>';
@@ -44,6 +45,7 @@ function geolocation_add_help_tab() {
 		$content .= '<td style="white-space:nowrap;"><code>' . esc_html( '[' . $tag . ' ' . $row[1] . ']' ) . '</code></td></tr>';
 	}
 	$content .= '</tbody></table>';
+	$content .= '<p>' . esc_html__( 'The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with "cat" to show the route of a single trip.', 'geolocation' ) . ' <code>' . esc_html( '[' . $tag . ' cat="italy-2026" route="1"]' ) . '</code></p>';
 	$content .= '<p>' . esc_html__( 'A page can contain several maps.', 'geolocation' ) . ' ' . esc_html__( 'Without the attribute "cat" the custom field "category" of the page is used.', 'geolocation' ) . '</p>';
 
 	$screen->add_help_tab(
@@ -140,7 +142,7 @@ function geolocation_settings_page() {
 						<?php esc_html_e( 'Wherever I put the shortcode: ', 'geolocation' ); ?>
 						<?php echo esc_html( $shortcode ); ?>.
 					</label>
-					<p class="description"><?php esc_html_e( 'On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat="travel" height="400"].', 'geolocation' ); ?> <?php esc_html_e( 'All attributes are explained under "Help" at the top right of this page.', 'geolocation' ); ?></p>
+					<p class="description"><?php esc_html_e( 'On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height, zoom and route, e.g. [geolocation cat="travel" height="400"].', 'geolocation' ); ?> <?php esc_html_e( 'All attributes are explained under "Help" at the top right of this page.', 'geolocation' ); ?></p>
 				</td>
 			</tr>
 			<tr>

@@ -23,6 +23,9 @@ msgstr "Alto del mapa en píxeles."
 msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
 msgstr "Nivel de zoom fijo de 1 a 19. Sin él, el mapa se ajusta a los marcadores."
 
+msgid "Connects the locations with a line, in the order of the post dates."
+msgstr "Une las ubicaciones con una línea, en el orden de las fechas de las entradas."
+
 msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
 msgstr "Pon el shortcode en una página para mostrar un mapa con las ubicaciones de tus entradas. Los siguientes atributos son opcionales y se pueden combinar."
 
@@ -34,6 +37,9 @@ msgstr "Significado"
 
 msgid "Example"
 msgstr "Ejemplo"
+
+msgid "The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with \"cat\" to show the route of a single trip."
+msgstr "La ruta sigue las fechas de publicación de las entradas, de la más antigua a la más reciente, y une las ubicaciones con líneas rectas. Combínala con \"cat\" para mostrar la ruta de un solo viaje."
 
 msgid "A page can contain several maps."
 msgstr "Una página puede contener varios mapas."
@@ -68,8 +74,8 @@ msgstr "Después de la entrada."
 msgid "Wherever I put the shortcode: "
 msgstr "Donde ponga el shortcode: "
 
-msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height and zoom, e.g. [geolocation cat=\"travel\" height=\"400\"]."
-msgstr "En las páginas, el shortcode muestra un mapa de todas las entradas. Atributos opcionales: cat, tag, width, height y zoom, p. ej. [geolocation cat=\"travel\" height=\"400\"]."
+msgid "On pages the shortcode shows a map of all posts. Optional attributes: cat, tag, width, height, zoom and route, e.g. [geolocation cat=\"travel\" height=\"400\"]."
+msgstr "En las páginas, el shortcode muestra un mapa de todas las entradas. Atributos opcionales: cat, tag, width, height, zoom y route, p. ej. [geolocation cat=\"travel\" height=\"400\"]."
 
 msgid "All attributes are explained under \"Help\" at the top right of this page."
 msgstr "Todos los atributos se explican en \"Ayuda\", arriba a la derecha de esta página."

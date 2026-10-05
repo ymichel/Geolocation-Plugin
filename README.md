@@ -17,6 +17,7 @@ Put the shortcode on a page to show a map with the locations of your posts. Opti
 | `width` | Width of the map in pixels or percent | `[geolocation width="100%"]` |
 | `height` | Height of the map in pixels | `[geolocation height="400"]` |
 | `zoom` | Fixed zoom level from 1 to 19; without it the map is fitted to the markers | `[geolocation zoom="6"]` |
+| `route` | Connects the locations with a line, in the order of the post dates | `[geolocation route="1"]` |
 
 Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
 
