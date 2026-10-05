@@ -77,7 +77,8 @@
 				var marker    = new google.maps.Marker( options );
 				google.maps.event.addListener( marker, 'click', function () {
 					infoWindow.setContent( common.buildPopup( item ) );
-					infoWindow.open( map, marker );
+					// Without moving the focus, so the theme does not draw a focus outline around the title.
+					infoWindow.open( { anchor: marker, map: map, shouldFocus: false } );
 				} );
 				bounds.extend( marker.getPosition() );
 				return marker;
