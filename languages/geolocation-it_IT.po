@@ -284,6 +284,9 @@ msgstr "Mostra le mappe solo se i tile sono forniti dal plugin proxy."
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Se il proxy non è disponibile, viene mostrato solo il testo della posizione e i browser dei tuoi visitatori non si collegano a server di mappe esterni."
 
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Senza il proxy questa modalità mostra solo il testo della posizione, nessuna mappa."
+
 msgid "Tiles url (Caching)"
 msgstr "URL dei tile (cache)"
 

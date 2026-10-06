@@ -442,3 +442,6 @@ msgstr "Kacheln beim Speichern einer Seite oder eines Beitrags vorab laden."
 
 msgid "Save the settings to pre-cache tiles."
 msgstr "Speichern Sie die Einstellungen, um Kacheln vorab zu laden."
+
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Ohne den Proxy zeigt dieser Modus nur den Standorttext, keine Karten."

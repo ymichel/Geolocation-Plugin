@@ -284,6 +284,9 @@ msgstr "Mostrar mapas solo si las teselas se sirven a través del plugin de prox
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Si el proxy no está disponible, solo se muestra el texto de la ubicación y los navegadores de tus visitantes no se conectan a servidores de mapas externos."
 
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Sin el proxy, este modo solo muestra el texto de la ubicación, sin mapas."
+
 msgid "Tiles url (Caching)"
 msgstr "URL de las teselas (caché)"
 

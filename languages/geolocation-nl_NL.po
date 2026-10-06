@@ -284,6 +284,9 @@ msgstr "Toon kaarten alleen als de tegels via de proxy-plugin worden geleverd."
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Als de proxy niet beschikbaar is, wordt alleen de locatietekst getoond en maken de browsers van je bezoekers geen verbinding met externe kaartservers."
 
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Zonder de proxy toont deze modus alleen de locatietekst, geen kaarten."
+
 msgid "Tiles url (Caching)"
 msgstr "Tegel-URL (caching)"
 

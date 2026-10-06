@@ -254,6 +254,11 @@ function geolocation_settings_page() {
 								<input type="checkbox" id="geolocation_osm_strict_privacy" name="geolocation_osm_strict_privacy" value="1" <?php checked( $osm_strict_privacy ); ?>>
 								<label for="geolocation_osm_strict_privacy"><?php esc_html_e( 'Only show maps if the tiles are delivered by the proxy plugin.', 'geolocation' ); ?></label>
 								<p class="description"><?php esc_html_e( 'If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers.', 'geolocation' ); ?></p>
+								<?php
+								// Whether the proxy plugin delivers tiles once it is used. The hint follows both checkboxes at once.
+								$osm_proxy_delivers = is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) && ( '' !== geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_url' ) || '' !== geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_rest_url' ) );
+								?>
+								<p id="geolocation-strict-hint" data-proxy="<?php echo $osm_proxy_delivers ? '1' : '0'; ?>" style="<?php echo $osm_strict_privacy && ! ( $osm_use_proxy && $osm_proxy_delivers ) ? '' : 'display:none;'; ?>"><strong><?php esc_html_e( 'Without the proxy this mode shows only the location text, no maps.', 'geolocation' ); ?></strong></p>
 							</td>
 						</tr>
 						<tr>

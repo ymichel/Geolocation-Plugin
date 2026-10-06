@@ -284,6 +284,9 @@ msgstr "N’afficher les cartes que si les tuiles sont servies par l’extension
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Si le proxy n’est pas disponible, seul le texte du lieu est affiché et les navigateurs de vos visiteurs ne se connectent à aucun serveur de cartes externe."
 
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Sans le proxy, ce mode n’affiche que le texte du lieu, pas de carte."
+
 msgid "Tiles url (Caching)"
 msgstr "URL des tuiles (cache)"
 

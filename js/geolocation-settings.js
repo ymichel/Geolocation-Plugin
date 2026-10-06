@@ -203,4 +203,22 @@
 			row.style.display = proxy.checked ? '' : 'none';
 		} );
 	} );
+
+	// The strict privacy mode shows no maps without the proxy: say so as soon as that combination is chosen.
+	ready( function () {
+		var strict = document.getElementById( 'geolocation_osm_strict_privacy' );
+		var proxy  = document.getElementById( 'geolocation_osm_use_proxy' );
+		var hint   = document.getElementById( 'geolocation-strict-hint' );
+		if ( ! strict || ! hint ) {
+			return;
+		}
+		function update() {
+			var delivers       = proxy && proxy.checked && hint.getAttribute( 'data-proxy' ) === '1';
+			hint.style.display = strict.checked && ! delivers ? '' : 'none';
+		}
+		strict.addEventListener( 'change', update );
+		if ( proxy ) {
+			proxy.addEventListener( 'change', update );
+		}
+	} );
 }() );
