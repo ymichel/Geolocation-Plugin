@@ -204,6 +204,25 @@
 		} );
 	} );
 
+	// The same goes for the address of the proxy and the explanation of the own tiles URL.
+	ready( function () {
+		var proxy    = document.getElementById( 'geolocation_osm_use_proxy' );
+		var used     = document.getElementById( 'geolocation-proxy-tiles' );
+		var fallback = document.getElementById( 'geolocation-tiles-fallback' );
+		var direct   = document.getElementById( 'geolocation-tiles-direct' );
+		var own      = document.getElementById( 'geolocation_osm_tiles_url' );
+		if ( ! proxy || ! used || ! fallback || ! direct || ! own ) {
+			return;
+		}
+		proxy.addEventListener( 'change', function () {
+			used.style.display     = proxy.checked ? '' : 'none';
+			fallback.style.display = proxy.checked ? '' : 'none';
+			direct.style.display   = proxy.checked ? 'none' : '';
+			// The own address is only a fallback while the proxy is used, so it cannot be changed then.
+			own.readOnly = proxy.checked;
+		} );
+	} );
+
 	// The strict privacy mode shows no maps without the proxy: say so as soon as that combination is chosen.
 	ready( function () {
 		var strict = document.getElementById( 'geolocation_osm_strict_privacy' );

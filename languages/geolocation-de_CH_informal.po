@@ -111,8 +111,8 @@ msgstr "Verbindet die Orte mit einer Linie, in der Reihenfolge der Beitragsdaten
 msgid "Currently used (from the proxy plugin):"
 msgstr "Derzeit verwendet (vom Proxy-Plugin):"
 
-msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
-msgstr "R&uuml;ckfall: wird nur verwendet, wenn der Proxy ausgeschaltet ist oder keine Kacheln liefert."
+msgid "Fallback: only used when the proxy is switched off or not available."
+msgstr "R&uuml;ckfall: wird nur verwendet, wenn der Proxy ausgeschaltet oder nicht verf&uuml;gbar ist."
 
 msgid "The address the map tiles are loaded from."
 msgstr "Die Adresse, von der die Kartenkacheln geladen werden."
@@ -239,8 +239,8 @@ msgid "Support"
 msgstr "Support"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:133
-msgid "Tiles url (Caching)"
-msgstr "Kachel URL (Caching)"
+msgid "Tiles url"
+msgstr "Kachel-URL"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:159
 msgid "Update all addresses from posts that have location information (only once this setup is saved)."

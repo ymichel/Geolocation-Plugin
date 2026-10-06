@@ -287,14 +287,14 @@ msgstr "Als de proxy niet beschikbaar is, wordt alleen de locatietekst getoond e
 msgid "Without the proxy this mode shows only the location text, no maps."
 msgstr "Zonder de proxy toont deze modus alleen de locatietekst, geen kaarten."
 
-msgid "Tiles url (Caching)"
-msgstr "Tegel-URL (caching)"
+msgid "Tiles url"
+msgstr "Tegel-URL"
 
 msgid "Currently used (from the proxy plugin):"
 msgstr "Momenteel in gebruik (van de proxy-plugin):"
 
-msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
-msgstr "Terugval: wordt alleen gebruikt als de proxy is uitgeschakeld of geen tegels levert."
+msgid "Fallback: only used when the proxy is switched off or not available."
+msgstr "Terugval: wordt alleen gebruikt als de proxy is uitgeschakeld of niet beschikbaar is."
 
 msgid "The address the map tiles are loaded from."
 msgstr "Het adres waarvandaan de kaarttegels worden geladen."

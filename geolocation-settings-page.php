@@ -262,21 +262,26 @@ function geolocation_settings_page() {
 							</td>
 						</tr>
 						<tr>
-							<th><label for="geolocation_osm_tiles_url"><?php esc_html_e( 'Tiles url (Caching)', 'geolocation' ); ?></label></th>
+							<th><label for="geolocation_osm_tiles_url"><?php esc_html_e( 'Tiles url', 'geolocation' ); ?></label></th>
 							<td>
-								<?php $osm_proxy_tiles_url = geolocation_osm_proxy_tiles_url(); ?>
-								<?php if ( '' !== $osm_proxy_tiles_url ) : ?>
-									<p><strong><?php esc_html_e( 'Currently used (from the proxy plugin):', 'geolocation' ); ?></strong><br /><code><?php echo esc_html( $osm_proxy_tiles_url ); ?></code></p>
+								<?php
+								// The address the proxy plugin offers, whether it is used at the moment or not.
+								$osm_proxy_offer_url = '';
+								if ( $osm_proxy_delivers ) {
+									$osm_proxy_offer_url = geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_url' );
+									$osm_proxy_offer_url = '' !== $osm_proxy_offer_url ? $osm_proxy_offer_url : geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_rest_url' );
+								}
+								$osm_proxy_in_use = $osm_use_proxy && '' !== $osm_proxy_offer_url;
+								?>
+								<?php // Both texts follow the checkbox "Use Proxy" at once, through the script of this page. ?>
+								<?php if ( '' !== $osm_proxy_offer_url ) : ?>
+									<p id="geolocation-proxy-tiles" style="<?php echo $osm_proxy_in_use ? '' : 'display:none;'; ?>"><strong><?php esc_html_e( 'Currently used (from the proxy plugin):', 'geolocation' ); ?></strong><br /><code><?php echo esc_html( $osm_proxy_offer_url ); ?></code></p>
 								<?php endif; ?>
-								<input type="text" class="regular-text" id="geolocation_osm_tiles_url" name="geolocation_osm_tiles_url" value="<?php echo esc_attr( $osm_tiles_url ); ?>" />
+								<?php // Read-only while the proxy is used: the value is kept and still submitted, which a disabled field would not be. ?>
+								<input type="text" class="regular-text" id="geolocation_osm_tiles_url" name="geolocation_osm_tiles_url" value="<?php echo esc_attr( $osm_tiles_url ); ?>" <?php echo $osm_proxy_in_use ? 'readonly="readonly"' : ''; ?> />
 								<p class="description">
-									<?php
-									if ( '' !== $osm_proxy_tiles_url ) {
-										esc_html_e( 'Fallback: only used when the proxy is switched off or does not deliver tiles.', 'geolocation' );
-									} else {
-										esc_html_e( 'The address the map tiles are loaded from.', 'geolocation' );
-									}
-									?>
+									<span id="geolocation-tiles-fallback" style="<?php echo $osm_proxy_in_use ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Fallback: only used when the proxy is switched off or not available.', 'geolocation' ); ?></span>
+									<span id="geolocation-tiles-direct" style="<?php echo $osm_proxy_in_use ? 'display:none;' : ''; ?>"><?php esc_html_e( 'The address the map tiles are loaded from.', 'geolocation' ); ?></span>
 								</p>
 							</td>
 						</tr>

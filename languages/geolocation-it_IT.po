@@ -287,14 +287,14 @@ msgstr "Se il proxy non è disponibile, viene mostrato solo il testo della posiz
 msgid "Without the proxy this mode shows only the location text, no maps."
 msgstr "Senza il proxy questa modalità mostra solo il testo della posizione, nessuna mappa."
 
-msgid "Tiles url (Caching)"
-msgstr "URL dei tile (cache)"
+msgid "Tiles url"
+msgstr "URL dei tile"
 
 msgid "Currently used (from the proxy plugin):"
 msgstr "Attualmente in uso (dal plugin proxy):"
 
-msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
-msgstr "Riserva: usato solo se il proxy è disattivato o non fornisce i tile."
+msgid "Fallback: only used when the proxy is switched off or not available."
+msgstr "Riserva: usato solo se il proxy è disattivato o non è disponibile."
 
 msgid "The address the map tiles are loaded from."
 msgstr "L’indirizzo da cui vengono caricati i tile della mappa."
