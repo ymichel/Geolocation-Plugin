@@ -121,6 +121,15 @@ function geolocation_settings_page() {
 	</style>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Geolocation Plugin Settings', 'geolocation' ); ?></h1>
+		<?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only selects a message. ?>
+		<?php $precache_result = isset( $_GET['geolocation-precache'] ) ? sanitize_key( $_GET['geolocation-precache'] ) : ''; ?>
+		<?php if ( 'started' === $precache_result ) : ?>
+			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Pre-caching the tiles has been started in the background.', 'geolocation' ); ?></p></div>
+		<?php elseif ( 'cancelled' === $precache_result ) : ?>
+			<div class="notice notice-info is-dismissible"><p><?php esc_html_e( 'The run was cancelled.', 'geolocation' ); ?></p></div>
+		<?php elseif ( 'failed' === $precache_result ) : ?>
+			<div class="notice notice-error is-dismissible"><p><?php esc_html_e( 'Pre-caching the tiles could not be started.', 'geolocation' ); ?></p></div>
+		<?php endif; ?>
 	<form method="post" action="options.php" id="settings">
 		<?php settings_fields( 'geolocation-settings-group' ); ?>
 		<table class="form-table">
@@ -245,27 +254,60 @@ function geolocation_settings_page() {
 								<input type="checkbox" id="geolocation_osm_strict_privacy" name="geolocation_osm_strict_privacy" value="1" <?php checked( $osm_strict_privacy ); ?>>
 								<label for="geolocation_osm_strict_privacy"><?php esc_html_e( 'Only show maps if the tiles are delivered by the proxy plugin.', 'geolocation' ); ?></label>
 								<p class="description"><?php esc_html_e( 'If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers.', 'geolocation' ); ?></p>
+								<?php
+								// Whether the proxy plugin delivers tiles once it is used. The hint follows both checkboxes at once.
+								$osm_proxy_delivers = is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) && ( '' !== geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_url' ) || '' !== geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_rest_url' ) );
+								?>
+								<p id="geolocation-strict-hint" data-proxy="<?php echo $osm_proxy_delivers ? '1' : '0'; ?>" style="<?php echo $osm_strict_privacy && ! ( $osm_use_proxy && $osm_proxy_delivers ) ? '' : 'display:none;'; ?>"><strong><?php esc_html_e( 'Without the proxy this mode shows only the location text, no maps.', 'geolocation' ); ?></strong></p>
 							</td>
 						</tr>
 						<tr>
-							<th><label for="geolocation_osm_tiles_url"><?php esc_html_e( 'Tiles url (Caching)', 'geolocation' ); ?></label></th>
+							<th><label for="geolocation_osm_tiles_url"><?php esc_html_e( 'Tiles url', 'geolocation' ); ?></label></th>
 							<td>
-								<?php $osm_proxy_tiles_url = geolocation_osm_proxy_tiles_url(); ?>
-								<?php if ( '' !== $osm_proxy_tiles_url ) : ?>
-									<p><strong><?php esc_html_e( 'Currently used (from the proxy plugin):', 'geolocation' ); ?></strong><br /><code><?php echo esc_html( $osm_proxy_tiles_url ); ?></code></p>
+								<?php
+								// The address the proxy plugin offers, whether it is used at the moment or not.
+								$osm_proxy_offer_url = '';
+								if ( $osm_proxy_delivers ) {
+									$osm_proxy_offer_url = geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_url' );
+									$osm_proxy_offer_url = '' !== $osm_proxy_offer_url ? $osm_proxy_offer_url : geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_rest_url' );
+								}
+								$osm_proxy_in_use = $osm_use_proxy && '' !== $osm_proxy_offer_url;
+								?>
+								<?php // Both texts follow the checkbox "Use Proxy" at once, through the script of this page. ?>
+								<?php if ( '' !== $osm_proxy_offer_url ) : ?>
+									<p id="geolocation-proxy-tiles" style="<?php echo $osm_proxy_in_use ? '' : 'display:none;'; ?>"><strong><?php esc_html_e( 'Currently used (from the proxy plugin):', 'geolocation' ); ?></strong><br /><code><?php echo esc_html( $osm_proxy_offer_url ); ?></code></p>
 								<?php endif; ?>
-								<input type="text" class="regular-text" id="geolocation_osm_tiles_url" name="geolocation_osm_tiles_url" value="<?php echo esc_attr( $osm_tiles_url ); ?>" />
+								<?php // Read-only while the proxy is used: the value is kept and still submitted, which a disabled field would not be. ?>
+								<input type="text" class="regular-text" id="geolocation_osm_tiles_url" name="geolocation_osm_tiles_url" value="<?php echo esc_attr( $osm_tiles_url ); ?>" <?php echo $osm_proxy_in_use ? 'readonly="readonly"' : ''; ?> />
 								<p class="description">
-									<?php
-									if ( '' !== $osm_proxy_tiles_url ) {
-										esc_html_e( 'Fallback: only used when the proxy is switched off or does not deliver tiles.', 'geolocation' );
-									} else {
-										esc_html_e( 'The address the map tiles are loaded from.', 'geolocation' );
-									}
-									?>
+									<span id="geolocation-tiles-fallback" style="<?php echo $osm_proxy_in_use ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Fallback: only used when the proxy is switched off or not available.', 'geolocation' ); ?></span>
+									<span id="geolocation-tiles-direct" style="<?php echo $osm_proxy_in_use ? 'display:none;' : ''; ?>"><?php esc_html_e( 'The address the map tiles are loaded from.', 'geolocation' ); ?></span>
 								</p>
 							</td>
 						</tr>
+						<?php if ( '' !== geolocation_precache_proxy_url() ) : ?>
+							<?php // Shown and hidden with the checkbox "Use Proxy" by the script of this page. ?>
+							<tr id="geolocation-precache-row" style="<?php echo $osm_use_proxy ? '' : 'display:none;'; ?>">
+								<th><?php esc_html_e( 'Pre-cache tiles', 'geolocation' ); ?></th>
+								<td>
+									<?php if ( '' !== geolocation_precache_tiles_url() ) : ?>
+										<?php // The status is refreshed by the script of this page while a run is in progress. ?>
+										<div id="geolocation-precache-status" data-url="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php?action=geolocation_precache_status' ), 'geolocation_precache' ) ); ?>" data-running="<?php echo geolocation_precache_is_running() ? '1' : '0'; ?>">
+											<?php echo geolocation_precache_status_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the function. ?>
+										</div>
+									<?php else : ?>
+										<p id="geolocation-precache-hint"><?php esc_html_e( 'Save the settings to pre-cache tiles.', 'geolocation' ); ?></p>
+									<?php endif; ?>
+									<input type="hidden" name="geolocation_osm_precache_on_save" value="0" />
+									<input type="checkbox" id="geolocation_osm_precache_on_save" name="geolocation_osm_precache_on_save" value="1" <?php checked( geolocation_precache_on_save() ); ?>>
+									<label for="geolocation_osm_precache_on_save"><?php esc_html_e( 'Pre-cache the tiles when a page or post is saved.', 'geolocation' ); ?></label>
+									<p class="description"><?php esc_html_e( 'Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand.', 'geolocation' ); ?></p>
+								</td>
+							</tr>
+						<?php else : ?>
+							<?php // Pre-caching is not possible at the moment: keep its switch as it is. ?>
+							<input type="hidden" name="geolocation_osm_precache_on_save" value="<?php echo geolocation_precache_on_save() ? '1' : '0'; ?>" />
+						<?php endif; ?>
 						<tr>
 							<th><?php esc_html_e( 'Leaflet JS', 'geolocation' ); ?></th>
 							<td><?php echo esc_html( geolocation_get_osm_leaflet_js_url() ); ?></td>

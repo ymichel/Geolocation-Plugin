@@ -107,6 +107,39 @@ msgstr "Cet article n’a pas encore de lieu à afficher. Définissez-le dans la
 msgid "No post with a visible location matches these settings."
 msgstr "Aucun article ayant un lieu visible ne correspond à ces réglages."
 
+msgid "Pre-caching is running in the background."
+msgstr "Le préchargement est en cours en arrière-plan."
+
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Étape %1$d sur %2$d : %3$s"
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Tuiles : %1$d demandées, %2$d stockées, %3$d en échec."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Démarré à %1$s, encore environ %2$s."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "Il ne s’est rien passé depuis quelques minutes. Les tâches d’arrière-plan de WordPress (WP-Cron) ne s’exécutent peut-être pas sur ce site."
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d tuiles sur %2$d pour les cartes de %3$d pages et articles sont stockées sur votre serveur."
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Dernière exécution (%1$s) : %2$d tuiles demandées, %3$d stockées, %4$d en échec."
+
+msgid "The run was cancelled."
+msgstr "L’exécution a été annulée."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Certaines tuiles n’ont pas pu être stockées. Soit votre serveur ne peut pas appeler sa propre adresse, soit les tuiles se trouvent en dehors de la zone autorisée dans les réglages de l’extension de proxy."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Précharger les tuiles manquantes"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Catégories sous forme de slug, de nom ou d’ID, séparées par des virgules."
 
@@ -157,6 +190,12 @@ msgstr "Code court"
 
 msgid "Geolocation Plugin Settings"
 msgstr "Réglages de l’extension Geolocation"
+
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "Le préchargement des tuiles a été lancé en arrière-plan."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Le préchargement des tuiles n’a pas pu être lancé."
 
 msgid "Dimensions"
 msgstr "Dimensions"
@@ -245,17 +284,32 @@ msgstr "N’afficher les cartes que si les tuiles sont servies par l’extension
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Si le proxy n’est pas disponible, seul le texte du lieu est affiché et les navigateurs de vos visiteurs ne se connectent à aucun serveur de cartes externe."
 
-msgid "Tiles url (Caching)"
-msgstr "URL des tuiles (cache)"
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Sans le proxy, ce mode n’affiche que le texte du lieu, pas de carte."
+
+msgid "Tiles url"
+msgstr "URL des tuiles"
 
 msgid "Currently used (from the proxy plugin):"
 msgstr "Actuellement utilisée (par l’extension de proxy) :"
 
-msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
-msgstr "Solution de repli : utilisée uniquement si le proxy est désactivé ou ne fournit pas de tuiles."
+msgid "Fallback: only used when the proxy is switched off or not available."
+msgstr "Solution de repli : utilisée uniquement si le proxy est désactivé ou indisponible."
 
 msgid "The address the map tiles are loaded from."
 msgstr "L’adresse depuis laquelle les tuiles de la carte sont chargées."
+
+msgid "Pre-cache tiles"
+msgstr "Précharger les tuiles"
+
+msgid "Save the settings to pre-cache tiles."
+msgstr "Enregistrez les réglages pour précharger les tuiles."
+
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "Précharger les tuiles lors de l’enregistrement d’une page ou d’un article."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Demande via le proxy les tuiles de la première vue de chaque carte : les cartes de vos articles et les cartes d’ensemble. Le premier visiteur n’a alors pas à attendre. Les tuiles atteintes en déplaçant ou en zoomant une carte sont toujours chargées à la demande."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

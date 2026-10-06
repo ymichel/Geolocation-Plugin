@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.14.1
+ * Version: 1.15.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.14.1' );
+define( 'GEOLOCATION__VERSION', '1.15.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -47,6 +47,12 @@ add_action( 'save_post_post', 'geolocation_save_postdata' );
 add_action( 'save_post_post', 'geolocation_flush_page_markers' );
 add_action( 'deleted_post', 'geolocation_flush_page_markers' );
 add_action( 'geolocation_update_addresses_batch', 'geolocation_update_addresses_batch' );
+add_action( 'geolocation_precache_batch', 'geolocation_precache_batch' );
+add_action( 'geolocation_precache_post', 'geolocation_precache_post' );
+add_action( 'save_post_post', 'geolocation_precache_saved_post', 20 );
+add_action( 'save_post_page', 'geolocation_precache_saved_post', 20 );
+add_action( 'admin_post_geolocation_precache', 'geolocation_precache_request' );
+add_action( 'wp_ajax_geolocation_precache_status', 'geolocation_precache_status_request' );
 add_filter( 'the_content', 'geolocation_display_location', 5 );
 add_filter( 'plugin_row_meta', 'geolocation_append_support_and_faq_links', 10, 2 );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'geolocation_customizer_action_links' );
@@ -56,6 +62,7 @@ register_uninstall_hook( __FILE__, 'geolocation_uninstall' );
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-settings.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-block.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-track.php';
+require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-precache.php';
 // To do: add support for multiple Map API providers.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':

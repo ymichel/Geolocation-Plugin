@@ -107,6 +107,39 @@ msgstr "Dit bericht heeft nog geen locatie om te tonen. Stel die in het Geolocat
 msgid "No post with a visible location matches these settings."
 msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellingen."
 
+msgid "Pre-caching is running in the background."
+msgstr "Het vooraf laden loopt op de achtergrond."
+
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Stap %1$d van %2$d: %3$s"
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Tegels: %1$d opgevraagd, %2$d opgeslagen, %3$d mislukt."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Gestart om %1$s, nog ongeveer %2$s."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "Er is al een paar minuten niets gebeurd. Mogelijk draaien de achtergrondtaken van WordPress (WP-Cron) niet op deze site."
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d van %2$d tegels voor de kaarten van %3$d pagina’s en berichten zijn op je server opgeslagen."
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Laatste run (%1$s): %2$d tegels opgevraagd, %3$d opgeslagen, %4$d mislukt."
+
+msgid "The run was cancelled."
+msgstr "De run is geannuleerd."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Sommige tegels konden niet worden opgeslagen. Of je server kan zijn eigen adres niet opvragen, of de tegels liggen buiten het gebied dat in de instellingen van de proxy-plugin is toegestaan."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Ontbrekende tegels vooraf laden"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorieën als slug, naam of ID, gescheiden door komma’s."
 
@@ -157,6 +190,12 @@ msgstr "Shortcode"
 
 msgid "Geolocation Plugin Settings"
 msgstr "Instellingen van de Geolocation-plugin"
+
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "Het vooraf laden van de tegels is op de achtergrond gestart."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Het vooraf laden van de tegels kon niet worden gestart."
 
 msgid "Dimensions"
 msgstr "Afmetingen"
@@ -245,17 +284,32 @@ msgstr "Toon kaarten alleen als de tegels via de proxy-plugin worden geleverd."
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Als de proxy niet beschikbaar is, wordt alleen de locatietekst getoond en maken de browsers van je bezoekers geen verbinding met externe kaartservers."
 
-msgid "Tiles url (Caching)"
-msgstr "Tegel-URL (caching)"
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Zonder de proxy toont deze modus alleen de locatietekst, geen kaarten."
+
+msgid "Tiles url"
+msgstr "Tegel-URL"
 
 msgid "Currently used (from the proxy plugin):"
 msgstr "Momenteel in gebruik (van de proxy-plugin):"
 
-msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
-msgstr "Terugval: wordt alleen gebruikt als de proxy is uitgeschakeld of geen tegels levert."
+msgid "Fallback: only used when the proxy is switched off or not available."
+msgstr "Terugval: wordt alleen gebruikt als de proxy is uitgeschakeld of niet beschikbaar is."
 
 msgid "The address the map tiles are loaded from."
 msgstr "Het adres waarvandaan de kaarttegels worden geladen."
+
+msgid "Pre-cache tiles"
+msgstr "Tegels vooraf laden"
+
+msgid "Save the settings to pre-cache tiles."
+msgstr "Sla de instellingen op om tegels vooraf te laden."
+
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "De tegels vooraf laden wanneer een pagina of bericht wordt opgeslagen."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Vraagt via de proxy de tegels van de eerste weergave van elke kaart op: de kaarten van je berichten en de overzichtskaarten. De eerste bezoeker hoeft dan niet te wachten. Tegels die worden bereikt door een kaart te verplaatsen of te zoomen, worden nog steeds op aanvraag geladen."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

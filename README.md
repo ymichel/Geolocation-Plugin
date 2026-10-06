@@ -23,6 +23,18 @@ Attributes can be combined, and a page can contain several maps. Without the att
 
 The same reference is available in WordPress under "Help" at the top right of the plugin's settings page.
 
+## Pre-caching tiles
+
+With the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/) storing tiles on your server, the settings page shows how many tiles of the maps of your posts are stored and offers to pre-cache the missing ones.
+
+- Only the first view of a map is covered. For the map of a post that is its location with the map size and zoom level of the settings, or the view showing its whole track. For an overview map of a shortcode or a block it is the view fitted to its locations and tracks, or its fixed zoom level. Tiles reached by moving or zooming a map are still fetched on demand.
+- Maps wider than a phone are also calculated for the width of a phone, where they may use another zoom level. A width in percent refers to the content width of the theme.
+- The run works in the background and takes one post after the other, like a visitor opening one map after the other, with a pause of 4 to 8 seconds in between. Posts whose tiles are stored already are passed without a pause. A run stops after 5000 tiles.
+- Posts are processed from new to old. While a run is in progress the settings page shows a progress bar, the post being processed, the tiles requested, stored and failed, and the estimated time remaining; it refreshes itself and the run can be cancelled.
+- The tiles are also pre-cached automatically when a page or post is saved, including the overview maps, which a new location may change; this can be switched off in the settings.
+- Pages and posts with an overview map are processed first, then the posts from new to old.
+- Maps with a size set in the block "Post Location" are calculated with the size of the settings.
+
 ## Tracks (GPX)
 
 A post can carry the track of a GPX file, e.g. the recording of a hike or a bike tour. Choose the file in the Geolocation box of the post editor.

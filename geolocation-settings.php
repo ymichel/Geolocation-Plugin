@@ -37,25 +37,26 @@ function geolocation_get_site_lang() {
  */
 function geolocation_get_settings_definition() {
 	return array(
-		'geolocation_map_width'           => array( 'integer', 'absint', '450' ),
-		'geolocation_map_height'          => array( 'integer', 'absint', '200' ),
-		'geolocation_default_zoom'        => array( 'integer', 'absint', '16' ),
-		'geolocation_map_position'        => array( 'string', 'geolocation_sanitize_position', 'after' ),
-		'geolocation_map_display'         => array( 'string', 'geolocation_sanitize_display', 'map' ),
-		'geolocation_wp_pin'              => array( 'string', 'sanitize_text_field', null ),
-		'geolocation_google_maps_api_key' => array( 'string', 'sanitize_text_field', null ),
-		'geolocation_updateAddresses'     => array( 'string', 'sanitize_text_field', null ),
-		'geolocation_map_width_page'      => array( 'integer', 'absint', '600' ),
-		'geolocation_map_height_page'     => array( 'integer', 'absint', '300' ),
-		'geolocation_provider'            => array( 'string', 'geolocation_sanitize_provider', 'osm' ),
-		'geolocation_shortcode'           => array( 'string', 'sanitize_text_field', '[geolocation]' ),
-		'geolocation_track_trim'          => array( 'integer', 'absint', null ),
-		'geolocation_track_figures'       => array( 'string', 'geolocation_sanitize_switch', null ),
-		'geolocation_track_profile'       => array( 'string', 'geolocation_sanitize_switch', null ),
-		'geolocation_osm_use_proxy'       => array( 'string', 'sanitize_text_field', null ),
-		'geolocation_osm_strict_privacy'  => array( 'string', 'sanitize_text_field', null ),
-		'geolocation_osm_tiles_url'       => array( 'string', 'sanitize_text_field', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' ),
-		'geolocation_osm_nominatim_url'   => array( 'string', 'geolocation_sanitize_url', 'https://nominatim.openstreetmap.org/' ),
+		'geolocation_map_width'            => array( 'integer', 'absint', '450' ),
+		'geolocation_map_height'           => array( 'integer', 'absint', '200' ),
+		'geolocation_default_zoom'         => array( 'integer', 'absint', '16' ),
+		'geolocation_map_position'         => array( 'string', 'geolocation_sanitize_position', 'after' ),
+		'geolocation_map_display'          => array( 'string', 'geolocation_sanitize_display', 'map' ),
+		'geolocation_wp_pin'               => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_google_maps_api_key'  => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_updateAddresses'      => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_map_width_page'       => array( 'integer', 'absint', '600' ),
+		'geolocation_map_height_page'      => array( 'integer', 'absint', '300' ),
+		'geolocation_provider'             => array( 'string', 'geolocation_sanitize_provider', 'osm' ),
+		'geolocation_shortcode'            => array( 'string', 'sanitize_text_field', '[geolocation]' ),
+		'geolocation_track_trim'           => array( 'integer', 'absint', null ),
+		'geolocation_track_figures'        => array( 'string', 'geolocation_sanitize_switch', null ),
+		'geolocation_track_profile'        => array( 'string', 'geolocation_sanitize_switch', null ),
+		'geolocation_osm_use_proxy'        => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_osm_strict_privacy'   => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_osm_precache_on_save' => array( 'string', 'geolocation_sanitize_precache_switch', null ),
+		'geolocation_osm_tiles_url'        => array( 'string', 'sanitize_text_field', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' ),
+		'geolocation_osm_nominatim_url'    => array( 'string', 'geolocation_sanitize_url', 'https://nominatim.openstreetmap.org/' ),
 	);
 }
 
@@ -118,6 +119,21 @@ function geolocation_sanitize_switch( $value ) {
 }
 
 /**
+ * Store the switch for pre-caching on save, which is not part of the settings form while pre-caching is not possible.
+ *
+ * A missing field then must not switch it off.
+ *
+ * @param mixed $value The submitted value, null if the field has not been submitted.
+ * @return string
+ */
+function geolocation_sanitize_precache_switch( $value ) {
+	if ( null === $value ) {
+		return '0' === (string) get_option( 'geolocation_osm_precache_on_save' ) ? '0' : '1';
+	}
+	return geolocation_sanitize_switch( $value );
+}
+
+/**
  * Sanitize a URL setting.
  *
  * @param mixed $value The submitted URL.
@@ -163,6 +179,7 @@ function geolocation_delete_settings() {
 	}
 	delete_option( 'geolocation_version' );
 	delete_option( 'geolocation_markers_version' );
+	delete_option( 'geolocation_precache_status' );
 	geolocation_delete_legacy_settings();
 }
 
@@ -230,6 +247,8 @@ function geolocation_activate() {
  */
 function geolocation_uninstall() {
 	wp_unschedule_hook( 'geolocation_update_addresses_batch' );
+	wp_unschedule_hook( 'geolocation_precache_batch' );
+	wp_unschedule_hook( 'geolocation_precache_post' );
 	geolocation_unregister_settings();
 	geolocation_delete_settings();
 	geolocation_delete_addresses();

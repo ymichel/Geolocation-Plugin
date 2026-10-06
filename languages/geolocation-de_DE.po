@@ -111,8 +111,8 @@ msgstr "Verbindet die Orte mit einer Linie, in der Reihenfolge der Beitragsdaten
 msgid "Currently used (from the proxy plugin):"
 msgstr "Derzeit verwendet (vom Proxy-Plugin):"
 
-msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
-msgstr "R&uuml;ckfall: wird nur verwendet, wenn der Proxy ausgeschaltet ist oder keine Kacheln liefert."
+msgid "Fallback: only used when the proxy is switched off or not available."
+msgstr "R&uuml;ckfall: wird nur verwendet, wenn der Proxy ausgeschaltet oder nicht verf&uuml;gbar ist."
 
 msgid "The address the map tiles are loaded from."
 msgstr "Die Adresse, von der die Kartenkacheln geladen werden."
@@ -239,8 +239,8 @@ msgid "Support"
 msgstr "Support"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:133
-msgid "Tiles url (Caching)"
-msgstr "Kachel URL (Caching)"
+msgid "Tiles url"
+msgstr "Kachel-URL"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:159
 msgid "Update all addresses from posts that have location information (only once this setup is saved)."
@@ -391,3 +391,57 @@ msgstr "Anzeigen"
 
 msgid "Hide"
 msgstr "Ausblenden"
+
+msgid "Pre-cache tiles"
+msgstr "Kacheln vorab laden"
+
+msgid "Pre-cache the missing tiles"
+msgstr "Fehlende Kacheln vorab laden"
+
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "Das Vorab-Laden der Kacheln wurde im Hintergrund gestartet."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Das Vorab-Laden der Kacheln konnte nicht gestartet werden."
+
+msgid "Pre-caching is running in the background."
+msgstr "Das Vorab-Laden l&auml;uft im Hintergrund."
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Kacheln: %1$d angefordert, %2$d gespeichert, %3$d fehlgeschlagen."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Gestartet um %1$s, noch etwa %2$s."
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Letzter Lauf (%1$s): %2$d Kacheln angefordert, %3$d gespeichert, %4$d fehlgeschlagen."
+
+msgid "The run was cancelled."
+msgstr "Der Lauf wurde abgebrochen."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Einige Kacheln konnten nicht gespeichert werden. Entweder kann der Server seine eigene Adresse nicht aufrufen, oder die Kacheln liegen au&szlig;erhalb des Bereichs, der in den Einstellungen des Proxy-Plugins erlaubt ist."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "Seit einigen Minuten ist nichts passiert. M&ouml;glicherweise laufen die Hintergrundaufgaben von WordPress (WP-Cron) auf dieser Website nicht."
+
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Schritt %1$d von %2$d: %3$s"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d von %2$d Kacheln f&uuml;r die Karten von %3$d Seiten und Beitr&auml;gen liegen auf deinem Server."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Fordert die Kacheln der ersten Ansicht jeder Karte &uuml;ber den Proxy an: die Karten deiner Beitr&auml;ge und die &Uuml;bersichtskarten. Der erste Besucher muss dann nicht warten. Kacheln, die durch Verschieben oder Zoomen einer Karte erreicht werden, werden weiterhin bei Bedarf geladen."
+
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "Kacheln beim Speichern einer Seite oder eines Beitrags vorab laden."
+
+msgid "Save the settings to pre-cache tiles."
+msgstr "Speichere die Einstellungen, um Kacheln vorab zu laden."
+
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Ohne den Proxy zeigt dieser Modus nur den Standorttext, keine Karten."

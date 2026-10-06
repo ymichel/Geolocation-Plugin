@@ -107,6 +107,39 @@ msgstr "Esta entrada aún no tiene una ubicación que mostrar. Defínela en la c
 msgid "No post with a visible location matches these settings."
 msgstr "Ninguna entrada con ubicación visible coincide con estos ajustes."
 
+msgid "Pre-caching is running in the background."
+msgstr "La precarga se está ejecutando en segundo plano."
+
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Paso %1$d de %2$d: %3$s"
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Teselas: %1$d solicitadas, %2$d guardadas, %3$d fallidas."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Iniciada a las %1$s, quedan unos %2$s."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "No ha ocurrido nada desde hace unos minutos. Puede que las tareas en segundo plano de WordPress (WP-Cron) no se estén ejecutando en este sitio."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d de %2$d teselas para los mapas de %3$d páginas y entradas están guardadas en tu servidor."
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Última ejecución (%1$s): %2$d teselas solicitadas, %3$d guardadas, %4$d fallidas."
+
+msgid "The run was cancelled."
+msgstr "La ejecución fue cancelada."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Algunas teselas no se pudieron guardar. O bien tu servidor no puede solicitar su propia dirección, o las teselas están fuera del área permitida en los ajustes del plugin de proxy."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Precargar las teselas que faltan"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorías como slug, nombre o ID, separadas por comas."
 
@@ -157,6 +190,12 @@ msgstr "Shortcode"
 
 msgid "Geolocation Plugin Settings"
 msgstr "Ajustes del plugin Geolocation"
+
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "La precarga de las teselas se ha iniciado en segundo plano."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "No se ha podido iniciar la precarga de las teselas."
 
 msgid "Dimensions"
 msgstr "Dimensiones"
@@ -245,17 +284,32 @@ msgstr "Mostrar mapas solo si las teselas se sirven a través del plugin de prox
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Si el proxy no está disponible, solo se muestra el texto de la ubicación y los navegadores de tus visitantes no se conectan a servidores de mapas externos."
 
-msgid "Tiles url (Caching)"
-msgstr "URL de las teselas (caché)"
+msgid "Without the proxy this mode shows only the location text, no maps."
+msgstr "Sin el proxy, este modo solo muestra el texto de la ubicación, sin mapas."
+
+msgid "Tiles url"
+msgstr "URL de las teselas"
 
 msgid "Currently used (from the proxy plugin):"
 msgstr "En uso actualmente (del plugin de proxy):"
 
-msgid "Fallback: only used when the proxy is switched off or does not deliver tiles."
-msgstr "Alternativa: solo se usa si el proxy está desactivado o no sirve teselas."
+msgid "Fallback: only used when the proxy is switched off or not available."
+msgstr "Alternativa: solo se usa si el proxy está desactivado o no está disponible."
 
 msgid "The address the map tiles are loaded from."
 msgstr "La dirección desde la que se cargan las teselas del mapa."
+
+msgid "Pre-cache tiles"
+msgstr "Precargar teselas"
+
+msgid "Save the settings to pre-cache tiles."
+msgstr "Guarda los ajustes para precargar teselas."
+
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "Precargar las teselas al guardar una página o una entrada."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Solicita a través del proxy las teselas de la primera vista de cada mapa: los mapas de tus entradas y los mapas generales. Así el primer visitante no tiene que esperar. Las teselas a las que se llega moviendo o ampliando un mapa se siguen cargando bajo demanda."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

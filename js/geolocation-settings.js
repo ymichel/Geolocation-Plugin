@@ -165,4 +165,79 @@
 
 		providerSelected( providerEl.value );
 	} );
+
+	// While tiles are pre-cached in the background, the status is refreshed every few seconds.
+	// The requests also keep the background tasks of WordPress going on sites with few visitors.
+	ready( function () {
+		var box = document.getElementById( 'geolocation-precache-status' );
+		if ( ! box || box.getAttribute( 'data-running' ) !== '1' || ! window.fetch ) {
+			return;
+		}
+		var timer = window.setInterval( function () {
+			window.fetch( box.getAttribute( 'data-url' ), { credentials: 'same-origin' } ).then( function ( response ) {
+				return response.json();
+			} ).then( function ( result ) {
+				if ( ! result || ! result.success ) {
+					return;
+				}
+				// The HTML is built and escaped by the plugin on the server.
+				box.innerHTML = result.data.html;
+				if ( ! result.data.running ) {
+					box.setAttribute( 'data-running', '0' );
+					window.clearInterval( timer );
+				}
+			} ).catch( function () {
+				// Try again with the next interval.
+			} );
+		}, 5000 );
+	} );
+
+	// Pre-caching belongs to the proxy: its row follows the checkbox "Use Proxy" at once, before the settings are saved.
+	ready( function () {
+		var proxy = document.getElementById( 'geolocation_osm_use_proxy' );
+		var row   = document.getElementById( 'geolocation-precache-row' );
+		if ( ! proxy || ! row ) {
+			return;
+		}
+		proxy.addEventListener( 'change', function () {
+			row.style.display = proxy.checked ? '' : 'none';
+		} );
+	} );
+
+	// The same goes for the address of the proxy and the explanation of the own tiles URL.
+	ready( function () {
+		var proxy    = document.getElementById( 'geolocation_osm_use_proxy' );
+		var used     = document.getElementById( 'geolocation-proxy-tiles' );
+		var fallback = document.getElementById( 'geolocation-tiles-fallback' );
+		var direct   = document.getElementById( 'geolocation-tiles-direct' );
+		var own      = document.getElementById( 'geolocation_osm_tiles_url' );
+		if ( ! proxy || ! used || ! fallback || ! direct || ! own ) {
+			return;
+		}
+		proxy.addEventListener( 'change', function () {
+			used.style.display     = proxy.checked ? '' : 'none';
+			fallback.style.display = proxy.checked ? '' : 'none';
+			direct.style.display   = proxy.checked ? 'none' : '';
+			// The own address is only a fallback while the proxy is used, so it cannot be changed then.
+			own.readOnly = proxy.checked;
+		} );
+	} );
+
+	// The strict privacy mode shows no maps without the proxy: say so as soon as that combination is chosen.
+	ready( function () {
+		var strict = document.getElementById( 'geolocation_osm_strict_privacy' );
+		var proxy  = document.getElementById( 'geolocation_osm_use_proxy' );
+		var hint   = document.getElementById( 'geolocation-strict-hint' );
+		if ( ! strict || ! hint ) {
+			return;
+		}
+		function update() {
+			var delivers       = proxy && proxy.checked && hint.getAttribute( 'data-proxy' ) === '1';
+			hint.style.display = strict.checked && ! delivers ? '' : 'none';
+		}
+		strict.addEventListener( 'change', update );
+		if ( proxy ) {
+			proxy.addEventListener( 'change', update );
+		}
+	} );
 }() );

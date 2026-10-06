@@ -623,4 +623,103 @@ class GeolocationTest extends TestCase {
 
 		unset( $GLOBALS['geolocation_test_options']['geolocation_track_figures'], $GLOBALS['geolocation_test_options']['geolocation_track_profile'] );
 	}
+
+	/**
+	 * Locations are converted to positions in the grid of tiles.
+	 *
+	 * @return void
+	 */
+	public function test_tile_position() {
+		$this->assertEqualsWithDelta( array( 0.5, 0.5 ), geolocation_tile_position( 0, 0, 0 ), 1e-9 );
+		$this->assertEqualsWithDelta( array( 1.0, 1.0 ), geolocation_tile_position( 0, 0, 1 ), 1e-9 );
+		$this->assertEqualsWithDelta( array( 0.0, 0.0 ), geolocation_tile_position( 85.0511287798, -180, 3 ), 1e-6 );
+		// Beyond the poles of the projection the position stays inside the grid.
+		$this->assertEqualsWithDelta( 8.0, geolocation_tile_position( -90, 0, 3 )[1], 1e-6 );
+
+		// Hamburg, town hall: tile 34587/21180 at zoom level 16.
+		$position = geolocation_tile_position( 53.5511, 9.9937, 16 );
+		$this->assertSame( 34587, (int) floor( $position[0] ) );
+		$this->assertSame( 21180, (int) floor( $position[1] ) );
+	}
+
+	/**
+	 * The tiles of a view cover the map and nothing more.
+	 *
+	 * @return void
+	 */
+	public function test_view_tiles() {
+		// A map of one tile centred on the middle of a tile shows exactly that tile.
+		$this->assertSame( array( array( 4, 5, 6 ) ), geolocation_view_tiles( array( 5.5, 6.5 ), 4, 256, 256 ) );
+		// Centred on a corner it shows the four tiles around it.
+		$this->assertSame(
+			array( array( 4, 4, 5 ), array( 4, 5, 5 ), array( 4, 4, 6 ), array( 4, 5, 6 ) ),
+			geolocation_view_tiles( array( 5.0, 6.0 ), 4, 256, 256 )
+		);
+		// 448 x 198 pixels around Hamburg at zoom level 16.
+		$tiles = geolocation_view_tiles( geolocation_tile_position( 53.5511, 9.9937, 16 ), 16, 448, 198 );
+		$this->assertContains( array( 16, 34587, 21180 ), $tiles );
+		$this->assertLessThanOrEqual( 6, count( $tiles ) );
+
+		// At the top of the world no rows above the grid are requested; beyond the date line the columns wrap.
+		$tiles = geolocation_view_tiles( array( 0.1, 0.1 ), 2, 256, 256 );
+		$this->assertSame( array( array( 2, 3, 0 ), array( 2, 0, 0 ) ), $tiles );
+	}
+
+	/**
+	 * A view is fitted to positions with the highest zoom level showing all of them.
+	 *
+	 * @return void
+	 */
+	public function test_fit_view() {
+		// Hamburg and Luebeck are about 60 km apart.
+		list( $center, $zoom ) = geolocation_fit_view( array( array( 53.5511, 9.9937 ), array( 53.8655, 10.6866 ) ), 448, 198 );
+		$this->assertSame( 8, $zoom );
+		$north_west = geolocation_tile_position( 53.8655, 9.9937, $zoom );
+		$south_east = geolocation_tile_position( 53.5511, 10.6866, $zoom );
+		$this->assertLessThanOrEqual( 448 - 40, ( $south_east[0] - $north_west[0] ) * 256 );
+		$this->assertLessThanOrEqual( 198 - 40, ( $south_east[1] - $north_west[1] ) * 256 );
+		$this->assertEqualsWithDelta( ( $north_west[0] + $south_east[0] ) / 2, $center[0], 1e-9 );
+		// One zoom level deeper it would not fit anymore.
+		$this->assertGreaterThan( 198 - 40, ( geolocation_tile_position( 53.5511, 10.6866, 9 )[1] - geolocation_tile_position( 53.8655, 9.9937, 9 )[1] ) * 256 );
+
+		// Positions lying at the same place are shown with the highest zoom level.
+		$this->assertSame( 18, geolocation_fit_view( array( array( 50.0, 10.0 ), array( 50.0, 10.0 ) ), 448, 198 )[1] );
+		// Positions around the world do not fit a small map: the lowest zoom level is used.
+		$this->assertSame( 0, geolocation_fit_view( array( array( 60.0, -170.0 ), array( -60.0, 170.0 ) ), 100, 100 )[1] );
+	}
+
+	/**
+	 * The URL of a tile is built like Leaflet does, and mapped to a file only inside the content folder.
+	 *
+	 * @return void
+	 */
+	public function test_tile_url() {
+		$this->assertSame( 'https://a.example.org/16/34587/21180.png', geolocation_tile_url( 'https://{s}.example.org/{z}/{x}/{y}.png', array( 16, 34587, 21180 ) ) );
+		$this->assertSame( 'https://a.example.org/1/0/0.png', geolocation_tile_url( 'https://{s}.example.org/{z}/{x}/{y}.png', array( 1, 0, 0 ) ) );
+		$this->assertSame( 'https://c.example.org/3/1/1.png', geolocation_tile_url( 'https://{s}.example.org/{z}/{x}/{y}.png', array( 3, 1, 1 ) ) );
+		$this->assertSame( 'https://example.org/t/2/1/3', geolocation_tile_url( 'https://example.org/t/{z}/{x}/{y}', array( 2, 1, 3 ) ) );
+	}
+
+	/**
+	 * The tiles of a post are pre-cached when it is saved unless this is switched off.
+	 *
+	 * @return void
+	 */
+	public function test_precache_on_save_switch() {
+		unset( $GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] );
+		$this->assertTrue( geolocation_precache_on_save() );
+		$GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] = '1';
+		$this->assertTrue( geolocation_precache_on_save() );
+		$GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] = '0';
+		$this->assertFalse( geolocation_precache_on_save() );
+		// A settings form without the field keeps the switch: off stays off, anything else is on.
+		$this->assertSame( '0', geolocation_sanitize_precache_switch( null ) );
+		$this->assertSame( '1', geolocation_sanitize_precache_switch( '1' ) );
+		$this->assertSame( '0', geolocation_sanitize_precache_switch( '0' ) );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] );
+		$this->assertSame( '1', geolocation_sanitize_precache_switch( null ) );
+		$GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] = '1';
+		$this->assertSame( '1', geolocation_sanitize_precache_switch( null ) );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] );
+	}
 }
