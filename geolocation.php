@@ -51,6 +51,7 @@ add_action( 'geolocation_precache_batch', 'geolocation_precache_batch' );
 add_action( 'geolocation_precache_post', 'geolocation_precache_post' );
 add_action( 'save_post_post', 'geolocation_precache_saved_post', 20 );
 add_action( 'admin_post_geolocation_precache', 'geolocation_precache_request' );
+add_action( 'wp_ajax_geolocation_precache_status', 'geolocation_precache_status_request' );
 add_filter( 'the_content', 'geolocation_display_location', 5 );
 add_filter( 'plugin_row_meta', 'geolocation_append_support_and_faq_links', 10, 2 );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'geolocation_customizer_action_links' );

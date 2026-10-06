@@ -107,6 +107,39 @@ msgstr "Esta entrada aún no tiene una ubicación que mostrar. Defínela en la c
 msgid "No post with a visible location matches these settings."
 msgstr "Ninguna entrada con ubicación visible coincide con estos ajustes."
 
+msgid "Pre-caching is running in the background."
+msgstr "La precarga se está ejecutando en segundo plano."
+
+msgid "Post %1$d of %2$d: %3$s"
+msgstr "Entrada %1$d de %2$d: %3$s"
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Teselas: %1$d solicitadas, %2$d guardadas, %3$d fallidas."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Iniciada a las %1$s, quedan unos %2$s."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "No ha ocurrido nada desde hace unos minutos. Puede que las tareas en segundo plano de WordPress (WP-Cron) no se estén ejecutando en este sitio."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d de %2$d teselas para los mapas de %3$d entradas están guardadas en tu servidor."
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Última ejecución (%1$s): %2$d teselas solicitadas, %3$d guardadas, %4$d fallidas."
+
+msgid "The run was cancelled."
+msgstr "La ejecución fue cancelada."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Algunas teselas no se pudieron guardar. O bien tu servidor no puede solicitar su propia dirección, o las teselas están fuera del área permitida en los ajustes del plugin de proxy."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Precargar las teselas que faltan"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorías como slug, nombre o ID, separadas por comas."
 
@@ -265,18 +298,6 @@ msgstr "La dirección desde la que se cargan las teselas del mapa."
 
 msgid "Pre-cache tiles"
 msgstr "Precargar teselas"
-
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d de %2$d teselas para los mapas de %3$d entradas están guardadas en tu servidor."
-
-msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
-msgstr "La precarga se está ejecutando en segundo plano: %1$d teselas solicitadas, %2$d guardadas hasta ahora."
-
-msgid "Last run: %1$d tiles requested, %2$d stored."
-msgstr "Última ejecución: %1$d teselas solicitadas, %2$d guardadas."
-
-msgid "Pre-cache the missing tiles"
-msgstr "Precargar las teselas que faltan"
 
 msgid "Pre-cache the tiles of a post when it is saved."
 msgstr "Precargar las teselas de una entrada al guardarla."

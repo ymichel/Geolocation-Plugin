@@ -107,6 +107,39 @@ msgstr "Questo articolo non ha ancora una posizione da mostrare. Impostala nel r
 msgid "No post with a visible location matches these settings."
 msgstr "Nessun articolo con una posizione visibile corrisponde a queste impostazioni."
 
+msgid "Pre-caching is running in the background."
+msgstr "Il precaricamento è in corso in background."
+
+msgid "Post %1$d of %2$d: %3$s"
+msgstr "Articolo %1$d di %2$d: %3$s"
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Tile: %1$d richiesti, %2$d salvati, %3$d non riusciti."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Avviato alle %1$s, ancora circa %2$s."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "Da alcuni minuti non è successo nulla. È possibile che le attività in background di WordPress (WP-Cron) non siano in esecuzione su questo sito."
+
+msgid "Cancel"
+msgstr "Annulla"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d di %2$d tile per le mappe di %3$d articoli sono salvati sul tuo server."
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Ultima esecuzione (%1$s): %2$d tile richiesti, %3$d salvati, %4$d non riusciti."
+
+msgid "The run was cancelled."
+msgstr "L’esecuzione è stata annullata."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Alcuni tile non sono stati salvati. Il server non riesce a richiamare il proprio indirizzo, oppure i tile si trovano fuori dall’area consentita nelle impostazioni del plugin proxy."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Precarica i tile mancanti"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorie come slug, nome o ID, separate da virgole."
 
@@ -265,18 +298,6 @@ msgstr "L’indirizzo da cui vengono caricati i tile della mappa."
 
 msgid "Pre-cache tiles"
 msgstr "Precarica i tile"
-
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d di %2$d tile per le mappe di %3$d articoli sono salvati sul tuo server."
-
-msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
-msgstr "Il precaricamento è in corso in background: %1$d tile richiesti, %2$d salvati finora."
-
-msgid "Last run: %1$d tiles requested, %2$d stored."
-msgstr "Ultima esecuzione: %1$d tile richiesti, %2$d salvati."
-
-msgid "Pre-cache the missing tiles"
-msgstr "Precarica i tile mancanti"
 
 msgid "Pre-cache the tiles of a post when it is saved."
 msgstr "Precarica i tile di un articolo quando viene salvato."

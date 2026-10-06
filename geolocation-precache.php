@@ -172,7 +172,7 @@ function geolocation_precache_tiles_url() {
 }
 
 /**
- * Get the posts whose maps are pre-cached: published posts with an enabled location.
+ * Get the posts whose maps are pre-cached: published posts with an enabled location, the newest first.
  *
  * @return array The ids of the posts.
  */
@@ -182,8 +182,11 @@ function geolocation_precache_post_ids() {
 			'post_type'      => 'post',
 			'posts_per_page' => -1,
 			'post_status'    => 'publish',
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
+			// The newest posts first: they are visited most, and a run which is stopped has covered them already.
+			'orderby'        => array(
+				'date' => 'DESC',
+				'ID'   => 'DESC',
+			),
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- only run from the settings page and in the background.
@@ -265,22 +268,85 @@ function geolocation_precache_fetch( $urls ) {
  * @return bool Whether the run has been started.
  */
 function geolocation_precache_start() {
-	if ( '' === geolocation_precache_tiles_url() ) {
+	$template = geolocation_precache_tiles_url();
+	if ( '' === $template ) {
 		return false;
 	}
+	$post_ids                  = geolocation_precache_post_ids();
+	list( , , $missing_tiles ) = geolocation_precache_missing( $post_ids, $template );
 	wp_unschedule_hook( 'geolocation_precache_batch' );
 	update_option(
 		'geolocation_precache_status',
 		array(
 			'running'   => true,
+			'cancelled' => false,
 			'requested' => 0,
 			'stored'    => 0,
+			// What the run has to do, to show its progress.
+			'missing'   => count( $missing_tiles ),
+			'posts'     => count( $post_ids ),
+			'done'      => 0,
+			'last'      => 0,
+			'started'   => time(),
 			'time'      => time(),
 		),
 		false
 	);
 	wp_schedule_single_event( time(), 'geolocation_precache_batch', array( 0 ) );
 	return true;
+}
+
+/**
+ * Get the state of the current or the last run.
+ *
+ * @return array Empty if there has been no run yet.
+ */
+function geolocation_precache_get_status() {
+	$status = get_option( 'geolocation_precache_status' );
+	if ( ! is_array( $status ) ) {
+		return array();
+	}
+	return array_merge(
+		array(
+			'running'   => false,
+			'cancelled' => false,
+			'requested' => 0,
+			'stored'    => 0,
+			'missing'   => 0,
+			'posts'     => 0,
+			'done'      => 0,
+			'last'      => 0,
+			'started'   => 0,
+			'time'      => 0,
+		),
+		$status
+	);
+}
+
+/**
+ * Check whether a run is in progress.
+ *
+ * @return bool
+ */
+function geolocation_precache_is_running() {
+	$status = geolocation_precache_get_status();
+	return ! empty( $status['running'] );
+}
+
+/**
+ * Stop the run in progress.
+ *
+ * @return void
+ */
+function geolocation_precache_cancel() {
+	wp_unschedule_hook( 'geolocation_precache_batch' );
+	$status = geolocation_precache_get_status();
+	if ( ! empty( $status['running'] ) ) {
+		$status['running']   = false;
+		$status['cancelled'] = true;
+		$status['time']      = time();
+		update_option( 'geolocation_precache_status', $status, false );
+	}
 }
 
 /**
@@ -292,23 +358,30 @@ function geolocation_precache_start() {
 function geolocation_precache_batch( $offset = 0 ) {
 	$offset   = (int) $offset;
 	$template = geolocation_precache_tiles_url();
-	$status   = get_option( 'geolocation_precache_status' );
-	$status   = is_array( $status ) ? $status : array();
-	$status   = array_merge(
-		array(
-			'requested' => 0,
-			'stored'    => 0,
-		),
-		$status
-	);
-	$post_ids = '' === $template ? array() : array_slice( geolocation_precache_post_ids(), $offset );
+	$status   = geolocation_precache_get_status();
+	if ( empty( $status['running'] ) ) {
+		// The run has been cancelled.
+		return;
+	}
+	$all_ids  = '' === $template ? array() : geolocation_precache_post_ids();
+	$post_ids = array_slice( $all_ids, $offset );
 
 	list( $posts, , $missing ) = geolocation_precache_missing( $post_ids, (string) $template, GEOLOCATION__PRECACHE_BATCH );
 	$missing                   = array_slice( $missing, 0, max( 0, GEOLOCATION__PRECACHE_LIMIT - $status['requested'] ) );
-	$status['requested']      += count( $missing );
-	$status['stored']         += geolocation_precache_fetch( $missing );
-	$status['time']            = time();
-	$status['running']         = $posts < count( $post_ids ) && $status['requested'] < GEOLOCATION__PRECACHE_LIMIT;
+	$stored                    = geolocation_precache_fetch( $missing );
+
+	// Read the state again: the run may have been cancelled while the tiles were requested.
+	$status = geolocation_precache_get_status();
+	if ( empty( $status['running'] ) ) {
+		return;
+	}
+	$status['requested'] += count( $missing );
+	$status['stored']    += $stored;
+	$status['posts']      = count( $all_ids );
+	$status['done']       = min( count( $all_ids ), $offset + $posts );
+	$status['last']       = $posts > 0 ? (int) $post_ids[ $posts - 1 ] : $status['last'];
+	$status['time']       = time();
+	$status['running']    = $posts < count( $post_ids ) && $status['requested'] < GEOLOCATION__PRECACHE_LIMIT;
 	update_option( 'geolocation_precache_status', $status, false );
 
 	if ( $status['running'] ) {
@@ -357,7 +430,7 @@ function geolocation_precache_post( $post_id ) {
 }
 
 /**
- * Handle the button of the settings page which starts pre-caching.
+ * Handle the buttons of the settings page which start and cancel pre-caching.
  *
  * @return void
  */
@@ -366,7 +439,77 @@ function geolocation_precache_request() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( '', '', array( 'response' => 403 ) );
 	}
-	$started = geolocation_precache_start();
-	wp_safe_redirect( add_query_arg( 'geolocation-precache', $started ? 'started' : 'failed', admin_url( 'options-general.php?page=geolocation.php' ) ) );
+	if ( isset( $_GET['cancel'] ) ) {
+		geolocation_precache_cancel();
+		$result = 'cancelled';
+	} else {
+		$result = geolocation_precache_start() ? 'started' : 'failed';
+	}
+	wp_safe_redirect( add_query_arg( 'geolocation-precache', $result, admin_url( 'options-general.php?page=geolocation.php' ) ) );
 	exit;
+}
+
+/**
+ * Answer the settings page asking for the progress of pre-caching.
+ *
+ * @return void
+ */
+function geolocation_precache_status_request() {
+	check_ajax_referer( 'geolocation_precache' );
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( null, 403 );
+	}
+	wp_send_json_success(
+		array(
+			'running' => geolocation_precache_is_running(),
+			'html'    => geolocation_precache_status_html(),
+		)
+	);
+}
+
+/**
+ * Build the status of pre-caching for the settings page: the progress of a run, or the stored tiles and the last run.
+ *
+ * @return string The escaped HTML.
+ */
+function geolocation_precache_status_html() {
+	$status = geolocation_precache_get_status();
+	$action = wp_nonce_url( admin_url( 'admin-post.php?action=geolocation_precache' ), 'geolocation_precache' );
+	$failed = empty( $status ) ? 0 : max( 0, $status['requested'] - $status['stored'] );
+	$html   = '';
+
+	if ( ! empty( $status['running'] ) ) {
+		$remaining = max( 0, $status['missing'] - $status['requested'] );
+		$seconds   = (int) ceil( $remaining / GEOLOCATION__PRECACHE_BATCH ) * ( GEOLOCATION__PRECACHE_PAUSE + 10 );
+		$html     .= '<p><strong>' . esc_html__( 'Pre-caching is running in the background.', 'geolocation' ) . '</strong></p>';
+		$html     .= '<p><progress id="geolocation-precache-progress" style="width:100%;max-width:400px;" max="' . esc_attr( (string) max( 1, $status['missing'] ) ) . '" value="' . esc_attr( (string) min( $status['requested'], max( 1, $status['missing'] ) ) ) . '"></progress></p>';
+		if ( $status['done'] > 0 ) {
+			/* translators: 1: number of the post, 2: number of posts, 3: title of the post. */
+			$html .= '<p>' . esc_html( sprintf( __( 'Post %1$d of %2$d: %3$s', 'geolocation' ), $status['done'], $status['posts'], html_entity_decode( get_the_title( $status['last'] ), ENT_QUOTES, 'UTF-8' ) ) ) . '</p>';
+		}
+		/* translators: 1: number of requested tiles, 2: number of stored tiles, 3: number of tiles which could not be stored. */
+		$html .= '<p>' . esc_html( sprintf( __( 'Tiles: %1$d requested, %2$d stored, %3$d failed.', 'geolocation' ), $status['requested'], $status['stored'], $failed ) ) . '</p>';
+		/* translators: 1: time of day, 2: a duration like "2 mins". */
+		$html .= '<p>' . esc_html( sprintf( __( 'Started at %1$s, about %2$s remaining.', 'geolocation' ), wp_date( get_option( 'time_format' ), $status['started'] ), human_time_diff( time(), time() + max( 1, $seconds ) ) ) ) . '</p>';
+		if ( time() - $status['time'] > 3 * MINUTE_IN_SECONDS ) {
+			$html .= '<p>' . esc_html__( 'Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site.', 'geolocation' ) . '</p>';
+		}
+		$html .= '<p><a class="button" id="geolocation-precache-cancel" href="' . esc_url( add_query_arg( 'cancel', '1', $action ) ) . '">' . esc_html__( 'Cancel', 'geolocation' ) . '</a></p>';
+		return $html;
+	}
+
+	list( $posts, $tiles, $missing ) = geolocation_precache_missing( geolocation_precache_post_ids(), geolocation_precache_tiles_url() );
+	/* translators: 1: number of stored tiles, 2: number of tiles needed, 3: number of posts. */
+	$html .= '<p>' . esc_html( sprintf( __( '%1$d of %2$d tiles for the maps of %3$d posts are stored on your server.', 'geolocation' ), $tiles - count( $missing ), $tiles, $posts ) ) . '</p>';
+	if ( ! empty( $status ) ) {
+		/* translators: 1: date and time, 2: number of requested tiles, 3: number of stored tiles, 4: number of tiles which could not be stored. */
+		$html .= '<p>' . esc_html( sprintf( __( 'Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed.', 'geolocation' ), wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $status['time'] ), $status['requested'], $status['stored'], $failed ) );
+		$html .= $status['cancelled'] ? ' ' . esc_html__( 'The run was cancelled.', 'geolocation' ) : '';
+		$html .= '</p>';
+		if ( $failed > 0 ) {
+			$html .= '<p>' . esc_html__( 'Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin.', 'geolocation' ) . '</p>';
+		}
+	}
+	$html .= '<p><a class="button" id="geolocation-precache" href="' . esc_url( $action ) . '">' . esc_html__( 'Pre-cache the missing tiles', 'geolocation' ) . '</a></p>';
+	return $html;
 }

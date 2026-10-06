@@ -125,6 +125,8 @@ function geolocation_settings_page() {
 		<?php $precache_result = isset( $_GET['geolocation-precache'] ) ? sanitize_key( $_GET['geolocation-precache'] ) : ''; ?>
 		<?php if ( 'started' === $precache_result ) : ?>
 			<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Pre-caching the tiles has been started in the background.', 'geolocation' ); ?></p></div>
+		<?php elseif ( 'cancelled' === $precache_result ) : ?>
+			<div class="notice notice-info is-dismissible"><p><?php esc_html_e( 'The run was cancelled.', 'geolocation' ); ?></p></div>
 		<?php elseif ( 'failed' === $precache_result ) : ?>
 			<div class="notice notice-error is-dismissible"><p><?php esc_html_e( 'Pre-caching the tiles could not be started.', 'geolocation' ); ?></p></div>
 		<?php endif; ?>
@@ -273,37 +275,14 @@ function geolocation_settings_page() {
 								</p>
 							</td>
 						</tr>
-						<?php $precache_url = geolocation_precache_tiles_url(); ?>
-						<?php if ( '' !== $precache_url ) : ?>
-							<?php
-							list( $precache_posts, $precache_tiles, $precache_missing ) = geolocation_precache_missing( geolocation_precache_post_ids(), $precache_url );
-							$precache_status = get_option( 'geolocation_precache_status' );
-							?>
+						<?php if ( '' !== geolocation_precache_tiles_url() ) : ?>
 							<tr>
 								<th><?php esc_html_e( 'Pre-cache tiles', 'geolocation' ); ?></th>
 								<td>
-									<p>
-										<?php
-										/* translators: 1: number of stored tiles, 2: number of tiles needed, 3: number of posts. */
-										echo esc_html( sprintf( __( '%1$d of %2$d tiles for the maps of %3$d posts are stored on your server.', 'geolocation' ), $precache_tiles - count( $precache_missing ), $precache_tiles, $precache_posts ) );
-										?>
-									</p>
-									<?php if ( is_array( $precache_status ) && isset( $precache_status['requested'], $precache_status['stored'] ) ) : ?>
-										<p>
-											<?php
-											if ( ! empty( $precache_status['running'] ) ) {
-												/* translators: 1: number of requested tiles, 2: number of stored tiles. */
-												echo esc_html( sprintf( __( 'Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far.', 'geolocation' ), $precache_status['requested'], $precache_status['stored'] ) );
-											} else {
-												/* translators: 1: number of requested tiles, 2: number of stored tiles. */
-												echo esc_html( sprintf( __( 'Last run: %1$d tiles requested, %2$d stored.', 'geolocation' ), $precache_status['requested'], $precache_status['stored'] ) );
-											}
-											?>
-										</p>
-									<?php endif; ?>
-									<p>
-										<a class="button" id="geolocation-precache" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=geolocation_precache' ), 'geolocation_precache' ) ); ?>"><?php esc_html_e( 'Pre-cache the missing tiles', 'geolocation' ); ?></a>
-									</p>
+									<?php // The status is refreshed by the script of this page while a run is in progress. ?>
+									<div id="geolocation-precache-status" data-url="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php?action=geolocation_precache_status' ), 'geolocation_precache' ) ); ?>" data-running="<?php echo geolocation_precache_is_running() ? '1' : '0'; ?>">
+										<?php echo geolocation_precache_status_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the function. ?>
+									</div>
 									<input type="hidden" name="geolocation_osm_precache_on_save" value="0" />
 									<input type="checkbox" id="geolocation_osm_precache_on_save" name="geolocation_osm_precache_on_save" value="1" <?php checked( geolocation_precache_on_save() ); ?>>
 									<label for="geolocation_osm_precache_on_save"><?php esc_html_e( 'Pre-cache the tiles of a post when it is saved.', 'geolocation' ); ?></label>

@@ -29,6 +29,7 @@ With the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/) 
 
 - Only the first view of the map of each post is covered, with the map size and zoom level of the settings; for a post with a track, the view showing the whole track. Tiles reached by moving or zooming a map are still fetched on demand.
 - The run works in the background in batches of about 20 tiles with 20 seconds in between, and stops after 5000 tiles.
+- Posts are processed from new to old. While a run is in progress the settings page shows a progress bar, the post being processed, the tiles requested, stored and failed, and the estimated time remaining; it refreshes itself and the run can be cancelled.
 - The tiles of a post are also pre-cached automatically when it is saved; this can be switched off in the settings.
 - Overview maps and maps with a size set in the block "Post Location" are not covered.
 

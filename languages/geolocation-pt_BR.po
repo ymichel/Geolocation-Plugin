@@ -107,6 +107,39 @@ msgstr "Este post ainda não tem uma localização para exibir. Defina-a na caix
 msgid "No post with a visible location matches these settings."
 msgstr "Nenhum post com localização visível corresponde a estas configurações."
 
+msgid "Pre-caching is running in the background."
+msgstr "O pré-carregamento está em execução em segundo plano."
+
+msgid "Post %1$d of %2$d: %3$s"
+msgstr "Post %1$d de %2$d: %3$s"
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Blocos: %1$d solicitados, %2$d armazenados, %3$d com falha."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Iniciado às %1$s, restam cerca de %2$s."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "Nada aconteceu nos últimos minutos. As tarefas em segundo plano do WordPress (WP-Cron) podem não estar em execução neste site."
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d de %2$d blocos para os mapas de %3$d posts estão armazenados no seu servidor."
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Última execução (%1$s): %2$d blocos solicitados, %3$d armazenados, %4$d com falha."
+
+msgid "The run was cancelled."
+msgstr "A execução foi cancelada."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Alguns blocos não puderam ser armazenados. Ou o servidor não consegue acessar o próprio endereço, ou os blocos estão fora da área permitida nas configurações do plugin de proxy."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Pré-carregar os blocos ausentes"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorias como slug, nome ou ID, separadas por vírgulas."
 
@@ -265,18 +298,6 @@ msgstr "O endereço de onde os blocos do mapa são carregados."
 
 msgid "Pre-cache tiles"
 msgstr "Pré-carregar blocos"
-
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d de %2$d blocos para os mapas de %3$d posts estão armazenados no seu servidor."
-
-msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
-msgstr "O pré-carregamento está em execução em segundo plano: %1$d blocos solicitados, %2$d armazenados até agora."
-
-msgid "Last run: %1$d tiles requested, %2$d stored."
-msgstr "Última execução: %1$d blocos solicitados, %2$d armazenados."
-
-msgid "Pre-cache the missing tiles"
-msgstr "Pré-carregar os blocos ausentes"
 
 msgid "Pre-cache the tiles of a post when it is saved."
 msgstr "Pré-carregar os blocos de um post quando ele for salvo."

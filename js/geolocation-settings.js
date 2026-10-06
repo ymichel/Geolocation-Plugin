@@ -165,4 +165,30 @@
 
 		providerSelected( providerEl.value );
 	} );
+
+	// While tiles are pre-cached in the background, the status is refreshed every few seconds.
+	// The requests also keep the background tasks of WordPress going on sites with few visitors.
+	ready( function () {
+		var box = document.getElementById( 'geolocation-precache-status' );
+		if ( ! box || box.getAttribute( 'data-running' ) !== '1' || ! window.fetch ) {
+			return;
+		}
+		var timer = window.setInterval( function () {
+			window.fetch( box.getAttribute( 'data-url' ), { credentials: 'same-origin' } ).then( function ( response ) {
+				return response.json();
+			} ).then( function ( result ) {
+				if ( ! result || ! result.success ) {
+					return;
+				}
+				// The HTML is built and escaped by the plugin on the server.
+				box.innerHTML = result.data.html;
+				if ( ! result.data.running ) {
+					box.setAttribute( 'data-running', '0' );
+					window.clearInterval( timer );
+				}
+			} ).catch( function () {
+				// Try again with the next interval.
+			} );
+		}, 5000 );
+	} );
 }() );

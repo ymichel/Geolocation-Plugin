@@ -107,6 +107,39 @@ msgstr "Dit bericht heeft nog geen locatie om te tonen. Stel die in het Geolocat
 msgid "No post with a visible location matches these settings."
 msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellingen."
 
+msgid "Pre-caching is running in the background."
+msgstr "Het vooraf laden loopt op de achtergrond."
+
+msgid "Post %1$d of %2$d: %3$s"
+msgstr "Bericht %1$d van %2$d: %3$s"
+
+msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
+msgstr "Tegels: %1$d opgevraagd, %2$d opgeslagen, %3$d mislukt."
+
+msgid "Started at %1$s, about %2$s remaining."
+msgstr "Gestart om %1$s, nog ongeveer %2$s."
+
+msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
+msgstr "Er is al een paar minuten niets gebeurd. Mogelijk draaien de achtergrondtaken van WordPress (WP-Cron) niet op deze site."
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d van %2$d tegels voor de kaarten van %3$d berichten zijn op je server opgeslagen."
+
+msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
+msgstr "Laatste run (%1$s): %2$d tegels opgevraagd, %3$d opgeslagen, %4$d mislukt."
+
+msgid "The run was cancelled."
+msgstr "De run is geannuleerd."
+
+msgid "Some tiles could not be stored. Either your server cannot request its own address, or the tiles lie outside the area allowed in the settings of the proxy plugin."
+msgstr "Sommige tegels konden niet worden opgeslagen. Of je server kan zijn eigen adres niet opvragen, of de tegels liggen buiten het gebied dat in de instellingen van de proxy-plugin is toegestaan."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Ontbrekende tegels vooraf laden"
+
 msgid "Categories as slugs, names or ids, separated by commas."
 msgstr "Categorieën als slug, naam of ID, gescheiden door komma’s."
 
@@ -265,18 +298,6 @@ msgstr "Het adres waarvandaan de kaarttegels worden geladen."
 
 msgid "Pre-cache tiles"
 msgstr "Tegels vooraf laden"
-
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d van %2$d tegels voor de kaarten van %3$d berichten zijn op je server opgeslagen."
-
-msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
-msgstr "Het vooraf laden loopt op de achtergrond: tot nu toe %1$d tegels opgevraagd, %2$d opgeslagen."
-
-msgid "Last run: %1$d tiles requested, %2$d stored."
-msgstr "Laatste run: %1$d tegels opgevraagd, %2$d opgeslagen."
-
-msgid "Pre-cache the missing tiles"
-msgstr "Ontbrekende tegels vooraf laden"
 
 msgid "Pre-cache the tiles of a post when it is saved."
 msgstr "De tegels van een bericht vooraf laden wanneer het wordt opgeslagen."
