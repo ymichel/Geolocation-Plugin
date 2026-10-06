@@ -9,16 +9,20 @@
  * Only the first view of a post's map is covered: what visitors reach by moving or zooming the map
  * is still fetched by the proxy on demand.
  *
+ * A run takes one post after the other, like a visitor opening one map after the other, with a short
+ * pause in between. This keeps the load on the tile servers small and even.
+ *
  * @category Components
  * @package geolocation
  * @author Yann Michel <yann@michelpunkt.de>
  * @license GPLv2+
  */
 
-/** The number of tiles requested by one batch. */
-define( 'GEOLOCATION__PRECACHE_BATCH', 20 );
-/** The seconds between two batches, to respect the usage policy of the tile servers. */
-define( 'GEOLOCATION__PRECACHE_PAUSE', 20 );
+/** The shortest and the longest pause in seconds after the tiles of a post have been requested. */
+define( 'GEOLOCATION__PRECACHE_PAUSE_MIN', 4 );
+define( 'GEOLOCATION__PRECACHE_PAUSE_MAX', 8 );
+/** The number of tiles requested for one post at most. */
+define( 'GEOLOCATION__PRECACHE_POST_LIMIT', 60 );
 /** The number of tiles one run requests at most. */
 define( 'GEOLOCATION__PRECACHE_LIMIT', 5000 );
 /** The highest zoom level the maps of this plugin use. */
@@ -237,15 +241,37 @@ function geolocation_precache_missing( $post_ids, $template, $limit = 0 ) {
 }
 
 /**
+ * Check whether the answer to the request for a tile is that tile.
+ *
+ * The proxy answers with another image if it does not deliver a tile, e.g. outside the area it allows.
+ *
+ * @param array|WP_Error $response The answer of wp_remote_get().
+ * @param string         $url The URL of the tile.
+ * @return bool
+ */
+function geolocation_precache_is_tile( $response, $url ) {
+	if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) || 0 !== strpos( (string) wp_remote_retrieve_header( $response, 'content-type' ), 'image/' ) ) {
+		return false;
+	}
+	$final = '';
+	if ( isset( $response['http_response'] ) && is_object( $response['http_response'] ) && method_exists( $response['http_response'], 'get_response_object' ) ) {
+		$object = $response['http_response']->get_response_object();
+		$final  = isset( $object->url ) ? (string) $object->url : '';
+	}
+	// After redirects the address still has to be the one of the tile.
+	return '' === $final || strtok( $final, '?' ) === $url;
+}
+
+/**
  * Request tiles through the proxy, which stores them.
  *
  * @param array $urls The URLs of the tiles.
- * @return int The number of tiles stored afterwards.
+ * @return int The number of tiles delivered or stored.
  */
 function geolocation_precache_fetch( $urls ) {
 	$stored = 0;
 	foreach ( $urls as $url ) {
-		wp_remote_get(
+		$response = wp_remote_get(
 			$url,
 			array(
 				'timeout'     => 20,
@@ -255,7 +281,7 @@ function geolocation_precache_fetch( $urls ) {
 			)
 		);
 		clearstatcache();
-		if ( file_exists( geolocation_tile_file( $url ) ) ) {
+		if ( geolocation_precache_is_tile( $response, $url ) || file_exists( geolocation_tile_file( $url ) ) ) {
 			++$stored;
 		}
 	}
@@ -284,6 +310,7 @@ function geolocation_precache_start() {
 			'stored'    => 0,
 			// What the run has to do, to show its progress.
 			'missing'   => count( $missing_tiles ),
+			'steps'     => 0,
 			'posts'     => count( $post_ids ),
 			'done'      => 0,
 			'last'      => 0,
@@ -313,6 +340,7 @@ function geolocation_precache_get_status() {
 			'requested' => 0,
 			'stored'    => 0,
 			'missing'   => 0,
+			'steps'     => 0,
 			'posts'     => 0,
 			'done'      => 0,
 			'last'      => 0,
@@ -350,7 +378,9 @@ function geolocation_precache_cancel() {
 }
 
 /**
- * Pre-cache the tiles of one batch of posts and schedule the next batch.
+ * Pre-cache the tiles of the next post which misses some, and schedule the following step.
+ *
+ * Posts whose tiles are stored already are passed without a pause.
  *
  * @param int $offset The number of posts already processed.
  * @return void
@@ -366,8 +396,9 @@ function geolocation_precache_batch( $offset = 0 ) {
 	$all_ids  = '' === $template ? array() : geolocation_precache_post_ids();
 	$post_ids = array_slice( $all_ids, $offset );
 
-	list( $posts, , $missing ) = geolocation_precache_missing( $post_ids, (string) $template, GEOLOCATION__PRECACHE_BATCH );
-	$missing                   = array_slice( $missing, 0, max( 0, GEOLOCATION__PRECACHE_LIMIT - $status['requested'] ) );
+	// Stops at the first post missing tiles.
+	list( $posts, , $missing ) = geolocation_precache_missing( $post_ids, (string) $template, 1 );
+	$missing                   = array_slice( $missing, 0, min( GEOLOCATION__PRECACHE_POST_LIMIT, max( 0, GEOLOCATION__PRECACHE_LIMIT - $status['requested'] ) ) );
 	$stored                    = geolocation_precache_fetch( $missing );
 
 	// Read the state again: the run may have been cancelled while the tiles were requested.
@@ -377,6 +408,7 @@ function geolocation_precache_batch( $offset = 0 ) {
 	}
 	$status['requested'] += count( $missing );
 	$status['stored']    += $stored;
+	$status['steps']     += empty( $missing ) ? 0 : 1;
 	$status['posts']      = count( $all_ids );
 	$status['done']       = min( count( $all_ids ), $offset + $posts );
 	$status['last']       = $posts > 0 ? (int) $post_ids[ $posts - 1 ] : $status['last'];
@@ -385,7 +417,8 @@ function geolocation_precache_batch( $offset = 0 ) {
 	update_option( 'geolocation_precache_status', $status, false );
 
 	if ( $status['running'] ) {
-		wp_schedule_single_event( time() + ( empty( $missing ) ? 1 : GEOLOCATION__PRECACHE_PAUSE ), 'geolocation_precache_batch', array( $offset + $posts ) );
+		// The pause varies, so the requests do not arrive in a fixed rhythm.
+		wp_schedule_single_event( time() + wp_rand( GEOLOCATION__PRECACHE_PAUSE_MIN, GEOLOCATION__PRECACHE_PAUSE_MAX ), 'geolocation_precache_batch', array( $offset + $posts ) );
 	}
 }
 
@@ -426,7 +459,7 @@ function geolocation_precache_post( $post_id ) {
 		return;
 	}
 	list( , , $missing ) = geolocation_precache_missing( array( (int) $post_id ), $template );
-	geolocation_precache_fetch( array_slice( $missing, 0, 2 * GEOLOCATION__PRECACHE_BATCH ) );
+	geolocation_precache_fetch( array_slice( $missing, 0, GEOLOCATION__PRECACHE_POST_LIMIT ) );
 }
 
 /**
@@ -480,9 +513,11 @@ function geolocation_precache_status_html() {
 
 	if ( ! empty( $status['running'] ) ) {
 		$remaining = max( 0, $status['missing'] - $status['requested'] );
-		$seconds   = (int) ceil( $remaining / GEOLOCATION__PRECACHE_BATCH ) * ( GEOLOCATION__PRECACHE_PAUSE + 10 );
-		$html     .= '<p><strong>' . esc_html__( 'Pre-caching is running in the background.', 'geolocation' ) . '</strong></p>';
-		$html     .= '<p><progress id="geolocation-precache-progress" style="width:100%;max-width:400px;" max="' . esc_attr( (string) max( 1, $status['missing'] ) ) . '" value="' . esc_attr( (string) min( $status['requested'], max( 1, $status['missing'] ) ) ) . '"></progress></p>';
+		// Estimated from the tiles a post needed so far, the pause and a few seconds for requesting them.
+		$per_post = $status['steps'] > 0 ? max( 1, $status['requested'] / $status['steps'] ) : 5;
+		$seconds  = (int) round( ceil( $remaining / $per_post ) * ( ( GEOLOCATION__PRECACHE_PAUSE_MIN + GEOLOCATION__PRECACHE_PAUSE_MAX ) / 2 + 4 ) );
+		$html    .= '<p><strong>' . esc_html__( 'Pre-caching is running in the background.', 'geolocation' ) . '</strong></p>';
+		$html    .= '<p><progress id="geolocation-precache-progress" style="width:100%;max-width:400px;" max="' . esc_attr( (string) max( 1, $status['missing'] ) ) . '" value="' . esc_attr( (string) min( $status['requested'], max( 1, $status['missing'] ) ) ) . '"></progress></p>';
 		if ( $status['done'] > 0 ) {
 			/* translators: 1: number of the post, 2: number of posts, 3: title of the post. */
 			$html .= '<p>' . esc_html( sprintf( __( 'Post %1$d of %2$d: %3$s', 'geolocation' ), $status['done'], $status['posts'], html_entity_decode( get_the_title( $status['last'] ), ENT_QUOTES, 'UTF-8' ) ) ) . '</p>';
