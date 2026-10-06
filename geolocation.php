@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.15.0
+ * Version: 1.15.1
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,12 +31,13 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.15.0' );
+define( 'GEOLOCATION__VERSION', '1.15.1' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
 add_action( 'init', 'geolocation_register_block' );
 add_action( 'wp_ajax_geolocation_preview', 'geolocation_block_preview' );
+add_action( 'wp_ajax_geolocation_geocode', 'geolocation_geocode_request' );
 add_action( 'admin_init', 'geolocation_maybe_upgrade' );
 add_action( 'admin_init', 'geolocation_register_settings' );
 add_action( 'admin_menu', 'geolocation_add_settings' );
@@ -101,11 +102,48 @@ function geolocation_customizer_action_links( $links_array ) {
 }
 
 /**
- * Check whether maps must not be shown to visitors.
+ * Check whether the strict privacy mode is switched on (OpenStreetMap only).
+ *
+ * @return boolean
+ */
+function geolocation_strict_privacy() {
+	return 'osm' === get_option( 'geolocation_provider' ) && (bool) get_option( 'geolocation_osm_strict_privacy' );
+}
+
+/**
+ * Look up an address or a position for the post editor in strict privacy mode.
+ *
+ * The browser of the author then asks this site instead of the geocoding service.
+ *
+ * @return void
+ */
+function geolocation_geocode_request() {
+	check_ajax_referer( 'geolocation_geocode' );
+	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- checked against the two allowed requests below.
+	$path = isset( $_GET['path'] ) ? (string) wp_unslash( $_GET['path'] ) : '';
+	if ( ! current_user_can( 'edit_posts' ) || ! function_exists( 'geolocation_get_osm_nominatim_url' ) || 1 !== preg_match( '#^/(search|reverse)\\?[A-Za-z0-9=&%._~+,!\'()*-]*$#', $path ) ) {
+		wp_send_json( array(), 403 );
+	}
+	$response = wp_remote_get(
+		geolocation_get_osm_nominatim_url() . $path,
+		array(
+			'timeout' => 15,
+			'headers' => array(
+				'User-Agent' => 'WordPress-Geolocation-Plugin/' . GEOLOCATION__VERSION . '; ' . home_url(),
+			),
+		)
+	);
+	$decoded  = is_wp_error( $response ) ? null : json_decode( wp_remote_retrieve_body( $response ), true );
+	wp_send_json( is_array( $decoded ) ? $decoded : array() );
+}
+
+/**
+ * Check whether maps must not be shown.
  *
  * In the strict privacy mode maps are only shown if the tiles are delivered by
- * the OSM tiles proxy, so the browsers of the visitors never connect to an
- * external map server. Without a working proxy only the location text is shown.
+ * the OSM tiles proxy, so browsers never connect to an external map server.
+ * Without a working proxy only the location text is shown. This holds for
+ * visitors and, in the editor and on the settings page, for authors as well.
  *
  * @return boolean
  */
@@ -170,7 +208,10 @@ function geolocation_inner_custom_box() {
 	<input type="hidden" id="geolocation-remove-flag" name="geolocation-remove" value="" />
 	<input type="hidden" id="geolocation-latitude" name="geolocation-latitude" />
 	<input type="hidden" id="geolocation-longitude" name="geolocation-longitude" />
-	<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:<?php echo esc_attr( (string) get_option( 'geolocation_map_width' ) ); ?>px;height:<?php echo esc_attr( (string) get_option( 'geolocation_map_height' ) ); ?>px;margin-top:5px;"></div>
+	<?php if ( geolocation_maps_blocked() ) : ?>
+		<p id="geolocation-map-blocked" class="description"><?php esc_html_e( 'Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address.', 'geolocation' ); ?></p>
+	<?php endif; ?>
+	<div id="geolocation-map" style="border:solid 1px #c6c6c6;width:<?php echo esc_attr( (string) get_option( 'geolocation_map_width' ) ); ?>px;height:<?php echo esc_attr( (string) get_option( 'geolocation_map_height' ) ); ?>px;margin-top:5px;<?php echo geolocation_maps_blocked() ? 'display:none;' : ''; ?>"></div>
 	<div style="margin:5px 0 0 0;">
 		<input id="geolocation-public" name="geolocation-public" type="checkbox" value="1" />
 		<label for="geolocation-public"><?php esc_html_e( 'Public', 'geolocation' ); ?></label>

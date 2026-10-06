@@ -722,4 +722,20 @@ class GeolocationTest extends TestCase {
 		$this->assertSame( '1', geolocation_sanitize_precache_switch( null ) );
 		unset( $GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] );
 	}
+
+	/**
+	 * The strict privacy mode only exists with OpenStreetMap.
+	 *
+	 * @return void
+	 */
+	public function test_strict_privacy() {
+		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'osm';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '1';
+		$this->assertTrue( geolocation_strict_privacy() );
+		$GLOBALS['geolocation_test_options']['geolocation_provider'] = 'google';
+		$this->assertFalse( geolocation_strict_privacy() );
+		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'osm';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '';
+		$this->assertFalse( geolocation_strict_privacy() );
+	}
 }

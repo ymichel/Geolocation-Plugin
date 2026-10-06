@@ -90,6 +90,23 @@
 		}
 	}
 
+	// The preview follows the checkboxes for the proxy and the strict privacy mode before they are saved.
+	function proxyChosen() {
+		var proxy = document.getElementById( 'geolocation_osm_use_proxy' );
+		return !! ( proxy && proxy.checked && settings.proxyTilesUrl );
+	}
+
+	// In strict privacy mode the browser must not load tiles from anywhere but the proxy.
+	function osmBlocked() {
+		var strict = document.getElementById( 'geolocation_osm_strict_privacy' );
+		return !! ( strict && strict.checked && ! proxyChosen() );
+	}
+
+	function osmTilesUrl() {
+		var own = document.getElementById( 'geolocation_osm_tiles_url' );
+		return proxyChosen() ? settings.proxyTilesUrl : ( own && own.value ? own.value : settings.tilesUrl );
+	}
+
 	function initializeMap() {
 		var el = document.getElementById( 'map' );
 		destroyMap();
@@ -110,8 +127,12 @@
 			if ( typeof L === 'undefined' ) {
 				return;
 			}
+			if ( osmBlocked() ) {
+				el.textContent = settings.blockedText || '';
+				return;
+			}
 			osmMap = L.map( el ).setView( latLng, zoomlevel );
-			L.tileLayer( settings.tilesUrl, {
+			L.tileLayer( osmTilesUrl(), {
 				attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
 			} ).addTo( osmMap );
 		}
@@ -156,6 +177,16 @@
 			providerSelected( providerEl.value );
 		} );
 		pinEl.addEventListener( 'click', setMarker );
+		[ 'geolocation_osm_use_proxy', 'geolocation_osm_strict_privacy' ].forEach( function ( id ) {
+			var box = document.getElementById( id );
+			if ( box ) {
+				box.addEventListener( 'change', function () {
+					if ( provider !== 'google' ) {
+						initializeMap();
+					}
+				} );
+			}
+		} );
 		document.querySelectorAll( 'input[name="geolocation_default_zoom"]' ).forEach( function ( radio ) {
 			radio.addEventListener( 'click', function () {
 				zoomlevel = parseInt( radio.value, 10 );

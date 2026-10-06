@@ -25,6 +25,20 @@ function geolocation_admin_enqueue_osm( $post_id ) {
 			'language'     => geolocation_get_site_lang(),
 		)
 	);
+	if ( geolocation_strict_privacy() ) {
+		// The browser of the author does not connect to external servers either: no tiles without the proxy,
+		// and addresses are looked up through this site.
+		$data['mapBlocked']   = geolocation_maps_blocked();
+		$data['tilesUrl']     = $data['mapBlocked'] ? '' : $data['tilesUrl'];
+		$data['nominatimUrl'] = '';
+		$data['geocodeUrl']   = add_query_arg(
+			array(
+				'action'   => 'geolocation_geocode',
+				'_wpnonce' => wp_create_nonce( 'geolocation_geocode' ),
+			),
+			admin_url( 'admin-ajax.php' )
+		);
+	}
 	wp_enqueue_style( 'osm_leaflet_css', geolocation_get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
 	wp_enqueue_script( 'osm_leaflet_js', geolocation_get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, true );
 	wp_enqueue_script( 'geolocation_admin_common', plugins_url( 'js/geolocation-admin-common.js', __FILE__ ), array(), GEOLOCATION__VERSION, true );

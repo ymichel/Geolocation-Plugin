@@ -188,6 +188,9 @@ msgstr "Dans un article, le bloc « Lieu de l’article » affiche son lieu l�
 msgid "Shortcode"
 msgstr "Code court"
 
+msgid "No preview: in strict privacy mode maps need the proxy."
+msgstr "Pas d’aperçu : en mode de confidentialité stricte, les cartes nécessitent le proxy."
+
 msgid "Geolocation Plugin Settings"
 msgstr "Réglages de l’extension Geolocation"
 
@@ -284,6 +287,9 @@ msgstr "N’afficher les cartes que si les tuiles sont servies par l’extension
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Si le proxy n’est pas disponible, seul le texte du lieu est affiché et les navigateurs de vos visiteurs ne se connectent à aucun serveur de cartes externe."
 
+msgid "This also applies to the editor and to this page: without the proxy they show no map, and addresses are looked up through your server."
+msgstr "Cela vaut aussi pour l’éditeur et pour cette page : sans le proxy, ils n’affichent aucune carte et les adresses sont recherchées via votre serveur."
+
 msgid "Without the proxy this mode shows only the location text, no maps."
 msgstr "Sans le proxy, ce mode n’affiche que le texte du lieu, pas de carte."
 
@@ -370,6 +376,9 @@ msgstr "Ma position"
 
 msgid "Remove location"
 msgstr "Supprimer la localisation"
+
+msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
+msgstr "Mode de confidentialité stricte : aucune carte n’est affichée, car le proxy ne fournit pas de tuiles. Définissez le lieu par son adresse."
 
 msgid "Public"
 msgstr "Public"

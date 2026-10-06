@@ -188,6 +188,9 @@ msgstr "In een bericht toont het blok \"Locatie van het bericht\" de locatie op 
 msgid "Shortcode"
 msgstr "Shortcode"
 
+msgid "No preview: in strict privacy mode maps need the proxy."
+msgstr "Geen voorbeeld: in de strikte privacymodus hebben kaarten de proxy nodig."
+
 msgid "Geolocation Plugin Settings"
 msgstr "Instellingen van de Geolocation-plugin"
 
@@ -284,6 +287,9 @@ msgstr "Toon kaarten alleen als de tegels via de proxy-plugin worden geleverd."
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Als de proxy niet beschikbaar is, wordt alleen de locatietekst getoond en maken de browsers van je bezoekers geen verbinding met externe kaartservers."
 
+msgid "This also applies to the editor and to this page: without the proxy they show no map, and addresses are looked up through your server."
+msgstr "Dit geldt ook voor de editor en voor deze pagina: zonder de proxy tonen ze geen kaart en worden adressen via je server opgezocht."
+
 msgid "Without the proxy this mode shows only the location text, no maps."
 msgstr "Zonder de proxy toont deze modus alleen de locatietekst, geen kaarten."
 
@@ -370,6 +376,9 @@ msgstr "Mijn locatie"
 
 msgid "Remove location"
 msgstr "Locatie verwijderen"
+
+msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
+msgstr "Strikte privacymodus: er wordt geen kaart getoond omdat de proxy geen tegels levert. Stel de locatie in via het adres."
 
 msgid "Public"
 msgstr "Openbaar"
