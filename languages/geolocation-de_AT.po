@@ -391,3 +391,30 @@ msgstr "Anzeigen"
 
 msgid "Hide"
 msgstr "Ausblenden"
+
+msgid "Pre-cache tiles"
+msgstr "Kacheln vorab laden"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d von %2$d Kacheln f&uuml;r die Karten von %3$d Beitr&auml;gen liegen auf deinem Server."
+
+msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
+msgstr "Das Vorab-Laden l&auml;uft im Hintergrund: bisher %1$d Kacheln angefordert, %2$d gespeichert."
+
+msgid "Last run: %1$d tiles requested, %2$d stored."
+msgstr "Letzter Lauf: %1$d Kacheln angefordert, %2$d gespeichert."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Fehlende Kacheln vorab laden"
+
+msgid "Pre-cache the tiles of a post when it is saved."
+msgstr "Kacheln eines Beitrags beim Speichern vorab laden."
+
+msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Fordert die Kacheln der ersten Ansicht der Karte jedes Beitrags &uuml;ber den Proxy an, damit der erste Besucher nicht warten muss. Kacheln, die durch Verschieben oder Zoomen einer Karte erreicht werden, werden weiterhin bei Bedarf geladen."
+
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "Das Vorab-Laden der Kacheln wurde im Hintergrund gestartet."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Das Vorab-Laden der Kacheln konnte nicht gestartet werden."

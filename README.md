@@ -23,6 +23,15 @@ Attributes can be combined, and a page can contain several maps. Without the att
 
 The same reference is available in WordPress under "Help" at the top right of the plugin's settings page.
 
+## Pre-caching tiles
+
+With the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/) storing tiles on your server, the settings page shows how many tiles of the maps of your posts are stored and offers to pre-cache the missing ones.
+
+- Only the first view of the map of each post is covered, with the map size and zoom level of the settings; for a post with a track, the view showing the whole track. Tiles reached by moving or zooming a map are still fetched on demand.
+- The run works in the background in batches of about 20 tiles with 20 seconds in between, and stops after 5000 tiles.
+- The tiles of a post are also pre-cached automatically when it is saved; this can be switched off in the settings.
+- Overview maps and maps with a size set in the block "Post Location" are not covered.
+
 ## Tracks (GPX)
 
 A post can carry the track of a GPX file, e.g. the recording of a hike or a bike tour. Choose the file in the Geolocation box of the post editor.

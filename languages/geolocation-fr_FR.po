@@ -158,6 +158,12 @@ msgstr "Code court"
 msgid "Geolocation Plugin Settings"
 msgstr "Réglages de l’extension Geolocation"
 
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "Le préchargement des tuiles a été lancé en arrière-plan."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Le préchargement des tuiles n’a pas pu être lancé."
+
 msgid "Dimensions"
 msgstr "Dimensions"
 
@@ -256,6 +262,27 @@ msgstr "Solution de repli : utilisée uniquement si le proxy est désactivé ou
 
 msgid "The address the map tiles are loaded from."
 msgstr "L’adresse depuis laquelle les tuiles de la carte sont chargées."
+
+msgid "Pre-cache tiles"
+msgstr "Précharger les tuiles"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d tuiles sur %2$d pour les cartes de %3$d articles sont stockées sur votre serveur."
+
+msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
+msgstr "Le préchargement est en cours en arrière-plan : %1$d tuiles demandées, %2$d stockées jusqu’ici."
+
+msgid "Last run: %1$d tiles requested, %2$d stored."
+msgstr "Dernière exécution : %1$d tuiles demandées, %2$d stockées."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Précharger les tuiles manquantes"
+
+msgid "Pre-cache the tiles of a post when it is saved."
+msgstr "Précharger les tuiles d’un article lors de son enregistrement."
+
+msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Demande via le proxy les tuiles de la première vue de la carte de chaque article, afin que le premier visiteur n’ait pas à attendre. Les tuiles atteintes en déplaçant ou en zoomant une carte sont toujours chargées à la demande."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

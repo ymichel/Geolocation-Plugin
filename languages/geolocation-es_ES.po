@@ -158,6 +158,12 @@ msgstr "Shortcode"
 msgid "Geolocation Plugin Settings"
 msgstr "Ajustes del plugin Geolocation"
 
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "La precarga de las teselas se ha iniciado en segundo plano."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "No se ha podido iniciar la precarga de las teselas."
+
 msgid "Dimensions"
 msgstr "Dimensiones"
 
@@ -256,6 +262,27 @@ msgstr "Alternativa: solo se usa si el proxy está desactivado o no sirve tesela
 
 msgid "The address the map tiles are loaded from."
 msgstr "La dirección desde la que se cargan las teselas del mapa."
+
+msgid "Pre-cache tiles"
+msgstr "Precargar teselas"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d de %2$d teselas para los mapas de %3$d entradas están guardadas en tu servidor."
+
+msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
+msgstr "La precarga se está ejecutando en segundo plano: %1$d teselas solicitadas, %2$d guardadas hasta ahora."
+
+msgid "Last run: %1$d tiles requested, %2$d stored."
+msgstr "Última ejecución: %1$d teselas solicitadas, %2$d guardadas."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Precargar las teselas que faltan"
+
+msgid "Pre-cache the tiles of a post when it is saved."
+msgstr "Precargar las teselas de una entrada al guardarla."
+
+msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Solicita a través del proxy las teselas de la primera vista del mapa de cada entrada, para que el primer visitante no tenga que esperar. Las teselas a las que se llega moviendo o ampliando un mapa se siguen cargando bajo demanda."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

@@ -158,6 +158,12 @@ msgstr "Shortcode"
 msgid "Geolocation Plugin Settings"
 msgstr "Configurações do plugin Geolocation"
 
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "O pré-carregamento dos blocos foi iniciado em segundo plano."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Não foi possível iniciar o pré-carregamento dos blocos."
+
 msgid "Dimensions"
 msgstr "Dimensões"
 
@@ -256,6 +262,27 @@ msgstr "Alternativa: usada apenas se o proxy estiver desativado ou não entregar
 
 msgid "The address the map tiles are loaded from."
 msgstr "O endereço de onde os blocos do mapa são carregados."
+
+msgid "Pre-cache tiles"
+msgstr "Pré-carregar blocos"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d de %2$d blocos para os mapas de %3$d posts estão armazenados no seu servidor."
+
+msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
+msgstr "O pré-carregamento está em execução em segundo plano: %1$d blocos solicitados, %2$d armazenados até agora."
+
+msgid "Last run: %1$d tiles requested, %2$d stored."
+msgstr "Última execução: %1$d blocos solicitados, %2$d armazenados."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Pré-carregar os blocos ausentes"
+
+msgid "Pre-cache the tiles of a post when it is saved."
+msgstr "Pré-carregar os blocos de um post quando ele for salvo."
+
+msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Solicita pelo proxy os blocos da primeira visualização do mapa de cada post, para que o primeiro visitante não precise esperar. Os blocos alcançados ao mover ou ampliar um mapa continuam sendo carregados sob demanda."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

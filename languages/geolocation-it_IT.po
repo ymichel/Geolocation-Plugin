@@ -158,6 +158,12 @@ msgstr "Shortcode"
 msgid "Geolocation Plugin Settings"
 msgstr "Impostazioni del plugin Geolocation"
 
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "Il precaricamento dei tile è stato avviato in background."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Non è stato possibile avviare il precaricamento dei tile."
+
 msgid "Dimensions"
 msgstr "Dimensioni"
 
@@ -256,6 +262,27 @@ msgstr "Riserva: usato solo se il proxy è disattivato o non fornisce i tile."
 
 msgid "The address the map tiles are loaded from."
 msgstr "L’indirizzo da cui vengono caricati i tile della mappa."
+
+msgid "Pre-cache tiles"
+msgstr "Precarica i tile"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d di %2$d tile per le mappe di %3$d articoli sono salvati sul tuo server."
+
+msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
+msgstr "Il precaricamento è in corso in background: %1$d tile richiesti, %2$d salvati finora."
+
+msgid "Last run: %1$d tiles requested, %2$d stored."
+msgstr "Ultima esecuzione: %1$d tile richiesti, %2$d salvati."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Precarica i tile mancanti"
+
+msgid "Pre-cache the tiles of a post when it is saved."
+msgstr "Precarica i tile di un articolo quando viene salvato."
+
+msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Richiede tramite il proxy i tile della prima vista della mappa di ogni articolo, così il primo visitatore non deve aspettare. I tile raggiunti spostando o ingrandendo una mappa vengono comunque caricati su richiesta."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

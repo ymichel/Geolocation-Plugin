@@ -158,6 +158,12 @@ msgstr "Shortcode"
 msgid "Geolocation Plugin Settings"
 msgstr "Instellingen van de Geolocation-plugin"
 
+msgid "Pre-caching the tiles has been started in the background."
+msgstr "Het vooraf laden van de tegels is op de achtergrond gestart."
+
+msgid "Pre-caching the tiles could not be started."
+msgstr "Het vooraf laden van de tegels kon niet worden gestart."
+
 msgid "Dimensions"
 msgstr "Afmetingen"
 
@@ -256,6 +262,27 @@ msgstr "Terugval: wordt alleen gebruikt als de proxy is uitgeschakeld of geen te
 
 msgid "The address the map tiles are loaded from."
 msgstr "Het adres waarvandaan de kaarttegels worden geladen."
+
+msgid "Pre-cache tiles"
+msgstr "Tegels vooraf laden"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
+msgstr "%1$d van %2$d tegels voor de kaarten van %3$d berichten zijn op je server opgeslagen."
+
+msgid "Pre-caching is running in the background: %1$d tiles requested, %2$d stored so far."
+msgstr "Het vooraf laden loopt op de achtergrond: tot nu toe %1$d tegels opgevraagd, %2$d opgeslagen."
+
+msgid "Last run: %1$d tiles requested, %2$d stored."
+msgstr "Laatste run: %1$d tegels opgevraagd, %2$d opgeslagen."
+
+msgid "Pre-cache the missing tiles"
+msgstr "Ontbrekende tegels vooraf laden"
+
+msgid "Pre-cache the tiles of a post when it is saved."
+msgstr "De tegels van een bericht vooraf laden wanneer het wordt opgeslagen."
+
+msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Vraagt via de proxy de tegels van de eerste weergave van de kaart van elk bericht op, zodat de eerste bezoeker niet hoeft te wachten. Tegels die worden bereikt door een kaart te verplaatsen of te zoomen, worden nog steeds op aanvraag geladen."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"
