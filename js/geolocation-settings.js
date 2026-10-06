@@ -191,4 +191,16 @@
 			} );
 		}, 5000 );
 	} );
+
+	// Pre-caching belongs to the proxy: its row follows the checkbox "Use Proxy" at once, before the settings are saved.
+	ready( function () {
+		var proxy = document.getElementById( 'geolocation_osm_use_proxy' );
+		var row   = document.getElementById( 'geolocation-precache-row' );
+		if ( ! proxy || ! row ) {
+			return;
+		}
+		proxy.addEventListener( 'change', function () {
+			row.style.display = proxy.checked ? '' : 'none';
+		} );
+	} );
 }() );

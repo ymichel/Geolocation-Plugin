@@ -395,17 +395,8 @@ msgstr "Ausblenden"
 msgid "Pre-cache tiles"
 msgstr "Kacheln vorab laden"
 
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d von %2$d Kacheln f&uuml;r die Karten von %3$d Beitr&auml;gen liegen auf deinem Server."
-
 msgid "Pre-cache the missing tiles"
 msgstr "Fehlende Kacheln vorab laden"
-
-msgid "Pre-cache the tiles of a post when it is saved."
-msgstr "Kacheln eines Beitrags beim Speichern vorab laden."
-
-msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
-msgstr "Fordert die Kacheln der ersten Ansicht der Karte jedes Beitrags &uuml;ber den Proxy an, damit der erste Besucher nicht warten muss. Kacheln, die durch Verschieben oder Zoomen einer Karte erreicht werden, werden weiterhin bei Bedarf geladen."
 
 msgid "Pre-caching the tiles has been started in the background."
 msgstr "Das Vorab-Laden der Kacheln wurde im Hintergrund gestartet."
@@ -415,9 +406,6 @@ msgstr "Das Vorab-Laden der Kacheln konnte nicht gestartet werden."
 
 msgid "Pre-caching is running in the background."
 msgstr "Das Vorab-Laden l&auml;uft im Hintergrund."
-
-msgid "Post %1$d of %2$d: %3$s"
-msgstr "Beitrag %1$d von %2$d: %3$s"
 
 msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
 msgstr "Kacheln: %1$d angefordert, %2$d gespeichert, %3$d fehlgeschlagen."
@@ -439,3 +427,18 @@ msgstr "Einige Kacheln konnten nicht gespeichert werden. Entweder kann der Serve
 
 msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
 msgstr "Seit einigen Minuten ist nichts passiert. M&ouml;glicherweise laufen die Hintergrundaufgaben von WordPress (WP-Cron) auf dieser Website nicht."
+
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Schritt %1$d von %2$d: %3$s"
+
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d von %2$d Kacheln f&uuml;r die Karten von %3$d Seiten und Beitr&auml;gen liegen auf deinem Server."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Fordert die Kacheln der ersten Ansicht jeder Karte &uuml;ber den Proxy an: die Karten deiner Beitr&auml;ge und die &Uuml;bersichtskarten. Der erste Besucher muss dann nicht warten. Kacheln, die durch Verschieben oder Zoomen einer Karte erreicht werden, werden weiterhin bei Bedarf geladen."
+
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "Kacheln beim Speichern einer Seite oder eines Beitrags vorab laden."
+
+msgid "Save the settings to pre-cache tiles."
+msgstr "Speichere die Einstellungen, um Kacheln vorab zu laden."

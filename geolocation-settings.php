@@ -54,7 +54,7 @@ function geolocation_get_settings_definition() {
 		'geolocation_track_profile'        => array( 'string', 'geolocation_sanitize_switch', null ),
 		'geolocation_osm_use_proxy'        => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_osm_strict_privacy'   => array( 'string', 'sanitize_text_field', null ),
-		'geolocation_osm_precache_on_save' => array( 'string', 'geolocation_sanitize_switch', null ),
+		'geolocation_osm_precache_on_save' => array( 'string', 'geolocation_sanitize_precache_switch', null ),
 		'geolocation_osm_tiles_url'        => array( 'string', 'sanitize_text_field', 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' ),
 		'geolocation_osm_nominatim_url'    => array( 'string', 'geolocation_sanitize_url', 'https://nominatim.openstreetmap.org/' ),
 	);
@@ -116,6 +116,21 @@ function geolocation_sanitize_display( $value ) {
  */
 function geolocation_sanitize_switch( $value ) {
 	return '0' === (string) $value || '' === (string) $value ? '0' : '1';
+}
+
+/**
+ * Store the switch for pre-caching on save, which is not part of the settings form while pre-caching is not possible.
+ *
+ * A missing field then must not switch it off.
+ *
+ * @param mixed $value The submitted value, null if the field has not been submitted.
+ * @return string
+ */
+function geolocation_sanitize_precache_switch( $value ) {
+	if ( null === $value ) {
+		return '0' === (string) get_option( 'geolocation_osm_precache_on_save' ) ? '0' : '1';
+	}
+	return geolocation_sanitize_switch( $value );
 }
 
 /**

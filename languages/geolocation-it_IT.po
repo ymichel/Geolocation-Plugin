@@ -110,8 +110,8 @@ msgstr "Nessun articolo con una posizione visibile corrisponde a queste impostaz
 msgid "Pre-caching is running in the background."
 msgstr "Il precaricamento è in corso in background."
 
-msgid "Post %1$d of %2$d: %3$s"
-msgstr "Articolo %1$d di %2$d: %3$s"
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Passo %1$d di %2$d: %3$s"
 
 msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
 msgstr "Tile: %1$d richiesti, %2$d salvati, %3$d non riusciti."
@@ -125,8 +125,8 @@ msgstr "Da alcuni minuti non è successo nulla. È possibile che le attività in
 msgid "Cancel"
 msgstr "Annulla"
 
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d di %2$d tile per le mappe di %3$d articoli sono salvati sul tuo server."
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d di %2$d tile per le mappe di %3$d pagine e articoli sono salvati sul tuo server."
 
 msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
 msgstr "Ultima esecuzione (%1$s): %2$d tile richiesti, %3$d salvati, %4$d non riusciti."
@@ -299,11 +299,14 @@ msgstr "L’indirizzo da cui vengono caricati i tile della mappa."
 msgid "Pre-cache tiles"
 msgstr "Precarica i tile"
 
-msgid "Pre-cache the tiles of a post when it is saved."
-msgstr "Precarica i tile di un articolo quando viene salvato."
+msgid "Save the settings to pre-cache tiles."
+msgstr "Salva le impostazioni per precaricare i tile."
 
-msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
-msgstr "Richiede tramite il proxy i tile della prima vista della mappa di ogni articolo, così il primo visitatore non deve aspettare. I tile raggiunti spostando o ingrandendo una mappa vengono comunque caricati su richiesta."
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "Precarica i tile quando una pagina o un articolo viene salvato."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Richiede tramite il proxy i tile della prima vista di ogni mappa: le mappe dei tuoi articoli e le mappe panoramiche. Così il primo visitatore non deve aspettare. I tile raggiunti spostando o ingrandendo una mappa vengono comunque caricati su richiesta."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

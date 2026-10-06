@@ -712,6 +712,14 @@ class GeolocationTest extends TestCase {
 		$this->assertTrue( geolocation_precache_on_save() );
 		$GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] = '0';
 		$this->assertFalse( geolocation_precache_on_save() );
+		// A settings form without the field keeps the switch: off stays off, anything else is on.
+		$this->assertSame( '0', geolocation_sanitize_precache_switch( null ) );
+		$this->assertSame( '1', geolocation_sanitize_precache_switch( '1' ) );
+		$this->assertSame( '0', geolocation_sanitize_precache_switch( '0' ) );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] );
+		$this->assertSame( '1', geolocation_sanitize_precache_switch( null ) );
+		$GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] = '1';
+		$this->assertSame( '1', geolocation_sanitize_precache_switch( null ) );
 		unset( $GLOBALS['geolocation_test_options']['geolocation_osm_precache_on_save'] );
 	}
 }

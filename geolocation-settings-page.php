@@ -275,20 +275,28 @@ function geolocation_settings_page() {
 								</p>
 							</td>
 						</tr>
-						<?php if ( '' !== geolocation_precache_tiles_url() ) : ?>
-							<tr>
+						<?php if ( '' !== geolocation_precache_proxy_url() ) : ?>
+							<?php // Shown and hidden with the checkbox "Use Proxy" by the script of this page. ?>
+							<tr id="geolocation-precache-row" style="<?php echo $osm_use_proxy ? '' : 'display:none;'; ?>">
 								<th><?php esc_html_e( 'Pre-cache tiles', 'geolocation' ); ?></th>
 								<td>
-									<?php // The status is refreshed by the script of this page while a run is in progress. ?>
-									<div id="geolocation-precache-status" data-url="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php?action=geolocation_precache_status' ), 'geolocation_precache' ) ); ?>" data-running="<?php echo geolocation_precache_is_running() ? '1' : '0'; ?>">
-										<?php echo geolocation_precache_status_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the function. ?>
-									</div>
+									<?php if ( '' !== geolocation_precache_tiles_url() ) : ?>
+										<?php // The status is refreshed by the script of this page while a run is in progress. ?>
+										<div id="geolocation-precache-status" data-url="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php?action=geolocation_precache_status' ), 'geolocation_precache' ) ); ?>" data-running="<?php echo geolocation_precache_is_running() ? '1' : '0'; ?>">
+											<?php echo geolocation_precache_status_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by the function. ?>
+										</div>
+									<?php else : ?>
+										<p id="geolocation-precache-hint"><?php esc_html_e( 'Save the settings to pre-cache tiles.', 'geolocation' ); ?></p>
+									<?php endif; ?>
 									<input type="hidden" name="geolocation_osm_precache_on_save" value="0" />
 									<input type="checkbox" id="geolocation_osm_precache_on_save" name="geolocation_osm_precache_on_save" value="1" <?php checked( geolocation_precache_on_save() ); ?>>
-									<label for="geolocation_osm_precache_on_save"><?php esc_html_e( 'Pre-cache the tiles of a post when it is saved.', 'geolocation' ); ?></label>
-									<p class="description"><?php esc_html_e( 'Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand.', 'geolocation' ); ?></p>
+									<label for="geolocation_osm_precache_on_save"><?php esc_html_e( 'Pre-cache the tiles when a page or post is saved.', 'geolocation' ); ?></label>
+									<p class="description"><?php esc_html_e( 'Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand.', 'geolocation' ); ?></p>
 								</td>
 							</tr>
+						<?php else : ?>
+							<?php // Pre-caching is not possible at the moment: keep its switch as it is. ?>
+							<input type="hidden" name="geolocation_osm_precache_on_save" value="<?php echo geolocation_precache_on_save() ? '1' : '0'; ?>" />
 						<?php endif; ?>
 						<tr>
 							<th><?php esc_html_e( 'Leaflet JS', 'geolocation' ); ?></th>

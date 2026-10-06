@@ -110,8 +110,8 @@ msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellinge
 msgid "Pre-caching is running in the background."
 msgstr "Het vooraf laden loopt op de achtergrond."
 
-msgid "Post %1$d of %2$d: %3$s"
-msgstr "Bericht %1$d van %2$d: %3$s"
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Stap %1$d van %2$d: %3$s"
 
 msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
 msgstr "Tegels: %1$d opgevraagd, %2$d opgeslagen, %3$d mislukt."
@@ -125,8 +125,8 @@ msgstr "Er is al een paar minuten niets gebeurd. Mogelijk draaien de achtergrond
 msgid "Cancel"
 msgstr "Annuleren"
 
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d van %2$d tegels voor de kaarten van %3$d berichten zijn op je server opgeslagen."
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d van %2$d tegels voor de kaarten van %3$d pagina’s en berichten zijn op je server opgeslagen."
 
 msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
 msgstr "Laatste run (%1$s): %2$d tegels opgevraagd, %3$d opgeslagen, %4$d mislukt."
@@ -299,11 +299,14 @@ msgstr "Het adres waarvandaan de kaarttegels worden geladen."
 msgid "Pre-cache tiles"
 msgstr "Tegels vooraf laden"
 
-msgid "Pre-cache the tiles of a post when it is saved."
-msgstr "De tegels van een bericht vooraf laden wanneer het wordt opgeslagen."
+msgid "Save the settings to pre-cache tiles."
+msgstr "Sla de instellingen op om tegels vooraf te laden."
 
-msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
-msgstr "Vraagt via de proxy de tegels van de eerste weergave van de kaart van elk bericht op, zodat de eerste bezoeker niet hoeft te wachten. Tegels die worden bereikt door een kaart te verplaatsen of te zoomen, worden nog steeds op aanvraag geladen."
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "De tegels vooraf laden wanneer een pagina of bericht wordt opgeslagen."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Vraagt via de proxy de tegels van de eerste weergave van elke kaart op: de kaarten van je berichten en de overzichtskaarten. De eerste bezoeker hoeft dan niet te wachten. Tegels die worden bereikt door een kaart te verplaatsen of te zoomen, worden nog steeds op aanvraag geladen."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"

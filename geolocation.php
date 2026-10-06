@@ -50,6 +50,7 @@ add_action( 'geolocation_update_addresses_batch', 'geolocation_update_addresses_
 add_action( 'geolocation_precache_batch', 'geolocation_precache_batch' );
 add_action( 'geolocation_precache_post', 'geolocation_precache_post' );
 add_action( 'save_post_post', 'geolocation_precache_saved_post', 20 );
+add_action( 'save_post_page', 'geolocation_precache_saved_post', 20 );
 add_action( 'admin_post_geolocation_precache', 'geolocation_precache_request' );
 add_action( 'wp_ajax_geolocation_precache_status', 'geolocation_precache_status_request' );
 add_filter( 'the_content', 'geolocation_display_location', 5 );

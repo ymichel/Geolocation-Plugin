@@ -110,8 +110,8 @@ msgstr "Nenhum post com localização visível corresponde a estas configuraçõ
 msgid "Pre-caching is running in the background."
 msgstr "O pré-carregamento está em execução em segundo plano."
 
-msgid "Post %1$d of %2$d: %3$s"
-msgstr "Post %1$d de %2$d: %3$s"
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Etapa %1$d de %2$d: %3$s"
 
 msgid "Tiles: %1$d requested, %2$d stored, %3$d failed."
 msgstr "Blocos: %1$d solicitados, %2$d armazenados, %3$d com falha."
@@ -125,8 +125,8 @@ msgstr "Nada aconteceu nos últimos minutos. As tarefas em segundo plano do Word
 msgid "Cancel"
 msgstr "Cancelar"
 
-msgid "%1$d of %2$d tiles for the maps of %3$d posts are stored on your server."
-msgstr "%1$d de %2$d blocos para os mapas de %3$d posts estão armazenados no seu servidor."
+msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
+msgstr "%1$d de %2$d blocos para os mapas de %3$d páginas e posts estão armazenados no seu servidor."
 
 msgid "Last run (%1$s): %2$d tiles requested, %3$d stored, %4$d failed."
 msgstr "Última execução (%1$s): %2$d blocos solicitados, %3$d armazenados, %4$d com falha."
@@ -299,11 +299,14 @@ msgstr "O endereço de onde os blocos do mapa são carregados."
 msgid "Pre-cache tiles"
 msgstr "Pré-carregar blocos"
 
-msgid "Pre-cache the tiles of a post when it is saved."
-msgstr "Pré-carregar os blocos de um post quando ele for salvo."
+msgid "Save the settings to pre-cache tiles."
+msgstr "Salve as configurações para pré-carregar blocos."
 
-msgid "Requests the tiles of the first view of the map of every post through the proxy, so the first visitor does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
-msgstr "Solicita pelo proxy os blocos da primeira visualização do mapa de cada post, para que o primeiro visitante não precise esperar. Os blocos alcançados ao mover ou ampliar um mapa continuam sendo carregados sob demanda."
+msgid "Pre-cache the tiles when a page or post is saved."
+msgstr "Pré-carregar os blocos ao salvar uma página ou um post."
+
+msgid "Requests the tiles of the first view of every map through the proxy: the maps of your posts and the overview maps. The first visitor then does not have to wait. Tiles reached by moving or zooming a map are still fetched on demand."
+msgstr "Solicita pelo proxy os blocos da primeira visualização de cada mapa: os mapas dos seus posts e os mapas gerais. Assim o primeiro visitante não precisa esperar. Os blocos alcançados ao mover ou ampliar um mapa continuam sendo carregados sob demanda."
 
 msgid "Leaflet JS"
 msgstr "Leaflet JS"
