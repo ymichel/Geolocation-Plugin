@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.15.0
+Stable tag: 1.15.1
 
 Put your posts on the map: locations, routes and GPX tracks with OpenStreetMap or Google Maps. Privacy-friendly and made for travel blogs.
 
@@ -30,6 +30,7 @@ Made for travel blogs, and for everyone who wants to show where a story happened
 The plugin uses OpenStreetMap by default and delivers the map library itself. Together with the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/ "proxy plugin for OSM") the map tiles come from your own server, so the browsers of your visitors do not connect to an external map server.
 
 * The **strict privacy mode** only shows maps if the tiles are delivered by the proxy. Otherwise visitors see the location as text.
+* The strict privacy mode also covers the admin area: without the proxy the post editor and the settings page show no map, and addresses are looked up through your own server instead of by the browser of the author.
 * The display mode **plain text** never loads a map for your visitors.
 * Without the proxy, or with Google Maps, the tiles are loaded directly from the map service.
 * With the proxy, the settings page can **pre-cache the tiles** of your maps, so the first visitor does not have to wait for them. It covers the first view of the map of every post and of every overview map, and works in small steps in the background; the tiles are also pre-cached automatically when a page or post is saved, unless you switch that off.
@@ -106,6 +107,9 @@ With the position setting "Not automatically" a location is only shown in posts 
 10. The track of a GPX file on an overview map, enabled by the shortcode attribute route="1"
 
 == Changelog ==
+
+= 1.15.1 =
+* the strict privacy mode also covers the admin area: without the proxy the post editor and the settings page show no map, and addresses are looked up through your own server.
 
 = 1.15.0 =
 * new: with the OSM tiles proxy plugin the tiles of your maps can be pre-cached from the settings page, so the first visitor does not have to wait for them. This covers the maps of the posts and the overview maps.

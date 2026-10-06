@@ -39,7 +39,8 @@
 
 		function request( path, onSuccess ) {
 			var xhr = new XMLHttpRequest();
-			xhr.open( 'GET', data.nominatimUrl + path, true );
+			// In strict privacy mode the request goes to this site, which asks the geocoding service.
+			xhr.open( 'GET', data.geocodeUrl ? data.geocodeUrl + '&path=' + encodeURIComponent( path ) : data.nominatimUrl + path, true );
 			xhr.onload = function () {
 				if ( this.status >= 200 && this.status < 400 ) {
 					var result = null;
@@ -110,9 +111,12 @@
 
 		map    = L.map( ui.els.map ).setView( defaultCenter, data.zoom );
 		marker = L.marker( defaultCenter, markerOptions ).addTo( map );
-		L.tileLayer( data.tilesUrl, {
-			attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-		} ).addTo( map );
+		// Without tiles (strict privacy mode without the proxy) the map stays hidden; the location is set by its address.
+		if ( ! data.mapBlocked ) {
+			L.tileLayer( data.tilesUrl, {
+				attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+			} ).addTo( map );
+		}
 
 		map.on( 'click', function ( event ) {
 			if ( ui.isEnabled() ) {

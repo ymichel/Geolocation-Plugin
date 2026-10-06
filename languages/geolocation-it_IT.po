@@ -188,6 +188,9 @@ msgstr "In un articolo, il blocco \"Posizione dell’articolo\" mostra la sua po
 msgid "Shortcode"
 msgstr "Shortcode"
 
+msgid "No preview: in strict privacy mode maps need the proxy."
+msgstr "Nessuna anteprima: nella modalità privacy rigorosa le mappe richiedono il proxy."
+
 msgid "Geolocation Plugin Settings"
 msgstr "Impostazioni del plugin Geolocation"
 
@@ -284,6 +287,9 @@ msgstr "Mostra le mappe solo se i tile sono forniti dal plugin proxy."
 msgid "If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers."
 msgstr "Se il proxy non è disponibile, viene mostrato solo il testo della posizione e i browser dei tuoi visitatori non si collegano a server di mappe esterni."
 
+msgid "This also applies to the editor and to this page: without the proxy they show no map, and addresses are looked up through your server."
+msgstr "Questo vale anche per l’editor e per questa pagina: senza il proxy non mostrano alcuna mappa e gli indirizzi vengono cercati tramite il tuo server."
+
 msgid "Without the proxy this mode shows only the location text, no maps."
 msgstr "Senza il proxy questa modalità mostra solo il testo della posizione, nessuna mappa."
 
@@ -370,6 +376,9 @@ msgstr "La mia posizione"
 
 msgid "Remove location"
 msgstr "Rimuovi posizione"
+
+msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
+msgstr "Modalità privacy rigorosa: non viene mostrata alcuna mappa perché il proxy non fornisce i tile. Imposta la posizione tramite l’indirizzo."
 
 msgid "Public"
 msgstr "Pubblico"

@@ -445,3 +445,12 @@ msgstr "Speichere die Einstellungen, um Kacheln vorab zu laden."
 
 msgid "Without the proxy this mode shows only the location text, no maps."
 msgstr "Ohne den Proxy zeigt dieser Modus nur den Standorttext, keine Karten."
+
+msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
+msgstr "Strikter Datenschutz-Modus: Es wird keine Karte angezeigt, weil der Proxy keine Kacheln liefert. Lege den Ort &uuml;ber seine Adresse fest."
+
+msgid "This also applies to the editor and to this page: without the proxy they show no map, and addresses are looked up through your server."
+msgstr "Das gilt auch f&uuml;r den Editor und f&uuml;r diese Seite: Ohne den Proxy zeigen sie keine Karte, und Adressen werden &uuml;ber deinen Server abgefragt."
+
+msgid "No preview: in strict privacy mode maps need the proxy."
+msgstr "Keine Vorschau: Im strikten Datenschutz-Modus brauchen Karten den Proxy."

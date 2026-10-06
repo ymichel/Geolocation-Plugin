@@ -93,6 +93,13 @@ function geolocation_settings_page() {
 		geolocation_update_addresses();
 	}
 
+	// The address the proxy plugin offers, whether it is used at the moment or not.
+	$proxy_offer_url = '';
+	if ( is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) ) {
+		$proxy_offer_url = geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_url' );
+		$proxy_offer_url = '' !== $proxy_offer_url ? $proxy_offer_url : geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_rest_url' );
+	}
+
 	wp_enqueue_style( 'osm_leaflet_css', geolocation_get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
 	wp_enqueue_script( 'osm_leaflet_js', geolocation_get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, true );
 	wp_enqueue_script( 'geolocation_settings', plugins_url( 'js/geolocation-settings.js', __FILE__ ), array( 'osm_leaflet_js' ), GEOLOCATION__VERSION, true );
@@ -102,15 +109,22 @@ function geolocation_settings_page() {
 			array_merge(
 				geolocation_get_map_settings(),
 				array(
-					'provider' => $provider,
-					'tilesUrl' => geolocation_get_osm_tiles_url(),
+					'provider'      => $provider,
+					'tilesUrl'      => geolocation_get_osm_tiles_url(),
+					// The address the proxy offers, so the preview can follow the checkbox "Use Proxy" before saving.
+					'proxyTilesUrl' => $proxy_offer_url,
+					'blockedText'   => geolocation_block_text( __( 'No preview: in strict privacy mode maps need the proxy.', 'geolocation' ) ),
 				)
 			)
 		) . ';',
 		'before'
 	);
-	// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- external API without a version.
-	wp_enqueue_script( 'google_maps_api', geolocation_get_google_maps_api_url(), array( 'geolocation_settings' ), null, true );
+	// In strict privacy mode with OpenStreetMap the browser does not connect to Google either;
+	// a preview with Google Maps is available after that provider has been saved.
+	if ( ! geolocation_strict_privacy() ) {
+		// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- external API without a version.
+		wp_enqueue_script( 'google_maps_api', geolocation_get_google_maps_api_url(), array( 'geolocation_settings' ), null, true );
+	}
 	?>
 	<style type="text/css">
 		#preload { display: none; }
@@ -253,10 +267,10 @@ function geolocation_settings_page() {
 							<td>
 								<input type="checkbox" id="geolocation_osm_strict_privacy" name="geolocation_osm_strict_privacy" value="1" <?php checked( $osm_strict_privacy ); ?>>
 								<label for="geolocation_osm_strict_privacy"><?php esc_html_e( 'Only show maps if the tiles are delivered by the proxy plugin.', 'geolocation' ); ?></label>
-								<p class="description"><?php esc_html_e( 'If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers.', 'geolocation' ); ?></p>
+								<p class="description"><?php esc_html_e( 'If the proxy is not available, only the location text is shown and the browsers of your visitors do not connect to external map servers.', 'geolocation' ); ?> <?php esc_html_e( 'This also applies to the editor and to this page: without the proxy they show no map, and addresses are looked up through your server.', 'geolocation' ); ?></p>
 								<?php
 								// Whether the proxy plugin delivers tiles once it is used. The hint follows both checkboxes at once.
-								$osm_proxy_delivers = is_plugin_active( 'osm-tiles-proxy/osm-tiles-proxy.php' ) && ( '' !== geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_url' ) || '' !== geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_rest_url' ) );
+								$osm_proxy_delivers = '' !== $proxy_offer_url;
 								?>
 								<p id="geolocation-strict-hint" data-proxy="<?php echo $osm_proxy_delivers ? '1' : '0'; ?>" style="<?php echo $osm_strict_privacy && ! ( $osm_use_proxy && $osm_proxy_delivers ) ? '' : 'display:none;'; ?>"><strong><?php esc_html_e( 'Without the proxy this mode shows only the location text, no maps.', 'geolocation' ); ?></strong></p>
 							</td>
@@ -265,13 +279,8 @@ function geolocation_settings_page() {
 							<th><label for="geolocation_osm_tiles_url"><?php esc_html_e( 'Tiles url', 'geolocation' ); ?></label></th>
 							<td>
 								<?php
-								// The address the proxy plugin offers, whether it is used at the moment or not.
-								$osm_proxy_offer_url = '';
-								if ( $osm_proxy_delivers ) {
-									$osm_proxy_offer_url = geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_url' );
-									$osm_proxy_offer_url = '' !== $osm_proxy_offer_url ? $osm_proxy_offer_url : geolocation_osm_proxy_url( 'osm_tiles_proxy_get_proxy_rest_url' );
-								}
-								$osm_proxy_in_use = $osm_use_proxy && '' !== $osm_proxy_offer_url;
+								$osm_proxy_offer_url = $proxy_offer_url;
+								$osm_proxy_in_use    = $osm_use_proxy && '' !== $osm_proxy_offer_url;
 								?>
 								<?php // Both texts follow the checkbox "Use Proxy" at once, through the script of this page. ?>
 								<?php if ( '' !== $osm_proxy_offer_url ) : ?>
