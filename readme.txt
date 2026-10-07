@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.15.1
+Stable tag: 1.16.0
 
 Put your posts on the map: locations, routes and GPX tracks with OpenStreetMap or Google Maps. Privacy-friendly and made for travel blogs.
 
@@ -22,7 +22,7 @@ Made for travel blogs, and for everyone who wants to show where a story happened
 * **Routes and GPX tracks** – connect the posts of a trip in the order they were published, and show the recorded track of a hike or a bike tour with its length, ascent, descent and elevation profile.
 * **Blocks and shortcode** – two blocks with a live preview for the block editor, and a shortcode with attributes for everything else.
 * **Privacy by design** – OpenStreetMap by default, map tiles from your own server, a strict mode that falls back to text, and GPX files that never leave your computer.
-* **Your choice of maps** – OpenStreetMap or Google Maps.
+* **Your choice of maps** – OpenStreetMap or Google Maps, with an optional link that opens a location in the full map service.
 * **Translated** – English, German, Spanish, French, Italian, Portuguese (Brazil) and Dutch.
 
 = Privacy =
@@ -33,6 +33,7 @@ The plugin uses OpenStreetMap by default and delivers the map library itself. To
 * The strict privacy mode also covers the admin area: without the proxy the post editor and the settings page show no map, and addresses are looked up through your own server instead of by the browser of the author.
 * The display mode **plain text** never loads a map for your visitors.
 * Without the proxy, or with Google Maps, the tiles are loaded directly from the map service.
+* The optional link to the external map requests nothing from the map service until a visitor follows it, and it does not tell the service which page the visitor comes from. A notice can be shown before the visitor leaves your website; in strict privacy mode it always is.
 * With the proxy, the settings page can **pre-cache the tiles** of your maps, so the first visitor does not have to wait for them. It covers the first view of the map of every post and of every overview map, and works in small steps in the background; the tiles are also pre-cached automatically when a page or post is saved, unless you switch that off.
 
 = Locations from your photos =
@@ -107,6 +108,11 @@ With the position setting "Not automatically" a location is only shown in posts 
 10. The track of a GPX file on an overview map, enabled by the shortcode attribute route="1"
 
 == Changelog ==
+
+= 1.16.0 =
+* new: an optional link opens the location of a post in OpenStreetMap or Google Maps, depending on the selected provider.
+* new: a notice can be shown before a visitor follows that link and leaves your website; in strict privacy mode it is always shown.
+* fix: on narrow screens the map of a post is no longer wider than the screen with block themes.
 
 = 1.15.1 =
 * the strict privacy mode also covers the admin area: without the proxy the post editor and the settings page show no map, and addresses are looked up through your own server.

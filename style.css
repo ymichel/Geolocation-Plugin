@@ -72,6 +72,72 @@
     margin-top: 4px;
 }
 
+/* Link which opens a location in an external map, and the notice shown before. */
+.geolocation-map-link-box {
+    margin-top: 4px;
+    font-size: 0.8em;
+}
+
+.geolocation-map-link[hidden] {
+    display: none;
+}
+
+.geolocation-map-link-icon {
+    display: inline-block;
+    width: auto;
+    height: 1.3em;
+    margin: 0 0.35em 0 0;
+    vertical-align: -0.25em;
+}
+
+.geolocation-map-link-notice {
+    max-width: min(26em, calc(100vw - 2em));
+    padding: 1.25em;
+    border: 1px solid #999;
+    border-radius: 6px;
+    background: #fff;
+    color: #1e1e1e;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.geolocation-map-link-notice::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.geolocation-map-link-notice p {
+    margin: 0 0 0.75em;
+}
+
+.geolocation-map-link-notice-title {
+    font-weight: 600;
+}
+
+.geolocation-map-link-notice-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    justify-content: flex-end;
+    margin-top: 1em;
+}
+
+.geolocation-map-link-notice-buttons button,
+.geolocation-map-link-notice-open {
+    padding: 0.4em 0.9em;
+    border: 1px solid #1e1e1e;
+    border-radius: 4px;
+    background: #fff;
+    color: #1e1e1e;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.geolocation-map-link-notice-open {
+    background: #1e1e1e;
+    color: #fff;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     #map {

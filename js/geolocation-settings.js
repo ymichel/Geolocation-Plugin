@@ -271,4 +271,34 @@
 			proxy.addEventListener( 'change', update );
 		}
 	} );
+
+	// In strict privacy mode (OpenStreetMap) the notice before leaving the website is always shown.
+	ready( function () {
+		var strict   = document.getElementById( 'geolocation_osm_strict_privacy' );
+		var notice   = document.getElementById( 'geolocation_map_link_notice' );
+		var forced   = document.getElementById( 'geolocation-map-link-forced' );
+		var kept     = document.getElementById( 'geolocation_map_link_notice_kept' );
+		var provider = document.getElementById( 'geolocation_provider' );
+		if ( ! strict || ! notice || ! forced || ! kept || ! provider ) {
+			return;
+		}
+		// What the site owner chose while the notice was not forced.
+		var chosen = notice.getAttribute( 'data-saved' ) === '1';
+		notice.addEventListener( 'change', function () {
+			if ( ! notice.disabled ) {
+				chosen = notice.checked;
+			}
+		} );
+		function update() {
+			var force            = strict.checked && provider.value === 'osm';
+			notice.disabled      = force;
+			notice.checked       = force ? true : chosen;
+			forced.style.display = force ? '' : 'none';
+			// A disabled checkbox is not submitted, so the hidden field carries the choice meanwhile.
+			kept.disabled = ! force;
+			kept.value    = chosen ? '1' : '';
+		}
+		strict.addEventListener( 'change', update );
+		provider.addEventListener( 'change', update );
+	} );
 }() );
