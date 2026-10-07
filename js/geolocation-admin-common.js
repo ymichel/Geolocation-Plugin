@@ -352,6 +352,9 @@
 	window.geolocationAdminCommon = {
 		ready: ready,
 		init: init,
-		parseGpx: parseGpx
+		parseGpx: parseGpx,
+		distance: distance,
+		simplify: simplify,
+		describeElevation: describeElevation
 	};
 }() );

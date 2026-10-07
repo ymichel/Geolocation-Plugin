@@ -54,6 +54,8 @@ In the block editor you can insert the block "Geolocation Map" instead of typing
 
 In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The editor shows a preview of the saved location. The automatic output before or after the post is omitted for posts using the block.
 
+With the position setting "Not automatically" a location is only shown in posts containing the block or the shortcode. Such a post still appears on overview maps if its location is enabled and public.
+
 ## Link to the external map
 
 With the setting "External map" a post shows a link "Open in OpenStreetMap" or "Open in Google Maps" below its location, depending on the map provider. It is switched off by default.
@@ -62,4 +64,18 @@ With the setting "External map" a post shows a link "Open in OpenStreetMap" or "
 - A notice can be shown before the visitor leaves your website. In strict privacy mode it is always shown; without JavaScript the link is then not shown at all.
 - The block "Post Location" can show or hide the link for a single post.
 
-With the position setting "Not automatically" a location is only shown in posts containing the block or the shortcode. Such a post still appears on overview maps if its location is enabled and public.
+## Development
+
+The checks which run for every pull request can be run locally:
+
+```bash
+composer install
+composer lint   # WordPress coding standard for PHP
+composer test   # PHPUnit
+
+npm ci
+npm run lint    # ESLint for the plugin's own scripts
+npm test        # unit tests for the scripts, with the test runner of Node.js (version 22 or newer)
+```
+
+The scripts in `js/` are delivered as they are; there is no build step. `package.json` and `node_modules` are development tools only and not part of the released plugin.

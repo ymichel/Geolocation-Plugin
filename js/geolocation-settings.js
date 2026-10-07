@@ -278,8 +278,8 @@
 		var notice   = document.getElementById( 'geolocation_map_link_notice' );
 		var forced   = document.getElementById( 'geolocation-map-link-forced' );
 		var kept     = document.getElementById( 'geolocation_map_link_notice_kept' );
-		var provider = document.getElementById( 'geolocation_provider' );
-		if ( ! strict || ! notice || ! forced || ! kept || ! provider ) {
+		var select   = document.getElementById( 'geolocation_provider' );
+		if ( ! strict || ! notice || ! forced || ! kept || ! select ) {
 			return;
 		}
 		// What the site owner chose while the notice was not forced.
@@ -290,7 +290,7 @@
 			}
 		} );
 		function update() {
-			var force            = strict.checked && provider.value === 'osm';
+			var force            = strict.checked && select.value === 'osm';
 			notice.disabled      = force;
 			notice.checked       = force ? true : chosen;
 			forced.style.display = force ? '' : 'none';
@@ -299,6 +299,6 @@
 			kept.value    = chosen ? '1' : '';
 		}
 		strict.addEventListener( 'change', update );
-		provider.addEventListener( 'change', update );
+		select.addEventListener( 'change', update );
 	} );
 }() );

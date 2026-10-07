@@ -2,7 +2,7 @@
 /**
  * OSM
  *
- * This is the provider specific pool for the provider "open streetmaps (osm)".
+ * Provider-specific code for OpenStreetMap.
  *
  * @category Components
  * @package geolocation
@@ -55,28 +55,34 @@ function geolocation_enqueue_front_osm() {
 	if ( wp_script_is( 'geolocation_front_osm', 'enqueued' ) ) {
 		return;
 	}
+	// Leaflet is not enqueued: the script loads it once a map is needed, clustering only for overview maps.
 	$data = array_merge(
 		geolocation_get_map_settings(),
-		array( 'tilesUrl' => geolocation_get_osm_tiles_url() )
+		array(
+			'tilesUrl' => geolocation_get_osm_tiles_url(),
+			'library'  => array(
+				'styles'         => array( geolocation_versioned_url( geolocation_get_osm_leaflet_css_url(), GEOLOCATION__VERSION ) ),
+				'scripts'        => array( geolocation_versioned_url( geolocation_get_osm_leaflet_js_url(), GEOLOCATION__VERSION ) ),
+				'clusterStyles'  => array(
+					geolocation_versioned_url( plugins_url( 'js/MarkerCluster.css', __FILE__ ), '1.5.3' ),
+					geolocation_versioned_url( plugins_url( 'js/MarkerCluster.Default.css', __FILE__ ), '1.5.3' ),
+				),
+				'clusterScripts' => array( geolocation_versioned_url( plugins_url( 'js/leaflet.markercluster.js', __FILE__ ), '1.5.3' ) ),
+			),
+		)
 	);
 	wp_enqueue_style( 'geolocation_css', plugins_url( 'style.css', __FILE__ ), array(), GEOLOCATION__VERSION, 'all' );
-	wp_enqueue_style( 'osm_leaflet_css', geolocation_get_osm_leaflet_css_url(), array(), GEOLOCATION__VERSION, 'all' );
-	wp_enqueue_script( 'osm_leaflet_js', geolocation_get_osm_leaflet_js_url(), array(), GEOLOCATION__VERSION, true );
 	wp_enqueue_script( 'geolocation_front_common', plugins_url( 'js/geolocation-front-common.js', __FILE__ ), array(), GEOLOCATION__VERSION, true );
 	wp_add_inline_script( 'geolocation_front_common', 'var geolocationFront = ' . wp_json_encode( $data ) . ';', 'before' );
-	wp_enqueue_script( 'geolocation_front_osm', plugins_url( 'js/geolocation-front-osm.js', __FILE__ ), array( 'osm_leaflet_js', 'geolocation_front_common' ), GEOLOCATION__VERSION, true );
-	// Only enqueued for the overview map of a page.
-	wp_register_script( 'geolocation_markercluster', plugins_url( 'js/leaflet.markercluster.js', __FILE__ ), array( 'osm_leaflet_js' ), '1.5.3', true );
-	wp_register_style( 'geolocation_markercluster_base', plugins_url( 'js/MarkerCluster.css', __FILE__ ), array(), '1.5.3', 'all' );
-	wp_register_style( 'geolocation_markercluster', plugins_url( 'js/MarkerCluster.Default.css', __FILE__ ), array( 'geolocation_markercluster_base' ), '1.5.3', 'all' );
+	wp_enqueue_script( 'geolocation_front_osm', plugins_url( 'js/geolocation-front-osm.js', __FILE__ ), array( 'geolocation_front_common' ), GEOLOCATION__VERSION, true );
 }
 
 /**
- * Pull the JSON for the given geoinformation.
+ * Ask Nominatim for the address of a position.
  *
- * @param [type] $latitude The Latitude.
- * @param [type] $longitude The Longitude.
- * @return mixed
+ * @param string $latitude The latitude.
+ * @param string $longitude The longitude.
+ * @return array The decoded answer, or an empty array if the request failed.
  */
 function geolocation_pull_json_osm( $latitude, $longitude ) {
 	$url  = geolocation_get_osm_nominatim_url() . '/reverse';
@@ -196,7 +202,7 @@ function geolocation_get_osm_leaflet_css_url() {
 }
 
 /**
- * Get the OpenStreetmaps Nominatim URL to be used.
+ * Get the OpenStreetMap Nominatim URL to be used.
  *
  * @return string
  */
