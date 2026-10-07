@@ -738,4 +738,52 @@ class GeolocationTest extends TestCase {
 		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '';
 		$this->assertFalse( geolocation_strict_privacy() );
 	}
+
+	/**
+	 * The link to an external map points to the map service of the provider.
+	 *
+	 * @return void
+	 */
+	public function test_external_map_url() {
+		$this->assertSame( 'https://www.openstreetmap.org/?mlat=53.5511&mlon=9.9937#map=16/53.5511/9.9937', geolocation_get_external_map_url( 'osm', '53.5511', '9.9937', 16 ) );
+		$this->assertSame( 'https://www.google.com/maps/search/?api=1&query=53.5511%2C9.9937', geolocation_get_external_map_url( 'google', 53.5511, 9.9937 ) );
+		// Negative and whole numbers, long fractions and zoom levels out of range.
+		$this->assertSame( 'https://www.openstreetmap.org/?mlat=-33.8688197&mlon=151#map=19/-33.8688197/151', geolocation_get_external_map_url( 'osm', '-33.86881970001', '151.0', 99 ) );
+		$this->assertSame( 'https://www.openstreetmap.org/?mlat=0&mlon=0#map=1/0/0', geolocation_get_external_map_url( 'osm', 'abc', '', 0 ) );
+		// Anything which is not a number cannot get into the address.
+		$this->assertSame( 'https://www.google.com/maps/search/?api=1&query=0%2C12', geolocation_get_external_map_url( 'google', '"><script>', '12&x=1' ) );
+		// An unknown provider is treated as OpenStreetMap.
+		$this->assertStringStartsWith( 'https://www.openstreetmap.org/', geolocation_get_external_map_url( 'other', 1, 2 ) );
+	}
+
+	/**
+	 * The link is off by default; a block can overrule the setting. Strict privacy mode forces the notice.
+	 *
+	 * @return void
+	 */
+	public function test_map_link_switches() {
+		unset( $GLOBALS['geolocation_test_options']['geolocation_map_link'], $GLOBALS['geolocation_test_options']['geolocation_map_link_notice'] );
+		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'osm';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '';
+		$this->assertFalse( geolocation_map_link_shows() );
+		$this->assertTrue( geolocation_map_link_shows( 'show' ) );
+		$this->assertFalse( geolocation_map_link_notice() );
+
+		$GLOBALS['geolocation_test_options']['geolocation_map_link'] = '1';
+		$this->assertTrue( geolocation_map_link_shows() );
+		$this->assertFalse( geolocation_map_link_shows( 'hide' ) );
+
+		$GLOBALS['geolocation_test_options']['geolocation_map_link_notice'] = '1';
+		$this->assertTrue( geolocation_map_link_notice() );
+		$GLOBALS['geolocation_test_options']['geolocation_map_link_notice']    = '';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '1';
+		$this->assertTrue( geolocation_map_link_notice() );
+		// The strict privacy mode only exists with OpenStreetMap.
+		$GLOBALS['geolocation_test_options']['geolocation_provider'] = 'google';
+		$this->assertFalse( geolocation_map_link_notice() );
+
+		unset( $GLOBALS['geolocation_test_options']['geolocation_map_link'], $GLOBALS['geolocation_test_options']['geolocation_map_link_notice'] );
+		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'osm';
+		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '';
+	}
 }

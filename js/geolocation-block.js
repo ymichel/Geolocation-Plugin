@@ -257,6 +257,17 @@
 					},
 					__next40pxDefaultSize: true,
 					__nextHasNoMarginBottom: true
+				} ),
+				el( 'div', { style: { height: '16px' } } ),
+				el( components.SelectControl, {
+					label: i18n.mapLink,
+					value: attributes.link,
+					options: choices,
+					onChange: function ( value ) {
+						set( { link: value } );
+					},
+					__next40pxDefaultSize: true,
+					__nextHasNoMarginBottom: true
 				} )
 			),
 			el( components.PanelBody, { title: i18n.tracks, initialOpen: false },

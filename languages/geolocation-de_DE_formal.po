@@ -454,3 +454,33 @@ msgstr "Das gilt auch f&uuml;r den Editor und f&uuml;r diese Seite: Ohne den Pro
 
 msgid "No preview: in strict privacy mode maps need the proxy."
 msgstr "Keine Vorschau: Im strikten Datenschutz-Modus brauchen Karten den Proxy."
+
+msgid "Open in %s"
+msgstr "In %s &ouml;ffnen"
+
+msgid "You are leaving this website"
+msgstr "Sie verlassen diese Website"
+
+msgid "The map opens on %s. That service receives your IP address."
+msgstr "Die Karte &ouml;ffnet sich auf %s. Dieser Dienst erh&auml;lt dabei Ihre IP-Adresse."
+
+msgid "Open map"
+msgstr "Karte &ouml;ffnen"
+
+msgid "External map"
+msgstr "Externe Karte"
+
+msgid "Show a link which opens the location in OpenStreetMap or Google Maps."
+msgstr "Einen Link anzeigen, der den Ort in OpenStreetMap oder Google Maps &ouml;ffnet."
+
+msgid "Show a notice before the visitor leaves your website."
+msgstr "Einen Hinweis anzeigen, bevor der Besucher Ihre Website verl&auml;sst."
+
+msgid "Always on in strict privacy mode."
+msgstr "Im strikten Datenschutz-Modus immer an."
+
+msgid "Nothing is requested from the map service until a visitor follows the link."
+msgstr "Beim Kartendienst wird nichts abgerufen, bis ein Besucher dem Link folgt."
+
+msgid "Link to the external map"
+msgstr "Link zur externen Karte"

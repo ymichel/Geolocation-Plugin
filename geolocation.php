@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.15.1
+ * Version: 1.16.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.15.1' );
+define( 'GEOLOCATION__VERSION', '1.16.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -64,6 +64,7 @@ require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-settings.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-block.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-track.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-precache.php';
+require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-link.php';
 // To do: add support for multiple Map API providers.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':
@@ -464,7 +465,8 @@ function geolocation_get_geo_div( $id = null, $position = '', $track = array(), 
 	$height = esc_attr( (string) ( $height >= 50 ? (int) $height : get_option( 'geolocation_map_height' ) ) );
 	$data   = '' === $position ? '' : ' data-geolocation="' . esc_attr( (string) $position ) . '"';
 	$data  .= empty( $track ) ? '' : ' data-track="' . esc_attr( wp_json_encode( $track ) ) . '"';
-	return '<div id="map' . esc_attr( (string) $id ) . '" class="geolocation-map"' . $data . ' style="width:' . $width . 'px;height:' . $height . 'px;"></div>';
+	// The limit is set here, because block themes overrule the one of the stylesheet.
+	return '<div id="map' . esc_attr( (string) $id ) . '" class="geolocation-map"' . $data . ' style="width:' . $width . 'px;max-width:100%;height:' . $height . 'px;"></div>';
 }
 
 /**
@@ -851,7 +853,8 @@ function geolocation_replace_shortcode( $content, $replacement ) {
  * @param string  $display How the location is shown: "plain", "link" or "map"; empty for the setting.
  * @param int     $width The width of the map in pixels, 0 for the width of the settings.
  * @param int     $height The height of the map in pixels, 0 for the height of the settings.
- * @param array   $track "figures" and "profile": "show" or "hide" to overrule the settings for the track details.
+ * @param array   $track "figures", "profile" and "link": "show" or "hide" to overrule the settings for the track details
+ *                        and the link to the external map.
  * @return string The HTML, or an empty string if the location may not be shown.
  */
 function geolocation_get_location_html( $post, $display = '', $width = 0, $height = 0, $track = array() ) {
@@ -876,6 +879,8 @@ function geolocation_get_location_html( $post, $display = '', $width = 0, $heigh
 	$figures   = geolocation_track_shows( 'figures', isset( $track['figures'] ) ? (string) $track['figures'] : '' );
 	$profile   = geolocation_track_shows( 'profile', isset( $track['profile'] ) ? (string) $track['profile'] : '' );
 	$map_width = $width >= 50 ? (int) $width : (int) get_option( 'geolocation_map_width' );
+	// The link which opens the location in the map service of the provider, if it is switched on.
+	$show_link = geolocation_map_link_shows( isset( $track['link'] ) ? (string) $track['link'] : '' );
 	$posted_at = esc_html__( 'Posted from ', 'geolocation' ) . esc_html( $address );
 	if ( ! in_array( $display, array( 'plain', 'link', 'map' ), true ) ) {
 		$display = (string) get_option( 'geolocation_map_display' );
@@ -886,17 +891,17 @@ function geolocation_get_location_html( $post, $display = '', $width = 0, $heigh
 	}
 	switch ( $display ) {
 		case 'plain':
-			$html = '<div class="geolocation-plain" id="geolocation' . $post->ID . '">' . $posted_at . '.</div>' . geolocation_get_track_details( $post->ID, $figures );
+			$html = '<div class="geolocation-plain" id="geolocation' . $post->ID . '">' . $posted_at . '.</div>' . ( $show_link ? geolocation_get_map_link( $latitude, $longitude ) : '' ) . geolocation_get_track_details( $post->ID, $figures );
 			wp_enqueue_style( 'geolocation_css', plugins_url( 'style.css', __FILE__ ), array(), GEOLOCATION__VERSION, 'all' );
 			break;
 		case 'link':
-			$html = '<div><a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" data-geolocation="' . esc_attr( $latitude . ',' . $longitude ) . '" onclick="return false;">' . $posted_at . '.</a></div>' . geolocation_get_track_details( $post->ID, $figures );
+			$html = '<div><a class="geolocation-link" href="#" id="geolocation' . $post->ID . '" data-geolocation="' . esc_attr( $latitude . ',' . $longitude ) . '" onclick="return false;">' . $posted_at . '.</a></div>' . ( $show_link ? geolocation_get_map_link( $latitude, $longitude ) : '' ) . geolocation_get_track_details( $post->ID, $figures );
 			// The popup map shown while hovering a location link.
 			add_action( 'wp_footer', 'geolocation_add_geo_div' );
 			geolocation_enqueue_front();
 			break;
 		case 'map':
-			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude, geolocation_get_track( $post->ID ), $width, $height ) . geolocation_get_track_details( $post->ID, $figures, $profile, $map_width );
+			$html = '<div class="geolocation-link" id="geolocation' . $post->ID . '">' . $posted_at . ':</div>' . geolocation_get_geo_div( $post->ID, $latitude . ',' . $longitude, geolocation_get_track( $post->ID ), $width, $height ) . ( $show_link ? geolocation_get_map_link( $latitude, $longitude, $map_width ) : '' ) . geolocation_get_track_details( $post->ID, $figures, $profile, $map_width );
 			geolocation_enqueue_front();
 			break;
 		case 'debug':

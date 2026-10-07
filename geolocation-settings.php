@@ -43,6 +43,8 @@ function geolocation_get_settings_definition() {
 		'geolocation_map_position'         => array( 'string', 'geolocation_sanitize_position', 'after' ),
 		'geolocation_map_display'          => array( 'string', 'geolocation_sanitize_display', 'map' ),
 		'geolocation_wp_pin'               => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_map_link'             => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_map_link_notice'      => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_google_maps_api_key'  => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_updateAddresses'      => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_map_width_page'       => array( 'integer', 'absint', '600' ),

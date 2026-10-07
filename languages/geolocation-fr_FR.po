@@ -32,6 +32,9 @@ msgstr "Chiffres clés de la trace"
 msgid "Elevation profile"
 msgstr "Profil altimétrique"
 
+msgid "Link to the external map"
+msgstr "Lien vers la carte externe"
+
 msgid "Show"
 msgstr "Afficher"
 
@@ -107,6 +110,21 @@ msgstr "Cet article n’a pas encore de lieu à afficher. Définissez-le dans la
 msgid "No post with a visible location matches these settings."
 msgstr "Aucun article ayant un lieu visible ne correspond à ces réglages."
 
+msgid "Open in %s"
+msgstr "Ouvrir dans %s"
+
+msgid "You are leaving this website"
+msgstr "Vous quittez ce site"
+
+msgid "The map opens on %s. That service receives your IP address."
+msgstr "La carte s’ouvre sur %s. Ce service reçoit votre adresse IP."
+
+msgid "Open map"
+msgstr "Ouvrir la carte"
+
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Pre-caching is running in the background."
 msgstr "Le préchargement est en cours en arrière-plan."
 
@@ -121,9 +139,6 @@ msgstr "Démarré à %1$s, encore environ %2$s."
 
 msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
 msgstr "Il ne s’est rien passé depuis quelques minutes. Les tâches d’arrière-plan de WordPress (WP-Cron) ne s’exécutent peut-être pas sur ce site."
-
-msgid "Cancel"
-msgstr "Annuler"
 
 msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
 msgstr "%1$d tuiles sur %2$d pour les cartes de %3$d pages et articles sont stockées sur votre serveur."
@@ -223,6 +238,21 @@ msgstr "Tous les attributs sont expliqués sous « Aide », en haut à droite 
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Comment souhaitez-vous afficher votre géolocalisation ?"
+
+msgid "External map"
+msgstr "Carte externe"
+
+msgid "Show a link which opens the location in OpenStreetMap or Google Maps."
+msgstr "Afficher un lien qui ouvre le lieu dans OpenStreetMap ou Google Maps."
+
+msgid "Show a notice before the visitor leaves your website."
+msgstr "Afficher un avertissement avant que le visiteur ne quitte votre site."
+
+msgid "Always on in strict privacy mode."
+msgstr "Toujours activé en mode de confidentialité stricte."
+
+msgid "Nothing is requested from the map service until a visitor follows the link."
+msgstr "Rien n’est demandé au service de cartographie tant qu’un visiteur ne suit pas le lien."
 
 msgid "Default Zoom Level"
 msgstr "Niveau de zoom par défaut"

@@ -183,6 +183,20 @@ function geolocation_settings_page() {
 				</td>
 			</tr>
 			<tr>
+				<th scope="row"><?php esc_html_e( 'External map', 'geolocation' ); ?></th>
+				<td>
+					<input type="checkbox" id="geolocation_map_link" name="geolocation_map_link" value="1" <?php checked( (bool) get_option( 'geolocation_map_link' ) ); ?>>
+					<label for="geolocation_map_link"><?php esc_html_e( 'Show a link which opens the location in OpenStreetMap or Google Maps.', 'geolocation' ); ?></label><br />
+					<?php // In strict privacy mode the notice is always shown; the script of this page follows that checkbox at once. ?>
+					<?php // While the checkbox is disabled it is not submitted: this field then keeps what has been chosen before. ?>
+					<input type="hidden" id="geolocation_map_link_notice_kept" name="geolocation_map_link_notice" value="<?php echo get_option( 'geolocation_map_link_notice' ) ? '1' : ''; ?>" <?php disabled( ! geolocation_strict_privacy() ); ?> />
+					<input type="checkbox" id="geolocation_map_link_notice" name="geolocation_map_link_notice" value="1" data-saved="<?php echo get_option( 'geolocation_map_link_notice' ) ? '1' : '0'; ?>" <?php checked( geolocation_map_link_notice() ); ?> <?php disabled( geolocation_strict_privacy() ); ?>>
+					<label for="geolocation_map_link_notice"><?php esc_html_e( 'Show a notice before the visitor leaves your website.', 'geolocation' ); ?></label>
+					<span id="geolocation-map-link-forced" class="description" style="<?php echo geolocation_strict_privacy() ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Always on in strict privacy mode.', 'geolocation' ); ?></span>
+					<p class="description"><?php esc_html_e( 'Nothing is requested from the map service until a visitor follows the link.', 'geolocation' ); ?></p>
+				</td>
+			</tr>
+			<tr>
 				<th scope="row"><?php esc_html_e( 'Default Zoom Level', 'geolocation' ); ?></th>
 				<td class="zoom">
 					<?php

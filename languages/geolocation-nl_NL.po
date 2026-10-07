@@ -32,6 +32,9 @@ msgstr "Kerncijfers van de track"
 msgid "Elevation profile"
 msgstr "Hoogteprofiel"
 
+msgid "Link to the external map"
+msgstr "Link naar de externe kaart"
+
 msgid "Show"
 msgstr "Tonen"
 
@@ -107,6 +110,21 @@ msgstr "Dit bericht heeft nog geen locatie om te tonen. Stel die in het Geolocat
 msgid "No post with a visible location matches these settings."
 msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellingen."
 
+msgid "Open in %s"
+msgstr "Openen in %s"
+
+msgid "You are leaving this website"
+msgstr "Je verlaat deze website"
+
+msgid "The map opens on %s. That service receives your IP address."
+msgstr "De kaart wordt geopend op %s. Die dienst ontvangt je IP-adres."
+
+msgid "Open map"
+msgstr "Kaart openen"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
 msgid "Pre-caching is running in the background."
 msgstr "Het vooraf laden loopt op de achtergrond."
 
@@ -121,9 +139,6 @@ msgstr "Gestart om %1$s, nog ongeveer %2$s."
 
 msgid "Nothing has happened for a few minutes. The background tasks of WordPress (WP-Cron) may not be running on this site."
 msgstr "Er is al een paar minuten niets gebeurd. Mogelijk draaien de achtergrondtaken van WordPress (WP-Cron) niet op deze site."
-
-msgid "Cancel"
-msgstr "Annuleren"
 
 msgid "%1$d of %2$d tiles for the maps of %3$d pages and posts are stored on your server."
 msgstr "%1$d van %2$d tegels voor de kaarten van %3$d pagina’s en berichten zijn op je server opgeslagen."
@@ -223,6 +238,21 @@ msgstr "Alle attributen worden uitgelegd onder \"Hulp\" rechtsboven op deze pagi
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Hoe wil je dat je geolocatie wordt weergegeven?"
+
+msgid "External map"
+msgstr "Externe kaart"
+
+msgid "Show a link which opens the location in OpenStreetMap or Google Maps."
+msgstr "Een link tonen die de locatie in OpenStreetMap of Google Maps opent."
+
+msgid "Show a notice before the visitor leaves your website."
+msgstr "Een melding tonen voordat de bezoeker je website verlaat."
+
+msgid "Always on in strict privacy mode."
+msgstr "Altijd aan in de strikte privacymodus."
+
+msgid "Nothing is requested from the map service until a visitor follows the link."
+msgstr "Er wordt niets bij de kaartdienst opgevraagd totdat een bezoeker de link volgt."
 
 msgid "Default Zoom Level"
 msgstr "Standaard zoomniveau"

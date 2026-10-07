@@ -107,6 +107,12 @@ function geolocation_register_block() {
 					'enum'    => array( '', 'show', 'hide' ),
 					'default' => '',
 				),
+				// The link to the external map: empty for the plugin setting, or "show" / "hide".
+				'link'    => array(
+					'type'    => 'string',
+					'enum'    => array( '', 'show', 'hide' ),
+					'default' => '',
+				),
 			),
 			'supports'        => array(
 				'html' => false,
@@ -157,6 +163,7 @@ function geolocation_get_block_data() {
 				'tracks'        => __( 'Tracks', 'geolocation' ),
 				'figures'       => __( 'Key figures of the track', 'geolocation' ),
 				'profile'       => __( 'Elevation profile', 'geolocation' ),
+				'mapLink'       => __( 'Link to the external map', 'geolocation' ),
 				'show'          => __( 'Show', 'geolocation' ),
 				'hide'          => __( 'Hide', 'geolocation' ),
 				'locationHelp'  => __( 'The location of this post is shown here, as set in the Geolocation box below the editor.', 'geolocation' ),
