@@ -1,0 +1,16 @@
+{
+  "name": "geolocation",
+  "private": true,
+  "description": "Development tools of the WordPress plugin Geolocation. Not part of the released plugin.",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "lint": "eslint js tests/js eslint.config.js",
+    "test": "node --test \"tests/js/*.test.js\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@xmldom/xmldom": "^0.9.12",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0"
+  }
+}

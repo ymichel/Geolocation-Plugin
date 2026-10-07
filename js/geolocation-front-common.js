@@ -146,7 +146,7 @@
 
 	// Read a list of positions from an attribute of an element; returns [ [ lat, lng ], ... ].
 	function parseTrack( el ) {
-		var track = [];
+		var track;
 		try {
 			track = JSON.parse( el.getAttribute( 'data-track' ) || '[]' );
 		} catch ( e ) {
@@ -306,14 +306,14 @@
 		var previousEnd = null;
 		sorted.forEach( function ( item ) {
 			var track = Array.isArray( item.track ) && item.track.length > 1 ? item.track : null;
-			var start = track ? track[0] : [ item.lat, item.lng ];
+			var first = track ? track[0] : [ item.lat, item.lng ];
 			if ( previousEnd ) {
-				lines.dashed.push( [ previousEnd, start ] );
+				lines.dashed.push( [ previousEnd, first ] );
 			}
 			if ( track ) {
 				lines.solid.push( track );
 			}
-			previousEnd = track ? track[ track.length - 1 ] : start;
+			previousEnd = track ? track[ track.length - 1 ] : first;
 		} );
 		return lines;
 	}
@@ -322,6 +322,8 @@
 		settings: settings,
 		ready: ready,
 		start: start,
+		parseLatLng: parseLatLng,
+		parseTrack: parseTrack,
 		forEachPostMap: forEachPostMap,
 		forEachPageMap: forEachPageMap,
 		initHoverMap: initHoverMap,

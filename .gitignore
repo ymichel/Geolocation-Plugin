@@ -4,3 +4,4 @@ composer.lock
 .phpunit.result.cache
 .claude/
 .DS_Store
+node_modules/

@@ -43,7 +43,7 @@
 			xhr.open( 'GET', data.geocodeUrl ? data.geocodeUrl + '&path=' + encodeURIComponent( path ) : data.nominatimUrl + path, true );
 			xhr.onload = function () {
 				if ( this.status >= 200 && this.status < 400 ) {
-					var result = null;
+					var result;
 					try {
 						result = JSON.parse( this.response );
 					} catch ( e ) {
@@ -67,10 +67,10 @@
 		}
 
 		// Move the marker to a position picked on the map, by dragging or by the browser's location.
-		function setLocation( lat, lng, recenter ) {
+		function setLocation( lat, lng, center ) {
 			ui.setPosition( lat, lng );
 			marker.setLatLng( [ lat, lng ] );
-			if ( recenter ) {
+			if ( center ) {
 				map.setView( marker.getLatLng(), Math.max( map.getZoom(), data.zoom ) );
 			}
 			reverseGeocode( lat, lng );
