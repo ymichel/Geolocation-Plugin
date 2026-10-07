@@ -65,7 +65,7 @@ require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-block.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-track.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-precache.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-link.php';
-// To do: add support for multiple Map API providers.
+// Only the code of the selected map provider is loaded.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':
 		require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-provider-google.php';
@@ -91,7 +91,7 @@ function geolocation_append_support_and_faq_links( $links_array, $plugin_file_na
 }
 
 /**
- * Append actions for cusstomizing/settigs of this plugin.
+ * Append the link to the settings page of this plugin.
  *
  * @param array $links_array The array to be extended.
  * @return array
@@ -311,7 +311,7 @@ function geolocation_get_posted_value( $key ) {
 /**
  * Save the post and derive geo metadata.
  *
- * @param [type] $post_id The posts id.
+ * @param int $post_id The id of the post.
  * @return int
  */
 function geolocation_save_postdata( $post_id ) {
@@ -379,7 +379,6 @@ function geolocation_admin_enqueue( $hook_suffix ) {
 	if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) || ! $post || 'post' !== $post->post_type ) {
 		return;
 	}
-	// To do: add support for multiple Map API providers.
 	switch ( get_option( 'geolocation_provider' ) ) {
 		case 'google':
 			geolocation_admin_enqueue_google( $post->ID );
@@ -450,7 +449,6 @@ function geolocation_get_admin_post_data( $post_id ) {
  * @return void
  */
 function geolocation_enqueue_front() {
-	// To do: add support for multiple Map API providers.
 	switch ( get_option( 'geolocation_provider' ) ) {
 		case 'google':
 			geolocation_enqueue_front_google();
@@ -462,7 +460,7 @@ function geolocation_enqueue_front() {
 }
 
 /**
- * Provide the DIV tage according to the definition and parameters.
+ * Build the DIV tag of a map.
  *
  * @param mixed  $id The suffix of the DIV's id, usually the post id.
  * @param string $position The location to be shown as "latitude,longitude", empty for the popup map.
@@ -664,10 +662,10 @@ function geolocation_page_debug( $category, $category_id, $candidates, $shown, $
 }
 
 /**
- * Dieplay all needed funcitons per page or post.
+ * Add the location to the content of a post, or the overview maps to the content of a page.
  *
- * @param [type] $content The content the location shall be displayed for.
- * @return mixed
+ * @param string $content The content the location shall be displayed for.
+ * @return string
  */
 function geolocation_display_location( $content ) {
 	if ( is_page() ) {
@@ -794,8 +792,8 @@ function geolocation_get_page_map( $atts, $result, $number, $map_id = '' ) {
 /**
  * Replace every shortcode inside a page by a map showing the locations of posts.
  *
- * @param [type] $content The content the functionality shall be provided for.
- * @return mixed
+ * @param string $content The content the functionality shall be provided for.
+ * @return string
  */
 function geolocation_display_location_page( $content ) {
 	$regex           = geolocation_shortcode_regex();
@@ -877,7 +875,7 @@ function geolocation_get_location_html( $post, $display = '', $width = 0, $heigh
 	$address = (string) get_post_meta( $post->ID, 'geo_address', true );
 	if ( '' === $address ) {
 		$address = geolocation_reverse_geocode( $latitude, $longitude );
-		// obviously was missing so add to post for future performance improvement.
+		// Store the address at the post, so it is not looked up again.
 		if ( '' !== $address ) {
 			update_post_meta( $post->ID, 'geo_address', wp_slash( $address ) );
 		}
@@ -1020,12 +1018,12 @@ function geolocation_update_addresses_batch( $offset = 0 ) {
 }
 
 /**
- * Build a stable address for the given attruibutes (to be later shown at the DIV).
+ * Build the address shown for a location from city, state and country, as far as they are known.
  *
- * @param [type] $city The name of the city of the location.
- * @param [type] $state The name of the state of the location.
- * @param [type] $country The name of the countr of the location.
- * @return mixed
+ * @param string $city The name of the city of the location.
+ * @param string $state The name of the state of the location.
+ * @param string $country The name of the country of the location.
+ * @return string
  */
 function geolocation_build_addresses( $city, $state, $country ) {
 	$city    = (string) $city;
@@ -1045,12 +1043,12 @@ function geolocation_build_addresses( $city, $state, $country ) {
 }
 
 /**
- * Reverse geocode the GPS data into readyble names.
+ * Look up the address of a position (reverse geocoding) with the selected map provider.
  *
- * @param [type] $latitude The Latitude of the location.
- * @param [type] $longitude The longitude of the location.
+ * @param string $latitude The latitude of the location.
+ * @param string $longitude The longitude of the location.
  * @param bool   $force Whether to bypass the cached result.
- * @return mixed
+ * @return string The address, or an empty string if the lookup failed.
  */
 function geolocation_reverse_geocode( $latitude, $longitude, $force = false ) {
 	$cache_key = 'geolocation_rg_' . md5( get_option( 'geolocation_provider' ) . '|' . geolocation_get_site_lang() . '|' . $latitude . ',' . $longitude );
@@ -1064,8 +1062,6 @@ function geolocation_reverse_geocode( $latitude, $longitude, $force = false ) {
 	$city    = '';
 	$state   = '';
 	$country = '';
-	//
-	// To do: add support for multiple Map API providers.
 	switch ( get_option( 'geolocation_provider' ) ) {
 		case 'google':
 			$json = geolocation_pull_json_google( $latitude, $longitude );

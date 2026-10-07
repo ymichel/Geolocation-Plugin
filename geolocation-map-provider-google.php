@@ -51,11 +51,11 @@ function geolocation_enqueue_front_google() {
 }
 
 /**
- * Pull the JSON for the given geoinformation.
+ * Ask the Google Geocoding API for the address of a position.
  *
- * @param float $latitude The Latitude.
- * @param float $longitude The Longitude.
- * @return mixed
+ * @param string $latitude The latitude.
+ * @param string $longitude The longitude.
+ * @return array The decoded answer, or an empty array if the request failed.
  */
 function geolocation_pull_json_google( $latitude, $longitude ) {
 	$args   = array(

@@ -157,7 +157,7 @@ function geolocation_unregister_settings() {
 }
 
 /**
- * Apply all default settings for this Plugin.
+ * Apply all default settings for this plugin.
  *
  * @return void
  */
@@ -175,7 +175,7 @@ function geolocation_default_settings() {
 }
 
 /**
- * Delete all settings stored for this Plugin.
+ * Delete all settings stored for this plugin.
  *
  * @return void
  */
@@ -238,7 +238,7 @@ function geolocation_delete_addresses() {
 }
 
 /**
- * Activate the PLugin and set defaults.
+ * Activate the plugin and set defaults.
  *
  * @return void
  */
@@ -247,7 +247,7 @@ function geolocation_activate() {
 }
 
 /**
- * Unregister this Plugin and clean up.
+ * Unregister this plugin and clean up.
  *
  * @return void
  */

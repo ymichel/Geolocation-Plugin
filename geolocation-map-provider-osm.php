@@ -2,7 +2,7 @@
 /**
  * OSM
  *
- * This is the provider specific pool for the provider "open streetmaps (osm)".
+ * Provider-specific code for OpenStreetMap.
  *
  * @category Components
  * @package geolocation
@@ -78,11 +78,11 @@ function geolocation_enqueue_front_osm() {
 }
 
 /**
- * Pull the JSON for the given geoinformation.
+ * Ask Nominatim for the address of a position.
  *
- * @param [type] $latitude The Latitude.
- * @param [type] $longitude The Longitude.
- * @return mixed
+ * @param string $latitude The latitude.
+ * @param string $longitude The longitude.
+ * @return array The decoded answer, or an empty array if the request failed.
  */
 function geolocation_pull_json_osm( $latitude, $longitude ) {
 	$url  = geolocation_get_osm_nominatim_url() . '/reverse';
@@ -202,7 +202,7 @@ function geolocation_get_osm_leaflet_css_url() {
 }
 
 /**
- * Get the OpenStreetmaps Nominatim URL to be used.
+ * Get the OpenStreetMap Nominatim URL to be used.
  *
  * @return string
  */
