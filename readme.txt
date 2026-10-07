@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.16.0
+Stable tag: 1.17.0
 
 Put your posts on the map: locations, routes and GPX tracks with OpenStreetMap or Google Maps. Privacy-friendly and made for travel blogs.
 
@@ -108,6 +108,10 @@ With the position setting "Not automatically" a location is only shown in posts 
 10. The track of a GPX file on an overview map, enabled by the shortcode attribute route="1"
 
 == Changelog ==
+
+= 1.17.0 =
+* performance: the map library (Leaflet or the Google Maps API) is only loaded once a map scrolls into view or a visitor points at a location link.
+* performance: fewer database queries on websites whose settings have not been saved since an update.
 
 = 1.16.0 =
 * new: an optional link opens the location of a post in OpenStreetMap or Google Maps, depending on the selected provider.

@@ -7,6 +7,12 @@
 	'use strict';
 
 	var settings = window.geolocationFront || {};
+	// The map library of the provider is only loaded once a map is needed.
+	var library      = settings.library || {};
+	var libraryState = 0;
+	var waiting      = [];
+	// The location link the visitor points at while the library is loading.
+	var pendingLink  = null;
 
 	function ready( fn ) {
 		if ( document.readyState !== 'loading' ) {
@@ -42,6 +48,100 @@
 			} );
 		}, { rootMargin: '200px' } );
 		observer.observe( el );
+	}
+
+	// Load the styles and scripts of the map library, then call fn(). They are requested only once.
+	function loadLibrary( fn ) {
+		if ( libraryState === 2 ) {
+			fn();
+			return;
+		}
+		waiting.push( fn );
+		if ( libraryState === 1 ) {
+			return;
+		}
+		libraryState = 1;
+
+		// Clustering is only needed for the overview map of a page.
+		var cluster = !! document.querySelector( '.geolocation-page-map' );
+		var styles  = ( library.styles || [] ).concat( cluster ? library.clusterStyles || [] : [] );
+		var scripts = ( library.scripts || [] ).concat( cluster ? library.clusterScripts || [] : [] );
+		var open    = styles.length + 1 + ( library.callback ? 1 : 0 );
+
+		function done() {
+			open -= 1;
+			if ( open > 0 ) {
+				return;
+			}
+			libraryState = 2;
+			waiting.splice( 0 ).forEach( function ( callback ) {
+				callback();
+			} );
+		}
+
+		// Scripts are loaded one after the other, as the later ones need the earlier ones.
+		function loadScript( index ) {
+			if ( index >= scripts.length ) {
+				done();
+				return;
+			}
+			var script     = document.createElement( 'script' );
+			script.src     = scripts[ index ];
+			script.onload  = function () {
+				loadScript( index + 1 );
+			};
+			script.onerror = script.onload;
+			document.head.appendChild( script );
+		}
+
+		styles.forEach( function ( href ) {
+			var link     = document.createElement( 'link' );
+			link.rel     = 'stylesheet';
+			link.href    = href;
+			link.onload  = done;
+			link.onerror = done;
+			document.head.appendChild( link );
+		} );
+		if ( library.callback ) {
+			// Google Maps reports by itself when it is ready.
+			window[ library.callback ] = done;
+		}
+		loadScript( 0 );
+	}
+
+	// The links which show the popup map while hovering (display mode "link").
+	function getHoverLinks() {
+		if ( ! document.getElementById( 'map' ) ) {
+			return [];
+		}
+		return Array.prototype.filter.call( document.querySelectorAll( '.geolocation-link' ), parseLatLng );
+	}
+
+	// Call init() once the map library is loaded. It is loaded when the first map is about to scroll
+	// into view or when the visitor points at a location link, so pages cost nothing until then.
+	function start( init ) {
+		var begun = false;
+		function begin() {
+			if ( ! begun ) {
+				begun = true;
+				loadLibrary( init );
+			}
+		}
+		document.querySelectorAll( '.geolocation-map' ).forEach( function ( el ) {
+			var markers = el.getAttribute( 'data-markers' );
+			if ( parseLatLng( el ) || ( markers && markers !== '[]' ) ) {
+				whenVisible( el, begin );
+			}
+		} );
+		getHoverLinks().forEach( function ( link ) {
+			link.addEventListener( 'mouseover', function () {
+				pendingLink = link;
+				begin();
+			} );
+			link.addEventListener( 'mouseout', function () {
+				pendingLink = null;
+			} );
+		} );
 	}
 
 	// Read a list of positions from an attribute of an element; returns [ [ lat, lng ], ... ].
@@ -91,7 +191,7 @@
 	// create( mapEl ) has to build the map and return a function show( latLng ).
 	function initHoverMap( create ) {
 		var mapEl = document.getElementById( 'map' );
-		var links = Array.prototype.filter.call( document.querySelectorAll( '.geolocation-link' ), parseLatLng );
+		var links = getHoverLinks();
 		if ( ! mapEl || ! links.length ) {
 			return;
 		}
@@ -111,19 +211,27 @@
 			}, 800 );
 		}
 
+		function open( link ) {
+			var rect = link.getBoundingClientRect();
+			show( parseLatLng( link ) );
+			mapEl.style.opacity    = 1;
+			mapEl.style.zIndex     = '99';
+			mapEl.style.visibility = 'visible';
+			mapEl.style.top        = ( rect.bottom + window.scrollY + 4 ) + 'px';
+			mapEl.style.left       = ( rect.left + window.scrollX ) + 'px';
+			allowDisappear         = false;
+		}
+
 		links.forEach( function ( link ) {
 			link.addEventListener( 'mouseover', function () {
-				var rect = link.getBoundingClientRect();
-				show( parseLatLng( link ) );
-				mapEl.style.opacity    = 1;
-				mapEl.style.zIndex     = '99';
-				mapEl.style.visibility = 'visible';
-				mapEl.style.top        = ( rect.bottom + window.scrollY + 4 ) + 'px';
-				mapEl.style.left       = ( rect.left + window.scrollX ) + 'px';
-				allowDisappear         = false;
+				open( link );
 			} );
 			link.addEventListener( 'mouseout', scheduleHide );
 		} );
+		// The visitor is still pointing at the link which made the library load.
+		if ( pendingLink ) {
+			open( pendingLink );
+		}
 
 		mapEl.addEventListener( 'mouseover', function () {
 			allowDisappear         = false;
@@ -213,6 +321,7 @@
 	window.geolocationFrontCommon = {
 		settings: settings,
 		ready: ready,
+		start: start,
 		forEachPostMap: forEachPostMap,
 		forEachPageMap: forEachPageMap,
 		initHoverMap: initHoverMap,

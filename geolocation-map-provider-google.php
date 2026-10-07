@@ -35,13 +35,19 @@ function geolocation_enqueue_front_google() {
 	}
 	wp_enqueue_style( 'geolocation_css', plugins_url( 'style.css', __FILE__ ), array(), GEOLOCATION__VERSION, 'all' );
 	wp_enqueue_script( 'geolocation_front_common', plugins_url( 'js/geolocation-front-common.js', __FILE__ ), array(), GEOLOCATION__VERSION, true );
-	wp_add_inline_script( 'geolocation_front_common', 'var geolocationFront = ' . wp_json_encode( geolocation_get_map_settings() ) . ';', 'before' );
+	// The Google Maps API is not enqueued: the script loads it once a map is needed, clustering only for overview maps.
+	$data = array_merge(
+		geolocation_get_map_settings(),
+		array(
+			'library' => array(
+				'scripts'        => array( geolocation_get_google_maps_api_url() ),
+				'callback'       => 'geolocationInitMap',
+				'clusterScripts' => array( geolocation_versioned_url( plugins_url( 'js/markerclusterer.min.js', __FILE__ ), '2.6.2' ) ),
+			),
+		)
+	);
+	wp_add_inline_script( 'geolocation_front_common', 'var geolocationFront = ' . wp_json_encode( $data ) . ';', 'before' );
 	wp_enqueue_script( 'geolocation_front_google', plugins_url( 'js/geolocation-front-google.js', __FILE__ ), array( 'geolocation_front_common' ), GEOLOCATION__VERSION, true );
-	// Only enqueued for the overview map of a page. Google Maps needs no extra style for clusters.
-	wp_register_script( 'geolocation_markercluster', plugins_url( 'js/markerclusterer.min.js', __FILE__ ), array(), '2.6.2', true );
-	wp_register_style( 'geolocation_markercluster', false, array(), '2.6.2' );
-	// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- external API without a version.
-	wp_enqueue_script( 'google_maps_api', geolocation_get_google_maps_api_url(), array( 'geolocation_front_google' ), null, true );
 }
 
 /**

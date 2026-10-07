@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.16.0
+ * Version: 1.17.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.16.0' );
+define( 'GEOLOCATION__VERSION', '1.17.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -388,6 +388,17 @@ function geolocation_admin_enqueue( $hook_suffix ) {
 			geolocation_admin_enqueue_osm( $post->ID );
 			break;
 	}
+}
+
+/**
+ * Add the version to the address of a script or style which is loaded by a script instead of WordPress.
+ *
+ * @param string $url The address of the file.
+ * @param string $version The version of the file.
+ * @return string
+ */
+function geolocation_versioned_url( $url, $version ) {
+	return add_query_arg( 'ver', rawurlencode( (string) $version ), (string) $url );
 }
 
 /**
@@ -766,9 +777,6 @@ function geolocation_get_page_map( $atts, $result, $number, $map_id = '' ) {
 		return '';
 	}
 	geolocation_enqueue_front();
-	// Markers lying close together are grouped on the overview map.
-	wp_enqueue_script( 'geolocation_markercluster' );
-	wp_enqueue_style( 'geolocation_markercluster' );
 
 	if ( '' === $map_id ) {
 		$map_id = 'google' === get_option( 'geolocation_provider' ) ? 'mymap' : 'mapid';

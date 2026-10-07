@@ -2,7 +2,7 @@
  * Geolocation: frontend maps using Google Maps.
  *
  * Requires geolocation-front-common.js.
- * The Google Maps API calls window.geolocationInitMap once it is loaded.
+ * The common script loads the Google Maps API once a map is needed.
  */
 ( function () {
 	'use strict';
@@ -56,8 +56,8 @@
 		};
 	}
 
-	window.geolocationInitMap = function () {
-		if ( ! common || typeof google === 'undefined' || ! google.maps ) {
+	function init() {
+		if ( typeof google === 'undefined' || ! google.maps ) {
 			return;
 		}
 
@@ -149,5 +149,11 @@
 				} );
 			}
 		} );
-	};
+	}
+
+	if ( common ) {
+		common.ready( function () {
+			common.start( init );
+		} );
+	}
 }() );

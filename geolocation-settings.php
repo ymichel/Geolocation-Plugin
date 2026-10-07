@@ -166,7 +166,11 @@ function geolocation_default_settings() {
 		if ( null !== $definition[2] && ! get_option( $name ) ) {
 			update_option( $name, $definition[2] );
 		}
+		// Every option has to exist: reading a missing one costs a database query on each page view.
+		// Switches are on by default; an empty value would be stored as switched off.
+		add_option( $name, in_array( $definition[1], array( 'geolocation_sanitize_switch', 'geolocation_sanitize_precache_switch' ), true ) ? '1' : '' );
 	}
+	add_option( 'geolocation_markers_version', '' );
 	update_option( 'geolocation_updateAddresses', false );
 }
 
