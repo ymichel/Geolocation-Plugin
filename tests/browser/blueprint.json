@@ -1,0 +1,16 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/",
+	"login": true,
+	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": { "resource": "wordpress.org/plugins", "slug": "osm-tiles-proxy" },
+			"options": { "activate": true }
+		},
+		{
+			"step": "activatePlugin",
+			"pluginPath": "geolocation/geolocation.php"
+		}
+	]
+}

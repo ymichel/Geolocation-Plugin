@@ -4,7 +4,6 @@
 /.github export-ignore
 /node_modules export-ignore
 /tests export-ignore
-/.claude export-ignore
 
 # Files
 /.gitattributes export-ignore

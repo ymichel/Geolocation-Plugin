@@ -78,4 +78,11 @@ npm run lint    # ESLint for the plugin's own scripts
 npm test        # unit tests for the scripts, with the test runner of Node.js (version 22 or newer)
 ```
 
+To try a change in a real WordPress, [tests/instructions.md](tests/instructions.md) describes how to start a local test instance with demo content and how to run the browser checks against it:
+
+```bash
+npm run wp:start   # WordPress Playground with this checkout as plugin, on http://127.0.0.1:9400
+npm run wp:seed    # demo content, in a second terminal
+```
+
 The scripts in `js/` are delivered as they are; there is no build step. `package.json` and `node_modules` are development tools only and not part of the released plugin.
