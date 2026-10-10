@@ -12,6 +12,7 @@
 .gitignore
 .gitattributes
 README.md
+AGENTS.md
 CHANGELOG.md
 composer.json
 package.json
