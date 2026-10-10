@@ -11,8 +11,8 @@
         }
     ],
     "scripts": {
-        "lint": "phpcs --standard=WordPress --extensions=php --ignore=vendor,tests,.claude,node_modules .",
-        "fix": "phpcbf --standard=WordPress --extensions=php --ignore=vendor,tests,.claude,node_modules .",
+        "lint": "phpcs --standard=WordPress --extensions=php \"--ignore=vendor,tests,node_modules,*/\\.[a-z]*/*\" .",
+        "fix": "phpcbf --standard=WordPress --extensions=php \"--ignore=vendor,tests,node_modules,*/\\.[a-z]*/*\" .",
         "test": "phpunit"
     },
     "require-dev": {

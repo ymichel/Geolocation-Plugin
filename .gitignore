@@ -2,6 +2,7 @@ vendor/
 composer.lock
 .vscode/extensions.json
 .phpunit.result.cache
-.claude/
 .DS_Store
 node_modules/
+tests/browser/.instance/
+tests/browser/out/

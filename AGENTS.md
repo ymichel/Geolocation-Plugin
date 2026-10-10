@@ -23,7 +23,7 @@ Guidance for AI coding agents working on the WordPress plugin "Geolocation". Peo
 | `geolocation-map-link.php` | Link to the external map and the notice before leaving |
 | `js/geolocation-*.js` | Own scripts. `js/leaflet*`, `js/markerclusterer.min.js`, `js/MarkerCluster*.css` are bundled libraries: never edit them |
 | `languages/` | `.po` and compiled `.mo` files for ten locales |
-| `tests/` | PHPUnit tests with stubbed WordPress functions; `tests/js/` unit tests for the scripts |
+| `tests/` | PHPUnit tests with stubbed WordPress functions; `tests/js/` unit tests for the scripts; `tests/browser/` checks against a real instance, see `tests/instructions.md` |
 
 ## Commands
 
@@ -61,11 +61,12 @@ All four checks run in CI for every pull request and have to pass.
 
 - Add a PHPUnit test for every pure function (calculation, sanitizing, formatting) and a test in `tests/js/` for calculating code in scripts. `tests/bootstrap.php` stubs the WordPress functions the tests need; add a stub there instead of loading WordPress.
 - Behaviour in the browser (maps, editor, settings screen) cannot be checked by these tests, which only stub WordPress.
+- For that there is a real instance: [tests/instructions.md](tests/instructions.md) describes how to start WordPress Playground with this checkout as plugin (`npm run wp:start`), fill it with demo content (`npm run wp:seed`) and run the browser checks in `tests/browser/`. Add or extend a check there when you change behaviour in the browser.
 
 ## Pull requests
 
 - **Every pull request has to contain proof of a successful test in a real instance:** a running WordPress with the plugin active (a local installation, WordPress Playground or a staging site), not the stubbed unit tests. Passing CI is not such proof.
-- Proof is a screenshot, or the output of a test run against the instance, which shows the changed behaviour working. Attach it to the description of the pull request and say which WordPress version, which map provider and which browser were used.
+- Proof is a screenshot, or the output of a check from `tests/browser/` run against the instance, which shows the changed behaviour working. Attach it to the description of the pull request and say which WordPress version, which map provider and which browser were used.
 - A change which touches maps is proven with OpenStreetMap and with Google Maps. Only the strict privacy mode is OpenStreetMap only.
 - Also list what was not tested. If no real instance is available, say so plainly and do not present the change as tested.
 - A change without visible behaviour (comments, development tools, documentation) needs no screenshot; state instead that the plugin still activates and shows a map in the instance.
