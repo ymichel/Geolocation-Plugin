@@ -113,6 +113,18 @@ function plugins_url( $path = '', $plugin = '' ) {
 	return 'https://example.org/wp-content/plugins/geolocation/' . ltrim( $path, '/' );
 }
 
+function wp_verify_nonce( $nonce, $action = -1 ) {
+	return 'valid' === $nonce && 'bulk-posts' === $action;
+}
+
+function wp_unslash( $value ) {
+	return $value;
+}
+
+function sanitize_text_field( $text ) {
+	return trim( (string) $text );
+}
+
 function __( $text, $domain = 'default' ) {
 	return $text;
 }

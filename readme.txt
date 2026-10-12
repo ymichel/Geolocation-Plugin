@@ -113,7 +113,7 @@ With the position setting "Not automatically" a location is only shown in posts 
 
 = 1.18.0 =
 * new: posts created by an app or through the API also get the location of their featured image; a setting decides whether such a location is public.
-* new: the list of posts shows the location of every post, and bulk actions publish the locations of several posts at once or take that back.
+* new: the list of posts shows the location of every post, and editing several posts at once can publish their locations or take that back.
 * fix: a location removed in the editor no longer comes back from the featured image when the post is saved again.
 
 = 1.17.0 =

@@ -500,11 +500,5 @@ msgstr "Ort"
 msgid "Not public"
 msgstr "Nicht &ouml;ffentlich"
 
-msgid "Publish location"
-msgstr "Ort ver&ouml;ffentlichen"
-
-msgid "Do not publish location"
-msgstr "Ort nicht ver&ouml;ffentlichen"
-
-msgid "Posts with a changed location: %d"
-msgstr "Beitr&auml;ge mit ge&auml;ndertem Ort: %d"
+msgid "No change"
+msgstr "Keine &Auml;nderung"

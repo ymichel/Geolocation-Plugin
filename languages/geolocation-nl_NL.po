@@ -122,14 +122,8 @@ msgstr "Openbaar"
 msgid "Not public"
 msgstr "Niet openbaar"
 
-msgid "Publish location"
-msgstr "Locatie publiceren"
-
-msgid "Do not publish location"
-msgstr "Locatie niet publiceren"
-
-msgid "Posts with a changed location: %d"
-msgstr "Berichten met gewijzigde locatie: %d"
+msgid "No change"
+msgstr "Geen wijziging"
 
 msgid "Open in %s"
 msgstr "Openen in %s"

@@ -2,7 +2,8 @@
 /**
  * Post list
  *
- * The list of posts in the admin area: a column showing the location and bulk actions to publish it.
+ * The list of posts in the admin area: a column showing the location, and a field which publishes the
+ * locations of several posts at once.
  *
  * @category Components
  * @package geolocation
@@ -50,15 +51,30 @@ function geolocation_list_column( $column, $post_id ) {
 }
 
 /**
- * Add the bulk actions which publish the locations of posts or take that back.
+ * Add the field "Location" to the form which edits several posts at once.
  *
- * @param array $actions The bulk actions of the list.
- * @return array
+ * @param string $column The name of the column the form is asked for.
+ * @param string $post_type The post type of the list.
+ * @return void
  */
-function geolocation_bulk_actions( $actions ) {
-	$actions['geolocation_public']     = __( 'Publish location', 'geolocation' );
-	$actions['geolocation_not_public'] = __( 'Do not publish location', 'geolocation' );
-	return $actions;
+function geolocation_bulk_edit_field( $column, $post_type ) {
+	if ( 'geolocation' !== $column || 'post' !== $post_type ) {
+		return;
+	}
+	?>
+	<fieldset class="inline-edit-col-right">
+		<div class="inline-edit-col">
+			<label class="inline-edit-group">
+				<span class="title"><?php esc_html_e( 'Location', 'geolocation' ); ?></span>
+				<select name="geolocation_public" id="geolocation-bulk-public">
+					<option value="">&mdash; <?php esc_html_e( 'No change', 'geolocation' ); ?> &mdash;</option>
+					<option value="1"><?php esc_html_e( 'Public', 'geolocation' ); ?></option>
+					<option value="0"><?php esc_html_e( 'Not public', 'geolocation' ); ?></option>
+				</select>
+			</label>
+		</div>
+	</fieldset>
+	<?php
 }
 
 /**
@@ -94,43 +110,21 @@ function geolocation_set_public( $post_ids, $is_public ) {
 }
 
 /**
- * Run the bulk actions of this plugin. WordPress has verified the nonce of the list before.
+ * Apply the field "Location" of the form which edits several posts at once.
  *
- * @param string $redirect The address the browser is sent to afterwards.
- * @param string $action The chosen bulk action.
- * @param array  $post_ids The ids of the selected posts.
- * @return string
- */
-function geolocation_handle_bulk_action( $redirect, $action, $post_ids ) {
-	if ( ! in_array( $action, array( 'geolocation_public', 'geolocation_not_public' ), true ) ) {
-		return $redirect;
-	}
-	return add_query_arg( 'geolocation_changed', geolocation_set_public( $post_ids, 'geolocation_public' === $action ), $redirect );
-}
-
-/**
- * Tell how many locations a bulk action has changed.
+ * WordPress saves every selected post the user may edit, which calls this function for each of them.
  *
+ * @param int $post_id The id of the saved post.
  * @return void
  */
-function geolocation_bulk_notice() {
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only a number which is shown.
-	if ( ! isset( $_GET['geolocation_changed'] ) ) {
+function geolocation_bulk_edit_save( $post_id ) {
+	if ( ! isset( $_REQUEST['bulk_edit'], $_REQUEST['geolocation_public'], $_REQUEST['_wpnonce'] ) ) {
 		return;
 	}
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- see above.
-	$changed = absint( wp_unslash( $_GET['geolocation_changed'] ) );
-	/* translators: %d: number of posts. */
-	echo '<div id="geolocation-bulk-notice" class="notice notice-success is-dismissible"><p>' . esc_html( sprintf( __( 'Posts with a changed location: %d', 'geolocation' ), $changed ) ) . '</p></div>';
-}
-
-/**
- * Keep the number of changed locations out of the address after the notice has been shown.
- *
- * @param array $args The query arguments WordPress removes from the address.
- * @return array
- */
-function geolocation_removable_query_args( $args ) {
-	$args[] = 'geolocation_changed';
-	return $args;
+	$choice = sanitize_text_field( wp_unslash( $_REQUEST['geolocation_public'] ) );
+	if ( ! in_array( $choice, array( '0', '1' ), true ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'bulk-posts' ) ) {
+		// No change has been chosen, or the request does not come from the list of posts.
+		return;
+	}
+	geolocation_set_public( array( $post_id ), '1' === $choice );
 }

@@ -893,14 +893,42 @@ class GeolocationTest extends TestCase {
 	}
 
 	/**
-	 * Only the bulk actions of this plugin are handled.
+	 * The field of the bulk edit form is only applied to a verified request with a choice.
 	 *
 	 * @return void
 	 */
-	public function test_bulk_actions() {
-		$actions = geolocation_bulk_actions( array( 'edit' => 'Edit' ) );
-		$this->assertSame( array( 'edit', 'geolocation_public', 'geolocation_not_public' ), array_keys( $actions ) );
-		$this->assertSame( 'edit.php', geolocation_handle_bulk_action( 'edit.php', 'trash', array( 1 ) ) );
-		$this->assertContains( 'geolocation_changed', geolocation_removable_query_args( array( 'updated' ) ) );
+	public function test_bulk_edit_save() {
+		$this->set_geo( 1, '53.55', '9.99', '1', '0' );
+		$request = $_REQUEST;
+
+		// Not the bulk edit form.
+		$_REQUEST = array(
+			'geolocation_public' => '1',
+			'_wpnonce'           => 'valid',
+		);
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		// "No change".
+		$_REQUEST = array(
+			'bulk_edit'          => 'Update',
+			'geolocation_public' => '',
+			'_wpnonce'           => 'valid',
+		);
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		// A request which does not come from the list of posts.
+		$_REQUEST['geolocation_public'] = '1';
+		$_REQUEST['_wpnonce']           = 'forged';
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		// The real thing, in both directions.
+		$_REQUEST['_wpnonce'] = 'valid';
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( 1, $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		$_REQUEST['geolocation_public'] = '0';
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( 0, $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+
+		$_REQUEST = $request;
 	}
 }

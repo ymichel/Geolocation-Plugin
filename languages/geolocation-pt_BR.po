@@ -122,14 +122,8 @@ msgstr "Público"
 msgid "Not public"
 msgstr "Não pública"
 
-msgid "Publish location"
-msgstr "Publicar localização"
-
-msgid "Do not publish location"
-msgstr "Não publicar localização"
-
-msgid "Posts with a changed location: %d"
-msgstr "Posts com localização alterada: %d"
+msgid "No change"
+msgstr "Sem alteração"
 
 msgid "Open in %s"
 msgstr "Abrir no %s"
