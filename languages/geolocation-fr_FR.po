@@ -110,6 +110,27 @@ msgstr "Cet article n’a pas encore de lieu à afficher. Définissez-le dans la
 msgid "No post with a visible location matches these settings."
 msgstr "Aucun article ayant un lieu visible ne correspond à ces réglages."
 
+msgid "Location"
+msgstr "Emplacement"
+
+msgid "Off"
+msgstr "Désactivé"
+
+msgid "Public"
+msgstr "Public"
+
+msgid "Not public"
+msgstr "Non public"
+
+msgid "Publish location"
+msgstr "Publier l’emplacement"
+
+msgid "Do not publish location"
+msgstr "Ne pas publier l’emplacement"
+
+msgid "Posts with a changed location: %d"
+msgstr "Articles dont l’emplacement a été modifié : %d"
+
 msgid "Open in %s"
 msgstr "Ouvrir dans %s"
 
@@ -419,14 +440,8 @@ msgstr "Supprimer la localisation"
 msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
 msgstr "Mode de confidentialité stricte : aucune carte n’est affichée, car le proxy ne fournit pas de tuiles. Définissez le lieu par son adresse."
 
-msgid "Public"
-msgstr "Public"
-
 msgid "On"
 msgstr "Activé"
-
-msgid "Off"
-msgstr "Désactivé"
 
 msgid "Track (GPX)"
 msgstr "Trace (GPX)"

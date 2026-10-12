@@ -493,3 +493,18 @@ msgstr "Orte ver&ouml;ffentlichen, die aus dem Beitragsbild von Beitr&auml;gen s
 
 msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
 msgstr "Ein Beitrag, der per App oder &uuml;ber die API erstellt wird, erh&auml;lt den Ort seines Beitragsbilds. Solange dies ausgeschaltet ist, sehen nur angemeldete Benutzer diesen Ort, bis Sie ihn im Editor auf &ouml;ffentlich setzen."
+
+msgid "Location"
+msgstr "Ort"
+
+msgid "Not public"
+msgstr "Nicht &ouml;ffentlich"
+
+msgid "Publish location"
+msgstr "Ort ver&ouml;ffentlichen"
+
+msgid "Do not publish location"
+msgstr "Ort nicht ver&ouml;ffentlichen"
+
+msgid "Posts with a changed location: %d"
+msgstr "Beitr&auml;ge mit ge&auml;ndertem Ort: %d"

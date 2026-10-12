@@ -110,6 +110,27 @@ msgstr "Questo articolo non ha ancora una posizione da mostrare. Impostala nel r
 msgid "No post with a visible location matches these settings."
 msgstr "Nessun articolo con una posizione visibile corrisponde a queste impostazioni."
 
+msgid "Location"
+msgstr "Posizione"
+
+msgid "Off"
+msgstr "Disattivo"
+
+msgid "Public"
+msgstr "Pubblico"
+
+msgid "Not public"
+msgstr "Non pubblica"
+
+msgid "Publish location"
+msgstr "Pubblica posizione"
+
+msgid "Do not publish location"
+msgstr "Non pubblicare la posizione"
+
+msgid "Posts with a changed location: %d"
+msgstr "Articoli con posizione modificata: %d"
+
 msgid "Open in %s"
 msgstr "Apri in %s"
 
@@ -419,14 +440,8 @@ msgstr "Rimuovi posizione"
 msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
 msgstr "Modalità privacy rigorosa: non viene mostrata alcuna mappa perché il proxy non fornisce i tile. Imposta la posizione tramite l’indirizzo."
 
-msgid "Public"
-msgstr "Pubblico"
-
 msgid "On"
 msgstr "Attivo"
-
-msgid "Off"
-msgstr "Disattivo"
 
 msgid "Track (GPX)"
 msgstr "Traccia (GPX)"

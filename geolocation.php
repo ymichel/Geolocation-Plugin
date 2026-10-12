@@ -42,6 +42,7 @@ add_action( 'admin_init', 'geolocation_maybe_upgrade' );
 add_action( 'admin_init', 'geolocation_register_settings' );
 add_action( 'admin_menu', 'geolocation_add_settings' );
 add_action( 'admin_notices', 'geolocation_custom_admin_notice' );
+add_action( 'admin_notices', 'geolocation_bulk_notice' );
 add_action( 'admin_enqueue_scripts', 'geolocation_admin_enqueue' );
 add_action( 'add_meta_boxes_post', 'geolocation_add_custom_box' );
 add_action( 'save_post_post', 'geolocation_save_postdata' );
@@ -58,6 +59,11 @@ add_action( 'save_post_page', 'geolocation_precache_saved_post', 20 );
 add_action( 'admin_post_geolocation_precache', 'geolocation_precache_request' );
 add_action( 'wp_ajax_geolocation_precache_status', 'geolocation_precache_status_request' );
 add_filter( 'the_content', 'geolocation_display_location', 5 );
+add_filter( 'manage_post_posts_columns', 'geolocation_list_columns' );
+add_action( 'manage_post_posts_custom_column', 'geolocation_list_column', 10, 2 );
+add_filter( 'bulk_actions-edit-post', 'geolocation_bulk_actions' );
+add_filter( 'handle_bulk_actions-edit-post', 'geolocation_handle_bulk_action', 10, 3 );
+add_filter( 'removable_query_args', 'geolocation_removable_query_args' );
 add_filter( 'plugin_row_meta', 'geolocation_append_support_and_faq_links', 10, 2 );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'geolocation_customizer_action_links' );
 register_activation_hook( __FILE__, 'geolocation_activate' );
@@ -68,6 +74,7 @@ require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-block.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-track.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-precache.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-link.php';
+require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-list.php';
 // Only the code of the selected map provider is loaded.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':

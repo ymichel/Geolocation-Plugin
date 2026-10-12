@@ -110,6 +110,27 @@ msgstr "Dit bericht heeft nog geen locatie om te tonen. Stel die in het Geolocat
 msgid "No post with a visible location matches these settings."
 msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellingen."
 
+msgid "Location"
+msgstr "Locatie"
+
+msgid "Off"
+msgstr "Uit"
+
+msgid "Public"
+msgstr "Openbaar"
+
+msgid "Not public"
+msgstr "Niet openbaar"
+
+msgid "Publish location"
+msgstr "Locatie publiceren"
+
+msgid "Do not publish location"
+msgstr "Locatie niet publiceren"
+
+msgid "Posts with a changed location: %d"
+msgstr "Berichten met gewijzigde locatie: %d"
+
 msgid "Open in %s"
 msgstr "Openen in %s"
 
@@ -419,14 +440,8 @@ msgstr "Locatie verwijderen"
 msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
 msgstr "Strikte privacymodus: er wordt geen kaart getoond omdat de proxy geen tegels levert. Stel de locatie in via het adres."
 
-msgid "Public"
-msgstr "Openbaar"
-
 msgid "On"
 msgstr "Aan"
-
-msgid "Off"
-msgstr "Uit"
 
 msgid "Track (GPX)"
 msgstr "Track (GPX)"

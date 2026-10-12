@@ -860,4 +860,47 @@ class GeolocationTest extends TestCase {
 		$this->assertFalse( geolocation_derive_location( 4 ) );
 		unset( $_POST['geolocation_nonce'] );
 	}
+
+	/**
+	 * The bulk action only changes posts which have a location and which the user may edit.
+	 *
+	 * @return void
+	 */
+	public function test_set_public() {
+		$this->set_geo( 1, '53.55', '9.99', '1', '0' );
+		$this->set_geo( 2, '52.52', '13.40', '0', '0' );
+		$this->set_geo( 3, '51.05', '13.73', '1', '1' );
+		$this->set_geo( 4, '', '', '', '' );
+		$this->set_geo( 5, '50.94', '6.95', '1', '0' );
+		$GLOBALS['geolocation_test_read_only'] = array( 5 );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_markers_version'] );
+
+		// Post 3 is public already, post 4 has no location, post 5 may not be edited, post 9 does not exist.
+		$this->assertSame( 2, geolocation_set_public( array( 1, 2, 3, 4, 5, 9 ), true ) );
+		$this->assertSame( 1, $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		$this->assertSame( 1, $GLOBALS['geolocation_test_post_meta'][2]['geo_public'] );
+		// A location which is switched off stays switched off.
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][2]['geo_enabled'] );
+		$this->assertSame( '', $GLOBALS['geolocation_test_post_meta'][4]['geo_public'] );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][5]['geo_public'] );
+		// The overview maps are built anew.
+		$this->assertArrayHasKey( 'geolocation_markers_version', $GLOBALS['geolocation_test_options'] );
+
+		$this->assertSame( 3, geolocation_set_public( array( '1', '2', '3' ), false ) );
+		$this->assertSame( 0, $GLOBALS['geolocation_test_post_meta'][3]['geo_public'] );
+		$this->assertSame( 0, geolocation_set_public( array( 1, 2, 3 ), false ) );
+		$GLOBALS['geolocation_test_read_only'] = array();
+	}
+
+	/**
+	 * Only the bulk actions of this plugin are handled.
+	 *
+	 * @return void
+	 */
+	public function test_bulk_actions() {
+		$actions = geolocation_bulk_actions( array( 'edit' => 'Edit' ) );
+		$this->assertSame( array( 'edit', 'geolocation_public', 'geolocation_not_public' ), array_keys( $actions ) );
+		$this->assertSame( 'edit.php', geolocation_handle_bulk_action( 'edit.php', 'trash', array( 1 ) ) );
+		$this->assertContains( 'geolocation_changed', geolocation_removable_query_args( array( 'updated' ) ) );
+	}
 }

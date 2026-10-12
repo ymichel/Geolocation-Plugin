@@ -110,6 +110,27 @@ msgstr "Esta entrada aún no tiene una ubicación que mostrar. Defínela en la c
 msgid "No post with a visible location matches these settings."
 msgstr "Ninguna entrada con ubicación visible coincide con estos ajustes."
 
+msgid "Location"
+msgstr "Ubicación"
+
+msgid "Off"
+msgstr "Desactivado"
+
+msgid "Public"
+msgstr "Público"
+
+msgid "Not public"
+msgstr "No pública"
+
+msgid "Publish location"
+msgstr "Publicar ubicación"
+
+msgid "Do not publish location"
+msgstr "No publicar ubicación"
+
+msgid "Posts with a changed location: %d"
+msgstr "Entradas con ubicación modificada: %d"
+
 msgid "Open in %s"
 msgstr "Abrir en %s"
 
@@ -419,14 +440,8 @@ msgstr "Eliminar ubicación"
 msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
 msgstr "Modo de privacidad estricta: no se muestra ningún mapa porque el proxy no sirve teselas. Define la ubicación mediante su dirección."
 
-msgid "Public"
-msgstr "Público"
-
 msgid "On"
 msgstr "Activado"
-
-msgid "Off"
-msgstr "Desactivado"
 
 msgid "Track (GPX)"
 msgstr "Recorrido (GPX)"

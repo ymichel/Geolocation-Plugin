@@ -97,8 +97,8 @@ function sanitize_title( $title ) {
 	return strtolower( trim( preg_replace( '/[^A-Za-z0-9]+/', '-', (string) $title ), '-' ) );
 }
 
-function current_user_can( $capability ) {
-	return true;
+function current_user_can( $capability, $object_id = 0 ) {
+	return ! in_array( $object_id, isset( $GLOBALS['geolocation_test_read_only'] ) ? $GLOBALS['geolocation_test_read_only'] : array(), true );
 }
 
 function apply_filters( $hook, $value ) {
@@ -111,6 +111,15 @@ function is_plugin_active( $plugin ) {
 
 function plugins_url( $path = '', $plugin = '' ) {
 	return 'https://example.org/wp-content/plugins/geolocation/' . ltrim( $path, '/' );
+}
+
+function __( $text, $domain = 'default' ) {
+	return $text;
+}
+
+function update_option( $name, $value ) {
+	$GLOBALS['geolocation_test_options'][ $name ] = $value;
+	return true;
 }
 
 require_once dirname( __DIR__ ) . '/geolocation.php';

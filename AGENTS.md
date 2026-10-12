@@ -21,6 +21,7 @@ Guidance for AI coding agents working on the WordPress plugin "Geolocation". Peo
 | `geolocation-track.php` | GPX tracks: storing, simplifying, key figures, elevation profile |
 | `geolocation-precache.php` | Pre-caching of map tiles through the proxy plugin |
 | `geolocation-map-link.php` | Link to the external map and the notice before leaving |
+| `geolocation-list.php` | List of posts in the admin area: column "Location" and the bulk actions which publish locations |
 | `js/geolocation-*.js` | Own scripts. `js/leaflet*`, `js/markerclusterer.min.js`, `js/MarkerCluster*.css` are bundled libraries: never edit them |
 | `languages/` | `.po` and compiled `.mo` files for ten locales |
 | `tests/` | PHPUnit tests with stubbed WordPress functions; `tests/js/` unit tests for the scripts; `tests/browser/` checks against a real instance, see `tests/instructions.md` |
