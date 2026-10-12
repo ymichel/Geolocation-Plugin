@@ -484,3 +484,12 @@ msgstr "Beim Kartendienst wird nichts abgerufen, bis ein Besucher dem Link folgt
 
 msgid "Link to the external map"
 msgstr "Link zur externen Karte"
+
+msgid "Featured image"
+msgstr "Beitragsbild"
+
+msgid "Publish locations taken from the featured image of posts which are not created in the editor."
+msgstr "Orte ver&ouml;ffentlichen, die aus dem Beitragsbild von Beitr&auml;gen stammen, die nicht im Editor erstellt werden."
+
+msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
+msgstr "Ein Beitrag, der per App oder &uuml;ber die API erstellt wird, erh&auml;lt den Ort seines Beitragsbilds. Solange dies ausgeschaltet ist, sehen nur angemeldete Benutzer diesen Ort, bis du ihn im Editor auf &ouml;ffentlich setzt."

@@ -54,6 +54,7 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 
 | Script | Purpose |
 |---|---|
+| `test-api-location.js` | Checks that a post which is not saved in the editor gets the location of its featured image: created through the REST API with the image, the image added later, an image without a position, a post which has a location already, a location removed in the editor, and the setting which makes such locations public. Runs with both providers, creates photos with GPS data itself and deletes its posts and photos at the end. |
 | `test-block-preview.js` | Checks the preview of both blocks in the editor: map, empty message, wide alignment and reload after a change for "Geolocation Map"; map with track, key figures and elevation profile, plain text and link for "Post Location"; the preview page refuses a wrong nonce. With `--google` the previews are checked with Google Maps. |
 | `test-block.js` | Checks the block "Geolocation Map": rendering on the website and through the REST API, registration and the controls in the editor. Creates or updates the page "Block test". |
 | `test-classic-editor.js` | Checks the Geolocation box in the classic editor (post "Trip to Dresden"): choosing a GPX file, saving, the output on the website, removing. Switches the block editor off through the test helper. With `--google` also with Google Maps. |
@@ -94,7 +95,7 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 
 ## The test helper
 
-`tests/browser/mu-plugins/geolocation-test-helper.php` is a must-use plugin of the test instance and not part of the released plugin. It offers `admin-ajax.php?action=geolocation_test&do=...` for administrators: `seed`, `classic_on`/`classic_off`, `language&locale=...`, `tiles&post=...`, `run_cron`, `state`, `backup`, `restore`, `simulate_old` and `uninstall_test`.
+`tests/browser/mu-plugins/geolocation-test-helper.php` is a must-use plugin of the test instance and not part of the released plugin. It offers `admin-ajax.php?action=geolocation_test&do=...` for administrators: `seed`, `meta&post=...`, `classic_on`/`classic_off`, `language&locale=...`, `tiles&post=...`, `run_cron`, `state`, `backup`, `restore`, `simulate_old` and `uninstall_test`.
 
 ## Things to know
 

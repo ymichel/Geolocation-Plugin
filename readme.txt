@@ -5,7 +5,7 @@ License: GPLv2+
 Requires at least: 6.0
 Requires PHP: 7.3
 Tested up to: 7.1
-Stable tag: 1.17.0
+Stable tag: 1.18.0
 
 Put your posts on the map: locations, routes and GPX tracks with OpenStreetMap or Google Maps. Privacy-friendly and made for travel blogs.
 
@@ -42,6 +42,8 @@ A post without a location takes it from the GPS data of its featured image. Two 
 
 * On an iPhone, take your photos as JPG. When a HEIC photo is converted for the upload, its GPS data is removed.
 * In the WordPress app, enable the option to keep the metadata of uploaded files.
+
+This also works for posts which are not created in the editor, e.g. by the WordPress app or through the REST API. Nobody has released such a location, so only logged-in users see it until you set it to public in the editor. With the setting "Featured image" these locations are public at once.
 
 = Google Maps =
 
@@ -108,6 +110,10 @@ With the position setting "Not automatically" a location is only shown in posts 
 10. The track of a GPX file on an overview map, enabled by the shortcode attribute route="1"
 
 == Changelog ==
+
+= 1.18.0 =
+* new: posts created by an app or through the API also get the location of their featured image; a setting decides whether such a location is public.
+* fix: a location removed in the editor no longer comes back from the featured image when the post is saved again.
 
 = 1.17.0 =
 * performance: the map library (Leaflet or the Google Maps API) is only loaded once a map scrolls into view or a visitor points at a location link.

@@ -239,6 +239,15 @@ msgstr "Alle attributen worden uitgelegd onder \"Hulp\" rechtsboven op deze pagi
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Hoe wil je dat je geolocatie wordt weergegeven?"
 
+msgid "Featured image"
+msgstr "Uitgelichte afbeelding"
+
+msgid "Publish locations taken from the featured image of posts which are not created in the editor."
+msgstr "Locaties publiceren die uit de uitgelichte afbeelding komen van berichten die niet in de editor zijn gemaakt."
+
+msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
+msgstr "Een bericht dat door een app of via de API is gemaakt, krijgt de locatie van zijn uitgelichte afbeelding. Zolang dit uit staat, zien alleen ingelogde gebruikers die locatie, totdat je ze in de editor op openbaar zet."
+
 msgid "External map"
 msgstr "Externe kaart"
 

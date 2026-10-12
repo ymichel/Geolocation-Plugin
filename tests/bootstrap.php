@@ -50,6 +50,41 @@ function get_post_meta( $post_id, $key = '', $single = false ) {
 	return isset( $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] ) ? $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] : '';
 }
 
+function update_post_meta( $post_id, $key, $value ) {
+	$GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] = $value;
+	return true;
+}
+
+function delete_post_meta( $post_id, $key ) {
+	unset( $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] );
+	return true;
+}
+
+function get_post( $post_id = null ) {
+	return isset( $GLOBALS['geolocation_test_posts'][ $post_id ] ) ? (object) $GLOBALS['geolocation_test_posts'][ $post_id ] : null;
+}
+
+function get_post_thumbnail_id( $post_id = null ) {
+	return 0;
+}
+
+function wp_slash( $value ) {
+	return $value;
+}
+
+function get_locale() {
+	return 'en_US';
+}
+
+function get_transient( $name ) {
+	return isset( $GLOBALS['geolocation_test_transients'][ $name ] ) ? $GLOBALS['geolocation_test_transients'][ $name ] : false;
+}
+
+function set_transient( $name, $value, $expiration = 0 ) {
+	$GLOBALS['geolocation_test_transients'][ $name ] = $value;
+	return true;
+}
+
 function esc_html( $text ) {
 	return htmlspecialchars( (string) $text, ENT_QUOTES, 'UTF-8' );
 }

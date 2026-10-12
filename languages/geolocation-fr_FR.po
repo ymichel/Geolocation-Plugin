@@ -239,6 +239,15 @@ msgstr "Tous les attributs sont expliqués sous « Aide », en haut à droite 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Comment souhaitez-vous afficher votre géolocalisation ?"
 
+msgid "Featured image"
+msgstr "Image mise en avant"
+
+msgid "Publish locations taken from the featured image of posts which are not created in the editor."
+msgstr "Publier les emplacements tirés de l’image mise en avant des articles qui ne sont pas créés dans l’éditeur."
+
+msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
+msgstr "Un article créé par une application ou via l’API reçoit l’emplacement de son image mise en avant. Tant que cette option est désactivée, seuls les utilisateurs connectés voient cet emplacement, jusqu’à ce que vous le rendiez public dans l’éditeur."
+
 msgid "External map"
 msgstr "Carte externe"
 

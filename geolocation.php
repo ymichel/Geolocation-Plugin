@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.17.0
+ * Version: 1.18.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Text Domain: geolocation
@@ -31,7 +31,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.17.0' );
+define( 'GEOLOCATION__VERSION', '1.18.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -46,6 +46,9 @@ add_action( 'admin_enqueue_scripts', 'geolocation_admin_enqueue' );
 add_action( 'add_meta_boxes_post', 'geolocation_add_custom_box' );
 add_action( 'save_post_post', 'geolocation_save_postdata' );
 add_action( 'save_post_post', 'geolocation_flush_page_markers' );
+add_action( 'wp_after_insert_post', 'geolocation_derive_location' );
+add_action( 'added_post_meta', 'geolocation_featured_image_changed', 10, 3 );
+add_action( 'updated_post_meta', 'geolocation_featured_image_changed', 10, 3 );
 add_action( 'deleted_post', 'geolocation_flush_page_markers' );
 add_action( 'geolocation_update_addresses_batch', 'geolocation_update_addresses_batch' );
 add_action( 'geolocation_precache_batch', 'geolocation_precache_batch' );
@@ -337,10 +340,12 @@ function geolocation_save_postdata( $post_id ) {
 		foreach ( array( 'geo_latitude', 'geo_longitude', 'geo_address', 'geo_address_reverse', 'geo_enabled', 'geo_public' ) as $meta_key ) {
 			delete_post_meta( $post_id, $meta_key );
 		}
+		// Remembered, so the location of the featured image does not come back by itself.
+		update_post_meta( $post_id, 'geo_removed', 1 );
 		return $post_id;
 	}
 
-	if ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) {
+	if ( ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) && ! get_post_meta( $post_id, 'geo_removed', true ) ) {
 		// check the featured image for geodata if no data was available in the post already.
 		$position = geolocation_get_featured_image_position( $post_id );
 		if ( ! empty( $position ) ) {
@@ -351,6 +356,7 @@ function geolocation_save_postdata( $post_id ) {
 	if ( ( ! empty( $latitude ) ) && ( ! empty( $longitude ) ) ) {
 		update_post_meta( $post_id, 'geo_latitude', $latitude );
 		update_post_meta( $post_id, 'geo_longitude', $longitude );
+		delete_post_meta( $post_id, 'geo_removed' );
 
 		$address_geocoded = geolocation_reverse_geocode( $latitude, $longitude );
 		if ( ( '' === $address ) || ( $address === $address_reverse ) ) {
@@ -366,6 +372,80 @@ function geolocation_save_postdata( $post_id ) {
 	}
 
 	return $post_id;
+}
+
+/**
+ * Store a location which has been taken from the featured image of a post.
+ *
+ * Nobody has released such a location in the editor, so it is only public if the settings say so.
+ *
+ * @param int    $post_id The id of the post.
+ * @param string $latitude The latitude.
+ * @param string $longitude The longitude.
+ * @return void
+ */
+function geolocation_store_derived_location( $post_id, $latitude, $longitude ) {
+	update_post_meta( $post_id, 'geo_latitude', $latitude );
+	update_post_meta( $post_id, 'geo_longitude', $longitude );
+	$address = geolocation_reverse_geocode( $latitude, $longitude );
+	if ( '' !== $address ) {
+		update_post_meta( $post_id, 'geo_address', wp_slash( $address ) );
+	}
+	update_post_meta( $post_id, 'geo_address_reverse', wp_slash( $address ) );
+	update_post_meta( $post_id, 'geo_enabled', 1 );
+	update_post_meta( $post_id, 'geo_public', get_option( 'geolocation_image_public' ) ? 1 : 0 );
+}
+
+/**
+ * Give a post without a location the one of its featured image.
+ *
+ * The box of the editor does this for posts saved there. This function covers every other way a post is
+ * created or changed: the REST API, XML-RPC, the mobile apps, WP-CLI or other plugins.
+ *
+ * @param int $post_id The id of the post.
+ * @return bool Whether a location has been stored.
+ */
+function geolocation_derive_location( $post_id ) {
+	$post = get_post( $post_id );
+	if ( ! $post || 'post' !== $post->post_type || in_array( $post->post_status, array( 'auto-draft', 'trash' ), true ) ) {
+		return false;
+	}
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- only checks whether the box of the editor is being saved, which verifies its nonce itself.
+	if ( isset( $_POST['geolocation_nonce'] ) ) {
+		// Saved in the editor: its box decides, also when the author has just removed the location.
+		return false;
+	}
+	if ( '' !== geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_latitude', true ) ) && '' !== geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_longitude', true ) ) ) {
+		// A location is never overwritten.
+		return false;
+	}
+	if ( get_post_meta( $post_id, 'geo_removed', true ) ) {
+		// The author has removed the location in the editor.
+		return false;
+	}
+	$position = geolocation_get_featured_image_position( $post_id );
+	if ( empty( $position ) ) {
+		return false;
+	}
+	geolocation_store_derived_location( $post_id, $position[0], $position[1] );
+	geolocation_flush_page_markers();
+	// The tiles of the new map, as pre-caching ran before the location was known.
+	geolocation_precache_saved_post( $post_id );
+	return true;
+}
+
+/**
+ * Derive the location when a post gets its featured image after it has been created.
+ *
+ * @param int    $meta_id The id of the meta entry.
+ * @param int    $post_id The id of the post.
+ * @param string $meta_key The key of the meta entry.
+ * @return void
+ */
+function geolocation_featured_image_changed( $meta_id, $post_id, $meta_key ) {
+	if ( '_thumbnail_id' === $meta_key ) {
+		geolocation_derive_location( $post_id );
+	}
 }
 
 /**

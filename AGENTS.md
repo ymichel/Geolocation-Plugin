@@ -84,5 +84,5 @@ All four checks run in CI for every pull request and have to pass.
 
 - Do not add a build step, a framework, a JavaScript library or any other runtime dependency. Solve it with plain JavaScript and the browser's own APIs.
 - Do not load anything from a CDN.
-- Do not rename options, post meta keys (`geo_latitude`, `geo_longitude`, `geo_address`, `geo_enabled`, `geo_public`, `geo_track*`), shortcode attributes or block attributes: existing sites depend on them.
+- Do not rename options, post meta keys (`geo_latitude`, `geo_longitude`, `geo_address`, `geo_enabled`, `geo_public`, `geo_removed`, `geo_track*`), shortcode attributes or block attributes: existing sites depend on them.
 - Do not commit API keys or other secrets, and do not put them into tests or documentation.
