@@ -5,7 +5,7 @@
  * It is a must-use plugin: tests/browser/start.js mounts this folder as wp-content/mu-plugins of the instance.
  *
  * admin-ajax.php?action=geolocation_test&do=... for administrators:
- * seed, classic_on / classic_off, loopback_off / loopback_on, proxy_max_zoom (&value=), language (&locale=), tiles (&post=), run_cron, state, backup, restore, simulate_old, uninstall_test.
+ * seed, meta (&post=), classic_on / classic_off, loopback_off / loopback_on, proxy_max_zoom (&value=), language (&locale=), tiles (&post=), run_cron, state, backup, restore, simulate_old, uninstall_test.
  *
  * "seed" creates the demo content of geolocation-test-content.json and resets posts and pages with the same slug.
  *
@@ -249,6 +249,15 @@ add_action(
 		switch ( $do ) {
 			case 'seed':
 				$result = geolocation_test_seed();
+				break;
+			case 'meta':
+				// The geo data of a post, and whether this instance can read the position of a photo at all.
+				$post_id        = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+				$result['exif'] = function_exists( 'exif_read_data' );
+				$result['meta'] = array();
+				foreach ( array( 'geo_latitude', 'geo_longitude', 'geo_address', 'geo_enabled', 'geo_public', 'geo_removed' ) as $key ) {
+					$result['meta'][ $key ] = (string) get_post_meta( $post_id, $key, true );
+				}
 				break;
 			case 'classic_on':
 				update_option( 'geolocation_test_classic', 1 );

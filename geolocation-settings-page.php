@@ -183,6 +183,14 @@ function geolocation_settings_page() {
 				</td>
 			</tr>
 			<tr>
+				<th scope="row"><?php esc_html_e( 'Featured image', 'geolocation' ); ?></th>
+				<td>
+					<input type="checkbox" id="geolocation_image_public" name="geolocation_image_public" value="1" <?php checked( (bool) get_option( 'geolocation_image_public' ) ); ?>>
+					<label for="geolocation_image_public"><?php esc_html_e( 'Publish locations taken from the featured image of posts which are not created in the editor.', 'geolocation' ); ?></label>
+					<p class="description"><?php esc_html_e( 'A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor.', 'geolocation' ); ?></p>
+				</td>
+			</tr>
+			<tr>
 				<th scope="row"><?php esc_html_e( 'External map', 'geolocation' ); ?></th>
 				<td>
 					<input type="checkbox" id="geolocation_map_link" name="geolocation_map_link" value="1" <?php checked( (bool) get_option( 'geolocation_map_link' ) ); ?>>

@@ -786,4 +786,149 @@ class GeolocationTest extends TestCase {
 		$GLOBALS['geolocation_test_options']['geolocation_provider']           = 'osm';
 		$GLOBALS['geolocation_test_options']['geolocation_osm_strict_privacy'] = '';
 	}
+
+	/**
+	 * A location taken from the featured image is public only if the settings say so.
+	 *
+	 * @return void
+	 */
+	public function test_store_derived_location() {
+		$GLOBALS['geolocation_test_options']['geolocation_provider'] = 'osm';
+		// The address comes from the cache, so no request is sent.
+		$GLOBALS['geolocation_test_transients'] = array( 'geolocation_rg_' . md5( 'osm|en|48.1372,11.5756' ) => 'Munich, Old Town, Germany' );
+
+		geolocation_store_derived_location( 7, '48.1372', '11.5756' );
+		$meta = $GLOBALS['geolocation_test_post_meta'][7];
+		$this->assertSame( '48.1372', $meta['geo_latitude'] );
+		$this->assertSame( '11.5756', $meta['geo_longitude'] );
+		$this->assertSame( 'Munich, Old Town, Germany', $meta['geo_address'] );
+		$this->assertSame( 'Munich, Old Town, Germany', $meta['geo_address_reverse'] );
+		$this->assertSame( 1, $meta['geo_enabled'] );
+		$this->assertSame( 0, $meta['geo_public'] );
+		$GLOBALS['geolocation_test_logged_in'] = false;
+		$this->assertFalse( geolocation_post_is_visible( 7 ) );
+
+		$GLOBALS['geolocation_test_options']['geolocation_image_public'] = '1';
+		geolocation_store_derived_location( 8, '48.1372', '11.5756' );
+		$this->assertSame( 1, $GLOBALS['geolocation_test_post_meta'][8]['geo_public'] );
+		$this->assertTrue( geolocation_post_is_visible( 8 ) );
+	}
+
+	/**
+	 * Deriving the location leaves alone what it must not touch.
+	 *
+	 * @return void
+	 */
+	public function test_derive_location_refuses() {
+		$GLOBALS['geolocation_test_posts'] = array(
+			1 => array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			),
+			2 => array(
+				'post_type'   => 'post',
+				'post_status' => 'auto-draft',
+			),
+			3 => array(
+				'post_type'   => 'post',
+				'post_status' => 'publish',
+			),
+			4 => array(
+				'post_type'   => 'post',
+				'post_status' => 'publish',
+			),
+		);
+		// Unknown posts, pages and posts which are not saved yet.
+		$this->assertFalse( geolocation_derive_location( 99 ) );
+		$this->assertFalse( geolocation_derive_location( 1 ) );
+		$this->assertFalse( geolocation_derive_location( 2 ) );
+		// A post which has a location keeps it.
+		$this->set_geo( 3, '53.55', '9.99', '0', '0' );
+		$this->assertFalse( geolocation_derive_location( 3 ) );
+		$this->assertSame( '53.55', $GLOBALS['geolocation_test_post_meta'][3]['geo_latitude'] );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][3]['geo_enabled'] );
+		// A post without a featured image gets no location.
+		$this->assertFalse( geolocation_derive_location( 4 ) );
+		$this->assertArrayNotHasKey( 4, $GLOBALS['geolocation_test_post_meta'] );
+		// The author has removed the location in the editor.
+		$GLOBALS['geolocation_test_post_meta'][4] = array( 'geo_removed' => 1 );
+		$this->assertFalse( geolocation_derive_location( 4 ) );
+		$this->assertArrayNotHasKey( 'geo_latitude', $GLOBALS['geolocation_test_post_meta'][4] );
+		unset( $GLOBALS['geolocation_test_post_meta'][4] );
+		// While the box of the editor is saved, it decides.
+		$_POST['geolocation_nonce'] = 'x';
+		$this->assertFalse( geolocation_derive_location( 4 ) );
+		unset( $_POST['geolocation_nonce'] );
+	}
+
+	/**
+	 * The bulk action only changes posts which have a location and which the user may edit.
+	 *
+	 * @return void
+	 */
+	public function test_set_public() {
+		$this->set_geo( 1, '53.55', '9.99', '1', '0' );
+		$this->set_geo( 2, '52.52', '13.40', '0', '0' );
+		$this->set_geo( 3, '51.05', '13.73', '1', '1' );
+		$this->set_geo( 4, '', '', '', '' );
+		$this->set_geo( 5, '50.94', '6.95', '1', '0' );
+		$GLOBALS['geolocation_test_read_only'] = array( 5 );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_markers_version'] );
+
+		// Post 3 is public already, post 4 has no location, post 5 may not be edited, post 9 does not exist.
+		$this->assertSame( 2, geolocation_set_public( array( 1, 2, 3, 4, 5, 9 ), true ) );
+		$this->assertSame( 1, $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		$this->assertSame( 1, $GLOBALS['geolocation_test_post_meta'][2]['geo_public'] );
+		// A location which is switched off stays switched off.
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][2]['geo_enabled'] );
+		$this->assertSame( '', $GLOBALS['geolocation_test_post_meta'][4]['geo_public'] );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][5]['geo_public'] );
+		// The overview maps are built anew.
+		$this->assertArrayHasKey( 'geolocation_markers_version', $GLOBALS['geolocation_test_options'] );
+
+		$this->assertSame( 3, geolocation_set_public( array( '1', '2', '3' ), false ) );
+		$this->assertSame( 0, $GLOBALS['geolocation_test_post_meta'][3]['geo_public'] );
+		$this->assertSame( 0, geolocation_set_public( array( 1, 2, 3 ), false ) );
+		$GLOBALS['geolocation_test_read_only'] = array();
+	}
+
+	/**
+	 * The field of the bulk edit form is only applied to a verified request with a choice.
+	 *
+	 * @return void
+	 */
+	public function test_bulk_edit_save() {
+		$this->set_geo( 1, '53.55', '9.99', '1', '0' );
+		$request = $_REQUEST;
+
+		// Not the bulk edit form.
+		$_REQUEST = array(
+			'geolocation_public' => '1',
+			'_wpnonce'           => 'valid',
+		);
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		// "No change".
+		$_REQUEST = array(
+			'bulk_edit'          => 'Update',
+			'geolocation_public' => '',
+			'_wpnonce'           => 'valid',
+		);
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		// A request which does not come from the list of posts.
+		$_REQUEST['geolocation_public'] = '1';
+		$_REQUEST['_wpnonce']           = 'forged';
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( '0', $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		// The real thing, in both directions.
+		$_REQUEST['_wpnonce'] = 'valid';
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( 1, $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+		$_REQUEST['geolocation_public'] = '0';
+		geolocation_bulk_edit_save( 1 );
+		$this->assertSame( 0, $GLOBALS['geolocation_test_post_meta'][1]['geo_public'] );
+
+		$_REQUEST = $request;
+	}
 }

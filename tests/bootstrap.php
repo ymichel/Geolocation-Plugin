@@ -50,6 +50,41 @@ function get_post_meta( $post_id, $key = '', $single = false ) {
 	return isset( $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] ) ? $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] : '';
 }
 
+function update_post_meta( $post_id, $key, $value ) {
+	$GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] = $value;
+	return true;
+}
+
+function delete_post_meta( $post_id, $key ) {
+	unset( $GLOBALS['geolocation_test_post_meta'][ $post_id ][ $key ] );
+	return true;
+}
+
+function get_post( $post_id = null ) {
+	return isset( $GLOBALS['geolocation_test_posts'][ $post_id ] ) ? (object) $GLOBALS['geolocation_test_posts'][ $post_id ] : null;
+}
+
+function get_post_thumbnail_id( $post_id = null ) {
+	return 0;
+}
+
+function wp_slash( $value ) {
+	return $value;
+}
+
+function get_locale() {
+	return 'en_US';
+}
+
+function get_transient( $name ) {
+	return isset( $GLOBALS['geolocation_test_transients'][ $name ] ) ? $GLOBALS['geolocation_test_transients'][ $name ] : false;
+}
+
+function set_transient( $name, $value, $expiration = 0 ) {
+	$GLOBALS['geolocation_test_transients'][ $name ] = $value;
+	return true;
+}
+
 function esc_html( $text ) {
 	return htmlspecialchars( (string) $text, ENT_QUOTES, 'UTF-8' );
 }
@@ -62,8 +97,8 @@ function sanitize_title( $title ) {
 	return strtolower( trim( preg_replace( '/[^A-Za-z0-9]+/', '-', (string) $title ), '-' ) );
 }
 
-function current_user_can( $capability ) {
-	return true;
+function current_user_can( $capability, $object_id = 0 ) {
+	return ! in_array( $object_id, isset( $GLOBALS['geolocation_test_read_only'] ) ? $GLOBALS['geolocation_test_read_only'] : array(), true );
 }
 
 function apply_filters( $hook, $value ) {
@@ -76,6 +111,27 @@ function is_plugin_active( $plugin ) {
 
 function plugins_url( $path = '', $plugin = '' ) {
 	return 'https://example.org/wp-content/plugins/geolocation/' . ltrim( $path, '/' );
+}
+
+function wp_verify_nonce( $nonce, $action = -1 ) {
+	return 'valid' === $nonce && 'bulk-posts' === $action;
+}
+
+function wp_unslash( $value ) {
+	return $value;
+}
+
+function sanitize_text_field( $text ) {
+	return trim( (string) $text );
+}
+
+function __( $text, $domain = 'default' ) {
+	return $text;
+}
+
+function update_option( $name, $value ) {
+	$GLOBALS['geolocation_test_options'][ $name ] = $value;
+	return true;
 }
 
 require_once dirname( __DIR__ ) . '/geolocation.php';

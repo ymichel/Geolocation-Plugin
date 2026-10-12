@@ -110,6 +110,21 @@ msgstr "Questo articolo non ha ancora una posizione da mostrare. Impostala nel r
 msgid "No post with a visible location matches these settings."
 msgstr "Nessun articolo con una posizione visibile corrisponde a queste impostazioni."
 
+msgid "Location"
+msgstr "Posizione"
+
+msgid "Off"
+msgstr "Disattivo"
+
+msgid "Public"
+msgstr "Pubblico"
+
+msgid "Not public"
+msgstr "Non pubblica"
+
+msgid "No change"
+msgstr "Nessuna modifica"
+
 msgid "Open in %s"
 msgstr "Apri in %s"
 
@@ -238,6 +253,15 @@ msgstr "Tutti gli attributi sono spiegati in \"Aiuto\", in alto a destra in ques
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Come vuoi che venga mostrata la tua geolocalizzazione?"
+
+msgid "Featured image"
+msgstr "Immagine in evidenza"
+
+msgid "Publish locations taken from the featured image of posts which are not created in the editor."
+msgstr "Pubblica le posizioni ricavate dall’immagine in evidenza degli articoli che non vengono creati nell’editor."
+
+msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
+msgstr "Un articolo creato da un’app o tramite l’API riceve la posizione della sua immagine in evidenza. Finché questa opzione è disattivata, solo gli utenti connessi vedono quella posizione, finché non la rendi pubblica nell’editor."
 
 msgid "External map"
 msgstr "Mappa esterna"
@@ -410,14 +434,8 @@ msgstr "Rimuovi posizione"
 msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
 msgstr "Modalità privacy rigorosa: non viene mostrata alcuna mappa perché il proxy non fornisce i tile. Imposta la posizione tramite l’indirizzo."
 
-msgid "Public"
-msgstr "Pubblico"
-
 msgid "On"
 msgstr "Attivo"
-
-msgid "Off"
-msgstr "Disattivo"
 
 msgid "Track (GPX)"
 msgstr "Traccia (GPX)"

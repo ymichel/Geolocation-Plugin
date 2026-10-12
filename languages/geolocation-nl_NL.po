@@ -110,6 +110,21 @@ msgstr "Dit bericht heeft nog geen locatie om te tonen. Stel die in het Geolocat
 msgid "No post with a visible location matches these settings."
 msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellingen."
 
+msgid "Location"
+msgstr "Locatie"
+
+msgid "Off"
+msgstr "Uit"
+
+msgid "Public"
+msgstr "Openbaar"
+
+msgid "Not public"
+msgstr "Niet openbaar"
+
+msgid "No change"
+msgstr "Geen wijziging"
+
 msgid "Open in %s"
 msgstr "Openen in %s"
 
@@ -238,6 +253,15 @@ msgstr "Alle attributen worden uitgelegd onder \"Hulp\" rechtsboven op deze pagi
 
 msgid "How would you like your geolocation to be displayed?"
 msgstr "Hoe wil je dat je geolocatie wordt weergegeven?"
+
+msgid "Featured image"
+msgstr "Uitgelichte afbeelding"
+
+msgid "Publish locations taken from the featured image of posts which are not created in the editor."
+msgstr "Locaties publiceren die uit de uitgelichte afbeelding komen van berichten die niet in de editor zijn gemaakt."
+
+msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
+msgstr "Een bericht dat door een app of via de API is gemaakt, krijgt de locatie van zijn uitgelichte afbeelding. Zolang dit uit staat, zien alleen ingelogde gebruikers die locatie, totdat je ze in de editor op openbaar zet."
 
 msgid "External map"
 msgstr "Externe kaart"
@@ -410,14 +434,8 @@ msgstr "Locatie verwijderen"
 msgid "Strict privacy mode: no map is shown, because the proxy does not deliver tiles. Set the location by its address."
 msgstr "Strikte privacymodus: er wordt geen kaart getoond omdat de proxy geen tegels levert. Stel de locatie in via het adres."
 
-msgid "Public"
-msgstr "Openbaar"
-
 msgid "On"
 msgstr "Aan"
-
-msgid "Off"
-msgstr "Uit"
 
 msgid "Track (GPX)"
 msgstr "Track (GPX)"

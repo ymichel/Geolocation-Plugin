@@ -21,6 +21,7 @@ Guidance for AI coding agents working on the WordPress plugin "Geolocation". Peo
 | `geolocation-track.php` | GPX tracks: storing, simplifying, key figures, elevation profile |
 | `geolocation-precache.php` | Pre-caching of map tiles through the proxy plugin |
 | `geolocation-map-link.php` | Link to the external map and the notice before leaving |
+| `geolocation-list.php` | List of posts in the admin area: column "Location" and the field of the bulk edit form which publishes locations |
 | `js/geolocation-*.js` | Own scripts. `js/leaflet*`, `js/markerclusterer.min.js`, `js/MarkerCluster*.css` are bundled libraries: never edit them |
 | `languages/` | `.po` and compiled `.mo` files for ten locales |
 | `tests/` | PHPUnit tests with stubbed WordPress functions; `tests/js/` unit tests for the scripts; `tests/browser/` checks against a real instance, see `tests/instructions.md` |
@@ -84,5 +85,5 @@ All four checks run in CI for every pull request and have to pass.
 
 - Do not add a build step, a framework, a JavaScript library or any other runtime dependency. Solve it with plain JavaScript and the browser's own APIs.
 - Do not load anything from a CDN.
-- Do not rename options, post meta keys (`geo_latitude`, `geo_longitude`, `geo_address`, `geo_enabled`, `geo_public`, `geo_track*`), shortcode attributes or block attributes: existing sites depend on them.
+- Do not rename options, post meta keys (`geo_latitude`, `geo_longitude`, `geo_address`, `geo_enabled`, `geo_public`, `geo_removed`, `geo_track*`), shortcode attributes or block attributes: existing sites depend on them.
 - Do not commit API keys or other secrets, and do not put them into tests or documentation.
