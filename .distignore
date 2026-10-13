@@ -20,3 +20,4 @@ eslint.config.js
 phpcs.xml
 .phpcs.xml.dist
 phpunit.xml.dist
+phpstan.neon.dist

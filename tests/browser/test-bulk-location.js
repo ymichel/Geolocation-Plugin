@@ -3,7 +3,7 @@
 // map of the page "Map" is read as a logged-out visitor, who only sees public locations. Runs with both providers
 // and sets the two locations to public again at the end, as in the demo content.
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const BERLIN = id('trip-to-berlin');
 const DRESDEN = id('trip-to-dresden');
 
@@ -25,7 +25,7 @@ async function visitorSees() {
   const helper = (q) => page.evaluate((query) => fetch('/wp-admin/admin-ajax.php?action=geolocation_test&do=' + query, { credentials: 'include' }).then(r => r.json()).then(j => j.data), q);
   const isPublic = async (post) => (await helper('meta&post=' + post)).meta.geo_public;
   const cell = (post) => page.evaluate((p) => { const c = document.querySelector('#post-' + p + ' td.column-geolocation'); return c ? c.innerText.replace(/\n/g, ' | ') : null; }, post);
-  const provider = async (name) => { await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' }); const was = await page.inputValue('#geolocation_provider'); if (name && name !== was) { await page.selectOption('#geolocation_provider', name); await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]); } return was; };
+  const provider = async (name) => { await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' }); const was = await page.inputValue('#geolocation_provider'); if (name && name !== was) { await chooseProvider(page, name); await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]); } return was; };
   // Edit several posts at once: choose them, open the form, set the field "Location" and update.
   const bulk = async (choice, posts) => {
     await list();

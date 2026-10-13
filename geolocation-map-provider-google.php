@@ -16,7 +16,7 @@
  * @param int $post_id The id of the edited post.
  * @return void
  */
-function geolocation_admin_enqueue_google( $post_id ) {
+function geolocation_admin_enqueue_google( int $post_id ): void {
 	wp_enqueue_script( 'geolocation_admin_common', plugins_url( 'js/geolocation-admin-common.js', __FILE__ ), array(), GEOLOCATION__VERSION, true );
 	wp_add_inline_script( 'geolocation_admin_common', 'var geolocationAdmin = ' . wp_json_encode( geolocation_get_admin_post_data( $post_id ) ) . ';', 'before' );
 	wp_enqueue_script( 'geolocation_admin_google', plugins_url( 'js/geolocation-admin-google.js', __FILE__ ), array( 'geolocation_admin_common' ), GEOLOCATION__VERSION, true );
@@ -29,7 +29,7 @@ function geolocation_admin_enqueue_google( $post_id ) {
  *
  * @return void
  */
-function geolocation_enqueue_front_google() {
+function geolocation_enqueue_front_google(): void {
 	if ( wp_script_is( 'geolocation_front_google', 'enqueued' ) ) {
 		return;
 	}
@@ -57,7 +57,7 @@ function geolocation_enqueue_front_google() {
  * @param string $longitude The longitude.
  * @return array The decoded answer, or an empty array if the request failed.
  */
-function geolocation_pull_json_google( $latitude, $longitude ) {
+function geolocation_pull_json_google( string $latitude, string $longitude ): array {
 	$args   = array(
 		'language' => rawurlencode( geolocation_get_site_lang() ),
 		'latlng'   => rawurlencode( $latitude . ',' . $longitude ),
@@ -81,7 +81,7 @@ function geolocation_pull_json_google( $latitude, $longitude ) {
  *
  * @return string
  */
-function geolocation_get_google_maps_api_url() {
+function geolocation_get_google_maps_api_url(): string {
 	$args   = array(
 		'loading'  => 'async',
 		'callback' => 'geolocationInitMap',

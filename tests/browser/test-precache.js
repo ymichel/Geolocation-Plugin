@@ -5,7 +5,7 @@
 const { chromium } = require('playwright-core');
 const fs = require('fs');
 const path = require('path');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const CACHE = require('./lib').cache;
 const POSTS = { berlin: [id('trip-to-berlin'), '/2026/10/04/trip-to-berlin/'], hamburg: [id('trip-to-hamburg'), '/2026/10/04/trip-to-hamburg/'], potsdam: [id('trip-to-potsdam'), '/2026/10/04/trip-to-potsdam/'], munich: [0, '/2026/09/20/munich-to-venice-by-bike/'] };
 
@@ -78,13 +78,13 @@ const POSTS = { berlin: [id('trip-to-berlin'), '/2026/10/04/trip-to-berlin/'], h
   // 4. Nothing is offered without the proxy or with Google Maps.
   await settings(async () => { await page.uncheck('#geolocation_osm_use_proxy'); });
   out.withoutProxy = [await row(), (await helper('tiles&post=' + POSTS.berlin[0])).tilesUrl];
-  await settings(async () => { await page.check('#geolocation_osm_use_proxy'); await page.selectOption('#geolocation_provider', 'google'); });
+  await settings(async () => { await page.check('#geolocation_osm_use_proxy'); await chooseProvider(page, 'google'); });
   try {
     out.withGoogle = [await row(), (await helper('tiles&post=' + POSTS.berlin[0])).tilesUrl];
     await page.goto(base + '/wp-admin/admin-post.php?action=geolocation_precache', { waitUntil: 'load' });
     out.withoutNonce = (await page.locator('body').innerText()).slice(0, 80);
   } finally {
-    await settings(async () => { await page.selectOption('#geolocation_provider', 'osm'); });
+    await settings(async () => { await chooseProvider(page, 'osm'); });
   }
   out.final = await page.evaluate(() => [document.getElementById('geolocation_provider').value, document.getElementById('geolocation_osm_use_proxy').checked, document.getElementById('geolocation_osm_precache_on_save').checked]);
   out.errors = [...new Set(errors)];

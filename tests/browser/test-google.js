@@ -3,14 +3,14 @@
 // Switches the provider to Google and back to OSM and restores the location of post 5.
 const { chromium } = require('playwright-core');
 const fs = require('fs');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const POST = id('trip-to-hamburg');
 const HOME = { lat: '53.5511', lng: '9.9937' };
 
 async function setProvider(page, provider) {
   await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
   const keySet = await page.$eval('input[name=geolocation_google_maps_api_key]', el => el.value.length > 0);
-  await page.selectOption('#geolocation_provider', provider);
+  await chooseProvider(page, provider);
   await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   return keySet;
 }

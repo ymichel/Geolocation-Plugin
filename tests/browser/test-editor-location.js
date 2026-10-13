@@ -1,7 +1,7 @@
 // Checks picking a location in the post editor: click on the map, dragging the marker and "My location".
 // Uses post 5 of the test instance and restores its location (Hamburg) and the OSM provider at the end.
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const POST = id('trip-to-hamburg');
 const HOME = { lat: '53.5511', lng: '9.9937' };
 
@@ -24,7 +24,7 @@ const fields = page => page.evaluate(() => ({
 }));
 async function setProvider(page, provider) {
   await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-  await page.selectOption('#geolocation_provider', provider);
+  await chooseProvider(page, provider);
   await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
 }
 async function scenario(page, ctx, label) {

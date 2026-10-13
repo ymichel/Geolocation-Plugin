@@ -2,12 +2,12 @@
 Contributors: ymichel, frsh, mdawaffe, automattic, alexterz
 Tags: map, GPS, travel, location, journey
 License: GPLv2+
-Requires at least: 6.0
-Requires PHP: 7.3
+Requires at least: 6.4
+Requires PHP: 8.3
 Tested up to: 7.1
-Stable tag: 1.18.0
+Stable tag: 1.19.0
 
-Put your posts on the map: locations, routes and GPX tracks with OpenStreetMap or Google Maps. Privacy-friendly and made for travel blogs.
+Put your posts on the map: locations, routes and GPX tracks with OpenStreetMap. Privacy-friendly and made for travel blogs.
 
 == Description ==
 **Put your stories on the map.** Geolocation adds a location to your posts and shows it to your readers: as a line of text, as a link that reveals a map, or as a map. Collect your posts on an overview map, connect them to a route and add the GPX tracks of your hikes and bike tours.
@@ -17,12 +17,12 @@ Made for travel blogs, and for everyone who wants to show where a story happened
 = Highlights =
 
 * **A location for every post** – search for an address, click on the map, drag the marker or use the position of your device. If a post has no location, the plugin reads it from the GPS data of the featured image.
-* **Three ways to show it** – plain text, a link that reveals a map on hover, or a map. Before the post, after it, or exactly where you place the block or the shortcode.
+* **Three ways to show it** – plain text, a link that reveals a map on hover, or a map. Before the post, after it, or exactly where you place the block.
 * **Overview maps** – all posts of your blog, of a category or of a tag on one map. Popups show the featured image, the date and the excerpt; markers lying close together are grouped.
 * **Routes and GPX tracks** – connect the posts of a trip in the order they were published, and show the recorded track of a hike or a bike tour with its length, ascent, descent and elevation profile.
-* **Blocks and shortcode** – two blocks with a live preview for the block editor, and a shortcode with attributes for everything else.
+* **Blocks** – two blocks with a live preview for the block editor: one for the location of a post, one for an overview map.
 * **Privacy by design** – OpenStreetMap by default, map tiles from your own server, a strict mode that falls back to text, and GPX files that never leave your computer.
-* **Your choice of maps** – OpenStreetMap or Google Maps, with an optional link that opens a location in the full map service.
+* **OpenStreetMap** – with an optional link that opens a location in the full map service.
 * **Translated** – English, German, Spanish, French, Italian, Portuguese (Brazil) and Dutch.
 
 = Privacy =
@@ -47,6 +47,8 @@ This also works for posts which are not created in the editor, e.g. by the WordP
 
 = Google Maps =
 
+The connection to Google Maps is no longer developed further: from version 1.19.0 on, new functions are made for OpenStreetMap only. New installations use OpenStreetMap; websites which already use Google Maps keep it with the functions it has today, as long as an API key is stored.
+
 Google Maps needs an API key, which you get from the Google Cloud Platform. Activate the "Maps JavaScript API" and the "Geocoding API" for it.
 
 = Support =
@@ -55,16 +57,14 @@ Questions, problems or ideas? Open a [support request](https://github.com/ymiche
 
 = Overview maps on pages =
 
-Put the shortcode on a page to show a map with the locations of your posts. Optional attributes filter the posts and set the size of the map:
+Insert the block "Geolocation Map" into a page or a post to show a map with the locations of your posts. In the settings of the block you choose:
 
-* `cat` – categories, as slugs, names or ids, separated by commas: `[geolocation cat="travel,europe"]`
-* `tag` – tags, as slugs, names or ids, separated by commas: `[geolocation tag="hiking"]`
-* `width` – width in pixels or percent: `[geolocation width="100%"]`
-* `height` – height in pixels: `[geolocation height="400"]`
-* `zoom` – a fixed zoom level from 1 to 19 instead of fitting the map to the markers: `[geolocation zoom="6"]`
-* `route` – connects the locations with a line, in the order of the post dates: `[geolocation route="1"]`. Combine it with `cat` to show the route of a single trip: `[geolocation cat="italy-2026" route="1"]`
+* the categories and tags whose posts are shown
+* the width and the height of the map
+* a fixed zoom level instead of fitting the map to the markers
+* the route: a line which connects the locations in the order of the post dates. Combine it with a category to show the route of a single trip.
 
-Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
+A page can contain several maps, and the editor shows each of them as a preview.
 
 = Tracks (GPX) =
 
@@ -73,25 +73,21 @@ A post can carry the track of a GPX file, e.g. the recording of a hike or a bike
 * The file is read in your browser. Only the simplified line of the track is stored with the post; the file itself, its times and elevations are not uploaded.
 * With the display setting "Simple map" the map of the post shows the track; the map in the editor shows it as well.
 * The post shows the key figures of the track: its length and, if the file contains elevations, ascent, descent and highest point. Below a map it also shows the elevation profile. Both can be switched off in the settings, and the block "Post Location" can show or hide them for a single post.
-* An overview map with `route="1"` draws the tracks as recorded and the gaps between them as dashed lines. The popup of a post shows the length of its track.
+* An overview map with the option "route" draws the tracks as recorded and the gaps between them as dashed lines. The popup of a post shows the length of its track.
 * A post without a location gets the end of its track as location.
 * The setting "Shorten tracks" hides a distance at the start and at the end of every track, e.g. to keep your home address private.
-
-= Block "Geolocation Map" =
-
-In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block, and the editor shows the map as a preview. The block can be used in pages and posts.
 
 = Block "Post Location" =
 
 In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The editor shows a preview of the saved location. The automatic output before or after the post is omitted for posts using the block.
 
-With the position setting "Not automatically" a location is only shown in posts containing the block or the shortcode. Such a post still appears on overview maps if its location is enabled and public.
+With the position setting "Not automatically" a location is only shown in posts containing the block. Such a post still appears on overview maps if its location is enabled and public.
 
 == Installation ==
 
 1. Upload the `geolocation` directory to the `/wp-content/plugins/` directory. (or simply install it from the official package repo)
-2. Activate the plugin through the 'Plugins' menu in WordPress. In case you would want to use Google Maps, choose Google Maps as your provider and insert the Google Maps API key on the Settings > Geolocation page.
-3. Optionally (if you are using OSM as per default setting): Install and activate the [OSM proxy](https://wordpress.org/plugins/osm-tiles-proxy/ "OSM tile proxy") to make use of local delivery without tracking options for the source to your visitors.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Optionally: Install and activate the [OSM proxy](https://wordpress.org/plugins/osm-tiles-proxy/ "OSM tile proxy") to make use of local delivery without tracking options for the source to your visitors.
 4. Modify the display settings as needed on the Settings > Geolocation page. The chosen settings can directly be seen in the OSM preview of the settings page.
 5. Start posting with geolocation data.
 6. Leave a rating on the plugin-page. :-)
@@ -102,14 +98,22 @@ With the position setting "Not automatically" a location is only shown in posts 
 2. Viewing the location in a post; setting: plain text
 3. Viewing the location in a post; setting: simple link w/hover
 4. Viewing the location in a post; setting: simple map (static)
-5. Editing a page: the shortcode embeds a map of all locations, optional attributes filter the posts and adjust the map
-6. Overview map on a page showing all posts with a location
-7. Overview map with the route between the posts, enabled by the shortcode attribute route="1"
-8. The shortcode attributes are explained in the Help tab of the settings page
-9. The block "Geolocation Map" with its settings in the block editor
-10. The track of a GPX file on an overview map, enabled by the shortcode attribute route="1"
+5. Overview map on a page showing all posts with a location
+6. Overview map with the route between the posts
+7. The block "Geolocation Map" with its settings in the block editor
+8. The track of a GPX file on an overview map
+
+== Upgrade Notice ==
+
+= 1.19.0 =
+Requires PHP 8.3 and WordPress 6.4. Google Maps is no longer developed further; websites which use it keep it.
 
 == Changelog ==
+
+= 1.19.0 =
+* PHP 8.3 and WordPress 6.4 or newer are required.
+* Google Maps is no longer developed further and no longer offered to new installations. Websites which use it keep it, as long as an API key is stored, and see a notice about it in the admin area.
+* fix: after "Remove location" the location is switched off and the editor no longer shows a marker at a default position.
 
 = 1.18.0 =
 * new: posts created by an app or through the API also get the location of their featured image; a setting decides whether such a location is public.

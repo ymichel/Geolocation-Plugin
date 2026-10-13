@@ -16,7 +16,7 @@
  *
  * @return void
  */
-function geolocation_register_block() {
+function geolocation_register_block(): void {
 	if ( ! function_exists( 'register_block_type' ) ) {
 		return;
 	}
@@ -133,7 +133,7 @@ function geolocation_register_block() {
  * @param string $text The translated text.
  * @return string
  */
-function geolocation_block_text( $text ) {
+function geolocation_block_text( string $text ): string {
 	return html_entity_decode( (string) $text, ENT_QUOTES, 'UTF-8' );
 }
 
@@ -142,7 +142,7 @@ function geolocation_block_text( $text ) {
  *
  * @return array
  */
-function geolocation_get_block_data() {
+function geolocation_get_block_data(): array {
 	return array(
 		'width'   => (int) get_option( 'geolocation_map_width_page' ),
 		'height'  => (int) get_option( 'geolocation_map_height_page' ),
@@ -196,10 +196,10 @@ function geolocation_get_block_data() {
 /**
  * Turn the attributes of the block into the attributes of the shortcode.
  *
- * @param array $attributes The attributes of the block.
+ * @param mixed $attributes The attributes of the block; anything but an array counts as no attributes.
  * @return array The attributes as accepted by geolocation_sanitize_map_atts().
  */
-function geolocation_block_to_map_atts( $attributes ) {
+function geolocation_block_to_map_atts( mixed $attributes ): array {
 	$attributes = is_array( $attributes ) ? $attributes : array();
 	$atts       = array();
 	foreach ( array(
@@ -233,7 +233,7 @@ function geolocation_block_to_map_atts( $attributes ) {
  * @param array $attributes The attributes of the block.
  * @return string The HTML of the map, or an empty string if there is nothing to show.
  */
-function geolocation_render_block( $attributes ) {
+function geolocation_render_block( array $attributes ): string {
 	$atts = geolocation_sanitize_map_atts( geolocation_block_to_map_atts( $attributes ) );
 	// The custom field "category" of a page only belongs to the shortcode.
 	$result = geolocation_get_page_markers( $atts, false );
@@ -252,7 +252,7 @@ function geolocation_render_block( $attributes ) {
  * @param WP_Block $block The block, providing the post of a query loop.
  * @return string The HTML of the location, or an empty string if there is nothing to show.
  */
-function geolocation_render_location_block( $attributes, $content = '', $block = null ) {
+function geolocation_render_location_block( array $attributes, string $content = '', ?WP_Block $block = null ): string {
 	$post = get_post( $block && ! empty( $block->context['postId'] ) ? (int) $block->context['postId'] : null );
 	if ( ! $post ) {
 		return '';
@@ -274,7 +274,7 @@ function geolocation_render_location_block( $attributes, $content = '', $block =
  *
  * @return void
  */
-function geolocation_block_preview() {
+function geolocation_block_preview(): void {
 	check_ajax_referer( 'geolocation_preview' );
 	if ( ! current_user_can( 'edit_posts' ) ) {
 		wp_die( '', '', array( 'response' => 403 ) );

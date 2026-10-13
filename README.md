@@ -8,26 +8,13 @@ Since WordPress needs a different [readme.txt](readme.txt), the core information
 
 ## Overview maps on pages
 
-Put the shortcode on a page to show a map with the locations of your posts. Optional attributes filter the posts and set the size of the map:
-
-| Attribute | Meaning | Example |
-|---|---|---|
-| `cat` | Categories as slugs, names or ids, separated by commas | `[geolocation cat="travel,europe"]` |
-| `tag` | Tags as slugs, names or ids, separated by commas | `[geolocation tag="hiking"]` |
-| `width` | Width of the map in pixels or percent | `[geolocation width="100%"]` |
-| `height` | Height of the map in pixels | `[geolocation height="400"]` |
-| `zoom` | Fixed zoom level from 1 to 19; without it the map is fitted to the markers | `[geolocation zoom="6"]` |
-| `route` | Connects the locations with a line, in the order of the post dates | `[geolocation route="1"]` |
-
-Attributes can be combined, and a page can contain several maps. Without the attribute `cat` the custom field "category" of the page is still used.
-
-The same reference is available in WordPress under "Help" at the top right of the plugin's settings page.
+Insert the block "Geolocation Map" into a page or a post to show a map with the locations of your posts. Categories, tags, width, height, zoom and route are chosen in the settings of the block, and the editor shows the map as a preview. A page can contain several maps.
 
 ## Pre-caching tiles
 
 With the [proxy plugin for OSM](https://wordpress.org/plugins/osm-tiles-proxy/) storing tiles on your server, the settings page shows how many tiles of the maps of your posts are stored and offers to pre-cache the missing ones.
 
-- Only the first view of a map is covered. For the map of a post that is its location with the map size and zoom level of the settings, or the view showing its whole track. For an overview map of a shortcode or a block it is the view fitted to its locations and tracks, or its fixed zoom level. Tiles reached by moving or zooming a map are still fetched on demand.
+- Only the first view of a map is covered. For the map of a post that is its location with the map size and zoom level of the settings, or the view showing its whole track. For an overview map it is the view fitted to its locations and tracks, or its fixed zoom level. Tiles reached by moving or zooming a map are still fetched on demand.
 - Maps wider than a phone are also calculated for the width of a phone, where they may use another zoom level. A width in percent refers to the content width of the theme.
 - The run works in the background and takes one post after the other, like a visitor opening one map after the other, with a pause of 4 to 8 seconds in between. Posts whose tiles are stored already are passed without a pause. A run stops after 5000 tiles.
 - Posts are processed from new to old. While a run is in progress the settings page shows a progress bar, the post being processed, the tiles requested, stored and failed, and the estimated time remaining; it refreshes itself and the run can be cancelled.
@@ -46,15 +33,11 @@ A post can carry the track of a GPX file, e.g. the recording of a hike or a bike
 - A post without a location gets the end of its track as location.
 - The setting "Shorten tracks" hides a distance at the start and at the end of every track, e.g. to keep your home address private.
 
-## Block "Geolocation Map"
-
-In the block editor you can insert the block "Geolocation Map" instead of typing the shortcode. Categories, tags, width, height, zoom and route are chosen in the settings of the block, and the editor shows the map as a preview. The block can be used in pages and posts.
-
 ## Block "Post Location"
 
 In a post the block "Post Location" shows the location of the post wherever you place it, as text, as link with a map on hover or as map with its own size. The editor shows a preview of the saved location. The automatic output before or after the post is omitted for posts using the block.
 
-With the position setting "Not automatically" a location is only shown in posts containing the block or the shortcode. Such a post still appears on overview maps if its location is enabled and public.
+With the position setting "Not automatically" a location is only shown in posts containing the block. Such a post still appears on overview maps if its location is enabled and public.
 
 ## Link to the external map
 
@@ -71,6 +54,7 @@ The checks which run for every pull request can be run locally:
 ```bash
 composer install
 composer lint   # WordPress coding standard for PHP
+composer analyse # PHPStan
 composer test   # PHPUnit
 
 npm ci

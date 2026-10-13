@@ -2,7 +2,7 @@
 // nothing on a page, registration and controls in the editor. With --google the website is checked with Google Maps
 // (needs a stored API key; OSM is restored afterwards). The content of the post "Trip to Berlin" is restored afterwards.
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const POST = id('trip-to-berlin');
 const GOOGLE = process.argv[2] === '--google';
 
@@ -32,7 +32,7 @@ const GOOGLE = process.argv[2] === '--google';
   };
   const setProvider = async (provider) => {
     await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-    await page.selectOption('#geolocation_provider', provider);
+    await chooseProvider(page, provider);
     await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   };
   if (GOOGLE) await setProvider('google');

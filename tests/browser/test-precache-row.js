@@ -2,7 +2,7 @@
 // instead of the status while the proxy is not saved as used, and stays shown or hidden after saving.
 // The settings are restored afterwards.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 (async () => {
   const browser = await chromium.launch();
   const page = await (await browser.newContext({ viewport: { width: 1366, height: 1000 } })).newPage();
@@ -13,7 +13,7 @@ const { base } = require('./lib');
   const save = () => Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   const row = () => page.evaluate(() => { const r = document.getElementById('geolocation-precache-row'); if (!r) return 'no row'; const vis = r.offsetParent !== null; return { visible: vis, status: !!document.getElementById('geolocation-precache-status'), startButton: !!document.getElementById('geolocation-precache'), hint: (document.getElementById('geolocation-precache-hint') || {}).textContent || '', onSaveBox: !!document.getElementById('geolocation_osm_precache_on_save') }; });
   const out = {};
-  await open(); await page.check('#geolocation_osm_use_proxy'); await page.selectOption('#geolocation_provider', 'osm'); await save();
+  await open(); await page.check('#geolocation_osm_use_proxy'); await chooseProvider(page, 'osm'); await save();
   try {
     await open();
     out.savedOn = await row();
@@ -28,10 +28,10 @@ const { base } = require('./lib');
     await save(); await open();
     out.savedOnAgain = await row();
     // With Google Maps the whole OSM section is hidden.
-    await page.selectOption('#geolocation_provider', 'google');
+    await chooseProvider(page, 'google');
     out.googleNotSaved = await row();
   } finally {
-    await open(); await page.selectOption('#geolocation_provider', 'osm'); await page.check('#geolocation_osm_use_proxy'); await page.check('#geolocation_osm_precache_on_save'); await save();
+    await open(); await chooseProvider(page, 'osm'); await page.check('#geolocation_osm_use_proxy'); await page.check('#geolocation_osm_precache_on_save'); await save();
   }
   await open();
   out.final = await page.evaluate(() => [document.getElementById('geolocation_provider').value, document.getElementById('geolocation_osm_use_proxy').checked, document.getElementById('geolocation_osm_precache_on_save').checked]);

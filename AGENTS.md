@@ -5,7 +5,7 @@ Guidance for AI coding agents working on the WordPress plugin "Geolocation". Peo
 ## Project
 
 - WordPress plugin, slug `geolocation`, published on wordpress.org. It shows the location of posts as text, link or map, overview maps on pages, routes and GPX tracks, with OpenStreetMap (Leaflet) or Google Maps.
-- Requires WordPress 6.0 and PHP 7.3. Do not use newer PHP syntax or WordPress functions without a fallback; if a change needs a newer version, say so instead of raising the requirement silently.
+- Requires WordPress 6.4 and PHP 8.3. Write for PHP 8.3: native types for parameters and return values, and the functions and syntax of PHP 8 where they make the code clearer. Do not use newer WordPress functions without a fallback; if a change needs a newer version, say so instead of raising the requirement silently.
 - Procedural PHP, every function, option, hook and handle prefixed with `geolocation_`. No classes, no namespaces, no autoloader.
 - JavaScript is delivered as written: no build step, no bundler, no JSX. Scripts use `var` and function expressions and are wrapped in an IIFE.
 - For simplicity the scripts are plain (vanilla) JavaScript: no jQuery and no other JavaScript library, also not the ones WordPress ships. The only exceptions are the bundled map libraries (Leaflet and the two clustering libraries) and, in the block editor, the `wp.*` packages which blocks cannot do without.
@@ -32,12 +32,13 @@ Guidance for AI coding agents working on the WordPress plugin "Geolocation". Peo
 composer install && npm ci
 composer lint    # WordPress coding standard (PHPCS); must report 0 errors
 composer fix     # PHPCBF
+composer analyse # PHPStan: the native types against their use
 composer test    # PHPUnit
 npm run lint     # ESLint for the own scripts
 npm test         # unit tests of the scripts (Node.js 22 or newer)
 ```
 
-All four checks run in CI for every pull request and have to pass.
+All five checks run in CI for every pull request and have to pass.
 
 **WPCS has to succeed.** The PHP code follows the WordPress Coding Standards, and the CI check "WPCS" fails the pull request on any error. Run `composer lint` before every commit and fix what it reports, with `composer fix` or by hand. Do not silence a finding with `phpcs:ignore` unless the line is correct as it is; then name the sniff and give the reason in the same comment. The two known warnings about `meta_query` in `geolocation.php` are accepted.
 
@@ -47,10 +48,12 @@ All four checks run in CI for every pull request and have to pass.
 - **Security:** check a nonce and the capability in every admin-ajax, admin-post and save handler; sanitize every input (`sanitize_text_field( wp_unslash( ... ) )` or a dedicated callback); escape every output at the place where it is printed (`esc_html`, `esc_attr`, `esc_url`, `wp_json_encode`). In scripts insert content of posts as text (`textContent`), never as HTML.
 - **Settings:** every option is listed in `geolocation_get_settings_definition()` with type, sanitize callback and default. An option also has to be created on upgrade and removed on uninstall. Switches which are on by default store `'1'`/`'0'` and are read with `'0' !== (string) get_option( ... )`.
 - **Assets:** enqueue scripts and styles only where a location is actually shown. Pass data to scripts with `wp_add_inline_script`, never by printing `<script>` tags. The map library is loaded on demand by `js/geolocation-front-common.js`; do not enqueue Leaflet or the Google Maps API in the front end.
-- **Both providers:** every feature and every fix has to work with OpenStreetMap and with Google Maps. Keep the legacy `google.maps.Marker`.
+- **OpenStreetMap only for new work:** since version 1.19.0 the connection to Google Maps is no longer developed further. New functions are made for OpenStreetMap only; do not add anything to the Google code and do not ask for it.
+- **Google Maps keeps working:** websites which use it keep the functions they have. A change to shared code must not break them, so check such a change with Google Maps as well. Keep the legacy `google.maps.Marker`. Google Maps is only offered to websites which use it (`geolocation_google_available()`: an API key is stored); do not offer it anywhere else.
+- **Blocks first:** the blocks "Geolocation Map" and "Post Location" are the way to place maps. The shortcode `[geolocation]` and its attributes keep working for existing content, but they are not documented any more and get no new attributes; add new options to the blocks.
 - **Privacy:** the plugin must not cause requests to third parties which the site owner has not chosen. In strict privacy mode (`geolocation_strict_privacy()`, `geolocation_maps_blocked()`) no browser, of visitors or authors, may contact an external map or geocoding server. Stay compatible with the plugin `osm-tiles-proxy` and its filters.
 - **Performance:** no remote request while rendering a page unless its result is cached; cache with transients; no query per post in loops over many posts.
-- **Comments:** every function has a docblock with real types. Comments say why, in English.
+- **Comments:** every function has a docblock with real types, matching its native types. Comments say why, in English.
 
 ## Translations
 
@@ -68,7 +71,7 @@ All four checks run in CI for every pull request and have to pass.
 
 - **Every pull request has to contain proof of a successful test in a real instance:** a running WordPress with the plugin active (a local installation, WordPress Playground or a staging site), not the stubbed unit tests. Passing CI is not such proof.
 - Proof is a screenshot, or the output of a check from `tests/browser/` run against the instance, which shows the changed behaviour working. Attach it to the description of the pull request and say which WordPress version, which map provider and which browser were used.
-- A change which touches maps is proven with OpenStreetMap and with Google Maps. Only the strict privacy mode is OpenStreetMap only.
+- A change is proven with OpenStreetMap. If it touches code which Google Maps shares, also show that Google Maps still works.
 - Also list what was not tested. If no real instance is available, say so plainly and do not present the change as tested.
 - A change without visible behaviour (comments, development tools, documentation) needs no screenshot; state instead that the plugin still activates and shows a map in the instance.
 

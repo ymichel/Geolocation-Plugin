@@ -3,7 +3,7 @@
 // with it; the uninstall test runs in one request. Values are never printed.
 // The maps are checked with Google Maps as well if an API key is stored.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 
 (async () => {
   const browser = await chromium.launch();
@@ -14,7 +14,7 @@ const { base } = require('./lib');
   const helper = async (action) => { await page.goto(base + '/wp-admin/admin-ajax.php?action=geolocation_test&do=' + action, { waitUntil: 'load' }); const r = JSON.parse(await page.locator('body').innerText()); if (!r.success) throw new Error(action + ': ' + JSON.stringify(r.data)); return r.data; };
   const setProvider = async (provider) => {
     await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-    await page.selectOption('#geolocation_provider', provider);
+    await chooseProvider(page, provider);
     await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   };
   const maps = async (google) => {

@@ -2,7 +2,7 @@
 // location of "Post Location" in the post "Trip to Potsdam" (its content is restored afterwards).
 // With --google the previews are checked with Google Maps (needs a stored API key; OSM is restored afterwards).
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const GOOGLE = process.argv[2] === '--google';
 const POST = id('trip-to-potsdam');
 
@@ -15,7 +15,7 @@ const POST = id('trip-to-potsdam');
   await page.goto(base + '/', { waitUntil: 'load' });
   const setProvider = async (provider) => {
     await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-    await page.selectOption('#geolocation_provider', provider);
+    await chooseProvider(page, provider);
     await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   };
   const openEditor = async (id) => {

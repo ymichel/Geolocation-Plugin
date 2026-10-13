@@ -2,7 +2,7 @@
 // Creates or updates the page "Block test"; writes control screenshots to ./out.
 // With --google the website is also checked with Google Maps.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 
 (async () => {
   require('fs').mkdirSync('out', { recursive: true });
@@ -80,7 +80,7 @@ const { base } = require('./lib');
   if (process.argv[2] === '--google') {
     const setProvider = async (provider) => {
       await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-      await page.selectOption('#geolocation_provider', provider);
+      await chooseProvider(page, provider);
       await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
     };
     await setProvider('google');

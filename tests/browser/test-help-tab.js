@@ -17,8 +17,13 @@ async function readHelp(page, shot) {
   await page.waitForTimeout(1200);
   const info = await page.evaluate(() => {
     const panel = document.querySelector('#tab-panel-geolocation-shortcode');
+    const maps = document.querySelector('#tab-panel-geolocation-maps');
     return {
       helpLink: true,
+      // The tab about the blocks comes first and is the one which is open.
+      tabs: [...document.querySelectorAll('.contextual-help-tabs li')].map(t => t.innerText.trim() + (t.classList.contains('active') ? ' (open)' : '')),
+      maps: maps ? [...maps.querySelectorAll('p')].map(p => p.innerText.slice(0, 90)) : null,
+      mapsMentionsShortcode: maps ? /\[|shortcode/i.test(maps.innerText) : null,
       tab: (document.querySelector('#tab-link-geolocation-shortcode') || {}).innerText,
       intro: panel ? panel.querySelector('p').innerText : null,
       headers: panel ? [...panel.querySelectorAll('th')].map(t => t.innerText) : [],

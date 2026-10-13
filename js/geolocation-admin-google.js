@@ -15,7 +15,7 @@
 		var geocoder;
 		var hasLocation;
 		var trackLine = null;
-		var ui = ! common || typeof google === 'undefined' || ! google.maps ? null : common.init( { geocode: geocode, setLocation: setLocation, showTrack: showTrack } );
+		var ui = ! common || typeof google === 'undefined' || ! google.maps ? null : common.init( { geocode: geocode, setLocation: setLocation, showTrack: showTrack, removeLocation: hideMarker } );
 		if ( ! ui ) {
 			return;
 		}
@@ -31,8 +31,14 @@
 			} );
 		}
 
+		// The marker is only on the map while the post has a location.
+		function hideMarker() {
+			marker.setMap( null );
+		}
+
 		function placeMarker( location ) {
 			marker.setPosition( location );
+			marker.setMap( map );
 			map.setCenter( location );
 			ui.setPosition( location.lat(), location.lng() );
 			reverseGeocode( location );
@@ -50,7 +56,9 @@
 		// Show the map section containing the marker and the track.
 		function fitTrack() {
 			var bounds = new google.maps.LatLngBounds();
-			bounds.extend( marker.getPosition() );
+			if ( marker.getMap() ) {
+				bounds.extend( marker.getPosition() );
+			}
 			trackLine.getPath().forEach( function ( position ) {
 				bounds.extend( position );
 			} );
@@ -102,7 +110,7 @@
 
 		var markerOptions = {
 			position: center,
-			map: map,
+			map: hasLocation ? map : null,
 			draggable: true,
 			title: 'Post Location'
 		};

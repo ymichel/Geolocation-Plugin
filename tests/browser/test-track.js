@@ -4,7 +4,7 @@
 // With --google the maps are also loaded with Google Maps (needs a stored API key); OSM is restored afterwards.
 const { chromium } = require('playwright-core');
 const fs = require('fs');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 
 // A winding track between two places, with times and elevations as a recorder would write them.
 function gpx(name, from, to, count, ele) {
@@ -43,7 +43,7 @@ const editorState = (page) => page.evaluate(() => ({
 
 async function setOption(page, name, value) {
   await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-  if (name === 'geolocation_provider') await page.selectOption('#geolocation_provider', value); else await page.fill('#' + name, value);
+  if (name === 'geolocation_provider') await chooseProvider(page, value); else await page.fill('#' + name, value);
   await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
 }
 

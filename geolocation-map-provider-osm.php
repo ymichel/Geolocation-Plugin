@@ -16,7 +16,7 @@
  * @param int $post_id The id of the edited post.
  * @return void
  */
-function geolocation_admin_enqueue_osm( $post_id ) {
+function geolocation_admin_enqueue_osm( int $post_id ): void {
 	$data = array_merge(
 		geolocation_get_admin_post_data( $post_id ),
 		array(
@@ -51,7 +51,7 @@ function geolocation_admin_enqueue_osm( $post_id ) {
  *
  * @return void
  */
-function geolocation_enqueue_front_osm() {
+function geolocation_enqueue_front_osm(): void {
 	if ( wp_script_is( 'geolocation_front_osm', 'enqueued' ) ) {
 		return;
 	}
@@ -84,7 +84,7 @@ function geolocation_enqueue_front_osm() {
  * @param string $longitude The longitude.
  * @return array The decoded answer, or an empty array if the request failed.
  */
-function geolocation_pull_json_osm( $latitude, $longitude ) {
+function geolocation_pull_json_osm( string $latitude, string $longitude ): array {
 	$url  = geolocation_get_osm_nominatim_url() . '/reverse';
 	$args = array(
 		'format'          => 'json',
@@ -124,7 +124,7 @@ function geolocation_pull_json_osm( $latitude, $longitude ) {
  *
  * @return bool
  */
-function geolocation_osm_use_proxy() {
+function geolocation_osm_use_proxy(): bool {
 	if ( ! (bool) get_option( 'geolocation_osm_use_proxy' ) ) {
 		return false;
 	}
@@ -143,7 +143,7 @@ function geolocation_osm_use_proxy() {
  * @param string $filter The name of the proxy plugin's filter.
  * @return string The URL or an empty string.
  */
-function geolocation_osm_proxy_url( $filter ) {
+function geolocation_osm_proxy_url( string $filter ): string {
 	$url = apply_filters( $filter, '' );
 	return is_string( $url ) ? trim( $url ) : '';
 }
@@ -155,7 +155,7 @@ function geolocation_osm_proxy_url( $filter ) {
  *
  * @return string The URL, or an empty string if the proxy is not used or does not deliver tiles.
  */
-function geolocation_osm_proxy_tiles_url() {
+function geolocation_osm_proxy_tiles_url(): string {
 	if ( ! geolocation_osm_use_proxy() ) {
 		return '';
 	}
@@ -176,7 +176,7 @@ function geolocation_osm_proxy_tiles_url() {
  *
  * @return string
  */
-function geolocation_get_osm_tiles_url() {
+function geolocation_get_osm_tiles_url(): string {
 	$url = geolocation_osm_proxy_tiles_url();
 	return '' !== $url ? $url : (string) get_option( 'geolocation_osm_tiles_url' );
 }
@@ -186,7 +186,7 @@ function geolocation_get_osm_tiles_url() {
  *
  * @return string
  */
-function geolocation_get_osm_leaflet_js_url() {
+function geolocation_get_osm_leaflet_js_url(): string {
 	$url = geolocation_osm_use_proxy() ? geolocation_osm_proxy_url( 'osm_tiles_proxy_get_leaflet_js_url' ) : '';
 	return '' !== $url ? $url : plugins_url( 'js/leaflet.js', __FILE__ );
 }
@@ -196,7 +196,7 @@ function geolocation_get_osm_leaflet_js_url() {
  *
  * @return string
  */
-function geolocation_get_osm_leaflet_css_url() {
+function geolocation_get_osm_leaflet_css_url(): string {
 	$url = geolocation_osm_use_proxy() ? geolocation_osm_proxy_url( 'osm_tiles_proxy_get_leaflet_css_url' ) : '';
 	return '' !== $url ? $url : plugins_url( 'js/leaflet.css', __FILE__ );
 }
@@ -206,7 +206,7 @@ function geolocation_get_osm_leaflet_css_url() {
  *
  * @return string
  */
-function geolocation_get_osm_nominatim_url() {
+function geolocation_get_osm_nominatim_url(): string {
 	$param = (string) get_option( 'geolocation_osm_nominatim_url' );
 	return untrailingslashit( $param );
 }

@@ -3,7 +3,7 @@
 // Also the unchanged behaviour without the strict mode and with Google Maps. Nothing is saved to the post;
 // the settings are restored afterwards.
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const POST = id('trip-to-dresden');
 
 (async () => {
@@ -18,7 +18,7 @@ const POST = id('trip-to-dresden');
   const open = () => page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
   const save = () => Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   // The checkboxes are only visible while OpenStreetMap is selected.
-  const set = async (provider, proxy, strict) => { await open(); await page.selectOption('#geolocation_provider', 'osm'); await page.setChecked('#geolocation_osm_use_proxy', proxy); await page.setChecked('#geolocation_osm_strict_privacy', strict); await page.selectOption('#geolocation_provider', provider); await save(); };
+  const set = async (provider, proxy, strict) => { await open(); await chooseProvider(page, 'osm'); await page.setChecked('#geolocation_osm_use_proxy', proxy); await page.setChecked('#geolocation_osm_strict_privacy', strict); await chooseProvider(page, provider); await save(); };
   // What the browser contacts in the editor, and whether looking up an address works.
   const editor = async (google) => {
     hosts = new Set(); geocode = 0;

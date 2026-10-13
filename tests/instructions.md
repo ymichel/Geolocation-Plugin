@@ -40,8 +40,9 @@ node tests/browser/test-overview-map.js --google
 
 - A check prints what it measured as JSON; read it and compare it with what you expect. An empty list `"errors"` means that the pages raised no JavaScript error. Control images are written to `tests/browser/out/`.
 - Most checks change settings or a post and restore them at the end. If one is interrupted, `npm run wp:seed` brings the instance back to the starting point.
-- **Both map providers:** a change which touches maps has to be checked with OpenStreetMap and with Google Maps. Checks which know the option `--google` repeat their steps with Google Maps; the others switch the provider themselves or are independent of it. Only the strict privacy mode is OpenStreetMap only.
+- **Map providers:** new functions are made for OpenStreetMap only, but websites which use Google Maps keep it. A change to code which both share has to be checked with Google Maps as well. Checks which know the option `--google` repeat their steps with Google Maps; the others switch the provider themselves or are independent of it.
 - **Google Maps needs your own API key.** Enter it yourself under Settings > Geolocation in the instance. It is stored in the database of the instance only; never put a key into a file of the repository.
+- The plugin only offers Google Maps to websites which use it, so a fresh instance shows neither the provider nor the field for the key. Open `http://127.0.0.1:9400/wp-admin/admin-ajax.php?action=geolocation_test&do=use_google` once: the helper stores a placeholder as key and selects Google Maps, and the settings page then shows the field, where you replace the placeholder by your key. Without a key the checks run with OpenStreetMap only.
 - The checks for pre-caching request tiles from the OpenStreetMap servers. Run them sparingly.
 
 Another instance can be used with `GEOLOCATION_TEST_URL` (its address) and `GEOLOCATION_TEST_DIR` (the folder of its WordPress files, needed by the pre-caching checks). It needs the test helper as must-use plugin and the demo content. `npm run wp:start -- --port=9401` starts the instance on another port.
@@ -60,8 +61,9 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 | `test-bulk-location.js` | Checks the list of posts: the column "Location" and the field of the bulk edit form which publishes locations or takes that back, including "No change", a post without a location and what a logged-out visitor then sees on the overview map. Runs with both providers and sets the locations of "Trip to Berlin" and "Trip to Dresden" to public again. |
 | `test-classic-editor.js` | Checks the Geolocation box in the classic editor (post "Trip to Dresden"): choosing a GPX file, saving, the output on the website, removing. Switches the block editor off through the test helper. With `--google` also with Google Maps. |
 | `test-editor-location.js` | Checks picking a location in the post editor: click on the map, dragging the marker, "My location" (with a simulated browser position and with the permission denied) and the "Off" state. With `--google` it repeats the checks for Google Maps. Restores the demo location of "Trip to Hamburg" afterwards. |
+| `test-google-offer.js` | Checks that Google Maps is only offered to websites which use it. In an instance without an API key it expects the settings page of a new website (no select, no key field, no request to Google) and that Google Maps cannot be stored; then it stores a placeholder as key and checks the choice, the notice for administrators with its link to hide it, and that removing the key switches to OpenStreetMap. In an instance with a key it expects the select and the hint, and the key field following the select. Needs OpenStreetMap selected; never reads or changes the API key. |
 | `test-google.js` | Checks the Google Maps provider. Needs an API key stored in the test instance. Covers the overview map (clusters, popup), the map of a single post and the editor (click, dragging the marker, address lookup). Switches the provider to Google and back to OSM. |
-| `test-help-tab.js` | Opens the "Shortcode" help tab of the settings page in English and in German and prints its content. Switches the site language to German and back. |
+| `test-help-tab.js` | Opens the help of the settings page in English and in German and prints its two tabs: "Maps", which explains the blocks and does not mention the shortcode, and "Shortcode" for existing content. Switches the site language to German and back. |
 | `test-languages.js` | Checks the translated texts of all ten languages in the browser (settings, help tab, Geolocation box, both blocks, output of a post, preview page) and reports texts which are still English or show HTML entities. Uses the test helper to switch the language. |
 | `test-lazy-library.js` | Checks with both providers that the map library (Leaflet or the Google Maps API) is only loaded when it is needed: not before a map is about to scroll into view, not before the visitor points at a location link, clustering only on overview maps, and nothing on a page without a location. Restores the provider and the display mode. |
 | `test-location-block.js` | Checks the block "Post Location" in the post "Trip to Berlin": map with its own size, plain text, the display of the settings, no second automatic output, rendering through the REST API and the controls in the editor. Restores the content of the post afterwards. |
@@ -79,6 +81,7 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 | `test-precache.js` | Checks pre-caching of tiles: the tiles the plugin calculates for four posts against the tiles Leaflet really requests, the row on the settings page, pre-caching when a post is saved, and that nothing is offered without the proxy or with Google Maps. It deletes tile files on the host, which the PHP workers of WordPress Playground do not notice reliably, so its numbers of stored tiles are not trustworthy; use `test-precache-run.js` for the run itself. |
 | `test-proxy-fields.js` | Checks the fields which follow the checkbox "Use Proxy" on the settings page: the address of the proxy, the explanation of the own tiles URL, and that this URL is read-only while the proxy is used but keeps its value. |
 | `test-query-loop.js` | Checks the block "Post Location" inside a query loop (page "Loop test"): every post shows its own location, on the website and in the previews of the editor. With `--google` also with Google Maps. |
+| `test-remove-location.js` | Checks "Remove location" in the block editor with the post "Trip to Munich": afterwards the post has no location, the location is switched off, the map shows no marker, and nothing comes back when the post is saved again; then a new location is chosen. With `--google` the same with Google Maps. Restores the location of the post. |
 | `test-route.js` | Checks the route line of an overview map (`route="1"`). Gives the demo posts times in the order of a round trip and creates the page "Route test" if missing; writes control screenshots to `out/`. With `--google` it also loads the map with Google Maps. |
 | `test-shortcode-attributes.js` | Checks the attributes of the overview map shortcode (`cat`, `tag`, `width`, `height`, `zoom`) and several maps on one page. Creates the category "North", the tag "capital" and the page "Shortcode test" if they are missing. |
 | `test-strict-admin.js` | Checks the strict privacy mode in the admin area: which hosts the browser of an author contacts in the editor and on the settings page with and without the proxy, that the address search works through the site, that the preview follows the checkboxes, and the unchanged behaviour without the strict mode and with Google Maps. Nothing is saved to the post. |
@@ -96,7 +99,7 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 
 ## The test helper
 
-`tests/browser/mu-plugins/geolocation-test-helper.php` is a must-use plugin of the test instance and not part of the released plugin. It offers `admin-ajax.php?action=geolocation_test&do=...` for administrators: `seed`, `meta&post=...`, `classic_on`/`classic_off`, `language&locale=...`, `tiles&post=...`, `run_cron`, `state`, `backup`, `restore`, `simulate_old` and `uninstall_test`.
+`tests/browser/mu-plugins/geolocation-test-helper.php` is a must-use plugin of the test instance and not part of the released plugin. It offers `admin-ajax.php?action=geolocation_test&do=...` for administrators: `seed`, `meta&post=...`, `classic_on`/`classic_off`, `use_google`, `show_notice`, `language&locale=...`, `tiles&post=...`, `run_cron`, `state`, `backup`, `restore`, `simulate_old` and `uninstall_test`.
 
 ## Things to know
 
@@ -109,8 +112,8 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 
 ## Screenshots for wordpress.org
 
-`screenshots.js`, `screenshot-1.js` and `screenshots-route.js` write the screenshots as PNG, 2732 pixels wide, to `tests/browser/out/`. On macOS they are converted with:
+`screenshots.js`, `screenshot-1.js` and `screenshots-route.js` write the screenshots as PNG, 2732 pixels wide, to `tests/browser/out/`. The two images which show the shortcode (5 and 8 of the scripts) are not published any more: the scripts' images 6, 7, 9 and 10 are the published screenshots 5, 6, 7 and 8. On macOS they are converted with:
 
 ```bash
-cd tests/browser && for i in 1 2 3 4 5 6 7 8 9 10; do sips -s format jpeg -s formatOptions 85 out/screenshot-$i.png --out ../../.wordpress-org/screenshot-$i.jpg; done
+cd tests/browser && for pair in 1:1 2:2 3:3 4:4 6:5 7:6 9:7 10:8; do sips -s format jpeg -s formatOptions 85 out/screenshot-${pair%:*}.png --out ../../.wordpress-org/screenshot-${pair#*:}.jpg; done
 ```

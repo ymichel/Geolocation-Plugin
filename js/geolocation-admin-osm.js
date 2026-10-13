@@ -15,7 +15,7 @@
 		var map;
 		var marker;
 		var trackLine = null;
-		var ui = typeof L === 'undefined' ? null : common.init( { geocode: geocode, setLocation: setLocation, showTrack: showTrack } );
+		var ui = typeof L === 'undefined' ? null : common.init( { geocode: geocode, setLocation: setLocation, showTrack: showTrack, removeLocation: hideMarker } );
 		if ( ! ui ) {
 			return;
 		}
@@ -66,10 +66,22 @@
 			);
 		}
 
+		// The marker is only on the map while the post has a location.
+		function showMarker() {
+			if ( ! map.hasLayer( marker ) ) {
+				marker.addTo( map );
+			}
+		}
+
+		function hideMarker() {
+			map.removeLayer( marker );
+		}
+
 		// Move the marker to a position picked on the map, by dragging or by the browser's location.
 		function setLocation( lat, lng, center ) {
 			ui.setPosition( lat, lng );
 			marker.setLatLng( [ lat, lng ] );
+			showMarker();
 			if ( center ) {
 				map.setView( marker.getLatLng(), Math.max( map.getZoom(), data.zoom ) );
 			}
@@ -78,7 +90,11 @@
 
 		// Show the map section containing the marker and the track.
 		function fitTrack() {
-			map.fitBounds( trackLine.getBounds().extend( marker.getLatLng() ), { padding: [ 20, 20 ], animate: false } );
+			var bounds = trackLine.getBounds();
+			if ( map.hasLayer( marker ) ) {
+				bounds.extend( marker.getLatLng() );
+			}
+			map.fitBounds( bounds, { padding: [ 20, 20 ], animate: false } );
 		}
 
 		// Draw the track of the post; an empty list removes it.
@@ -103,6 +119,7 @@
 					}
 					ui.setPosition( result[0].lat, result[0].lon );
 					marker.setLatLng( [ result[0].lat, result[0].lon ] );
+					showMarker();
 					map.setView( marker.getLatLng(), map.getZoom() );
 					reverseGeocode( result[0].lat, result[0].lon );
 				}
@@ -110,7 +127,7 @@
 		}
 
 		map    = L.map( ui.els.map ).setView( defaultCenter, data.zoom );
-		marker = L.marker( defaultCenter, markerOptions ).addTo( map );
+		marker = L.marker( defaultCenter, markerOptions );
 		// Without tiles (strict privacy mode without the proxy) the map stays hidden; the location is set by its address.
 		if ( ! data.mapBlocked ) {
 			L.tileLayer( data.tilesUrl, {
@@ -130,6 +147,7 @@
 
 		if ( ui.hasLocation ) {
 			marker.setLatLng( [ data.latitude, data.longitude ] );
+			showMarker();
 			map.setView( marker.getLatLng(), data.zoom );
 			if ( ui.needsAddress ) {
 				reverseGeocode( data.latitude, data.longitude );

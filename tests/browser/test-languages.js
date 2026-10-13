@@ -19,7 +19,7 @@ const SAME = { '*': ['Shortcode', 'Tags', 'Route', 'Leaflet JS', 'Leaflet CSS', 
     Object.assign(t, await page.evaluate(() => {
       const o = {};
       document.querySelectorAll('#settings th, #settings label, #settings p.description, #settings strong').forEach((e, i) => { const x = e.textContent.replace(/\s+/g, ' ').trim(); if (x) o['settings.' + i] = x; });
-      document.querySelectorAll('#tab-panel-geolocation-shortcode p, #tab-panel-geolocation-shortcode th, #tab-panel-geolocation-shortcode td:nth-child(2)').forEach((e, i) => { o['help.' + i] = e.textContent.replace(/\s+/g, ' ').trim(); });
+      document.querySelectorAll('#tab-panel-geolocation-maps p, #tab-panel-geolocation-shortcode p, #tab-panel-geolocation-shortcode th, #tab-panel-geolocation-shortcode td:nth-child(2)').forEach((e, i) => { o['help.' + i] = e.textContent.replace(/\s+/g, ' ').trim(); });
       o['settings.title'] = document.querySelector('.wrap h1').textContent.trim();
       return o;
     }));

@@ -21,7 +21,7 @@
  * @param int    $zoom The zoom level, used by OpenStreetMap.
  * @return string
  */
-function geolocation_get_external_map_url( $provider, $latitude, $longitude, $zoom = 16 ) {
+function geolocation_get_external_map_url( string $provider, mixed $latitude, mixed $longitude, int $zoom = 16 ): string {
 	// Seven decimals are more precise than a map can show.
 	$latitude  = rtrim( rtrim( number_format( (float) $latitude, 7, '.', '' ), '0' ), '.' );
 	$longitude = rtrim( rtrim( number_format( (float) $longitude, 7, '.', '' ), '0' ), '.' );
@@ -39,7 +39,7 @@ function geolocation_get_external_map_url( $provider, $latitude, $longitude, $zo
  *
  * @return bool
  */
-function geolocation_map_link_notice() {
+function geolocation_map_link_notice(): bool {
 	return geolocation_strict_privacy() || (bool) get_option( 'geolocation_map_link_notice' );
 }
 
@@ -49,7 +49,7 @@ function geolocation_map_link_notice() {
  * @param string $choice "show" or "hide" to overrule the setting, e.g. by a block; anything else for the setting.
  * @return bool
  */
-function geolocation_map_link_shows( $choice = '' ) {
+function geolocation_map_link_shows( string $choice = '' ): bool {
 	if ( in_array( $choice, array( 'show', 'hide' ), true ) ) {
 		return 'show' === $choice;
 	}
@@ -62,7 +62,7 @@ function geolocation_map_link_shows( $choice = '' ) {
  * @param string $provider The provider, "osm" or "google".
  * @return string The escaped HTML.
  */
-function geolocation_get_map_link_icon( $provider ) {
+function geolocation_get_map_link_icon( string $provider ): string {
 	if ( get_option( 'geolocation_wp_pin' ) ) {
 		return '<img class="geolocation-map-link-icon" src="' . esc_url( plugins_url( 'img/wp_pin.png', __FILE__ ) ) . '" alt="" width="25" height="34" />';
 	}
@@ -81,7 +81,7 @@ function geolocation_get_map_link_icon( $provider ) {
  * @param int   $width The width of the map above the link in pixels, 0 if there is none.
  * @return string The escaped HTML.
  */
-function geolocation_get_map_link( $latitude, $longitude, $width = 0 ) {
+function geolocation_get_map_link( mixed $latitude, mixed $longitude, int $width = 0 ): string {
 	$provider = 'google' === get_option( 'geolocation_provider' ) ? 'google' : 'osm';
 	$service  = 'google' === $provider ? 'Google Maps' : 'OpenStreetMap';
 	$url      = geolocation_get_external_map_url( $provider, $latitude, $longitude, (int) get_option( 'geolocation_default_zoom' ) );

@@ -17,7 +17,7 @@
  * @param array $columns The columns of the list.
  * @return array
  */
-function geolocation_list_columns( $columns ) {
+function geolocation_list_columns( array $columns ): array {
 	$columns['geolocation'] = __( 'Location', 'geolocation' );
 	return $columns;
 }
@@ -29,7 +29,7 @@ function geolocation_list_columns( $columns ) {
  * @param int    $post_id The id of the post.
  * @return void
  */
-function geolocation_list_column( $column, $post_id ) {
+function geolocation_list_column( string $column, int $post_id ): void {
 	if ( 'geolocation' !== $column ) {
 		return;
 	}
@@ -57,7 +57,7 @@ function geolocation_list_column( $column, $post_id ) {
  * @param string $post_type The post type of the list.
  * @return void
  */
-function geolocation_bulk_edit_field( $column, $post_type ) {
+function geolocation_bulk_edit_field( string $column, string $post_type ): void {
 	if ( 'geolocation' !== $column || 'post' !== $post_type ) {
 		return;
 	}
@@ -87,7 +87,7 @@ function geolocation_bulk_edit_field( $column, $post_type ) {
  * @param bool  $is_public Whether the locations shall be public.
  * @return int The number of posts whose location has been changed.
  */
-function geolocation_set_public( $post_ids, $is_public ) {
+function geolocation_set_public( array $post_ids, bool $is_public ): int {
 	$changed = 0;
 	foreach ( array_map( 'intval', (array) $post_ids ) as $post_id ) {
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -117,7 +117,7 @@ function geolocation_set_public( $post_ids, $is_public ) {
  * @param int $post_id The id of the saved post.
  * @return void
  */
-function geolocation_bulk_edit_save( $post_id ) {
+function geolocation_bulk_edit_save( int $post_id ): void {
 	if ( ! isset( $_REQUEST['bulk_edit'], $_REQUEST['geolocation_public'], $_REQUEST['_wpnonce'] ) ) {
 		return;
 	}

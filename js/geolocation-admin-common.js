@@ -212,7 +212,8 @@
 
 	// Wire the meta box's fields. handlers.geocode( address ) has to look up an address,
 	// handlers.setLocation( lat, lng, recenter ) has to move the marker to a position picked by the user,
-	// handlers.showTrack( points ) has to draw the track of the post on the map (an empty list removes it).
+	// handlers.showTrack( points ) has to draw the track of the post on the map (an empty list removes it),
+	// handlers.removeLocation() has to take the marker from the map.
 	// Returns null if the meta box is not available.
 	function init( handlers ) {
 		var els = {
@@ -323,7 +324,11 @@
 			els.addrRev.value     = '';
 			els.removeFlag.value  = '1';
 			els.status.textContent = '';
-			els.map.style.opacity = '0.5';
+			// Without a location there is nothing to show: switch it off and take the marker from the map.
+			setGeoEnabled( false );
+			if ( handlers.removeLocation ) {
+				handlers.removeLocation();
+			}
 		} );
 
 		// A post without a location gets the end of its track as location.
