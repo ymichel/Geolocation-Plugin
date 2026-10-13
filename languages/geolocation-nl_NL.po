@@ -185,6 +185,24 @@ msgstr "Hoogte van de kaart in pixels."
 msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
 msgstr "Vast zoomniveau van 1 tot 19. Zonder dit attribuut wordt de kaart aangepast aan de markers."
 
+msgid "Insert the block \"Geolocation Map\" into a page or a post to show a map with the locations of your posts. In the settings of the block you choose categories and tags, the size of the map, a fixed zoom level and the route between the locations."
+msgstr "Voeg het blok \"Geolocation-kaart\" in een pagina of een bericht in om een kaart met de locaties van je berichten te tonen. In de instellingen van het blok kies je categorieën en tags, de grootte van de kaart, een vast zoomniveau en de route tussen de locaties."
+
+msgid "A page can contain several maps."
+msgstr "Een pagina kan meerdere kaarten bevatten."
+
+msgid "The route follows the publication dates of the posts, oldest first. Choose a category to show the route of a single trip."
+msgstr "De route volgt de publicatiedata van de berichten, de oudste eerst. Kies een categorie om de route van één reis te tonen."
+
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Een bericht kan de track van een GPX-bestand bevatten, gekozen in het Geolocation-vak van de editor. Een kaart met route tekent deze tracks zoals opgenomen en de tussenruimtes als stippellijnen."
+
+msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
+msgstr "In een bericht toont het blok \"Locatie van het bericht\" de locatie op de plek waar je het plaatst. De automatische uitvoer voor of na het bericht vervalt dan."
+
+msgid "The shortcode keeps working for existing pages. For new maps use the block \"Geolocation Map\"."
+msgstr "De shortcode blijft werken voor bestaande pagina’s. Gebruik voor nieuwe kaarten het blok \"Geolocation-kaart\"."
+
 msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
 msgstr "Plaats de shortcode op een pagina om een kaart met de locaties van je berichten te tonen. De volgende attributen zijn optioneel en kunnen worden gecombineerd."
 
@@ -200,20 +218,11 @@ msgstr "Voorbeeld"
 msgid "The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with \"cat\" to show the route of a single trip."
 msgstr "De route volgt de publicatiedatums van de berichten, de oudste eerst, en verbindt de locaties met rechte lijnen. Combineer met \"cat\" om de route van één reis te tonen."
 
-msgid "A page can contain several maps."
-msgstr "Een pagina kan meerdere kaarten bevatten."
-
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Zonder het attribuut \"cat\" wordt het aangepaste veld \"category\" van de pagina gebruikt."
 
-msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
-msgstr "Een bericht kan de track van een GPX-bestand bevatten, gekozen in het Geolocation-vak van de editor. Een kaart met route tekent deze tracks zoals opgenomen en de tussenruimtes als stippellijnen."
-
-msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
-msgstr "In de blokeditor biedt het blok \"Geolocation-kaart\" dezelfde opties zonder een shortcode te typen."
-
-msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
-msgstr "In een bericht toont het blok \"Locatie van het bericht\" de locatie op de plek waar je het plaatst. De automatische uitvoer voor of na het bericht vervalt dan."
+msgid "Maps"
+msgstr "Kaarten"
 
 msgid "Shortcode"
 msgstr "Shortcode"
@@ -320,6 +329,9 @@ msgstr "Verbergt deze afstand aan het begin en het einde van elke track, bijv. o
 msgid "Maps Provider"
 msgstr "Kaartaanbieder"
 
+msgid "Google Maps is no longer developed further and is only offered to websites which already use it. It disappears from this page once the API key is removed."
+msgstr "Google Maps wordt niet verder ontwikkeld en wordt alleen nog aangeboden aan websites die het al gebruiken. Het verdwijnt van deze pagina zodra de API-sleutel is verwijderd."
+
 msgid "Google Maps API key"
 msgstr "Google Maps API-sleutel"
 
@@ -410,8 +422,11 @@ msgstr "Ondersteuning"
 msgid "Settings"
 msgstr "Instellingen"
 
-msgid "Google Maps API key is missing for"
-msgstr "De Google Maps API-sleutel ontbreekt voor"
+msgid "Geolocation: Google Maps is no longer developed further. Your maps keep working, but new functions are made for OpenStreetMap only. You can switch to OpenStreetMap in the settings at any time."
+msgstr "Geolocation: Google Maps wordt niet verder ontwikkeld. Je kaarten blijven werken, maar nieuwe functies worden alleen nog voor OpenStreetMap gemaakt. Je kunt in de instellingen op elk moment naar OpenStreetMap overstappen."
+
+msgid "Hide this notice"
+msgstr "Deze melding verbergen"
 
 msgid "Geolocation: strict privacy mode is active, but the tiles proxy is not available. Only the location text is shown."
 msgstr "Geolocation: de strikte privacymodus is actief, maar de tegelproxy is niet beschikbaar. Alleen de locatietekst wordt getoond."

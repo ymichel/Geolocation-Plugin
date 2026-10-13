@@ -2,13 +2,13 @@
 // below it, with both providers, on a desktop and on a phone. Keeps the settings as they are, except the provider,
 // which ends on the one found. The link has to be switched on.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 (async () => {
   const browser = await chromium.launch();
   const page = await (await browser.newContext({ viewport: { width: 1366, height: 1000 } })).newPage();
   await page.goto(base + '/', { waitUntil: 'load' });
   const provider = async (p) => { await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' }); const was = await page.inputValue('#geolocation_provider'); const linkOn = await page.isChecked('#geolocation_map_link');
-    if (p && p !== was) { await page.selectOption('#geolocation_provider', p); await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]); } return [was, linkOn]; };
+    if (p && p !== was) { await chooseProvider(page, p); await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]); } return [was, linkOn]; };
   const [was, linkOn] = await provider();
   const out = { providerBefore: was, linkOn };
   try {

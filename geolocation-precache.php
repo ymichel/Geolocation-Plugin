@@ -38,7 +38,7 @@ define( 'GEOLOCATION__MAX_ZOOM', 18 );
  * @param int   $zoom The zoom level.
  * @return array The position as [ x, y ] in tiles, with fractions.
  */
-function geolocation_tile_position( $latitude, $longitude, $zoom ) {
+function geolocation_tile_position( float $latitude, float $longitude, int $zoom ): array {
 	$tiles    = pow( 2, (int) $zoom );
 	$latitude = max( -85.0511287798, min( 85.0511287798, (float) $latitude ) );
 	$sinus    = sin( deg2rad( $latitude ) );
@@ -57,7 +57,7 @@ function geolocation_tile_position( $latitude, $longitude, $zoom ) {
  * @param int   $height The height of the map in pixels.
  * @return array The tiles as [ zoom, x, y ].
  */
-function geolocation_view_tiles( $center, $zoom, $width, $height ) {
+function geolocation_view_tiles( array $center, int $zoom, int $width, int $height ): array {
 	$zoom  = (int) $zoom;
 	$count = (int) pow( 2, $zoom );
 	$left  = (int) round( $center[0] * 256 - $width / 2 );
@@ -85,7 +85,7 @@ function geolocation_view_tiles( $center, $zoom, $width, $height ) {
  * @param int   $padding The free space kept at every edge in pixels.
  * @return array The centre as [ x, y ] in tiles and the zoom level.
  */
-function geolocation_fit_view( $points, $width, $height, $padding = 20 ) {
+function geolocation_fit_view( array $points, int $width, int $height, int $padding = 20 ): array {
 	$latitudes  = array();
 	$longitudes = array();
 	foreach ( $points as $point ) {
@@ -114,7 +114,7 @@ function geolocation_fit_view( $points, $width, $height, $padding = 20 ) {
  * @param int $width The width of the map in pixels.
  * @return array The widths of the map without its border.
  */
-function geolocation_precache_widths( $width ) {
+function geolocation_precache_widths( int $width ): array {
 	// The map has a border of one pixel at every edge.
 	$widths = array( max( 50, (int) $width - 2 ) );
 	if ( $width > GEOLOCATION__PRECACHE_PHONE_WIDTH ) {
@@ -129,7 +129,7 @@ function geolocation_precache_widths( $width ) {
  * @param bool $wide Whether the map is aligned wide or full.
  * @return int The width in pixels.
  */
-function geolocation_get_content_width( $wide = false ) {
+function geolocation_get_content_width( bool $wide = false ): int {
 	$layout = function_exists( 'wp_get_global_settings' ) ? wp_get_global_settings( array( 'layout' ) ) : array();
 	$key    = $wide ? 'wideSize' : 'contentSize';
 	if ( is_array( $layout ) && isset( $layout[ $key ] ) && preg_match( '/^(\d+)px$/', trim( (string) $layout[ $key ] ), $matches ) ) {
@@ -145,7 +145,7 @@ function geolocation_get_content_width( $wide = false ) {
  * @param int $post_id The posts id.
  * @return array The tiles as [ zoom, x, y ]; empty if the post has no location.
  */
-function geolocation_get_location_tiles( $post_id ) {
+function geolocation_get_location_tiles( int $post_id ): array {
 	$latitude  = geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_latitude', true ) );
 	$longitude = geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_longitude', true ) );
 	if ( '' === (string) $latitude || '' === (string) $longitude || ! get_post_meta( $post_id, 'geo_enabled', true ) ) {
@@ -157,7 +157,7 @@ function geolocation_get_location_tiles( $post_id ) {
 	if ( empty( $track ) ) {
 		// A narrower map shows a part of the same tiles.
 		$zoom = max( 0, min( GEOLOCATION__MAX_ZOOM, (int) get_option( 'geolocation_default_zoom' ) ) );
-		return geolocation_view_tiles( geolocation_tile_position( $latitude, $longitude, $zoom ), $zoom, $widths[0], $height );
+		return geolocation_view_tiles( geolocation_tile_position( (float) $latitude, (float) $longitude, $zoom ), $zoom, $widths[0], $height );
 	}
 	// The map shows the whole track and the location.
 	$track[] = array( (float) $latitude, (float) $longitude );
@@ -176,7 +176,7 @@ function geolocation_get_location_tiles( $post_id ) {
  * @return array One entry per map with the cleaned attributes ("atts"), whether the custom field "category"
  *               of the page applies ("legacy") and whether the map is aligned wide or full ("wide").
  */
-function geolocation_get_overview_maps( $post ) {
+function geolocation_get_overview_maps( WP_Post $post ): array {
 	$maps  = array();
 	$regex = geolocation_shortcode_regex();
 	if ( 'page' === $post->post_type && '' !== $regex && preg_match_all( $regex, $post->post_content, $matches, PREG_SET_ORDER ) ) {
@@ -189,7 +189,7 @@ function geolocation_get_overview_maps( $post ) {
 			);
 		}
 	}
-	if ( function_exists( 'parse_blocks' ) && false !== strpos( $post->post_content, 'wp:geolocation/map' ) ) {
+	if ( function_exists( 'parse_blocks' ) && str_contains( $post->post_content, 'wp:geolocation/map' ) ) {
 		$blocks = parse_blocks( $post->post_content );
 		while ( $blocks ) {
 			$block = array_shift( $blocks );
@@ -216,7 +216,7 @@ function geolocation_get_overview_maps( $post ) {
  * @param int   $page_id The id of the page or post containing the map.
  * @return array The positions the map is fitted to, as [ latitude, longitude ] pairs.
  */
-function geolocation_get_overview_points( $map, $page_id ) {
+function geolocation_get_overview_points( array $map, int $page_id ): array {
 	$atts       = $map['atts'];
 	$categories = $atts['cat'];
 	$legacy     = false;
@@ -258,7 +258,7 @@ function geolocation_get_overview_points( $map, $page_id ) {
  * @param WP_Post $post The page or post.
  * @return array The tiles as [ zoom, x, y ].
  */
-function geolocation_get_overview_tiles( $post ) {
+function geolocation_get_overview_tiles( WP_Post $post ): array {
 	$tiles = array();
 	foreach ( geolocation_get_overview_maps( $post ) as $map ) {
 		$result = geolocation_get_overview_points( $map, $post->ID );
@@ -295,7 +295,7 @@ function geolocation_get_overview_tiles( $post ) {
  * @param int $post_id The id of the page or post.
  * @return array The tiles as [ zoom, x, y ].
  */
-function geolocation_get_post_tiles( $post_id ) {
+function geolocation_get_post_tiles( int $post_id ): array {
 	$post = get_post( $post_id );
 	if ( ! $post ) {
 		return array();
@@ -311,7 +311,7 @@ function geolocation_get_post_tiles( $post_id ) {
  * @param array  $tile The tile as [ zoom, x, y ].
  * @return string
  */
-function geolocation_tile_url( $template, $tile ) {
+function geolocation_tile_url( string $template, array $tile ): string {
 	$subdomains = array( 'a', 'b', 'c' );
 	return str_replace(
 		array( '{s}', '{z}', '{x}', '{y}' ),
@@ -326,9 +326,9 @@ function geolocation_tile_url( $template, $tile ) {
  * @param string $url The URL of the tile.
  * @return string The path, or an empty string if the URL does not point into the content folder of this site.
  */
-function geolocation_tile_file( $url ) {
+function geolocation_tile_file( string $url ): string {
 	$base = trailingslashit( content_url() );
-	if ( 0 !== strpos( $url, $base ) || false !== strpos( $url, '..' ) ) {
+	if ( ! str_starts_with( $url, $base ) || str_contains( $url, '..' ) ) {
 		return '';
 	}
 	return trailingslashit( WP_CONTENT_DIR ) . substr( $url, strlen( $base ) );
@@ -341,7 +341,7 @@ function geolocation_tile_file( $url ) {
  *
  * @return string The tiles URL, or an empty string.
  */
-function geolocation_precache_proxy_url() {
+function geolocation_precache_proxy_url(): string {
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
@@ -360,7 +360,7 @@ function geolocation_precache_proxy_url() {
  *
  * @return string The tiles URL, or an empty string if pre-caching is not possible.
  */
-function geolocation_precache_tiles_url() {
+function geolocation_precache_tiles_url(): string {
 	if ( 'osm' !== get_option( 'geolocation_provider' ) || ! get_option( 'geolocation_osm_use_proxy' ) ) {
 		return '';
 	}
@@ -372,7 +372,7 @@ function geolocation_precache_tiles_url() {
  *
  * @return array The ids, pages first.
  */
-function geolocation_precache_map_ids() {
+function geolocation_precache_map_ids(): array {
 	global $wpdb;
 	$shortcode = trim( (string) get_option( 'geolocation_shortcode' ) );
 	$shortcode = '[' === substr( $shortcode, 0, 1 ) ? rtrim( $shortcode, ']' ) : $shortcode;
@@ -395,7 +395,7 @@ function geolocation_precache_map_ids() {
  *
  * @return array The ids of the pages and posts.
  */
-function geolocation_precache_post_ids() {
+function geolocation_precache_post_ids(): array {
 	$posts = get_posts(
 		array(
 			'post_type'      => 'post',
@@ -433,7 +433,7 @@ function geolocation_precache_post_ids() {
  * @param int    $limit Stop after this number of missing tiles, 0 for no limit.
  * @return array The number of posts looked at, the number of their tiles and the URLs of the missing ones.
  */
-function geolocation_precache_missing( $post_ids, $template, $limit = 0 ) {
+function geolocation_precache_missing( array $post_ids, string $template, int $limit = 0 ): array {
 	$posts   = 0;
 	$seen    = array();
 	$missing = array();
@@ -465,8 +465,8 @@ function geolocation_precache_missing( $post_ids, $template, $limit = 0 ) {
  * @param string         $url The URL of the tile.
  * @return bool
  */
-function geolocation_precache_is_tile( $response, $url ) {
-	if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) || 0 !== strpos( (string) wp_remote_retrieve_header( $response, 'content-type' ), 'image/' ) ) {
+function geolocation_precache_is_tile( $response, string $url ): bool {
+	if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) || ! str_starts_with( (string) wp_remote_retrieve_header( $response, 'content-type' ), 'image/' ) ) {
 		return false;
 	}
 	$final = '';
@@ -484,7 +484,7 @@ function geolocation_precache_is_tile( $response, $url ) {
  * @param array $urls The URLs of the tiles.
  * @return int The number of tiles delivered or stored.
  */
-function geolocation_precache_fetch( $urls ) {
+function geolocation_precache_fetch( array $urls ): int {
 	$stored = 0;
 	foreach ( $urls as $url ) {
 		$response = wp_remote_get(
@@ -509,7 +509,7 @@ function geolocation_precache_fetch( $urls ) {
  *
  * @return bool Whether the run has been started.
  */
-function geolocation_precache_start() {
+function geolocation_precache_start(): bool {
 	$template = geolocation_precache_tiles_url();
 	if ( '' === $template ) {
 		return false;
@@ -544,7 +544,7 @@ function geolocation_precache_start() {
  *
  * @return array Empty if there has been no run yet.
  */
-function geolocation_precache_get_status() {
+function geolocation_precache_get_status(): array {
 	$status = get_option( 'geolocation_precache_status' );
 	if ( ! is_array( $status ) ) {
 		return array();
@@ -572,7 +572,7 @@ function geolocation_precache_get_status() {
  *
  * @return bool
  */
-function geolocation_precache_is_running() {
+function geolocation_precache_is_running(): bool {
 	$status = geolocation_precache_get_status();
 	return ! empty( $status['running'] );
 }
@@ -582,7 +582,7 @@ function geolocation_precache_is_running() {
  *
  * @return void
  */
-function geolocation_precache_cancel() {
+function geolocation_precache_cancel(): void {
 	wp_unschedule_hook( 'geolocation_precache_batch' );
 	$status = geolocation_precache_get_status();
 	if ( ! empty( $status['running'] ) ) {
@@ -601,7 +601,7 @@ function geolocation_precache_cancel() {
  * @param int $offset The number of posts already processed.
  * @return void
  */
-function geolocation_precache_batch( $offset = 0 ) {
+function geolocation_precache_batch( int $offset = 0 ): void {
 	$offset   = (int) $offset;
 	$template = geolocation_precache_tiles_url();
 	$status   = geolocation_precache_get_status();
@@ -645,7 +645,7 @@ function geolocation_precache_batch( $offset = 0 ) {
  *
  * @return bool
  */
-function geolocation_precache_on_save() {
+function geolocation_precache_on_save(): bool {
 	return '0' !== (string) get_option( 'geolocation_osm_precache_on_save' );
 }
 
@@ -655,7 +655,7 @@ function geolocation_precache_on_save() {
  * @param int $post_id The id of the page or post.
  * @return void
  */
-function geolocation_precache_saved_post( $post_id ) {
+function geolocation_precache_saved_post( int $post_id ): void {
 	if ( ! geolocation_precache_on_save() || wp_is_post_revision( $post_id ) || 'publish' !== get_post_status( $post_id ) || '' === geolocation_precache_tiles_url() ) {
 		return;
 	}
@@ -671,7 +671,7 @@ function geolocation_precache_saved_post( $post_id ) {
  * @param int $post_id The id of the page or post.
  * @return void
  */
-function geolocation_precache_post( $post_id ) {
+function geolocation_precache_post( int $post_id ): void {
 	$template = geolocation_precache_tiles_url();
 	if ( '' === $template ) {
 		return;
@@ -686,7 +686,7 @@ function geolocation_precache_post( $post_id ) {
  *
  * @return void
  */
-function geolocation_precache_request() {
+function geolocation_precache_request(): void {
 	check_admin_referer( 'geolocation_precache' );
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( '', '', array( 'response' => 403 ) );
@@ -706,7 +706,7 @@ function geolocation_precache_request() {
  *
  * @return void
  */
-function geolocation_precache_status_request() {
+function geolocation_precache_status_request(): void {
 	check_ajax_referer( 'geolocation_precache' );
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error( null, 403 );
@@ -724,7 +724,7 @@ function geolocation_precache_status_request() {
  *
  * @return string The escaped HTML.
  */
-function geolocation_precache_status_html() {
+function geolocation_precache_status_html(): string {
 	$status = geolocation_precache_get_status();
 	$action = wp_nonce_url( admin_url( 'admin-post.php?action=geolocation_precache' ), 'geolocation_precache' );
 	$failed = empty( $status ) ? 0 : max( 0, $status['requested'] - $status['stored'] );

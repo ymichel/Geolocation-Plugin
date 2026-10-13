@@ -2,7 +2,7 @@
 // "Munich to Venice by bike" with its track. The demo content creates the post, "npm run wp:seed" writes out/munich-venice.gpx.
 // With --google it writes a control image of the editor with Google Maps instead (OSM is restored afterwards).
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 const GOOGLE = process.argv[2] === '--google';
 
 (async () => {
@@ -14,7 +14,7 @@ const GOOGLE = process.argv[2] === '--google';
   await page.goto(base + '/', { waitUntil: 'load' });
   const setProvider = async (provider) => {
     await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-    await page.selectOption('#geolocation_provider', provider);
+    await chooseProvider(page, provider);
     await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   };
   const report = {};

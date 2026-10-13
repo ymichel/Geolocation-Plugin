@@ -152,9 +152,12 @@
 		var googleRow = document.querySelector( '.google-apikey' );
 		var osmRow    = document.querySelector( '.osm-urls' );
 		provider      = value;
-		if ( googleRow && osmRow ) {
+		// The row of the key only exists on websites which are offered Google Maps.
+		if ( googleRow ) {
 			googleRow.style.display = provider === 'google' ? '' : 'none';
-			osmRow.style.display    = provider === 'google' ? 'none' : '';
+		}
+		if ( osmRow ) {
+			osmRow.style.display = provider === 'google' ? 'none' : '';
 		}
 		initializeMap();
 	}

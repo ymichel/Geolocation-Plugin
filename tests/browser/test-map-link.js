@@ -3,7 +3,7 @@
 // modes, the option of the block "Post Location" and the settings page. Uses the post "Trip to Berlin" (restored).
 // The link itself is not followed, so the test does not contact the map services through it.
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const POST = id('trip-to-berlin');
 const URL_ = '/2026/10/04/trip-to-berlin/';
 
@@ -16,9 +16,9 @@ const URL_ = '/2026/10/04/trip-to-berlin/';
   await page.goto(base + '/', { waitUntil: 'load' });
   const open = () => page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
   const save = () => Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
-  const set = async (o) => { await open(); await page.selectOption('#geolocation_provider', 'osm'); if ('strict' in o) await page.setChecked('#geolocation_osm_strict_privacy', o.strict);
+  const set = async (o) => { await open(); await chooseProvider(page, 'osm'); if ('strict' in o) await page.setChecked('#geolocation_osm_strict_privacy', o.strict);
     if ('link' in o) await page.setChecked('#geolocation_map_link', o.link); if ('notice' in o && !(await page.isDisabled('#geolocation_map_link_notice'))) await page.setChecked('#geolocation_map_link_notice', o.notice);
-    if (o.display) await page.check('#geolocation_map_display_' + o.display); await page.selectOption('#geolocation_provider', o.provider || 'osm'); await save(); };
+    if (o.display) await page.check('#geolocation_map_display_' + o.display); await chooseProvider(page, o.provider || 'osm'); await save(); };
   const setContent = async (c) => { await page.goto(base + '/wp-admin/edit.php', { waitUntil: 'load' }); await page.evaluate(async ([id, c]) => { await wp.apiFetch({ path: '/wp/v2/posts/' + id, method: 'POST', data: { content: c } }); }, [POST, c]); };
   const link = async (p) => { await (p || page).goto(base + URL_, { waitUntil: 'load' }); await (p || page).waitForTimeout(800); return (p || page).evaluate(() => { const a = document.querySelector('a.geolocation-map-link'); if (!a) return null;
     const i = a.querySelector('.geolocation-map-link-icon'); const r = a.getBoundingClientRect();
@@ -71,7 +71,7 @@ const URL_ = '/2026/10/04/trip-to-berlin/';
     out.settingsStrictUnchecked = await box();
     await page.check('#geolocation_osm_strict_privacy');
     out.settingsStrictChecked = await box();
-    await page.selectOption('#geolocation_provider', 'google');
+    await chooseProvider(page, 'google');
     out.settingsGoogleSelected = await box();
     // A chosen notice survives a time in strict mode.
     await set({ provider: 'osm', strict: false, link: true, notice: true });

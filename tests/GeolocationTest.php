@@ -99,7 +99,26 @@ class GeolocationTest extends TestCase {
 	 * @return void
 	 */
 	public function test_sanitize_provider() {
+		// Google Maps is only accepted on websites which use it.
+		$this->assertFalse( geolocation_google_available() );
+		$this->assertSame( 'osm', geolocation_sanitize_provider( 'google' ) );
+		$GLOBALS['geolocation_test_options']['geolocation_google_maps_api_key'] = 'a-key';
+		$this->assertTrue( geolocation_google_available() );
 		$this->assertSame( 'google', geolocation_sanitize_provider( 'google' ) );
+		$GLOBALS['geolocation_test_options']['geolocation_google_maps_api_key'] = '';
+		$this->assertSame( 'osm', geolocation_sanitize_provider( 'google' ) );
+		// Google Maps without a key is not offered and not used: the provider then reads as OpenStreetMap.
+		$GLOBALS['geolocation_test_options']['geolocation_provider'] = 'google';
+		$this->assertFalse( geolocation_google_available() );
+		$this->assertSame( 'osm', geolocation_sanitize_provider( 'google' ) );
+		$this->assertSame( 'osm', geolocation_filter_provider( 'google' ) );
+		$this->assertSame( 'osm', geolocation_filter_provider( 'osm' ) );
+		$GLOBALS['geolocation_test_options']['geolocation_google_maps_api_key'] = 'a-key';
+		$this->assertSame( 'google', geolocation_filter_provider( 'google' ) );
+		$GLOBALS['geolocation_test_options']['geolocation_google_maps_api_key'] = '';
+		// With OpenStreetMap selected and no key it is gone.
+		$GLOBALS['geolocation_test_options']['geolocation_provider'] = 'osm';
+		$this->assertFalse( geolocation_google_available() );
 		$this->assertSame( 'osm', geolocation_sanitize_provider( 'osm' ) );
 		$this->assertSame( 'osm', geolocation_sanitize_provider( 'bing' ) );
 		$this->assertSame( 'osm', geolocation_sanitize_provider( null ) );

@@ -185,6 +185,24 @@ msgstr "Altezza della mappa in pixel."
 msgid "Fixed zoom level from 1 to 19. Without it the map is fitted to the markers."
 msgstr "Livello di zoom fisso da 1 a 19. Senza, la mappa viene adattata ai marcatori."
 
+msgid "Insert the block \"Geolocation Map\" into a page or a post to show a map with the locations of your posts. In the settings of the block you choose categories and tags, the size of the map, a fixed zoom level and the route between the locations."
+msgstr "Inserisci il blocco \"Mappa Geolocation\" in una pagina o in un articolo per mostrare una mappa con le posizioni dei tuoi articoli. Nelle impostazioni del blocco scegli categorie e tag, la dimensione della mappa, un livello di zoom fisso e il percorso tra le posizioni."
+
+msgid "A page can contain several maps."
+msgstr "Una pagina può contenere più mappe."
+
+msgid "The route follows the publication dates of the posts, oldest first. Choose a category to show the route of a single trip."
+msgstr "Il percorso segue le date di pubblicazione degli articoli, dal più vecchio. Scegli una categoria per mostrare il percorso di un solo viaggio."
+
+msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
+msgstr "Un articolo può avere la traccia di un file GPX, scelto nel riquadro Geolocation dell’editor. Una mappa con percorso disegna queste tracce come registrate e gli spazi tra di esse con linee tratteggiate."
+
+msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
+msgstr "In un articolo, il blocco \"Posizione dell’articolo\" mostra la sua posizione dove lo inserisci. L’output automatico prima o dopo l’articolo viene quindi omesso."
+
+msgid "The shortcode keeps working for existing pages. For new maps use the block \"Geolocation Map\"."
+msgstr "Lo shortcode continua a funzionare per le pagine esistenti. Per le nuove mappe usa il blocco \"Mappa Geolocation\"."
+
 msgid "Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined."
 msgstr "Inserisci lo shortcode in una pagina per mostrare una mappa con le posizioni dei tuoi articoli. I seguenti attributi sono facoltativi e possono essere combinati."
 
@@ -200,20 +218,11 @@ msgstr "Esempio"
 msgid "The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with \"cat\" to show the route of a single trip."
 msgstr "Il percorso segue le date di pubblicazione degli articoli, dal più vecchio al più recente, e collega le posizioni con linee rette. Combinalo con \"cat\" per mostrare il percorso di un singolo viaggio."
 
-msgid "A page can contain several maps."
-msgstr "Una pagina può contenere più mappe."
-
 msgid "Without the attribute \"cat\" the custom field \"category\" of the page is used."
 msgstr "Senza l’attributo \"cat\" viene usato il campo personalizzato \"category\" della pagina."
 
-msgid "A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines."
-msgstr "Un articolo può avere la traccia di un file GPX, scelto nel riquadro Geolocation dell’editor. Una mappa con percorso disegna queste tracce come registrate e gli spazi tra di esse con linee tratteggiate."
-
-msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
-msgstr "Nell’editor a blocchi, il blocco \"Mappa Geolocation\" offre le stesse opzioni senza digitare uno shortcode."
-
-msgid "In a post the block \"Post Location\" shows its location wherever you place it. The automatic output before or after the post is then omitted."
-msgstr "In un articolo, il blocco \"Posizione dell’articolo\" mostra la sua posizione dove lo inserisci. L’output automatico prima o dopo l’articolo viene quindi omesso."
+msgid "Maps"
+msgstr "Mappe"
 
 msgid "Shortcode"
 msgstr "Shortcode"
@@ -320,6 +329,9 @@ msgstr "Nasconde questa distanza all’inizio e alla fine di ogni traccia, ad es
 msgid "Maps Provider"
 msgstr "Fornitore di mappe"
 
+msgid "Google Maps is no longer developed further and is only offered to websites which already use it. It disappears from this page once the API key is removed."
+msgstr "Google Maps non viene più sviluppato ed è offerto solo ai siti che lo usano già. Scompare da questa pagina non appena la chiave API viene rimossa."
+
 msgid "Google Maps API key"
 msgstr "Chiave API di Google Maps"
 
@@ -410,8 +422,11 @@ msgstr "Supporto"
 msgid "Settings"
 msgstr "Impostazioni"
 
-msgid "Google Maps API key is missing for"
-msgstr "Manca la chiave API di Google Maps per"
+msgid "Geolocation: Google Maps is no longer developed further. Your maps keep working, but new functions are made for OpenStreetMap only. You can switch to OpenStreetMap in the settings at any time."
+msgstr "Geolocation: Google Maps non viene più sviluppato. Le tue mappe continuano a funzionare, ma le nuove funzioni vengono create solo per OpenStreetMap. Puoi passare a OpenStreetMap nelle impostazioni in qualsiasi momento."
+
+msgid "Hide this notice"
+msgstr "Nascondi questo avviso"
 
 msgid "Geolocation: strict privacy mode is active, but the tiles proxy is not available. Only the location text is shown."
 msgstr "Geolocation: la modalità privacy rigorosa è attiva, ma il proxy dei tile non è disponibile. Viene mostrato solo il testo della posizione."

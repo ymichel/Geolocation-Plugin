@@ -2,7 +2,7 @@
 // Uses the test helper of the instance (mu-plugin) to switch the block editor off, and the post "Trip to Dresden".
 // With --google the editor map is checked with Google Maps (OSM is restored afterwards).
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const GOOGLE = process.argv[2] === '--google';
 const POST = id('trip-to-dresden');
 
@@ -15,7 +15,7 @@ const POST = id('trip-to-dresden');
   const helper = async (action) => { await page.goto(base + '/wp-admin/admin-ajax.php?action=geolocation_test&do=' + action, { waitUntil: 'load' }); return JSON.parse(await page.locator('body').innerText()); };
   const setProvider = async (provider) => {
     await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-    await page.selectOption('#geolocation_provider', provider);
+    await chooseProvider(page, provider);
     await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   };
   const open = async () => {

@@ -1,7 +1,7 @@
 // Checks that the switch "pre-cache when saved" survives saving the settings while its row is not shown
 // (proxy switched off, Google Maps), in both positions. The settings are restored afterwards.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 (async () => {
   const browser = await chromium.launch();
   const page = await (await browser.newContext({ viewport: { width: 1366, height: 1000 } })).newPage();
@@ -11,15 +11,15 @@ const { base } = require('./lib');
   const out = {};
   for (const on of [true, false]) {
     const r = [];
-    await settings(async () => { await page.check('#geolocation_osm_use_proxy'); await page.selectOption('#geolocation_provider', 'osm'); });
+    await settings(async () => { await page.check('#geolocation_osm_use_proxy'); await chooseProvider(page, 'osm'); });
     await settings(async () => { await page.setChecked('#geolocation_osm_precache_on_save', on); });
     r.push(await state());
     await settings(async () => { await page.uncheck('#geolocation_osm_use_proxy'); });
     r.push(await state());
     await settings(async () => {});
-    await settings(async () => { await page.selectOption('#geolocation_provider', 'google'); });
+    await settings(async () => { await chooseProvider(page, 'google'); });
     r.push(await state());
-    await settings(async () => { await page.selectOption('#geolocation_provider', 'osm'); await page.check('#geolocation_osm_use_proxy'); });
+    await settings(async () => { await chooseProvider(page, 'osm'); await page.check('#geolocation_osm_use_proxy'); });
     r.push(await state());
     out[on ? 'switchedOn' : 'switchedOff'] = r;
   }

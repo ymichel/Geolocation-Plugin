@@ -3,9 +3,11 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.18.0
+ * Version: 1.19.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
+ * Requires at least: 6.4
+ * Requires PHP: 8.3
  * Text Domain: geolocation
  * License: GPLv2+
  *
@@ -31,7 +33,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.18.0' );
+define( 'GEOLOCATION__VERSION', '1.19.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -42,11 +44,13 @@ add_action( 'admin_init', 'geolocation_maybe_upgrade' );
 add_action( 'admin_init', 'geolocation_register_settings' );
 add_action( 'admin_menu', 'geolocation_add_settings' );
 add_action( 'admin_notices', 'geolocation_custom_admin_notice' );
+add_action( 'admin_init', 'geolocation_hide_notice' );
+add_filter( 'option_geolocation_provider', 'geolocation_filter_provider' );
 add_action( 'admin_enqueue_scripts', 'geolocation_admin_enqueue' );
 add_action( 'add_meta_boxes_post', 'geolocation_add_custom_box' );
 add_action( 'save_post_post', 'geolocation_save_postdata' );
 add_action( 'save_post_post', 'geolocation_flush_page_markers' );
-add_action( 'wp_after_insert_post', 'geolocation_derive_location' );
+add_action( 'wp_after_insert_post', 'geolocation_post_saved' );
 add_action( 'added_post_meta', 'geolocation_featured_image_changed', 10, 3 );
 add_action( 'updated_post_meta', 'geolocation_featured_image_changed', 10, 3 );
 add_action( 'deleted_post', 'geolocation_flush_page_markers' );
@@ -90,7 +94,7 @@ switch ( get_option( 'geolocation_provider' ) ) {
  * @param string $plugin_file_name The plugin the links are shown for.
  * @return array
  */
-function geolocation_append_support_and_faq_links( $links_array, $plugin_file_name ) {
+function geolocation_append_support_and_faq_links( array $links_array, string $plugin_file_name ): array {
 	if ( plugin_basename( __FILE__ ) === $plugin_file_name ) {
 		$links_array[] = '<a href="https://wordpress.org/support/plugin/geolocation/reviews/#new-post" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Review', 'geolocation' ) . '</a>';
 		$links_array[] = '<a href="https://github.com/ymichel/Geolocation-Plugin/issues" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Support', 'geolocation' ) . '</a>';
@@ -104,7 +108,7 @@ function geolocation_append_support_and_faq_links( $links_array, $plugin_file_na
  * @param array $links_array The array to be extended.
  * @return array
  */
-function geolocation_customizer_action_links( $links_array ) {
+function geolocation_customizer_action_links( array $links_array ): array {
 	$config_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=geolocation.php' ) ) . '">' . esc_html__( 'Settings', 'geolocation' ) . '</a>';
 	array_unshift( $links_array, $config_link );
 	return $links_array;
@@ -115,7 +119,7 @@ function geolocation_customizer_action_links( $links_array ) {
  *
  * @return boolean
  */
-function geolocation_strict_privacy() {
+function geolocation_strict_privacy(): bool {
 	return 'osm' === get_option( 'geolocation_provider' ) && (bool) get_option( 'geolocation_osm_strict_privacy' );
 }
 
@@ -126,7 +130,7 @@ function geolocation_strict_privacy() {
  *
  * @return void
  */
-function geolocation_geocode_request() {
+function geolocation_geocode_request(): void {
 	check_ajax_referer( 'geolocation_geocode' );
 	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- checked against the two allowed requests below.
 	$path = isset( $_GET['path'] ) ? (string) wp_unslash( $_GET['path'] ) : '';
@@ -156,7 +160,7 @@ function geolocation_geocode_request() {
  *
  * @return boolean
  */
-function geolocation_maps_blocked() {
+function geolocation_maps_blocked(): bool {
 	if ( 'osm' !== get_option( 'geolocation_provider' ) || ! (bool) get_option( 'geolocation_osm_strict_privacy' ) ) {
 		return false;
 	}
@@ -164,19 +168,53 @@ function geolocation_maps_blocked() {
 }
 
 /**
+ * Google Maps is only used while an API key is stored: without a key the provider is OpenStreetMap.
+ *
+ * @param mixed $provider The stored provider.
+ * @return mixed
+ */
+function geolocation_filter_provider( mixed $provider ): mixed {
+	return 'google' === $provider && '' === (string) get_option( 'geolocation_google_maps_api_key' ) ? 'osm' : $provider;
+}
+
+/**
+ * Hide the notice about Google Maps for the administrator who asked for it.
+ *
+ * @return void
+ */
+function geolocation_hide_notice(): void {
+	if ( ! isset( $_GET['geolocation_hide_notice'], $_GET['_wpnonce'] ) || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'geolocation_hide_notice' ) ) {
+		return;
+	}
+	update_user_meta( get_current_user_id(), 'geolocation_google_notice_hidden', 1 );
+	wp_safe_redirect( remove_query_arg( array( 'geolocation_hide_notice', '_wpnonce' ) ) );
+	exit;
+}
+
+/**
  * Display the admin notices of this plugin.
  *
  * @return void
  */
-function geolocation_custom_admin_notice() {
+function geolocation_custom_admin_notice(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
 	$settings_url = admin_url( 'options-general.php?page=geolocation.php' );
-	if ( 'google' === get_option( 'geolocation_provider' ) && ! get_option( 'geolocation_google_maps_api_key' ) ) {
+	$screen       = get_current_screen();
+	// Websites which use Google Maps learn that it is no longer developed further. Every administrator can hide that.
+	if ( 'google' === get_option( 'geolocation_provider' ) && $screen && in_array( $screen->id, array( 'dashboard', 'plugins', 'settings_page_geolocation' ), true ) && ! get_user_meta( get_current_user_id(), 'geolocation_google_notice_hidden', true ) ) {
+		$hide_url = wp_nonce_url( add_query_arg( 'geolocation_hide_notice', 'google' ), 'geolocation_hide_notice' );
 		?>
-		<div class="notice notice-error">
-			<p><?php esc_html_e( 'Google Maps API key is missing for', 'geolocation' ); ?> <a href="<?php echo esc_url( $settings_url ); ?>">Geolocation</a>!</p>
+		<div class="notice notice-warning" id="geolocation-google-notice">
+			<p>
+				<?php esc_html_e( 'Geolocation: Google Maps is no longer developed further. Your maps keep working, but new functions are made for OpenStreetMap only. You can switch to OpenStreetMap in the settings at any time.', 'geolocation' ); ?>
+				<a href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Settings', 'geolocation' ); ?></a>
+				| <a href="<?php echo esc_url( $hide_url ); ?>" id="geolocation-google-notice-hide"><?php esc_html_e( 'Hide this notice', 'geolocation' ); ?></a>
+			</p>
 		</div>
 		<?php
 	}
@@ -194,7 +232,7 @@ function geolocation_custom_admin_notice() {
  *
  * @return void
  */
-function geolocation_add_custom_box() {
+function geolocation_add_custom_box(): void {
 	add_meta_box( 'geolocation_sectionid', __( 'Geolocation', 'geolocation' ), 'geolocation_inner_custom_box', 'post', 'advanced' );
 }
 
@@ -203,7 +241,7 @@ function geolocation_add_custom_box() {
  *
  * @return void
  */
-function geolocation_inner_custom_box() {
+function geolocation_inner_custom_box(): void {
 	?>
 	<?php wp_nonce_field( plugin_basename( __FILE__ ), 'geolocation_nonce', false ); ?>
 	<label class="screen-reader-text" for="geolocation-address"><?php esc_html_e( 'Geolocation', 'geolocation' ); ?></label>
@@ -252,7 +290,7 @@ function geolocation_inner_custom_box() {
  * @param mixed $ref The EXIF hemisphere reference (N, S, E or W).
  * @return string
  */
-function geolocation_exif_to_decimal( $parts, $ref ) {
+function geolocation_exif_to_decimal( mixed $parts, mixed $ref ): string {
 	if ( ! is_array( $parts ) || count( $parts ) < 3 ) {
 		return '';
 	}
@@ -278,7 +316,7 @@ function geolocation_exif_to_decimal( $parts, $ref ) {
  * @param int $post_id The posts id.
  * @return array Latitude and longitude, or an empty array if not available.
  */
-function geolocation_get_featured_image_position( $post_id ) {
+function geolocation_get_featured_image_position( int $post_id ): array {
 	if ( ! function_exists( 'exif_read_data' ) ) {
 		return array();
 	}
@@ -295,8 +333,8 @@ function geolocation_get_featured_image_position( $post_id ) {
 	if ( ! isset( $exif['GPS']['GPSLatitude'], $exif['GPS']['GPSLongitude'] ) ) {
 		return array();
 	}
-	$latitude  = geolocation_exif_to_decimal( $exif['GPS']['GPSLatitude'], isset( $exif['GPS']['GPSLatitudeRef'] ) ? $exif['GPS']['GPSLatitudeRef'] : 'N' );
-	$longitude = geolocation_exif_to_decimal( $exif['GPS']['GPSLongitude'], isset( $exif['GPS']['GPSLongitudeRef'] ) ? $exif['GPS']['GPSLongitudeRef'] : 'E' );
+	$latitude  = geolocation_exif_to_decimal( $exif['GPS']['GPSLatitude'], $exif['GPS']['GPSLatitudeRef'] ?? 'N' );
+	$longitude = geolocation_exif_to_decimal( $exif['GPS']['GPSLongitude'], $exif['GPS']['GPSLongitudeRef'] ?? 'E' );
 	if ( '' === $latitude || '' === $longitude ) {
 		return array();
 	}
@@ -311,7 +349,7 @@ function geolocation_get_featured_image_position( $post_id ) {
  * @param string $key The name of the submitted field.
  * @return string
  */
-function geolocation_get_posted_value( $key ) {
+function geolocation_get_posted_value( string $key ): string {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	return isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
 }
@@ -320,9 +358,9 @@ function geolocation_get_posted_value( $key ) {
  * Save the post and derive geo metadata.
  *
  * @param int $post_id The id of the post.
- * @return int
+ * @return void
  */
-function geolocation_save_postdata( $post_id ) {
+function geolocation_save_postdata( int $post_id ): void {
 	// Check authorization, permissions, autosave, etc.
 	if ( ( ! isset( $_POST['geolocation_nonce'] ) ) ||
 		( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['geolocation_nonce'] ) ), plugin_basename( __FILE__ ) ) ) ||
@@ -330,7 +368,7 @@ function geolocation_save_postdata( $post_id ) {
 		( ( 'page' === geolocation_get_posted_value( 'post_type' ) ) && ( ! current_user_can( 'edit_page', $post_id ) ) ) ||
 		( ! current_user_can( 'edit_post', $post_id ) )
 	) {
-		return $post_id;
+		return;
 	}
 
 	geolocation_save_track( $post_id );
@@ -345,9 +383,11 @@ function geolocation_save_postdata( $post_id ) {
 		foreach ( array( 'geo_latitude', 'geo_longitude', 'geo_address', 'geo_address_reverse', 'geo_enabled', 'geo_public' ) as $meta_key ) {
 			delete_post_meta( $post_id, $meta_key );
 		}
-		// Remembered, so the location of the featured image does not come back by itself.
+		// Remembered, so the location of the featured image does not come back by itself,
+		// and switched off, so the editor does not offer a location again on its own.
 		update_post_meta( $post_id, 'geo_removed', 1 );
-		return $post_id;
+		update_post_meta( $post_id, 'geo_enabled', 0 );
+		return;
 	}
 
 	if ( ( ( empty( $latitude ) ) || ( empty( $longitude ) ) ) && ! get_post_meta( $post_id, 'geo_removed', true ) ) {
@@ -374,9 +414,10 @@ function geolocation_save_postdata( $post_id ) {
 
 		update_post_meta( $post_id, 'geo_enabled', empty( geolocation_get_posted_value( 'geolocation-on' ) ) ? 0 : 1 );
 		update_post_meta( $post_id, 'geo_public', empty( geolocation_get_posted_value( 'geolocation-public' ) ) ? 0 : 1 );
+	} elseif ( get_post_meta( $post_id, 'geo_removed', true ) ) {
+		// No location since it has been removed: keep what the author chose for "On" and "Off".
+		update_post_meta( $post_id, 'geo_enabled', empty( geolocation_get_posted_value( 'geolocation-on' ) ) ? 0 : 1 );
 	}
-
-	return $post_id;
 }
 
 /**
@@ -389,7 +430,7 @@ function geolocation_save_postdata( $post_id ) {
  * @param string $longitude The longitude.
  * @return void
  */
-function geolocation_store_derived_location( $post_id, $latitude, $longitude ) {
+function geolocation_store_derived_location( int $post_id, string $latitude, string $longitude ): void {
 	update_post_meta( $post_id, 'geo_latitude', $latitude );
 	update_post_meta( $post_id, 'geo_longitude', $longitude );
 	$address = geolocation_reverse_geocode( $latitude, $longitude );
@@ -410,7 +451,7 @@ function geolocation_store_derived_location( $post_id, $latitude, $longitude ) {
  * @param int $post_id The id of the post.
  * @return bool Whether a location has been stored.
  */
-function geolocation_derive_location( $post_id ) {
+function geolocation_derive_location( int $post_id ): bool {
 	$post = get_post( $post_id );
 	if ( ! $post || 'post' !== $post->post_type || in_array( $post->post_status, array( 'auto-draft', 'trash' ), true ) ) {
 		return false;
@@ -440,14 +481,24 @@ function geolocation_derive_location( $post_id ) {
 }
 
 /**
+ * Derive the location of a post which has been saved on any way.
+ *
+ * @param int $post_id The id of the post.
+ * @return void
+ */
+function geolocation_post_saved( int $post_id ): void {
+	geolocation_derive_location( $post_id );
+}
+
+/**
  * Derive the location when a post gets its featured image after it has been created.
  *
- * @param int    $meta_id The id of the meta entry.
+ * @param mixed  $meta_id The id of the meta entry; not used.
  * @param int    $post_id The id of the post.
  * @param string $meta_key The key of the meta entry.
  * @return void
  */
-function geolocation_featured_image_changed( $meta_id, $post_id, $meta_key ) {
+function geolocation_featured_image_changed( mixed $meta_id, int $post_id, string $meta_key ): void {
 	if ( '_thumbnail_id' === $meta_key ) {
 		geolocation_derive_location( $post_id );
 	}
@@ -459,7 +510,7 @@ function geolocation_featured_image_changed( $meta_id, $post_id, $meta_key ) {
  * @param string $hook_suffix The current admin page.
  * @return void
  */
-function geolocation_admin_enqueue( $hook_suffix ) {
+function geolocation_admin_enqueue( string $hook_suffix ): void {
 	$post = get_post();
 	if ( ! in_array( $hook_suffix, array( 'post.php', 'post-new.php' ), true ) || ! $post || 'post' !== $post->post_type ) {
 		return;
@@ -481,7 +532,7 @@ function geolocation_admin_enqueue( $hook_suffix ) {
  * @param string $version The version of the file.
  * @return string
  */
-function geolocation_versioned_url( $url, $version ) {
+function geolocation_versioned_url( string $url, string $version ): string {
 	return add_query_arg( 'ver', rawurlencode( (string) $version ), (string) $url );
 }
 
@@ -490,7 +541,7 @@ function geolocation_versioned_url( $url, $version ) {
  *
  * @return array
  */
-function geolocation_get_map_settings() {
+function geolocation_get_map_settings(): array {
 	return array(
 		'zoom'         => (int) get_option( 'geolocation_default_zoom' ),
 		'usePin'       => (bool) get_option( 'geolocation_wp_pin' ),
@@ -505,7 +556,7 @@ function geolocation_get_map_settings() {
  * @param int $post_id The posts id.
  * @return array
  */
-function geolocation_get_admin_post_data( $post_id ) {
+function geolocation_get_admin_post_data( int $post_id ): array {
 	return array_merge(
 		geolocation_get_map_settings(),
 		array(
@@ -533,7 +584,7 @@ function geolocation_get_admin_post_data( $post_id ) {
  *
  * @return void
  */
-function geolocation_enqueue_front() {
+function geolocation_enqueue_front(): void {
 	switch ( get_option( 'geolocation_provider' ) ) {
 		case 'google':
 			geolocation_enqueue_front_google();
@@ -554,7 +605,7 @@ function geolocation_enqueue_front() {
  * @param int    $height The height of the map in pixels, 0 for the height of the settings.
  * @return string The escaped HTML of the DIV.
  */
-function geolocation_get_geo_div( $id = null, $position = '', $track = array(), $width = 0, $height = 0 ) {
+function geolocation_get_geo_div( mixed $id = null, string $position = '', array $track = array(), int $width = 0, int $height = 0 ): string {
 	$width  = esc_attr( (string) ( $width >= 50 ? (int) $width : get_option( 'geolocation_map_width' ) ) );
 	$height = esc_attr( (string) ( $height >= 50 ? (int) $height : get_option( 'geolocation_map_height' ) ) );
 	$data   = '' === $position ? '' : ' data-geolocation="' . esc_attr( (string) $position ) . '"';
@@ -568,7 +619,7 @@ function geolocation_get_geo_div( $id = null, $position = '', $track = array(), 
  *
  * @return void
  */
-function geolocation_add_geo_div() {
+function geolocation_add_geo_div(): void {
 	echo geolocation_get_geo_div(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in geolocation_get_geo_div().
 }
 
@@ -580,7 +631,7 @@ function geolocation_add_geo_div() {
  * @param int $post_id The id of the post to check.
  * @return boolean
  */
-function geolocation_post_is_visible( $post_id ) {
+function geolocation_post_is_visible( int $post_id ): bool {
 	$latitude  = geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_latitude', true ) );
 	$longitude = geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_longitude', true ) );
 	$on        = (bool) get_post_meta( $post_id, 'geo_enabled', true );
@@ -600,7 +651,7 @@ function geolocation_post_is_visible( $post_id ) {
  *
  * @return string A regular expression, or an empty string if no shortcode is set.
  */
-function geolocation_shortcode_regex() {
+function geolocation_shortcode_regex(): string {
 	$shortcode = trim( (string) get_option( 'geolocation_shortcode' ) );
 	if ( '' === $shortcode ) {
 		return '';
@@ -617,7 +668,7 @@ function geolocation_shortcode_regex() {
  * @param mixed $atts The attributes as parsed from the shortcode.
  * @return array The supported attributes: cat, tag, width, height, zoom and route. Unused ones are empty.
  */
-function geolocation_sanitize_map_atts( $atts ) {
+function geolocation_sanitize_map_atts( mixed $atts ): array {
 	$atts  = is_array( $atts ) ? array_change_key_case( $atts, CASE_LOWER ) : array();
 	$clean = array(
 		'cat'    => '',
@@ -632,7 +683,7 @@ function geolocation_sanitize_map_atts( $atts ) {
 	}
 	foreach ( array( 'cat', 'tag' ) as $key ) {
 		if ( isset( $atts[ $key ] ) ) {
-			$terms         = array_filter( array_map( 'trim', explode( ',', (string) $atts[ $key ] ) ), 'strlen' );
+			$terms         = array_filter( array_map( 'trim', explode( ',', (string) $atts[ $key ] ) ), static fn ( string $term ): bool => '' !== $term );
 			$clean[ $key ] = implode( ',', $terms );
 		}
 	}
@@ -663,9 +714,9 @@ function geolocation_sanitize_map_atts( $atts ) {
  * @param string $taxonomy The taxonomy: category or post_tag.
  * @return array The ids of the existing terms.
  */
-function geolocation_get_term_ids( $terms, $taxonomy ) {
+function geolocation_get_term_ids( string $terms, string $taxonomy ): array {
 	$ids = array();
-	foreach ( array_filter( array_map( 'trim', explode( ',', (string) $terms ) ), 'strlen' ) as $term ) {
+	foreach ( array_filter( array_map( 'trim', explode( ',', $terms ) ), static fn ( string $term ): bool => '' !== $term ) as $term ) {
 		$found = false;
 		if ( ctype_digit( $term ) ) {
 			$found = get_term( (int) $term, $taxonomy );
@@ -676,7 +727,7 @@ function geolocation_get_term_ids( $terms, $taxonomy ) {
 		if ( ! $found ) {
 			$found = get_term_by( 'name', $term, $taxonomy );
 		}
-		if ( $found && ! is_wp_error( $found ) ) {
+		if ( $found instanceof WP_Term ) {
 			$ids[] = (int) $found->term_id;
 		}
 	}
@@ -693,7 +744,7 @@ function geolocation_get_term_ids( $terms, $taxonomy ) {
  * @param array $tag_ids The ids of the tags to filter for (empty = all).
  * @return array
  */
-function geolocation_page_query_args( $category_ids, $tag_ids = array() ) {
+function geolocation_page_query_args( array $category_ids, array $tag_ids = array() ): array {
 	$args = array(
 		'post_type'      => 'post',
 		'posts_per_page' => -1,
@@ -730,7 +781,7 @@ function geolocation_page_query_args( $category_ids, $tag_ids = array() ) {
  * @param bool   $shortcode_found Whether the shortcode was found in the page content.
  * @return string
  */
-function geolocation_page_debug( $category, $category_id, $candidates, $shown, $shortcode_found ) {
+function geolocation_page_debug( string $category, int $category_id, int $candidates, int $shown, bool $shortcode_found ): string {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only diagnostic switch.
 	if ( ! isset( $_GET['geodebug'] ) ) {
 		return '';
@@ -749,10 +800,12 @@ function geolocation_page_debug( $category, $category_id, $candidates, $shown, $
 /**
  * Add the location to the content of a post, or the overview maps to the content of a page.
  *
- * @param string $content The content the location shall be displayed for.
+ * @param mixed $content The content the location shall be displayed for. Other plugins on this filter
+ *                       do not always pass text.
  * @return string
  */
-function geolocation_display_location( $content ) {
+function geolocation_display_location( mixed $content ): string {
+	$content = is_string( $content ) ? $content : '';
 	if ( is_page() ) {
 		return geolocation_display_location_page( $content );
 	} else {
@@ -771,12 +824,12 @@ function geolocation_display_location( $content ) {
  * @param bool  $use_custom_field Whether the page's custom field "category" is used without a "cat" attribute.
  * @return array The category, its id, the number of posts having coordinates and the markers.
  */
-function geolocation_get_page_markers( $atts = array(), $use_custom_field = true ) {
+function geolocation_get_page_markers( array $atts = array(), bool $use_custom_field = true ): array {
 	$categories = isset( $atts['cat'] ) ? (string) $atts['cat'] : '';
 	$tags       = isset( $atts['tag'] ) ? (string) $atts['tag'] : '';
 	$legacy     = false;
 	if ( '' === $categories && $use_custom_field ) {
-		$categories = (string) get_post_meta( get_the_ID(), 'category', true );
+		$categories = (string) get_post_meta( (int) get_the_ID(), 'category', true );
 		$legacy     = true;
 	}
 	// Tracks are only needed for a map showing the route.
@@ -842,7 +895,7 @@ function geolocation_get_page_markers( $atts = array(), $use_custom_field = true
  *
  * @return void
  */
-function geolocation_flush_page_markers() {
+function geolocation_flush_page_markers(): void {
 	update_option( 'geolocation_markers_version', (string) microtime( true ) );
 }
 
@@ -855,7 +908,7 @@ function geolocation_flush_page_markers() {
  * @param string $map_id The id of the map's element; by default derived from the number.
  * @return string The HTML of the map, or an empty string if there is nothing to show.
  */
-function geolocation_get_page_map( $atts, $result, $number, $map_id = '' ) {
+function geolocation_get_page_map( array $atts, array $result, int $number, string $map_id = '' ): string {
 	if ( empty( $result['markers'] ) || geolocation_maps_blocked() ) {
 		return '';
 	}
@@ -880,7 +933,7 @@ function geolocation_get_page_map( $atts, $result, $number, $map_id = '' ) {
  * @param string $content The content the functionality shall be provided for.
  * @return string
  */
-function geolocation_display_location_page( $content ) {
+function geolocation_display_location_page( string $content ): string {
 	$regex           = geolocation_shortcode_regex();
 	$shortcode_found = '' !== $regex && 1 === preg_match( $regex, $content );
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only diagnostic switch.
@@ -892,7 +945,8 @@ function geolocation_display_location_page( $content ) {
 	$number = 0;
 	$last   = null;
 	if ( $shortcode_found ) {
-		$content = preg_replace_callback(
+		$original = $content;
+		$content  = preg_replace_callback(
 			$regex,
 			function ( $matches ) use ( &$number, &$last ) {
 				// Editors may turn straight quotes into typographic ones.
@@ -903,7 +957,7 @@ function geolocation_display_location_page( $content ) {
 				return geolocation_get_page_map( $atts, $last, $number );
 			},
 			$content
-		);
+		) ?? $original;
 	}
 	if ( ! $debug ) {
 		return $content;
@@ -921,18 +975,20 @@ function geolocation_display_location_page( $content ) {
  * @param string $replacement The HTML to be shown instead of the shortcode.
  * @return string
  */
-function geolocation_replace_shortcode( $content, $replacement ) {
+function geolocation_replace_shortcode( string $content, string $replacement ): string {
 	$regex = geolocation_shortcode_regex();
 	if ( '' === $regex ) {
 		return $content;
 	}
-	return preg_replace_callback(
+	$replaced = preg_replace_callback(
 		$regex,
 		function () use ( $replacement ) {
 			return $replacement;
 		},
 		$content
 	);
+	// The content stays as it is if the pattern could not be applied.
+	return $replaced ?? $content;
 }
 
 /**
@@ -948,7 +1004,7 @@ function geolocation_replace_shortcode( $content, $replacement ) {
  *                        and the link to the external map.
  * @return string The HTML, or an empty string if the location may not be shown.
  */
-function geolocation_get_location_html( $post, $display = '', $width = 0, $height = 0, $track = array() ) {
+function geolocation_get_location_html( WP_Post $post, string $display = '', int $width = 0, int $height = 0, array $track = array() ): string {
 	if ( ! geolocation_post_is_visible( $post->ID ) ) {
 		return '';
 	}
@@ -1008,7 +1064,7 @@ function geolocation_get_location_html( $post, $display = '', $width = 0, $heigh
  * @param string $content The content the functionality shall be provided for.
  * @return string
  */
-function geolocation_display_location_post( $content ) {
+function geolocation_display_location_post( string $content ): string {
 	$post = get_post();
 	if ( ! $post ) {
 		return $content;
@@ -1041,7 +1097,7 @@ function geolocation_display_location_post( $content ) {
  *
  * @return void
  */
-function geolocation_update_addresses() {
+function geolocation_update_addresses(): void {
 	wp_unschedule_hook( 'geolocation_update_addresses_batch' );
 	wp_schedule_single_event( time(), 'geolocation_update_addresses_batch', array( 0 ) );
 	echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Addresses are being updated in the background.', 'geolocation' ) . '</p></div>';
@@ -1053,7 +1109,7 @@ function geolocation_update_addresses() {
  * @param int $offset The number of posts already processed.
  * @return void
  */
-function geolocation_update_addresses_batch( $offset = 0 ) {
+function geolocation_update_addresses_batch( int $offset = 0 ): void {
 	$offset   = (int) $offset;
 	$post_ids = get_posts(
 		array(
@@ -1105,12 +1161,12 @@ function geolocation_update_addresses_batch( $offset = 0 ) {
 /**
  * Build the address shown for a location from city, state and country, as far as they are known.
  *
- * @param string $city The name of the city of the location.
- * @param string $state The name of the state of the location.
- * @param string $country The name of the country of the location.
+ * @param mixed $city The name of the city of the location, as the geocoder delivered it.
+ * @param mixed $state The name of the state of the location.
+ * @param mixed $country The name of the country of the location.
  * @return string
  */
-function geolocation_build_addresses( $city, $state, $country ) {
+function geolocation_build_addresses( mixed $city, mixed $state, mixed $country ): string {
 	$city    = (string) $city;
 	$state   = (string) $state;
 	$country = (string) $country;
@@ -1135,12 +1191,12 @@ function geolocation_build_addresses( $city, $state, $country ) {
  * @param bool   $force Whether to bypass the cached result.
  * @return string The address, or an empty string if the lookup failed.
  */
-function geolocation_reverse_geocode( $latitude, $longitude, $force = false ) {
+function geolocation_reverse_geocode( string $latitude, string $longitude, bool $force = false ): string {
 	$cache_key = 'geolocation_rg_' . md5( get_option( 'geolocation_provider' ) . '|' . geolocation_get_site_lang() . '|' . $latitude . ',' . $longitude );
 	if ( ! $force ) {
 		$cached = get_transient( $cache_key );
 		if ( false !== $cached ) {
-			return $cached;
+			return (string) $cached;
 		}
 	}
 
@@ -1198,7 +1254,7 @@ function geolocation_reverse_geocode( $latitude, $longitude, $force = false ) {
  * @param mixed $coordinate The coordinates to be cleaned.
  * @return string
  */
-function geolocation_clean_coordinate( $coordinate ) {
+function geolocation_clean_coordinate( mixed $coordinate ): string {
 	$coordinate = trim( (string) $coordinate );
 	if ( ! is_numeric( $coordinate ) ) {
 		return '';

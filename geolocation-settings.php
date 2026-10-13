@@ -15,7 +15,7 @@
  *
  * @return void
  */
-function geolocation_languages_init() {
+function geolocation_languages_init(): void {
 	$plugin_rel_path = basename( __DIR__ ) . '/languages/'; /* Relative to WP_PLUGIN_DIR */
 	load_plugin_textdomain( 'geolocation', false, $plugin_rel_path );
 }
@@ -25,7 +25,7 @@ function geolocation_languages_init() {
  *
  * @return string
  */
-function geolocation_get_site_lang() {
+function geolocation_get_site_lang(): string {
 	$language = substr( get_locale(), 0, 2 );
 	return $language;
 }
@@ -35,7 +35,7 @@ function geolocation_get_site_lang() {
  *
  * @return array
  */
-function geolocation_get_settings_definition() {
+function geolocation_get_settings_definition(): array {
 	return array(
 		'geolocation_map_width'            => array( 'integer', 'absint', '450' ),
 		'geolocation_map_height'           => array( 'integer', 'absint', '200' ),
@@ -68,7 +68,7 @@ function geolocation_get_settings_definition() {
  *
  * @return void
  */
-function geolocation_register_settings() {
+function geolocation_register_settings(): void {
 	foreach ( geolocation_get_settings_definition() as $name => $definition ) {
 		register_setting(
 			'geolocation-settings-group',
@@ -87,8 +87,22 @@ function geolocation_register_settings() {
  * @param mixed $value The submitted provider.
  * @return string
  */
-function geolocation_sanitize_provider( $value ) {
-	return in_array( $value, array( 'google', 'osm' ), true ) ? $value : 'osm';
+function geolocation_sanitize_provider( mixed $value ): string {
+	// Google Maps needs a stored API key. The key is saved before the provider, so removing the key
+	// on the settings page switches to OpenStreetMap with the same click.
+	return 'google' === $value && '' !== (string) get_option( 'geolocation_google_maps_api_key' ) ? 'google' : 'osm';
+}
+
+/**
+ * Check whether Google Maps is offered on this website.
+ *
+ * Google Maps is no longer developed further. It stays available for websites which use it:
+ * as long as an API key is stored.
+ *
+ * @return bool
+ */
+function geolocation_google_available(): bool {
+	return '' !== (string) get_option( 'geolocation_google_maps_api_key' );
 }
 
 /**
@@ -97,7 +111,7 @@ function geolocation_sanitize_provider( $value ) {
  * @param mixed $value The submitted position.
  * @return string
  */
-function geolocation_sanitize_position( $value ) {
+function geolocation_sanitize_position( mixed $value ): string {
 	return in_array( $value, array( 'before', 'after', 'shortcode' ), true ) ? $value : 'after';
 }
 
@@ -107,7 +121,7 @@ function geolocation_sanitize_position( $value ) {
  * @param mixed $value The submitted display mode.
  * @return string
  */
-function geolocation_sanitize_display( $value ) {
+function geolocation_sanitize_display( mixed $value ): string {
 	return in_array( $value, array( 'plain', 'link', 'map', 'debug' ), true ) ? $value : 'map';
 }
 
@@ -117,7 +131,7 @@ function geolocation_sanitize_display( $value ) {
  * @param mixed $value The submitted value.
  * @return string
  */
-function geolocation_sanitize_switch( $value ) {
+function geolocation_sanitize_switch( mixed $value ): string {
 	return '0' === (string) $value || '' === (string) $value ? '0' : '1';
 }
 
@@ -129,7 +143,7 @@ function geolocation_sanitize_switch( $value ) {
  * @param mixed $value The submitted value, null if the field has not been submitted.
  * @return string
  */
-function geolocation_sanitize_precache_switch( $value ) {
+function geolocation_sanitize_precache_switch( mixed $value ): string {
 	if ( null === $value ) {
 		return '0' === (string) get_option( 'geolocation_osm_precache_on_save' ) ? '0' : '1';
 	}
@@ -142,7 +156,7 @@ function geolocation_sanitize_precache_switch( $value ) {
  * @param mixed $value The submitted URL.
  * @return string
  */
-function geolocation_sanitize_url( $value ) {
+function geolocation_sanitize_url( mixed $value ): string {
 	return esc_url_raw( (string) $value );
 }
 
@@ -151,7 +165,7 @@ function geolocation_sanitize_url( $value ) {
  *
  * @return void
  */
-function geolocation_unregister_settings() {
+function geolocation_unregister_settings(): void {
 	foreach ( array_keys( geolocation_get_settings_definition() ) as $name ) {
 		unregister_setting( 'geolocation-settings-group', $name );
 	}
@@ -162,7 +176,7 @@ function geolocation_unregister_settings() {
  *
  * @return void
  */
-function geolocation_default_settings() {
+function geolocation_default_settings(): void {
 	foreach ( geolocation_get_settings_definition() as $name => $definition ) {
 		if ( null !== $definition[2] && ! get_option( $name ) ) {
 			update_option( $name, $definition[2] );
@@ -180,7 +194,7 @@ function geolocation_default_settings() {
  *
  * @return void
  */
-function geolocation_delete_settings() {
+function geolocation_delete_settings(): void {
 	foreach ( array_keys( geolocation_get_settings_definition() ) as $name ) {
 		delete_option( $name );
 	}
@@ -195,7 +209,7 @@ function geolocation_delete_settings() {
  *
  * @return void
  */
-function geolocation_delete_legacy_settings() {
+function geolocation_delete_legacy_settings(): void {
 	delete_option( 'geolocation_osm_leaflet_js_url' );
 	delete_option( 'geolocation_osm_leaflet_css_url' );
 }
@@ -205,9 +219,13 @@ function geolocation_delete_legacy_settings() {
  *
  * @return void
  */
-function geolocation_maybe_upgrade() {
+function geolocation_maybe_upgrade(): void {
 	if ( GEOLOCATION__VERSION === get_option( 'geolocation_version' ) ) {
 		return;
+	}
+	// Google Maps without an API key is not offered any more: such a website uses OpenStreetMap from now on.
+	if ( '' === (string) get_option( 'geolocation_google_maps_api_key' ) ) {
+		update_option( 'geolocation_provider', 'osm' );
 	}
 	geolocation_default_settings();
 	geolocation_delete_legacy_settings();
@@ -221,11 +239,12 @@ function geolocation_maybe_upgrade() {
  *
  * @return void
  */
-function geolocation_delete_addresses() {
+function geolocation_delete_addresses(): void {
 	global $wpdb;
 	delete_post_meta_by_key( 'geo_address' );
 	delete_post_meta_by_key( 'geo_address_reverse' );
 	delete_post_meta_by_key( 'geo_removed' );
+	delete_metadata( 'user', 0, 'geolocation_google_notice_hidden', '', true );
 	delete_post_meta_by_key( 'geo_track' );
 	delete_post_meta_by_key( 'geo_track_km' );
 	delete_post_meta_by_key( 'geo_track_ele' );
@@ -244,7 +263,7 @@ function geolocation_delete_addresses() {
  *
  * @return void
  */
-function geolocation_activate() {
+function geolocation_activate(): void {
 	geolocation_default_settings();
 }
 
@@ -253,7 +272,7 @@ function geolocation_activate() {
  *
  * @return void
  */
-function geolocation_uninstall() {
+function geolocation_uninstall(): void {
 	wp_unschedule_hook( 'geolocation_update_addresses_batch' );
 	wp_unschedule_hook( 'geolocation_precache_batch' );
 	wp_unschedule_hook( 'geolocation_precache_post' );
@@ -267,7 +286,7 @@ function geolocation_uninstall() {
  *
  * @return void
  */
-function geolocation_add_settings() {
+function geolocation_add_settings(): void {
 	require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-settings-page.php';
 	$hook_suffix = add_options_page( __( 'Geolocation Plugin Settings', 'geolocation' ), 'Geolocation', 'manage_options', 'geolocation.php', 'geolocation_settings_page' );
 	if ( $hook_suffix ) {

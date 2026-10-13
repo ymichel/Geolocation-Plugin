@@ -1,7 +1,7 @@
 // Checks the block "Post Location" inside a query loop (page "Loop test"): every post shows its own location,
 // on the website and in the previews of the editor. With --google the maps are checked with Google Maps.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 const GOOGLE = process.argv[2] === '--google';
 
 (async () => {
@@ -13,7 +13,7 @@ const GOOGLE = process.argv[2] === '--google';
   await page.goto(base + '/', { waitUntil: 'load' });
   const setProvider = async (provider) => {
     await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-    await page.selectOption('#geolocation_provider', provider);
+    await chooseProvider(page, provider);
     await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
   };
   const out = { provider: GOOGLE ? 'google' : 'osm' };

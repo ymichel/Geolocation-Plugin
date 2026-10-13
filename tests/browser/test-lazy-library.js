@@ -3,7 +3,7 @@
 // maps, and nothing at all on a page without a location. Runs with both providers; the display mode and the
 // provider are restored afterwards.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 const POST = '/2026/10/04/trip-to-berlin/';
 const isLibrary = u => /leaflet(\.min)?\.js|leaflet\.css|maps\.googleapis\.com\/maps\/api\/js|osm-tiles-proxy.*leaflet/.test(u);
 const isCluster = u => /markercluster|MarkerCluster/.test(u);
@@ -13,7 +13,7 @@ const isCluster = u => /markercluster|MarkerCluster/.test(u);
   const admin = await (await browser.newContext({ viewport: { width: 1366, height: 1000 } })).newPage();
   await admin.goto(base + '/', { waitUntil: 'load' });
   const read = async () => { await admin.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' }); return [await admin.inputValue('#geolocation_provider'), await admin.inputValue('input[name=geolocation_map_display]:checked')]; };
-  const set = async (provider, display) => { await read(); await admin.check('#geolocation_map_display_' + display); await admin.selectOption('#geolocation_provider', provider); await Promise.all([admin.waitForNavigation({ waitUntil: 'load' }), admin.click('#settings input[type=submit]')]); };
+  const set = async (provider, display) => { await read(); await admin.check('#geolocation_map_display_' + display); await chooseProvider(admin, provider); await Promise.all([admin.waitForNavigation({ waitUntil: 'load' }), admin.click('#settings input[type=submit]')]); };
   const visit = async (url, height) => {
     const context = await browser.newContext({ viewport: { width: 1366, height } });
     await context.addCookies((await admin.context().cookies()));

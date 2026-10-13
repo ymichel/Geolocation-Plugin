@@ -3,7 +3,7 @@
 // already, and the setting which makes such locations public. Runs with both providers, as the address comes from
 // the geocoder of the provider. Creates photos with GPS data itself and deletes its posts and photos at the end.
 const { chromium } = require('playwright-core');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 
 // The EXIF block of a photo taken at the given position (north and east).
 function exif(lat, lng) {
@@ -32,7 +32,7 @@ function exif(lat, lng) {
   const helper = (q) => page.evaluate((query) => fetch('/wp-admin/admin-ajax.php?action=geolocation_test&do=' + query, { credentials: 'include' }).then(r => r.json()).then(j => j.data), q);
   const openSettings = () => page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
   const save = () => Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
-  const set = async (provider, isPublic) => { await openSettings(); await page.selectOption('#geolocation_provider', provider); await page.setChecked('#geolocation_image_public', isPublic); await save(); await page.goto(base + '/wp-admin/edit.php', { waitUntil: 'load' }); };
+  const set = async (provider, isPublic) => { await openSettings(); await chooseProvider(page, provider); await page.setChecked('#geolocation_image_public', isPublic); await save(); await page.goto(base + '/wp-admin/edit.php', { waitUntil: 'load' }); };
 
   // A small JPEG drawn by the browser, with and without the position of a camera.
   const plain = Buffer.from(await page.evaluate(() => { const c = document.createElement('canvas'); c.width = 240; c.height = 160; const x = c.getContext('2d'); x.fillStyle = '#2b6cb0'; x.fillRect(0, 0, 240, 160); x.fillStyle = '#fff'; x.font = '24px sans-serif'; x.fillText('test photo', 60, 88); return c.toDataURL('image/jpeg', 0.8).split(',')[1]; }), 'base64');

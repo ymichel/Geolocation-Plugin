@@ -3,11 +3,11 @@
 // With --google the map is also checked with Google Maps; the provider is switched back to OSM afterwards.
 const { chromium } = require('playwright-core');
 const fs = require('fs');
-const { base } = require('./lib');
+const { base, chooseProvider } = require('./lib');
 
 async function setProvider(page, provider) {
   await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
-  await page.selectOption('#geolocation_provider', provider);
+  await chooseProvider(page, provider);
   await Promise.all([page.waitForNavigation({ waitUntil: 'load' }), page.click('#settings input[type=submit]')]);
 }
 

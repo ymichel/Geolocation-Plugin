@@ -5,7 +5,7 @@
  * It is a must-use plugin: tests/browser/start.js mounts this folder as wp-content/mu-plugins of the instance.
  *
  * admin-ajax.php?action=geolocation_test&do=... for administrators:
- * seed, meta (&post=), classic_on / classic_off, loopback_off / loopback_on, proxy_max_zoom (&value=), language (&locale=), tiles (&post=), run_cron, state, backup, restore, simulate_old, uninstall_test.
+ * seed, meta (&post=), classic_on / classic_off, use_google, show_notice, loopback_off / loopback_on, proxy_max_zoom (&value=), language (&locale=), tiles (&post=), run_cron, state, backup, restore, simulate_old, uninstall_test.
  *
  * "seed" creates the demo content of geolocation-test-content.json and resets posts and pages with the same slug.
  *
@@ -332,6 +332,18 @@ add_action(
 				break;
 			case 'classic_off':
 				delete_option( 'geolocation_test_classic' );
+				break;
+			case 'use_google':
+				// Google Maps is only offered while an API key is stored. This stores a placeholder as key and selects
+				// Google Maps, so the field appears on the settings page and the real key can be entered there.
+				if ( '' === (string) get_option( 'geolocation_google_maps_api_key' ) ) {
+					update_option( 'geolocation_google_maps_api_key', 'replace-with-your-key' );
+				}
+				update_option( 'geolocation_provider', 'google' );
+				break;
+			case 'show_notice':
+				// The notice about Google Maps comes back for the current user.
+				delete_user_meta( get_current_user_id(), 'geolocation_google_notice_hidden' );
 				break;
 			case 'language':
 				// Also languages without an installed language pack of WordPress, to check the texts of the plugin.

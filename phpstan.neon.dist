@@ -1,0 +1,25 @@
+# Static analysis of the plugin's PHP files: checks the native types against their use.
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+    level: 5
+    phpVersion: 80300
+    bootstrapFiles:
+        - tests/phpstan-bootstrap.php
+    ignoreErrors:
+        # WordPress takes the version of the block API as a number; the definitions used here expect text.
+        -
+            identifier: argument.type
+            message: '#\$args of function register_block_type expects#'
+            path: geolocation-block.php
+    paths:
+        - geolocation.php
+        - geolocation-block.php
+        - geolocation-list.php
+        - geolocation-map-link.php
+        - geolocation-map-provider-google.php
+        - geolocation-map-provider-osm.php
+        - geolocation-precache.php
+        - geolocation-settings.php
+        - geolocation-settings-page.php
+        - geolocation-track.php

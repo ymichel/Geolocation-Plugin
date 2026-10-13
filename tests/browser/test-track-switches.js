@@ -2,7 +2,7 @@
 // overview map and the options of the block "Post Location" (post "Trip to Potsdam", restored afterwards).
 // With --google everything runs with Google Maps (needs a stored API key; OSM is restored afterwards).
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, chooseProvider } = require('./lib');
 const GOOGLE = process.argv[2] === '--google';
 const POST = id('trip-to-potsdam');
 const URL = '/2026/10/04/trip-to-potsdam/';
@@ -26,7 +26,7 @@ const URL = '/2026/10/04/trip-to-potsdam/';
   const overview = async () => { await page.goto(base + '/our-route/', { waitUntil: 'load' }); await page.waitForTimeout(GOOGLE ? 7000 : 2500); return page.evaluate(() => { const m = document.querySelector('.geolocation-page-map'); const ms = JSON.parse(m.dataset.markers); return { lengths: ms.map(x => x.length).filter(Boolean), tracks: ms.filter(x => x.track).length, map: m.classList.contains('leaflet-container') || !!m.querySelector('.gm-style') }; }); };
   const setContent = async (c) => { await page.goto(base + '/wp-admin/edit.php', { waitUntil: 'load' }); await page.evaluate(async ([id, c]) => { await wp.apiFetch({ path: '/wp/v2/posts/' + id, method: 'POST', data: { content: c } }); }, [POST, c]); };
   const out = { provider: GOOGLE ? 'google' : 'osm' };
-  if (GOOGLE) await settings(async () => { await page.selectOption('#geolocation_provider', 'google'); });
+  if (GOOGLE) await settings(async () => { await chooseProvider(page, 'google'); });
   await page.goto(base + '/wp-admin/edit.php', { waitUntil: 'load' });
   const original = await page.evaluate(async (id) => (await wp.apiFetch({ path: '/wp/v2/posts/' + id + '?context=edit' })).content.raw, POST);
   try {
@@ -71,7 +71,7 @@ const URL = '/2026/10/04/trip-to-potsdam/';
     await page.screenshot({ path: 'out/track-switches-editor' + (GOOGLE ? '-google' : '') + '.png' });
   } finally {
     await setContent(original);
-    await settings(async () => { await page.setChecked('#geolocation_track_figures', true); await page.setChecked('#geolocation_track_profile', true); if (GOOGLE) await page.selectOption('#geolocation_provider', 'osm'); });
+    await settings(async () => { await page.setChecked('#geolocation_track_figures', true); await page.setChecked('#geolocation_track_profile', true); if (GOOGLE) await chooseProvider(page, 'osm'); });
   }
   out.errors = [...new Set(errors)];
   console.log(JSON.stringify(out));

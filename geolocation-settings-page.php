@@ -11,11 +11,11 @@
  */
 
 /**
- * Add the help tab explaining the shortcode and its attributes to the settings page.
+ * Add the help tabs to the settings page: the blocks, and the shortcode for existing content.
  *
  * @return void
  */
-function geolocation_add_help_tab() {
+function geolocation_add_help_tab(): void {
 	$screen = get_current_screen();
 	if ( ! $screen ) {
 		return;
@@ -33,7 +33,15 @@ function geolocation_add_help_tab() {
 		'route'  => array( __( 'Connects the locations with a line, in the order of the post dates.', 'geolocation' ), 'route="1"' ),
 	);
 
-	$content  = '<p>' . esc_html__( 'Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined.', 'geolocation' ) . '</p>';
+	// The blocks are the way to place maps.
+	$maps  = '<p>' . esc_html__( 'Insert the block "Geolocation Map" into a page or a post to show a map with the locations of your posts. In the settings of the block you choose categories and tags, the size of the map, a fixed zoom level and the route between the locations.', 'geolocation' ) . ' ' . esc_html__( 'A page can contain several maps.', 'geolocation' ) . '</p>';
+	$maps .= '<p>' . esc_html__( 'The route follows the publication dates of the posts, oldest first. Choose a category to show the route of a single trip.', 'geolocation' ) . '</p>';
+	$maps .= '<p>' . esc_html__( 'A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines.', 'geolocation' ) . '</p>';
+	$maps .= '<p>' . esc_html__( 'In a post the block "Post Location" shows its location wherever you place it. The automatic output before or after the post is then omitted.', 'geolocation' ) . '</p>';
+
+	// The shortcode is kept for pages which use it.
+	$content  = '<p><strong>' . esc_html__( 'The shortcode keeps working for existing pages. For new maps use the block "Geolocation Map".', 'geolocation' ) . '</strong></p>';
+	$content .= '<p>' . esc_html__( 'Put the shortcode on a page to show a map with the locations of your posts. The following attributes are optional and can be combined.', 'geolocation' ) . '</p>';
 	$content .= '<table class="widefat striped" style="max-width:760px;"><thead><tr>';
 	$content .= '<th>' . esc_html__( 'Attribute', 'geolocation' ) . '</th>';
 	$content .= '<th>' . esc_html__( 'Meaning', 'geolocation' ) . '</th>';
@@ -47,10 +55,14 @@ function geolocation_add_help_tab() {
 	$content .= '</tbody></table>';
 	$content .= '<p>' . esc_html__( 'The route follows the publication dates of the posts, oldest first, and connects the locations with straight lines. Combine it with "cat" to show the route of a single trip.', 'geolocation' ) . ' <code>' . esc_html( '[' . $tag . ' cat="italy-2026" route="1"]' ) . '</code></p>';
 	$content .= '<p>' . esc_html__( 'A page can contain several maps.', 'geolocation' ) . ' ' . esc_html__( 'Without the attribute "cat" the custom field "category" of the page is used.', 'geolocation' ) . '</p>';
-	$content .= '<p>' . esc_html__( 'A post can carry the track of a GPX file, chosen in the Geolocation box of the editor. A map with a route draws these tracks as recorded and the gaps between them as dashed lines.', 'geolocation' ) . '</p>';
-	$content .= '<p>' . esc_html__( 'In the block editor the block "Geolocation Map" offers the same options without typing a shortcode.', 'geolocation' ) . '</p>';
-	$content .= '<p>' . esc_html__( 'In a post the block "Post Location" shows its location wherever you place it. The automatic output before or after the post is then omitted.', 'geolocation' ) . '</p>';
 
+	$screen->add_help_tab(
+		array(
+			'id'      => 'geolocation-maps',
+			'title'   => __( 'Maps', 'geolocation' ),
+			'content' => $maps,
+		)
+	);
 	$screen->add_help_tab(
 		array(
 			'id'      => 'geolocation-shortcode',
@@ -65,7 +77,7 @@ function geolocation_add_help_tab() {
  *
  * @return void
  */
-function geolocation_settings_page() {
+function geolocation_settings_page(): void {
 	require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-provider-google.php';
 	require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-provider-osm.php';
 
@@ -121,7 +133,7 @@ function geolocation_settings_page() {
 	);
 	// In strict privacy mode with OpenStreetMap the browser does not connect to Google either;
 	// a preview with Google Maps is available after that provider has been saved.
-	if ( ! geolocation_strict_privacy() ) {
+	if ( geolocation_google_available() && ! geolocation_strict_privacy() ) {
 		// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- external API without a version.
 		wp_enqueue_script( 'google_maps_api', geolocation_get_google_maps_api_url(), array( 'geolocation_settings' ), null, true );
 	}
@@ -218,8 +230,8 @@ function geolocation_settings_page() {
 					);
 					foreach ( $zoom_levels as $value => $label ) :
 						?>
-						<input type="radio" id="geolocation_default_zoom_<?php echo esc_attr( $value ); ?>" name="geolocation_default_zoom" value="<?php echo esc_attr( $value ); ?>" <?php checked( $default_zoom, $value ); ?>>
-						<label for="geolocation_default_zoom_<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $label ); ?></label>
+						<input type="radio" id="geolocation_default_zoom_<?php echo esc_attr( (string) $value ); ?>" name="geolocation_default_zoom" value="<?php echo esc_attr( (string) $value ); ?>" <?php checked( $default_zoom, $value ); ?>>
+						<label for="geolocation_default_zoom_<?php echo esc_attr( (string) $value ); ?>"><?php echo esc_html( $label ); ?></label>
 					<?php endforeach; ?>
 					<br />
 					<?php echo geolocation_get_geo_div(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in geolocation_get_geo_div(). ?>
@@ -256,6 +268,7 @@ function geolocation_settings_page() {
 					<p class="description"><?php esc_html_e( 'Hides this distance at the start and at the end of every track, e.g. to keep your home address private. 0 shows the whole track.', 'geolocation' ); ?></p>
 				</td>
 			</tr>
+			<?php if ( geolocation_google_available() ) : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Maps Provider', 'geolocation' ); ?></th>
 				<td>
@@ -263,14 +276,19 @@ function geolocation_settings_page() {
 						<option value="google" <?php selected( $provider, 'google' ); ?>>Google Maps</option>
 						<option value="osm" <?php selected( $provider, 'osm' ); ?>>Open Street Maps</option>
 					</select>
+					<p class="description" id="geolocation-google-hint"><?php esc_html_e( 'Google Maps is no longer developed further and is only offered to websites which already use it. It disappears from this page once the API key is removed.', 'geolocation' ); ?></p>
 				</td>
 			</tr>
-			<tr class="google-apikey" style="<?php echo 'google' === $provider ? '' : 'display:none;'; ?>">
+				<tr class="google-apikey" style="<?php echo 'google' === $provider ? '' : 'display:none;'; ?>">
 				<th scope="row"><?php esc_html_e( 'Google Maps API key', 'geolocation' ); ?></th>
 				<td>
 					<input type="text" name="geolocation_google_maps_api_key" value="<?php echo esc_attr( $google_maps_api_key ); ?>" />
 				</td>
 			</tr>
+			<?php else : ?>
+				<?php // New websites only get OpenStreetMap. The script of this page reads the provider from this field. ?>
+			<input type="hidden" id="geolocation_provider" name="geolocation_provider" value="osm" />
+			<?php endif; ?>
 			<tr class="osm-urls" style="<?php echo 'osm' === $provider ? '' : 'display:none;'; ?>">
 				<th scope="row"><?php esc_html_e( 'OSM URLs', 'geolocation' ); ?></th>
 				<td>

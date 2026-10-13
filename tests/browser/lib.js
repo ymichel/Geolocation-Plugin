@@ -36,11 +36,22 @@ function id( slug ) {
 	return ids[ slug ];
 }
 
+// Choose the map provider on the settings page. A website which does not use Google Maps only has OpenStreetMap
+// and no select: Google Maps is offered once an API key is stored in the instance.
+async function chooseProvider( page, name ) {
+	if ( await page.$( 'select#geolocation_provider' ) ) {
+		await page.selectOption( '#geolocation_provider', name );
+	} else if ( name !== 'osm' ) {
+		throw new Error( 'Google Maps is not offered by the test instance at ' + base + ': it has no API key, see tests/instructions.md.' );
+	}
+}
+
 module.exports = {
 	base,
 	instance,
 	// Where the proxy plugin stores tiles, and the must-use plugins of the instance.
 	cache: path.join( instance, 'wp-content', 'cache', 'osm-tiles' ),
+	chooseProvider,
 	muPlugins: process.env.GEOLOCATION_TEST_DIR ? path.join( instance, 'wp-content', 'mu-plugins' ) : path.join( __dirname, 'mu-plugins' ),
 	id
 };

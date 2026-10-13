@@ -22,7 +22,7 @@ define( 'GEOLOCATION__TRACK_POINTS_PAGE', 3000 );
  * @param mixed $raw The track as JSON or as an array of [ latitude, longitude ] pairs.
  * @return array The positions as [ latitude, longitude ] pairs, empty if there is no valid track.
  */
-function geolocation_sanitize_track( $raw ) {
+function geolocation_sanitize_track( mixed $raw ): array {
 	$points = is_string( $raw ) ? json_decode( $raw, true ) : $raw;
 	if ( ! is_array( $points ) ) {
 		return array();
@@ -50,7 +50,7 @@ function geolocation_sanitize_track( $raw ) {
  * @param array $to The second position as [ latitude, longitude ].
  * @return float
  */
-function geolocation_distance( $from, $to ) {
+function geolocation_distance( array $from, array $to ): float {
 	$lat1 = deg2rad( $from[0] );
 	$lat2 = deg2rad( $to[0] );
 	$half = sin( ( $lat2 - $lat1 ) / 2 ) ** 2 + cos( $lat1 ) * cos( $lat2 ) * sin( deg2rad( $to[1] - $from[1] ) / 2 ) ** 2;
@@ -63,7 +63,7 @@ function geolocation_distance( $from, $to ) {
  * @param array $points The positions of the track.
  * @return float
  */
-function geolocation_track_length( $points ) {
+function geolocation_track_length( array $points ): float {
 	$length = 0.0;
 	$count  = count( $points );
 	for ( $i = 1; $i < $count; $i++ ) {
@@ -79,7 +79,7 @@ function geolocation_track_length( $points ) {
  * @param float $tolerance The allowed deviation in degrees of latitude.
  * @return array
  */
-function geolocation_simplify_track_by( $points, $tolerance ) {
+function geolocation_simplify_track_by( array $points, float $tolerance ): array {
 	$count = count( $points );
 	if ( $count < 3 ) {
 		return $points;
@@ -131,7 +131,7 @@ function geolocation_simplify_track_by( $points, $tolerance ) {
  * @param int   $max The maximum number of positions.
  * @return array
  */
-function geolocation_simplify_track( $points, $max ) {
+function geolocation_simplify_track( array $points, int $max ): array {
 	$max       = max( 2, (int) $max );
 	$tolerance = 0.00002; // About two metres.
 	$count     = count( $points );
@@ -150,7 +150,7 @@ function geolocation_simplify_track( $points, $max ) {
  * @param int   $metres The distance to cut off at the start and at the end.
  * @return array The shortened track, empty if nothing is left of it.
  */
-function geolocation_trim_track( $points, $metres ) {
+function geolocation_trim_track( array $points, int $metres ): array {
 	$cut = (int) $metres / 1000;
 	if ( $cut <= 0 ) {
 		return $points;
@@ -175,10 +175,10 @@ function geolocation_trim_track( $points, $metres ) {
 /**
  * Format the length of a track for visitors, e.g. "42 km".
  *
- * @param float $km The length in kilometres.
+ * @param mixed $km The length in kilometres. Stored values are text and may be empty.
  * @return string An empty string if there is no length.
  */
-function geolocation_format_track_length( $km ) {
+function geolocation_format_track_length( mixed $km ): string {
 	$km = (float) $km;
 	if ( $km <= 0 ) {
 		return '';
@@ -193,7 +193,7 @@ function geolocation_format_track_length( $km ) {
  *                   equal distances along the track), "up" and "down" (ascent and descent in metres).
  * @return array The keys "profile", "up", "down", "min" and "max"; empty if there are no valid elevations.
  */
-function geolocation_sanitize_elevation( $raw ) {
+function geolocation_sanitize_elevation( mixed $raw ): array {
 	$data = is_string( $raw ) ? json_decode( $raw, true ) : $raw;
 	if ( ! is_array( $data ) || empty( $data['profile'] ) || ! is_array( $data['profile'] ) ) {
 		return array();
@@ -223,7 +223,7 @@ function geolocation_sanitize_elevation( $raw ) {
  * @param int $post_id The posts id.
  * @return array As returned by geolocation_sanitize_elevation().
  */
-function geolocation_get_elevation( $post_id ) {
+function geolocation_get_elevation( int $post_id ): array {
 	$stored = get_post_meta( $post_id, 'geo_track_ele', true );
 	return empty( $stored ) ? array() : geolocation_sanitize_elevation( $stored );
 }
@@ -234,7 +234,7 @@ function geolocation_get_elevation( $post_id ) {
  * @param int $post_id The posts id.
  * @return string An empty string if the post has no track.
  */
-function geolocation_get_track_summary( $post_id ) {
+function geolocation_get_track_summary( int $post_id ): string {
 	$length = geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) );
 	if ( '' === $length ) {
 		return '';
@@ -262,7 +262,7 @@ function geolocation_get_track_summary( $post_id ) {
  * @param array  $labels The texts "title", "min" and "max" (formatted elevations).
  * @return string The escaped SVG, or an empty string if there is no profile.
  */
-function geolocation_get_elevation_svg( $elevation, $length, $width, $labels ) {
+function geolocation_get_elevation_svg( array $elevation, string $length, int $width, array $labels ): string {
 	if ( empty( $elevation['profile'] ) || count( $elevation['profile'] ) < 2 ) {
 		return '';
 	}
@@ -300,7 +300,7 @@ function geolocation_get_elevation_svg( $elevation, $length, $width, $labels ) {
  * @param string $choice "show" or "hide" to overrule the settings, e.g. by a block; anything else for the settings.
  * @return bool
  */
-function geolocation_track_shows( $part, $choice = '' ) {
+function geolocation_track_shows( string $part, string $choice = '' ): bool {
 	if ( in_array( $choice, array( 'show', 'hide' ), true ) ) {
 		return 'show' === $choice;
 	}
@@ -317,7 +317,7 @@ function geolocation_track_shows( $part, $choice = '' ) {
  * @param int  $width The width of the map in pixels the details belong to, 0 if there is no map.
  * @return string The HTML, or an empty string if there is nothing to show.
  */
-function geolocation_get_track_details( $post_id, $figures = true, $profile = false, $width = 0 ) {
+function geolocation_get_track_details( int $post_id, bool $figures = true, bool $profile = false, int $width = 0 ): string {
 	$summary = $figures ? geolocation_get_track_summary( $post_id ) : '';
 	$image   = '';
 	if ( $profile && '' !== geolocation_format_track_length( get_post_meta( $post_id, 'geo_track_km', true ) ) ) {
@@ -350,7 +350,7 @@ function geolocation_get_track_details( $post_id, $figures = true, $profile = fa
  * @param int $post_id The posts id.
  * @return void
  */
-function geolocation_save_track( $post_id ) {
+function geolocation_save_track( int $post_id ): void {
 	// phpcs:disable WordPress.Security.NonceVerification.Missing -- verified by geolocation_save_postdata().
 	if ( '1' === geolocation_get_posted_value( 'geolocation-track-remove' ) ) {
 		delete_post_meta( $post_id, 'geo_track' );
@@ -394,7 +394,7 @@ function geolocation_save_track( $post_id ) {
  * @param int $max The maximum number of positions.
  * @return array The positions as [ latitude, longitude ] pairs, empty if the post has no track.
  */
-function geolocation_get_track( $post_id, $max = GEOLOCATION__TRACK_POINTS ) {
+function geolocation_get_track( int $post_id, int $max = GEOLOCATION__TRACK_POINTS ): array {
 	$stored = get_post_meta( $post_id, 'geo_track', true );
 	if ( empty( $stored ) ) {
 		return array();

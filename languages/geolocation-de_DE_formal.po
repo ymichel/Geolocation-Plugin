@@ -66,9 +66,6 @@ msgid "Globe"
 msgstr "Welt"
 
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.php:91
-msgid "Google Maps API key is missing for"
-msgstr "Der Google Maps API Schl&uuml;ssel fehlt f&uuml;r"
-
 #: /home/ymichel/src/GIT/Geolocation-Plugin/geolocation.settings.page.php:56 
 msgid "Height"
 msgstr "H&ouml;he"
@@ -308,9 +305,6 @@ msgstr "Route"
 msgid "The map is shown on the website. Choose the posts and the size in the block settings."
 msgstr "Die Karte wird auf der Website angezeigt. Beitr&auml;ge und Gr&ouml;&szlig;e lassen sich in den Block-Einstellungen w&auml;hlen."
 
-msgid "In the block editor the block \"Geolocation Map\" offers the same options without typing a shortcode."
-msgstr "Im Block-Editor bietet der Block \"Geolocation-Karte\" dieselben Optionen, ohne einen Shortcode zu tippen."
-
 msgid "Track (GPX)"
 msgstr "Strecke (GPX)"
 
@@ -502,3 +496,24 @@ msgstr "Nicht &ouml;ffentlich"
 
 msgid "No change"
 msgstr "Keine &Auml;nderung"
+
+msgid "Google Maps is no longer developed further and is only offered to websites which already use it. It disappears from this page once the API key is removed."
+msgstr "Google Maps wird nicht mehr weiterentwickelt und nur noch Websites angeboten, die es bereits nutzen. Es verschwindet von dieser Seite, sobald der API-Schl&uuml;ssel entfernt ist."
+
+msgid "Maps"
+msgstr "Karten"
+
+msgid "Insert the block \"Geolocation Map\" into a page or a post to show a map with the locations of your posts. In the settings of the block you choose categories and tags, the size of the map, a fixed zoom level and the route between the locations."
+msgstr "F&uuml;gen Sie den Block \"Geolocation-Karte\" in eine Seite oder einen Beitrag ein, um eine Karte mit den Orten Ihrer Beitr&auml;ge zu zeigen. In den Einstellungen des Blocks w&auml;hlen Sie Kategorien und Schlagw&ouml;rter, die Gr&ouml;&szlig;e der Karte, eine feste Zoomstufe und die Route zwischen den Orten."
+
+msgid "The route follows the publication dates of the posts, oldest first. Choose a category to show the route of a single trip."
+msgstr "Die Route folgt den Ver&ouml;ffentlichungsdaten der Beitr&auml;ge, &auml;ltester zuerst. W&auml;hlen Sie eine Kategorie, um die Route einer einzelnen Reise zu zeigen."
+
+msgid "The shortcode keeps working for existing pages. For new maps use the block \"Geolocation Map\"."
+msgstr "Der Shortcode funktioniert f&uuml;r bestehende Seiten weiter. Nutzen Sie f&uuml;r neue Karten den Block \"Geolocation-Karte\"."
+
+msgid "Geolocation: Google Maps is no longer developed further. Your maps keep working, but new functions are made for OpenStreetMap only. You can switch to OpenStreetMap in the settings at any time."
+msgstr "Geolocation: Google Maps wird nicht mehr weiterentwickelt. Ihre Karten funktionieren weiter, neue Funktionen gibt es aber nur noch f&uuml;r OpenStreetMap. Sie k&ouml;nnen in den Einstellungen jederzeit zu OpenStreetMap wechseln."
+
+msgid "Hide this notice"
+msgstr "Diesen Hinweis ausblenden"
