@@ -999,4 +999,27 @@ class GeolocationTest extends TestCase {
 		);
 		$this->assertSame( array( 'width' => '100%' ), geolocation_convert_atts( geolocation_sanitize_map_atts( array( 'width' => '100%' ) ), 1 ) );
 	}
+
+	/**
+	 * The part of the elevation profile which belongs to the track visitors see.
+	 *
+	 * @return void
+	 */
+	public function test_track_visible_range() {
+		// Four sections of about 11.1 km along a meridian.
+		$GLOBALS['geolocation_test_post_meta'][7] = array( 'geo_track' => '[[0,0],[0.1,0],[0.2,0],[0.3,0],[0.4,0]]' );
+		$this->assertSame( array( 0.0, 1.0 ), geolocation_track_visible_range( 7 ) );
+		// Shortened by 5 km: one section at each end is hidden.
+		$GLOBALS['geolocation_test_options']['geolocation_track_trim'] = 5000;
+		list( $start, $end ) = geolocation_track_visible_range( 7 );
+		$this->assertEqualsWithDelta( 0.25, $start, 0.0001 );
+		$this->assertEqualsWithDelta( 0.75, $end, 0.0001 );
+		// Shortened by more than half: nothing is visible.
+		$GLOBALS['geolocation_test_options']['geolocation_track_trim'] = 30000;
+		list( $start, $end ) = geolocation_track_visible_range( 7 );
+		$this->assertGreaterThan( $end, $start );
+		// No track.
+		$this->assertSame( array( 1.0, 0.0 ), geolocation_track_visible_range( 8 ) );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_track_trim'] );
+	}
 }

@@ -74,7 +74,7 @@ A post can carry the track of a GPX file, e.g. the recording of a hike or a bike
 
 * The file is read in your browser. Only the simplified line of the track is stored with the post; the file itself, its times and elevations are not uploaded.
 * With the display setting "Simple map" the map of the post shows the track; the map in the editor shows it as well.
-* The post shows the key figures of the track: its length and, if the file contains elevations, ascent, descent and highest point. Below a map it also shows the elevation profile. Both can be switched off in the settings, and the block "Post Location" can show or hide them for a single post.
+* The post shows the key figures of the track: its length and, if the file contains elevations, ascent, descent and highest point. Below a map it also shows the elevation profile. Pointing at the profile, tapping it or moving along it with the arrow keys shows the distance and the elevation, and the map marks the same place of the track. Both can be switched off in the settings, and the block "Post Location" can show or hide them for a single post.
 * An overview map with the option "route" draws the tracks as recorded and the gaps between them as dashed lines. The popup of a post shows the length of its track.
 * A post without a location gets the end of its track as location.
 * The setting "Shorten tracks" hides a distance at the start and at the end of every track, e.g. to keep your home address private.
@@ -115,6 +115,7 @@ Requires PHP 8.3 and WordPress 6.4. Google Maps is no longer developed further; 
 = 1.20.0 =
 * new: existing posts without a location can get the location of their featured image, read once in the background from the settings page.
 * new: the settings page converts the shortcodes of existing pages and posts into the blocks, keeping their categories, tags, size, zoom and route.
+* new: the elevation profile follows the pointer, a tap or the arrow keys, shows distance and elevation, and the map marks the same place of the track (OpenStreetMap).
 * performance: overview maps load the featured images of their posts at once instead of one by one.
 
 = 1.19.0 =

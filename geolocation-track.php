@@ -260,9 +260,10 @@ function geolocation_get_track_summary( int $post_id ): string {
  * @param string                $length The formatted length of the track, e.g. "42 km".
  * @param int                   $width The width of the image in pixels.
  * @param array<string, string> $labels The texts "title", "min" and "max" (formatted elevations).
+ * @param array<string, string> $data Values for data attributes of the image, by name, for the script of the website.
  * @return string The escaped SVG, or an empty string if there is no profile.
  */
-function geolocation_get_elevation_svg( array $elevation, string $length, int $width, array $labels ): string {
+function geolocation_get_elevation_svg( array $elevation, string $length, int $width, array $labels, array $data = array() ): string {
 	if ( empty( $elevation['profile'] ) || count( $elevation['profile'] ) < 2 ) {
 		return '';
 	}
@@ -278,8 +279,12 @@ function geolocation_get_elevation_svg( array $elevation, string $length, int $w
 		$y        = round( $bottom - ( $value - $elevation['min'] ) * ( $bottom - $top ) / $range, 1 );
 		$points[] = $x . ',' . $y;
 	}
-	$line = 'M' . implode( ' L', $points );
-	$svg  = '<svg class="geolocation-elevation" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' . esc_attr( $labels['title'] ) . '" viewBox="0 0 ' . $width . ' ' . $height . '" width="' . $width . '" height="' . $height . '">';
+	$line       = 'M' . implode( ' L', $points );
+	$attributes = '';
+	foreach ( $data as $name => $value ) {
+		$attributes .= ' data-' . $name . '="' . esc_attr( (string) $value ) . '"';
+	}
+	$svg  = '<svg class="geolocation-elevation" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' . esc_attr( $labels['title'] ) . '" viewBox="0 0 ' . $width . ' ' . $height . '" width="' . $width . '" height="' . $height . '"' . $attributes . '>';
 	$svg .= '<title>' . esc_html( $labels['title'] ) . '</title>';
 	$svg .= '<path d="' . esc_attr( $line . ' L' . $width . ',' . $bottom . ' L0,' . $bottom . ' Z' ) . '" fill="#2b6cb0" fill-opacity="0.2"/>';
 	$svg .= '<path d="' . esc_attr( $line ) . '" fill="none" stroke="#2b6cb0" stroke-width="1.5" stroke-linejoin="round"/>';
@@ -309,6 +314,23 @@ function geolocation_track_shows( string $part, string $choice = '' ): bool {
 }
 
 /**
+ * The data the script of the website needs to follow the elevation profile on the map of the post.
+ *
+ * @param int                  $post_id The id of the post.
+ * @param array<string, mixed> $elevation The elevations as returned by geolocation_sanitize_elevation().
+ * @return array<string, string> The values of the data attributes of the profile, by name.
+ */
+function geolocation_profile_data( int $post_id, array $elevation ): array {
+	list( $start, $end ) = geolocation_track_visible_range( $post_id );
+	return array(
+		'profile' => (string) wp_json_encode( array_map( 'intval', $elevation['profile'] ) ),
+		'km'      => (string) round( (float) get_post_meta( $post_id, 'geo_track_km', true ), 2 ),
+		'start'   => (string) round( $start, 4 ),
+		'end'     => (string) round( $end, 4 ),
+	);
+}
+
+/**
  * Build the key figures and the elevation profile of the track of a post.
  *
  * @param int  $post_id The posts id.
@@ -331,7 +353,8 @@ function geolocation_get_track_details( int $post_id, bool $figures = true, bool
 					'title' => __( 'Elevation profile', 'geolocation' ),
 					'min'   => number_format_i18n( $elevation['min'] ) . ' m',
 					'max'   => number_format_i18n( $elevation['max'] ) . ' m',
-				)
+				),
+				geolocation_profile_data( $post_id, $elevation )
 			);
 		}
 	}
@@ -385,6 +408,42 @@ function geolocation_save_track( int $post_id ): void {
 	} else {
 		update_post_meta( $post_id, 'geo_track_ele', wp_json_encode( $elevation ) );
 	}
+}
+
+/**
+ * Get the part of the elevation profile which belongs to the track visitors see.
+ *
+ * The profile covers the whole track, while visitors may see a shortened one ("Shorten tracks"). The shortened
+ * track starts and ends at positions of the stored one, so the hidden distances can be measured there.
+ *
+ * @param int $post_id The id of the post.
+ * @return array{float, float} Start and end as fractions of the profile; the start is after the end if nothing is visible.
+ */
+function geolocation_track_visible_range( int $post_id ): array {
+	$full   = geolocation_sanitize_track( get_post_meta( $post_id, 'geo_track', true ) );
+	$length = geolocation_track_length( $full );
+	if ( $length <= 0 ) {
+		return array( 1.0, 0.0 );
+	}
+	$metres = (int) get_option( 'geolocation_track_trim' );
+	if ( $metres <= 0 ) {
+		return array( 0.0, 1.0 );
+	}
+	$visible = geolocation_trim_track( $full, $metres );
+	if ( empty( $visible ) ) {
+		return array( 1.0, 0.0 );
+	}
+	$last  = count( $full ) - 1;
+	$start = 0.0;
+	for ( $i = 0; $i < $last && $full[ $i ] !== $visible[0]; $i++ ) {
+		$start += geolocation_distance( $full[ $i ], $full[ $i + 1 ] );
+	}
+	$end  = 0.0;
+	$tail = $visible[ count( $visible ) - 1 ];
+	for ( $i = $last; $i > 0 && $full[ $i ] !== $tail; $i-- ) {
+		$end += geolocation_distance( $full[ $i ], $full[ $i - 1 ] );
+	}
+	return array( $start / $length, 1 - $end / $length );
 }
 
 /**
