@@ -517,3 +517,14 @@ msgstr "Geolocation: Google Maps wird nicht mehr weiterentwickelt. Deine Karten 
 
 msgid "Hide this notice"
 msgstr "Diesen Hinweis ausblenden"
+
+msgid "Read the locations of existing posts without a location from their featured images (once, when the settings are saved)."
+msgstr "Die Orte bestehender Beitr&auml;ge ohne Ort aus ihren Beitragsbildern lesen (einmalig beim Speichern der Einstellungen)."
+
+#, php-format
+msgid "Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d."
+msgstr "Die Beitragsbilder werden im Hintergrund gelesen. Gepr&uuml;fte Beitr&auml;ge: %1$d von %2$d, gefundene Orte: %3$d."
+
+#, php-format
+msgid "Last run. Posts without a location checked: %1$d, locations found: %2$d."
+msgstr "Letzter Lauf. Gepr&uuml;fte Beitr&auml;ge ohne Ort: %1$d, gefundene Orte: %2$d."

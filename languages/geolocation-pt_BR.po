@@ -272,6 +272,9 @@ msgstr "Publicar as localizações obtidas da imagem destacada de posts que não
 msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
 msgstr "Um post criado por um aplicativo ou pela API recebe a localização da sua imagem destacada. Enquanto isto estiver desativado, apenas usuários conectados veem essa localização, até você torná-la pública no editor."
 
+msgid "Read the locations of existing posts without a location from their featured images (once, when the settings are saved)."
+msgstr "Ler as localizações dos posts existentes sem localização a partir das suas imagens destacadas (uma vez, ao salvar as configurações)."
+
 msgid "External map"
 msgstr "Mapa externo"
 
@@ -460,6 +463,12 @@ msgstr "Remover trajeto"
 
 msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
 msgstr "O arquivo é lido no seu navegador. Apenas a linha simplificada do trajeto é armazenada, não o arquivo."
+
+msgid "Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d."
+msgstr "Lendo as imagens destacadas em segundo plano. Posts verificados: %1$d de %2$d, localizações encontradas: %3$d."
+
+msgid "Last run. Posts without a location checked: %1$d, locations found: %2$d."
+msgstr "Última execução. Posts sem localização verificados: %1$d, localizações encontradas: %2$d."
 
 msgid "Your location could not be determined."
 msgstr "Não foi possível determinar sua localização."

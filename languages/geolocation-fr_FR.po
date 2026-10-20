@@ -272,6 +272,9 @@ msgstr "Publier les emplacements tirés de l’image mise en avant des articles 
 msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
 msgstr "Un article créé par une application ou via l’API reçoit l’emplacement de son image mise en avant. Tant que cette option est désactivée, seuls les utilisateurs connectés voient cet emplacement, jusqu’à ce que vous le rendiez public dans l’éditeur."
 
+msgid "Read the locations of existing posts without a location from their featured images (once, when the settings are saved)."
+msgstr "Lire les emplacements des articles existants sans emplacement à partir de leurs images mises en avant (une fois, à l’enregistrement des réglages)."
+
 msgid "External map"
 msgstr "Carte externe"
 
@@ -460,6 +463,12 @@ msgstr "Supprimer la trace"
 
 msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
 msgstr "Le fichier est lu dans votre navigateur. Seule la ligne simplifiée de la trace est enregistrée, pas le fichier."
+
+msgid "Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d."
+msgstr "Lecture des images mises en avant en arrière-plan. Articles vérifiés : %1$d sur %2$d, emplacements trouvés : %3$d."
+
+msgid "Last run. Posts without a location checked: %1$d, locations found: %2$d."
+msgstr "Dernière exécution. Articles sans emplacement vérifiés : %1$d, emplacements trouvés : %2$d."
 
 msgid "Your location could not be determined."
 msgstr "Votre position n’a pas pu être déterminée."

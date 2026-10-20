@@ -950,4 +950,24 @@ class GeolocationTest extends TestCase {
 
 		$_REQUEST = $request;
 	}
+
+	/**
+	 * The settings page describes the run which reads locations from featured images.
+	 *
+	 * @return void
+	 */
+	public function test_derive_status_text() {
+		$this->assertSame( '', geolocation_derive_status_text() );
+		$GLOBALS['geolocation_test_options']['geolocation_derive_status'] = array(
+			'total'    => 12,
+			'done'     => 5,
+			'found'    => 2,
+			'finished' => 0,
+		);
+		$this->assertSame( 'Reading the featured images in the background. Posts checked: 5 of 12, locations found: 2.', geolocation_derive_status_text() );
+		$GLOBALS['geolocation_test_options']['geolocation_derive_status']['done']     = 12;
+		$GLOBALS['geolocation_test_options']['geolocation_derive_status']['finished'] = 1792000000;
+		$this->assertSame( 'Last run. Posts without a location checked: 12, locations found: 2.', geolocation_derive_status_text() );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_derive_status'] );
+	}
 }

@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.19.0
+ * Version: 1.20.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Requires at least: 6.4
@@ -33,7 +33,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.19.0' );
+define( 'GEOLOCATION__VERSION', '1.20.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -55,6 +55,7 @@ add_action( 'added_post_meta', 'geolocation_featured_image_changed', 10, 3 );
 add_action( 'updated_post_meta', 'geolocation_featured_image_changed', 10, 3 );
 add_action( 'deleted_post', 'geolocation_flush_page_markers' );
 add_action( 'geolocation_update_addresses_batch', 'geolocation_update_addresses_batch' );
+add_action( 'geolocation_derive_locations_batch', 'geolocation_derive_locations_batch' );
 add_action( 'geolocation_precache_batch', 'geolocation_precache_batch' );
 add_action( 'geolocation_precache_post', 'geolocation_precache_post' );
 add_action( 'save_post_post', 'geolocation_precache_saved_post', 20 );
@@ -488,6 +489,118 @@ function geolocation_derive_location( int $post_id ): bool {
  */
 function geolocation_post_saved( int $post_id ): void {
 	geolocation_derive_location( $post_id );
+}
+
+/**
+ * Start reading the locations of existing posts from their featured images, in the background.
+ *
+ * Covers the posts which have a featured image but no location, except those whose location has been removed
+ * in the editor. Posts saved before version 1.18.0 outside the editor are the typical case.
+ *
+ * @return void
+ */
+function geolocation_derive_locations_start(): void {
+	$post_ids = get_posts(
+		array(
+			'post_type'      => 'post',
+			'post_status'    => array( 'publish', 'future', 'draft', 'pending', 'private' ),
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- runs once, in the background, when an administrator asks for it.
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => '_thumbnail_id',
+					'compare' => 'EXISTS',
+				),
+				array(
+					'key'     => 'geo_removed',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'geo_latitude',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'geo_latitude',
+						'value'   => '',
+						'compare' => '=',
+					),
+				),
+			),
+		)
+	);
+	$post_ids = array_map( 'intval', $post_ids );
+	wp_unschedule_hook( 'geolocation_derive_locations_batch' );
+	update_option( 'geolocation_derive_queue', $post_ids, false );
+	update_option(
+		'geolocation_derive_status',
+		array(
+			'total'    => count( $post_ids ),
+			'done'     => 0,
+			'found'    => 0,
+			'finished' => empty( $post_ids ) ? time() : 0,
+		),
+		false
+	);
+	if ( ! empty( $post_ids ) ) {
+		wp_schedule_single_event( time(), 'geolocation_derive_locations_batch' );
+	}
+}
+
+/**
+ * Read the locations of the next posts in the queue from their featured images.
+ *
+ * @return void
+ */
+function geolocation_derive_locations_batch(): void {
+	$queue  = get_option( 'geolocation_derive_queue' );
+	$status = get_option( 'geolocation_derive_status' );
+	if ( ! is_array( $queue ) || ! is_array( $status ) ) {
+		return;
+	}
+	$batch     = array_splice( $queue, 0, GEOLOCATION__UPDATE_BATCH_SIZE );
+	$requested = false;
+	foreach ( $batch as $post_id ) {
+		if ( $requested ) {
+			// Respect the usage policy of the geocoding service (max. 1 request per second).
+			sleep( 1 );
+		}
+		$requested = geolocation_derive_location( (int) $post_id );
+		++$status['done'];
+		$status['found'] += $requested ? 1 : 0;
+	}
+	if ( empty( $queue ) ) {
+		$status['finished'] = time();
+		delete_option( 'geolocation_derive_queue' );
+	} else {
+		update_option( 'geolocation_derive_queue', $queue, false );
+		wp_schedule_single_event( time() + 5, 'geolocation_derive_locations_batch' );
+	}
+	update_option( 'geolocation_derive_status', $status, false );
+}
+
+/**
+ * Describe the last run which read locations from featured images, for the settings page.
+ *
+ * @return string The escaped text, or an empty string if there has been no run.
+ */
+function geolocation_derive_status_text(): string {
+	$status = get_option( 'geolocation_derive_status' );
+	if ( ! is_array( $status ) || ! isset( $status['total'], $status['done'], $status['found'] ) ) {
+		return '';
+	}
+	if ( empty( $status['finished'] ) ) {
+		/* translators: 1: number of posts checked so far, 2: number of posts to check, 3: number of locations found. */
+		return esc_html( sprintf( __( 'Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d.', 'geolocation' ), $status['done'], $status['total'], $status['found'] ) );
+	}
+	/* translators: 1: number of posts checked, 2: number of locations found. */
+	return esc_html( sprintf( __( 'Last run. Posts without a location checked: %1$d, locations found: %2$d.', 'geolocation' ), $status['done'], $status['found'] ) );
 }
 
 /**
