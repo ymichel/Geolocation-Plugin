@@ -959,8 +959,23 @@ function geolocation_get_page_markers( array $atts = array(), bool $use_custom_f
 	// A shortcode filter that matches no existing term must not fall back to showing all posts.
 	// An unknown category in the page's custom field shows all posts, as in former versions.
 	$no_match = ( ! $legacy && '' !== $categories && empty( $category_ids ) ) || ( '' !== $tags && empty( $tag_ids ) );
-	$posts    = $no_match ? array() : get_posts( geolocation_page_query_args( $category_ids, $tag_ids ) );
-	$markers  = array();
+	$posts    = array();
+	if ( ! $no_match ) {
+		// The same query as get_posts() runs: without sticky posts and without filters of other plugins.
+		$query = new WP_Query(
+			array_merge(
+				geolocation_page_query_args( $category_ids, $tag_ids ),
+				array(
+					'ignore_sticky_posts' => true,
+					'suppress_filters'    => true,
+				)
+			)
+		);
+		// The featured images of all posts in two queries, instead of two queries for every post.
+		update_post_thumbnail_cache( $query );
+		$posts = $query->posts;
+	}
+	$markers = array();
 	// The posts having a track, by the index of their marker.
 	$with_track = array();
 	foreach ( $posts as $geo_post ) {
