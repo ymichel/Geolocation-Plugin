@@ -72,6 +72,38 @@
     margin-top: 4px;
 }
 
+/* The profile follows the pointer; a horizontal drag moves along it, a vertical one still scrolls the page. */
+.geolocation-elevation[data-profile] {
+    cursor: crosshair;
+    touch-action: pan-y;
+}
+
+/* A tap focuses the image; only the keyboard needs the focus outline. */
+.geolocation-elevation[data-profile]:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.geolocation-elevation-cursor {
+    stroke: currentColor;
+    stroke-opacity: 0.5;
+    stroke-dasharray: 3 3;
+}
+
+.geolocation-elevation-dot {
+    fill: #e53e3e;
+    stroke: #fff;
+    stroke-width: 1.5;
+}
+
+.geolocation-elevation-label {
+    font-size: 11px;
+    fill: currentColor;
+    paint-order: stroke;
+    stroke: #fff;
+    stroke-width: 3px;
+    stroke-opacity: 0.8;
+}
+
 /* Link which opens a location in an external map, and the notice shown before. */
 .geolocation-map-link-box {
     margin-top: 4px;

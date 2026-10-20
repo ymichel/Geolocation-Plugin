@@ -5,7 +5,7 @@
  * It is a must-use plugin: tests/browser/start.js mounts this folder as wp-content/mu-plugins of the instance.
  *
  * admin-ajax.php?action=geolocation_test&do=... for administrators:
- * seed, meta (&post=), classic_on / classic_off, use_google, show_notice, loopback_off / loopback_on, proxy_max_zoom (&value=), language (&locale=), tiles (&post=), run_cron, state, backup, restore, simulate_old, uninstall_test.
+ * seed, meta (&post=), forget_location (&post=, &removed=1), classic_on / classic_off, use_google, show_notice, loopback_off / loopback_on, proxy_max_zoom (&value=), language (&locale=), tiles (&post=), run_cron (&hook=), state, backup, restore, simulate_old, uninstall_test.
  *
  * "seed" creates the demo content of geolocation-test-content.json and resets posts and pages with the same slug.
  *
@@ -285,10 +285,11 @@ add_action(
 				}
 				break;
 			case 'run_cron':
-				// Run the due background tasks of the plugin now.
+				// Run the due background tasks of the plugin now: those of pre-caching, or those whose name starts with &hook=.
+				$prefix = isset( $_GET['hook'] ) ? sanitize_key( wp_unslash( $_GET['hook'] ) ) : 'geolocation_precache';
 				foreach ( (array) _get_cron_array() as $time => $hooks ) {
 					foreach ( $hooks as $hook => $events ) {
-						if ( 0 !== strpos( $hook, 'geolocation_precache' ) ) {
+						if ( ! str_starts_with( $hook, $prefix ) ) {
 							continue;
 						}
 						foreach ( $events as $event ) {
@@ -297,6 +298,19 @@ add_action(
 							$result['ran'][] = $hook;
 						}
 					}
+				}
+				break;
+			case 'forget_location':
+				// The state of a post saved before version 1.18.0 outside the editor: a featured image but no
+				// location. With &removed=1 the location counts as removed in the editor.
+				$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+				foreach ( array_keys( get_post_meta( $post_id ) ) as $key ) {
+					if ( str_starts_with( $key, 'geo_' ) ) {
+						delete_post_meta( $post_id, $key );
+					}
+				}
+				if ( ! empty( $_GET['removed'] ) ) {
+					update_post_meta( $post_id, 'geo_removed', 1 );
 				}
 				break;
 			case 'probe':

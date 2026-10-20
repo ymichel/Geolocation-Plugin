@@ -517,3 +517,31 @@ msgstr "Geolocation: Google Maps wird nicht mehr weiterentwickelt. Deine Karten 
 
 msgid "Hide this notice"
 msgstr "Diesen Hinweis ausblenden"
+
+msgid "Read the locations of existing posts without a location from their featured images (once, when the settings are saved)."
+msgstr "Die Orte bestehender Beitr&auml;ge ohne Ort aus ihren Beitragsbildern lesen (einmalig beim Speichern der Einstellungen)."
+
+#, php-format
+msgid "Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d."
+msgstr "Die Beitragsbilder werden im Hintergrund gelesen. Gepr&uuml;fte Beitr&auml;ge: %1$d von %2$d, gefundene Orte: %3$d."
+
+#, php-format
+msgid "Last run. Posts without a location checked: %1$d, locations found: %2$d."
+msgstr "Letzter Lauf. Gepr&uuml;fte Beitr&auml;ge ohne Ort: %1$d, gefundene Orte: %2$d."
+
+msgid "Convert the shortcodes of pages and posts into blocks (once, when the settings are saved). The previous content stays available as a revision."
+msgstr "Die Shortcodes von Seiten und Beitr&auml;gen in Bl&ouml;cke umwandeln (einmalig beim Speichern der Einstellungen). Der vorherige Inhalt bleibt als Revision erhalten."
+
+msgid "A shortcode stays where it is not a paragraph of its own, where none of the categories or tags it names exists, and in posts unless the location is set to appear where the shortcode is."
+msgstr "Ein Shortcode bleibt, wo er kein eigener Absatz ist, wo es keine der genannten Kategorien oder Schlagw&ouml;rter gibt, und in Beitr&auml;gen, au&szlig;er der Ort soll an der Stelle des Shortcodes erscheinen."
+
+#, php-format
+msgid "Last conversion. Shortcodes converted: %d."
+msgstr "Letzte Umwandlung. Umgewandelte Shortcodes: %d."
+
+msgid "No page or post contains the shortcode."
+msgstr "Keine Seite und kein Beitrag enth&auml;lt den Shortcode."
+
+#, php-format
+msgid "Pages and posts with the shortcode: %s"
+msgstr "Seiten und Beitr&auml;ge mit dem Shortcode: %s"

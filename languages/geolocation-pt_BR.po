@@ -110,6 +110,15 @@ msgstr "Este post ainda não tem uma localização para exibir. Defina-a na caix
 msgid "No post with a visible location matches these settings."
 msgstr "Nenhum post com localização visível corresponde a estas configurações."
 
+msgid "Last conversion. Shortcodes converted: %d."
+msgstr "Última conversão. Shortcodes convertidos: %d."
+
+msgid "No page or post contains the shortcode."
+msgstr "Nenhuma página ou post contém o shortcode."
+
+msgid "Pages and posts with the shortcode: %s"
+msgstr "Páginas e posts com o shortcode: %s"
+
 msgid "Location"
 msgstr "Localização"
 
@@ -272,6 +281,9 @@ msgstr "Publicar as localizações obtidas da imagem destacada de posts que não
 msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
 msgstr "Um post criado por um aplicativo ou pela API recebe a localização da sua imagem destacada. Enquanto isto estiver desativado, apenas usuários conectados veem essa localização, até você torná-la pública no editor."
 
+msgid "Read the locations of existing posts without a location from their featured images (once, when the settings are saved)."
+msgstr "Ler as localizações dos posts existentes sem localização a partir das suas imagens destacadas (uma vez, ao salvar as configurações)."
+
 msgid "External map"
 msgstr "Mapa externo"
 
@@ -398,6 +410,12 @@ msgstr "Idioma usado para os endereços"
 msgid "Update all addresses from posts that have location information (only once this setup is saved)."
 msgstr "Atualizar todos os endereços dos posts que têm informações de localização (apenas uma vez, ao salvar estas configurações)."
 
+msgid "Convert the shortcodes of pages and posts into blocks (once, when the settings are saved). The previous content stays available as a revision."
+msgstr "Converter os shortcodes de páginas e posts em blocos (uma vez, ao salvar as configurações). O conteúdo anterior continua disponível como revisão."
+
+msgid "A shortcode stays where it is not a paragraph of its own, where none of the categories or tags it names exists, and in posts unless the location is set to appear where the shortcode is."
+msgstr "Um shortcode permanece onde não é um parágrafo próprio, onde não existe nenhuma das categorias ou tags que cita, e nos posts, a menos que a localização deva aparecer onde está o shortcode."
+
 msgid "Save Changes"
 msgstr "Salvar alterações"
 
@@ -460,6 +478,12 @@ msgstr "Remover trajeto"
 
 msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
 msgstr "O arquivo é lido no seu navegador. Apenas a linha simplificada do trajeto é armazenada, não o arquivo."
+
+msgid "Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d."
+msgstr "Lendo as imagens destacadas em segundo plano. Posts verificados: %1$d de %2$d, localizações encontradas: %3$d."
+
+msgid "Last run. Posts without a location checked: %1$d, locations found: %2$d."
+msgstr "Última execução. Posts sem localização verificados: %1$d, localizações encontradas: %2$d."
 
 msgid "Your location could not be determined."
 msgstr "Não foi possível determinar sua localização."

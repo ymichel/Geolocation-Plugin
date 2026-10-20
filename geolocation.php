@@ -3,7 +3,7 @@
  * Plugin Name: Geolocation
  * Plugin URI: https://wordpress.org/extend/plugins/geolocation/
  * Description: Displays post geotag information on an embedded map.
- * Version: 1.19.0
+ * Version: 1.20.0
  * Author: Yann Michel
  * Author URI: https://github.com/ymichel/Geolocation-Plugin/
  * Requires at least: 6.4
@@ -33,7 +33,7 @@
 */
 
 define( 'GEOLOCATION__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'GEOLOCATION__VERSION', '1.19.0' );
+define( 'GEOLOCATION__VERSION', '1.20.0' );
 define( 'GEOLOCATION__UPDATE_BATCH_SIZE', 10 );
 
 add_action( 'init', 'geolocation_languages_init' );
@@ -55,6 +55,7 @@ add_action( 'added_post_meta', 'geolocation_featured_image_changed', 10, 3 );
 add_action( 'updated_post_meta', 'geolocation_featured_image_changed', 10, 3 );
 add_action( 'deleted_post', 'geolocation_flush_page_markers' );
 add_action( 'geolocation_update_addresses_batch', 'geolocation_update_addresses_batch' );
+add_action( 'geolocation_derive_locations_batch', 'geolocation_derive_locations_batch' );
 add_action( 'geolocation_precache_batch', 'geolocation_precache_batch' );
 add_action( 'geolocation_precache_post', 'geolocation_precache_post' );
 add_action( 'save_post_post', 'geolocation_precache_saved_post', 20 );
@@ -77,6 +78,7 @@ require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-track.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-precache.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-link.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-list.php';
+require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-convert.php';
 // Only the code of the selected map provider is loaded.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':
@@ -90,9 +92,9 @@ switch ( get_option( 'geolocation_provider' ) ) {
 /**
  * Append provided links for support and faq.
  *
- * @param array  $links_array The array to be extended.
- * @param string $plugin_file_name The plugin the links are shown for.
- * @return array
+ * @param array<int|string, string> $links_array The array to be extended.
+ * @param string                    $plugin_file_name The plugin the links are shown for.
+ * @return array<int|string, string>
  */
 function geolocation_append_support_and_faq_links( array $links_array, string $plugin_file_name ): array {
 	if ( plugin_basename( __FILE__ ) === $plugin_file_name ) {
@@ -105,8 +107,8 @@ function geolocation_append_support_and_faq_links( array $links_array, string $p
 /**
  * Append the link to the settings page of this plugin.
  *
- * @param array $links_array The array to be extended.
- * @return array
+ * @param array<int|string, string> $links_array The array to be extended.
+ * @return array<int|string, string>
  */
 function geolocation_customizer_action_links( array $links_array ): array {
 	$config_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=geolocation.php' ) ) . '">' . esc_html__( 'Settings', 'geolocation' ) . '</a>';
@@ -314,7 +316,7 @@ function geolocation_exif_to_decimal( mixed $parts, mixed $ref ): string {
  * Read the geo position from the EXIF data of the post's featured image.
  *
  * @param int $post_id The posts id.
- * @return array Latitude and longitude, or an empty array if not available.
+ * @return array<int, string> Latitude and longitude, or an empty array if not available.
  */
 function geolocation_get_featured_image_position( int $post_id ): array {
 	if ( ! function_exists( 'exif_read_data' ) ) {
@@ -491,6 +493,118 @@ function geolocation_post_saved( int $post_id ): void {
 }
 
 /**
+ * Start reading the locations of existing posts from their featured images, in the background.
+ *
+ * Covers the posts which have a featured image but no location, except those whose location has been removed
+ * in the editor. Posts saved before version 1.18.0 outside the editor are the typical case.
+ *
+ * @return void
+ */
+function geolocation_derive_locations_start(): void {
+	$post_ids = get_posts(
+		array(
+			'post_type'      => 'post',
+			'post_status'    => array( 'publish', 'future', 'draft', 'pending', 'private' ),
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- runs once, in the background, when an administrator asks for it.
+			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => '_thumbnail_id',
+					'compare' => 'EXISTS',
+				),
+				array(
+					'key'     => 'geo_removed',
+					'compare' => 'NOT EXISTS',
+				),
+				array(
+					'relation' => 'OR',
+					array(
+						'key'     => 'geo_latitude',
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => 'geo_latitude',
+						'value'   => '',
+						'compare' => '=',
+					),
+				),
+			),
+		)
+	);
+	$post_ids = array_map( 'intval', $post_ids );
+	wp_unschedule_hook( 'geolocation_derive_locations_batch' );
+	update_option( 'geolocation_derive_queue', $post_ids, false );
+	update_option(
+		'geolocation_derive_status',
+		array(
+			'total'    => count( $post_ids ),
+			'done'     => 0,
+			'found'    => 0,
+			'finished' => empty( $post_ids ) ? time() : 0,
+		),
+		false
+	);
+	if ( ! empty( $post_ids ) ) {
+		wp_schedule_single_event( time(), 'geolocation_derive_locations_batch' );
+	}
+}
+
+/**
+ * Read the locations of the next posts in the queue from their featured images.
+ *
+ * @return void
+ */
+function geolocation_derive_locations_batch(): void {
+	$queue  = get_option( 'geolocation_derive_queue' );
+	$status = get_option( 'geolocation_derive_status' );
+	if ( ! is_array( $queue ) || ! is_array( $status ) ) {
+		return;
+	}
+	$batch     = array_splice( $queue, 0, GEOLOCATION__UPDATE_BATCH_SIZE );
+	$requested = false;
+	foreach ( $batch as $post_id ) {
+		if ( $requested ) {
+			// Respect the usage policy of the geocoding service (max. 1 request per second).
+			sleep( 1 );
+		}
+		$requested = geolocation_derive_location( (int) $post_id );
+		++$status['done'];
+		$status['found'] += $requested ? 1 : 0;
+	}
+	if ( empty( $queue ) ) {
+		$status['finished'] = time();
+		delete_option( 'geolocation_derive_queue' );
+	} else {
+		update_option( 'geolocation_derive_queue', $queue, false );
+		wp_schedule_single_event( time() + 5, 'geolocation_derive_locations_batch' );
+	}
+	update_option( 'geolocation_derive_status', $status, false );
+}
+
+/**
+ * Describe the last run which read locations from featured images, for the settings page.
+ *
+ * @return string The escaped text, or an empty string if there has been no run.
+ */
+function geolocation_derive_status_text(): string {
+	$status = get_option( 'geolocation_derive_status' );
+	if ( ! is_array( $status ) || ! isset( $status['total'], $status['done'], $status['found'] ) ) {
+		return '';
+	}
+	if ( empty( $status['finished'] ) ) {
+		/* translators: 1: number of posts checked so far, 2: number of posts to check, 3: number of locations found. */
+		return esc_html( sprintf( __( 'Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d.', 'geolocation' ), $status['done'], $status['total'], $status['found'] ) );
+	}
+	/* translators: 1: number of posts checked, 2: number of locations found. */
+	return esc_html( sprintf( __( 'Last run. Posts without a location checked: %1$d, locations found: %2$d.', 'geolocation' ), $status['done'], $status['found'] ) );
+}
+
+/**
  * Derive the location when a post gets its featured image after it has been created.
  *
  * @param mixed  $meta_id The id of the meta entry; not used.
@@ -539,7 +653,7 @@ function geolocation_versioned_url( string $url, string $version ): string {
 /**
  * Get the map settings shared by all scripts.
  *
- * @return array
+ * @return array<string, mixed>
  */
 function geolocation_get_map_settings(): array {
 	return array(
@@ -554,7 +668,7 @@ function geolocation_get_map_settings(): array {
  * Get the map settings and the geo data of a post for the post editor's script.
  *
  * @param int $post_id The posts id.
- * @return array
+ * @return array<string, mixed>
  */
 function geolocation_get_admin_post_data( int $post_id ): array {
 	return array_merge(
@@ -598,11 +712,11 @@ function geolocation_enqueue_front(): void {
 /**
  * Build the DIV tag of a map.
  *
- * @param mixed  $id The suffix of the DIV's id, usually the post id.
- * @param string $position The location to be shown as "latitude,longitude", empty for the popup map.
- * @param array  $track The track to be drawn on the map, as [ latitude, longitude ] pairs.
- * @param int    $width The width of the map in pixels, 0 for the width of the settings.
- * @param int    $height The height of the map in pixels, 0 for the height of the settings.
+ * @param mixed                           $id The suffix of the DIV's id, usually the post id.
+ * @param string                          $position The location to be shown as "latitude,longitude", empty for the popup map.
+ * @param array<int, array{float, float}> $track The track to be drawn on the map, as [ latitude, longitude ] pairs.
+ * @param int                             $width The width of the map in pixels, 0 for the width of the settings.
+ * @param int                             $height The height of the map in pixels, 0 for the height of the settings.
  * @return string The escaped HTML of the DIV.
  */
 function geolocation_get_geo_div( mixed $id = null, string $position = '', array $track = array(), int $width = 0, int $height = 0 ): string {
@@ -666,7 +780,7 @@ function geolocation_shortcode_regex(): string {
  * Clean the attributes of an overview map's shortcode.
  *
  * @param mixed $atts The attributes as parsed from the shortcode.
- * @return array The supported attributes: cat, tag, width, height, zoom and route. Unused ones are empty.
+ * @return array<string, string> The supported attributes: cat, tag, width, height, zoom and route. Unused ones are empty.
  */
 function geolocation_sanitize_map_atts( mixed $atts ): array {
 	$atts  = is_array( $atts ) ? array_change_key_case( $atts, CASE_LOWER ) : array();
@@ -712,7 +826,7 @@ function geolocation_sanitize_map_atts( mixed $atts ): array {
  *
  * @param string $terms The list as given in the shortcode.
  * @param string $taxonomy The taxonomy: category or post_tag.
- * @return array The ids of the existing terms.
+ * @return array<int, int> The ids of the existing terms.
  */
 function geolocation_get_term_ids( string $terms, string $taxonomy ): array {
 	$ids = array();
@@ -740,9 +854,9 @@ function geolocation_get_term_ids( string $terms, string $taxonomy ): array {
  * Only posts having coordinates are selected here. Whether a post is shown
  * is decided afterwards by geolocation_post_is_visible().
  *
- * @param array $category_ids The ids of the categories to filter for (empty = all).
- * @param array $tag_ids The ids of the tags to filter for (empty = all).
- * @return array
+ * @param array<int, int> $category_ids The ids of the categories to filter for (empty = all).
+ * @param array<int, int> $tag_ids The ids of the tags to filter for (empty = all).
+ * @return array<string, mixed>
  */
 function geolocation_page_query_args( array $category_ids, array $tag_ids = array() ): array {
 	$args = array(
@@ -820,9 +934,9 @@ function geolocation_display_location( mixed $content ): string {
  * attribute the page's custom field "category" (a category name) is used, as in former versions.
  * The result is cached until a post is saved or deleted, at most for one hour.
  *
- * @param array $atts The cleaned shortcode attributes.
- * @param bool  $use_custom_field Whether the page's custom field "category" is used without a "cat" attribute.
- * @return array The category, its id, the number of posts having coordinates and the markers.
+ * @param array<string, string> $atts The cleaned shortcode attributes.
+ * @param bool                  $use_custom_field Whether the page's custom field "category" is used without a "cat" attribute.
+ * @return array<string, mixed> The category, its id, the number of posts having coordinates and the markers.
  */
 function geolocation_get_page_markers( array $atts = array(), bool $use_custom_field = true ): array {
 	$categories = isset( $atts['cat'] ) ? (string) $atts['cat'] : '';
@@ -845,8 +959,23 @@ function geolocation_get_page_markers( array $atts = array(), bool $use_custom_f
 	// A shortcode filter that matches no existing term must not fall back to showing all posts.
 	// An unknown category in the page's custom field shows all posts, as in former versions.
 	$no_match = ( ! $legacy && '' !== $categories && empty( $category_ids ) ) || ( '' !== $tags && empty( $tag_ids ) );
-	$posts    = $no_match ? array() : get_posts( geolocation_page_query_args( $category_ids, $tag_ids ) );
-	$markers  = array();
+	$posts    = array();
+	if ( ! $no_match ) {
+		// The same query as get_posts() runs: without sticky posts and without filters of other plugins.
+		$query = new WP_Query(
+			array_merge(
+				geolocation_page_query_args( $category_ids, $tag_ids ),
+				array(
+					'ignore_sticky_posts' => true,
+					'suppress_filters'    => true,
+				)
+			)
+		);
+		// The featured images of all posts in two queries, instead of two queries for every post.
+		update_post_thumbnail_cache( $query );
+		$posts = $query->posts;
+	}
+	$markers = array();
 	// The posts having a track, by the index of their marker.
 	$with_track = array();
 	foreach ( $posts as $geo_post ) {
@@ -902,10 +1031,10 @@ function geolocation_flush_page_markers(): void {
 /**
  * Build the overview map for one shortcode of a page.
  *
- * @param array  $atts The cleaned shortcode attributes.
- * @param array  $result The markers as returned by geolocation_get_page_markers().
- * @param int    $number The number of the map on the page, starting with 1.
- * @param string $map_id The id of the map's element; by default derived from the number.
+ * @param array<string, string> $atts The cleaned shortcode attributes.
+ * @param array<string, mixed>  $result The markers as returned by geolocation_get_page_markers().
+ * @param int                   $number The number of the map on the page, starting with 1.
+ * @param string                $map_id The id of the map's element; by default derived from the number.
  * @return string The HTML of the map, or an empty string if there is nothing to show.
  */
 function geolocation_get_page_map( array $atts, array $result, int $number, string $map_id = '' ): string {
@@ -996,12 +1125,12 @@ function geolocation_replace_shortcode( string $content, string $replacement ): 
  *
  * The scripts and styles for maps are only enqueued if a location is actually shown.
  *
- * @param WP_Post $post The post.
- * @param string  $display How the location is shown: "plain", "link" or "map"; empty for the setting.
- * @param int     $width The width of the map in pixels, 0 for the width of the settings.
- * @param int     $height The height of the map in pixels, 0 for the height of the settings.
- * @param array   $track "figures", "profile" and "link": "show" or "hide" to overrule the settings for the track details
- *                        and the link to the external map.
+ * @param WP_Post               $post The post.
+ * @param string                $display How the location is shown: "plain", "link" or "map"; empty for the setting.
+ * @param int                   $width The width of the map in pixels, 0 for the width of the settings.
+ * @param int                   $height The height of the map in pixels, 0 for the height of the settings.
+ * @param array<string, string> $track "figures", "profile" and "link": "show" or "hide" to overrule the settings for the track details
+ *                      and the link to the external map.
  * @return string The HTML, or an empty string if the location may not be shown.
  */
 function geolocation_get_location_html( WP_Post $post, string $display = '', int $width = 0, int $height = 0, array $track = array() ): string {

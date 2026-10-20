@@ -140,7 +140,7 @@ function geolocation_block_text( string $text ): string {
 /**
  * Get the data the editor script of the block needs.
  *
- * @return array
+ * @return array<string, mixed>
  */
 function geolocation_get_block_data(): array {
 	return array(
@@ -197,7 +197,7 @@ function geolocation_get_block_data(): array {
  * Turn the attributes of the block into the attributes of the shortcode.
  *
  * @param mixed $attributes The attributes of the block; anything but an array counts as no attributes.
- * @return array The attributes as accepted by geolocation_sanitize_map_atts().
+ * @return array<string, string> The attributes as accepted by geolocation_sanitize_map_atts().
  */
 function geolocation_block_to_map_atts( mixed $attributes ): array {
 	$attributes = is_array( $attributes ) ? $attributes : array();
@@ -230,7 +230,7 @@ function geolocation_block_to_map_atts( mixed $attributes ): array {
 /**
  * Render the block "Geolocation Map".
  *
- * @param array $attributes The attributes of the block.
+ * @param array<string, mixed> $attributes The attributes of the block.
  * @return string The HTML of the map, or an empty string if there is nothing to show.
  */
 function geolocation_render_block( array $attributes ): string {
@@ -247,9 +247,9 @@ function geolocation_render_block( array $attributes ): string {
 /**
  * Render the block "Post Location".
  *
- * @param array    $attributes The attributes of the block.
- * @param string   $content The content of the block, which is empty.
- * @param WP_Block $block The block, providing the post of a query loop.
+ * @param array<string, mixed> $attributes The attributes of the block.
+ * @param string               $content The content of the block, which is empty.
+ * @param WP_Block             $block The block, providing the post of a query loop.
  * @return string The HTML of the location, or an empty string if there is nothing to show.
  */
 function geolocation_render_location_block( array $attributes, string $content = '', ?WP_Block $block = null ): string {

@@ -58,6 +58,26 @@
 					// Show the whole track of the post instead of the surroundings of its location.
 					L.polyline( track, lineOptions ).addTo( map );
 					map.fitBounds( track.concat( [ latLng ] ), { padding: [ 20, 20 ] } );
+					// The place of the track the elevation profile points at.
+					var spot = null;
+					common.registerTrackMap( el, {
+						show: function ( point ) {
+							if ( ! point ) {
+								return;
+							}
+							if ( spot ) {
+								spot.setLatLng( point );
+							} else {
+								spot = L.circleMarker( point, { radius: 6, color: '#fff', weight: 2, fillColor: '#e53e3e', fillOpacity: 1, interactive: false } ).addTo( map );
+							}
+						},
+						hide: function () {
+							if ( spot ) {
+								map.removeLayer( spot );
+								spot = null;
+							}
+						}
+					} );
 				} else {
 					map.setView( latLng, settings.zoom );
 				}

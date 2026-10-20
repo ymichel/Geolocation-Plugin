@@ -70,3 +70,25 @@ test( 'route: a track of a single position is treated as a location', () => {
 	const markers = [ { lat: 1, lng: 1, time: 1, track: [ [ 9, 9 ] ] }, { lat: 2, lng: 2, time: 2 } ];
 	assert.deepEqual( front.getRouteLines( route, markers ), { solid: [ [ [ 1, 1 ], [ 2, 2 ] ] ], dashed: [] } );
 } );
+
+test( 'a position along a track', () => {
+	// Two sections of equal length along the equator.
+	const track = [ [ 0, 0 ], [ 0, 1 ], [ 0, 2 ] ];
+	assert.deepEqual( front.pointAlong( track, 0 ), [ 0, 0 ] );
+	assert.deepEqual( front.pointAlong( track, 1 ), [ 0, 2 ] );
+	assert.deepEqual( front.pointAlong( track, 0.25 ), [ 0, 0.5 ] );
+	assert.deepEqual( front.pointAlong( track, 0.75 ), [ 0, 1.5 ] );
+	// Out of range shares are kept at the ends; a track without length has no position.
+	assert.deepEqual( front.pointAlong( track, 2 ), [ 0, 2 ] );
+	assert.equal( front.pointAlong( [ [ 1, 1 ] ], 0.5 ), null );
+	assert.equal( front.pointAlong( [ [ 1, 1 ], [ 1, 1 ] ], 0.5 ), null );
+} );
+
+test( 'the elevation at a share of the profile', () => {
+	const profile = [ 100, 200, 400 ];
+	assert.equal( front.profileValueAt( profile, 0 ), 100 );
+	assert.equal( front.profileValueAt( profile, 1 ), 400 );
+	assert.equal( front.profileValueAt( profile, 0.25 ), 150 );
+	assert.equal( front.profileValueAt( profile, 0.75 ), 300 );
+	assert.equal( front.profileValueAt( profile, -1 ), 100 );
+} );

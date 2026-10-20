@@ -110,6 +110,15 @@ msgstr "Cet article n’a pas encore de lieu à afficher. Définissez-le dans la
 msgid "No post with a visible location matches these settings."
 msgstr "Aucun article ayant un lieu visible ne correspond à ces réglages."
 
+msgid "Last conversion. Shortcodes converted: %d."
+msgstr "Dernière conversion. Codes courts convertis : %d."
+
+msgid "No page or post contains the shortcode."
+msgstr "Aucune page ni aucun article ne contient le code court."
+
+msgid "Pages and posts with the shortcode: %s"
+msgstr "Pages et articles avec le code court : %s"
+
 msgid "Location"
 msgstr "Emplacement"
 
@@ -272,6 +281,9 @@ msgstr "Publier les emplacements tirés de l’image mise en avant des articles 
 msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
 msgstr "Un article créé par une application ou via l’API reçoit l’emplacement de son image mise en avant. Tant que cette option est désactivée, seuls les utilisateurs connectés voient cet emplacement, jusqu’à ce que vous le rendiez public dans l’éditeur."
 
+msgid "Read the locations of existing posts without a location from their featured images (once, when the settings are saved)."
+msgstr "Lire les emplacements des articles existants sans emplacement à partir de leurs images mises en avant (une fois, à l’enregistrement des réglages)."
+
 msgid "External map"
 msgstr "Carte externe"
 
@@ -398,6 +410,12 @@ msgstr "Langue utilisée pour les adresses"
 msgid "Update all addresses from posts that have location information (only once this setup is saved)."
 msgstr "Mettre à jour toutes les adresses des articles ayant des informations de localisation (une seule fois, à l’enregistrement de ces réglages)."
 
+msgid "Convert the shortcodes of pages and posts into blocks (once, when the settings are saved). The previous content stays available as a revision."
+msgstr "Convertir les codes courts des pages et des articles en blocs (une fois, à l’enregistrement des réglages). L’ancien contenu reste disponible en tant que révision."
+
+msgid "A shortcode stays where it is not a paragraph of its own, where none of the categories or tags it names exists, and in posts unless the location is set to appear where the shortcode is."
+msgstr "Un code court reste en place s’il ne forme pas un paragraphe à lui seul, si aucune des catégories ou étiquettes qu’il nomme n’existe, et dans les articles, sauf si le lieu doit apparaître à l’endroit du code court."
+
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
@@ -460,6 +478,12 @@ msgstr "Supprimer la trace"
 
 msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
 msgstr "Le fichier est lu dans votre navigateur. Seule la ligne simplifiée de la trace est enregistrée, pas le fichier."
+
+msgid "Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d."
+msgstr "Lecture des images mises en avant en arrière-plan. Articles vérifiés : %1$d sur %2$d, emplacements trouvés : %3$d."
+
+msgid "Last run. Posts without a location checked: %1$d, locations found: %2$d."
+msgstr "Dernière exécution. Articles sans emplacement vérifiés : %1$d, emplacements trouvés : %2$d."
 
 msgid "Your location could not be determined."
 msgstr "Votre position n’a pas pu être déterminée."

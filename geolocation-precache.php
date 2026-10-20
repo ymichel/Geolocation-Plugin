@@ -36,7 +36,7 @@ define( 'GEOLOCATION__MAX_ZOOM', 18 );
  * @param float $latitude The latitude.
  * @param float $longitude The longitude.
  * @param int   $zoom The zoom level.
- * @return array The position as [ x, y ] in tiles, with fractions.
+ * @return array{float, float} The position as [ x, y ] in tiles, with fractions.
  */
 function geolocation_tile_position( float $latitude, float $longitude, int $zoom ): array {
 	$tiles    = pow( 2, (int) $zoom );
@@ -51,11 +51,11 @@ function geolocation_tile_position( float $latitude, float $longitude, int $zoom
 /**
  * Get the tiles a map shows for a view, the way Leaflet selects them.
  *
- * @param array $center The centre of the view as [ x, y ] in tiles, see geolocation_tile_position().
- * @param int   $zoom The zoom level.
- * @param int   $width The width of the map in pixels.
- * @param int   $height The height of the map in pixels.
- * @return array The tiles as [ zoom, x, y ].
+ * @param array{float, float} $center The centre of the view as [ x, y ] in tiles, see geolocation_tile_position().
+ * @param int                 $zoom The zoom level.
+ * @param int                 $width The width of the map in pixels.
+ * @param int                 $height The height of the map in pixels.
+ * @return array<int, array{int, int, int}> The tiles as [ zoom, x, y ].
  */
 function geolocation_view_tiles( array $center, int $zoom, int $width, int $height ): array {
 	$zoom  = (int) $zoom;
@@ -79,11 +79,11 @@ function geolocation_view_tiles( array $center, int $zoom, int $width, int $heig
 /**
  * Find the view a map uses to show all given positions, the way Leaflet fits a map to bounds.
  *
- * @param array $points The positions as [ latitude, longitude ] pairs.
- * @param int   $width The width of the map in pixels.
- * @param int   $height The height of the map in pixels.
- * @param int   $padding The free space kept at every edge in pixels.
- * @return array The centre as [ x, y ] in tiles and the zoom level.
+ * @param array<int, array{float, float}> $points The positions as [ latitude, longitude ] pairs.
+ * @param int                             $width The width of the map in pixels.
+ * @param int                             $height The height of the map in pixels.
+ * @param int                             $padding The free space kept at every edge in pixels.
+ * @return array{array{float, float}, int} The centre as [ x, y ] in tiles and the zoom level.
  */
 function geolocation_fit_view( array $points, int $width, int $height, int $padding = 20 ): array {
 	$latitudes  = array();
@@ -112,7 +112,7 @@ function geolocation_fit_view( array $points, int $width, int $height, int $padd
  * A map which is fitted to its content may use another zoom level when it is narrower.
  *
  * @param int $width The width of the map in pixels.
- * @return array The widths of the map without its border.
+ * @return array<int, int> The widths of the map without its border.
  */
 function geolocation_precache_widths( int $width ): array {
 	// The map has a border of one pixel at every edge.
@@ -143,7 +143,7 @@ function geolocation_get_content_width( bool $wide = false ): int {
  * Get the tiles the map of a post shows at first, with the size and the zoom level of the settings.
  *
  * @param int $post_id The posts id.
- * @return array The tiles as [ zoom, x, y ]; empty if the post has no location.
+ * @return array<int, array{int, int, int}> The tiles as [ zoom, x, y ]; empty if the post has no location.
  */
 function geolocation_get_location_tiles( int $post_id ): array {
 	$latitude  = geolocation_clean_coordinate( get_post_meta( $post_id, 'geo_latitude', true ) );
@@ -173,7 +173,7 @@ function geolocation_get_location_tiles( int $post_id ): array {
  * Find the overview maps in the content of a page or post: shortcodes (pages only) and blocks.
  *
  * @param WP_Post $post The page or post.
- * @return array One entry per map with the cleaned attributes ("atts"), whether the custom field "category"
+ * @return array<int, array<string, mixed>> One entry per map with the cleaned attributes ("atts"), whether the custom field "category"
  *               of the page applies ("legacy") and whether the map is aligned wide or full ("wide").
  */
 function geolocation_get_overview_maps( WP_Post $post ): array {
@@ -212,9 +212,11 @@ function geolocation_get_overview_maps( WP_Post $post ): array {
 /**
  * Collect what an overview map shows to visitors: the locations and, for a route, the tracks.
  *
- * @param array $map The map as returned by geolocation_get_overview_maps().
- * @param int   $page_id The id of the page or post containing the map.
- * @return array The positions the map is fitted to, as [ latitude, longitude ] pairs.
+ * @param array<string, mixed> $map The map as returned by geolocation_get_overview_maps().
+ * @param int                  $page_id The id of the page or post containing the map.
+ * @return array{array<int, array{float, float}>, int} The positions the map is fitted to, as [ latitude, longitude ]
+ *                                                    pairs, and how many of them are locations of posts; the
+ *                                                    others are positions of their tracks.
  */
 function geolocation_get_overview_points( array $map, int $page_id ): array {
 	$atts       = $map['atts'];
@@ -227,7 +229,7 @@ function geolocation_get_overview_points( array $map, int $page_id ): array {
 	$category_ids = geolocation_get_term_ids( $categories, 'category' );
 	$tag_ids      = geolocation_get_term_ids( $atts['tag'], 'post_tag' );
 	if ( ( ! $legacy && '' !== $categories && empty( $category_ids ) ) || ( '' !== $atts['tag'] && empty( $tag_ids ) ) ) {
-		return array();
+		return array( array(), 0 );
 	}
 	$points     = array();
 	$with_track = array();
@@ -256,13 +258,13 @@ function geolocation_get_overview_points( array $map, int $page_id ): array {
  * Get the tiles the overview maps of a page or post show at first.
  *
  * @param WP_Post $post The page or post.
- * @return array The tiles as [ zoom, x, y ].
+ * @return array<int, array{int, int, int}> The tiles as [ zoom, x, y ].
  */
 function geolocation_get_overview_tiles( WP_Post $post ): array {
 	$tiles = array();
 	foreach ( geolocation_get_overview_maps( $post ) as $map ) {
 		$result = geolocation_get_overview_points( $map, $post->ID );
-		if ( empty( $result ) || empty( $result[0] ) ) {
+		if ( empty( $result[0] ) ) {
 			continue;
 		}
 		list( $points, $locations ) = $result;
@@ -293,7 +295,7 @@ function geolocation_get_overview_tiles( WP_Post $post ): array {
  * Get the tiles the maps of a page or post show at first: the map of its location and its overview maps.
  *
  * @param int $post_id The id of the page or post.
- * @return array The tiles as [ zoom, x, y ].
+ * @return array<int, array{int, int, int}> The tiles as [ zoom, x, y ].
  */
 function geolocation_get_post_tiles( int $post_id ): array {
 	$post = get_post( $post_id );
@@ -307,15 +309,15 @@ function geolocation_get_post_tiles( int $post_id ): array {
 /**
  * Build the URL of a tile from the tiles URL, the way Leaflet does.
  *
- * @param string $template The tiles URL with the placeholders {s}, {z}, {x} and {y}.
- * @param array  $tile The tile as [ zoom, x, y ].
+ * @param string               $template The tiles URL with the placeholders {s}, {z}, {x} and {y}.
+ * @param array{int, int, int} $tile The tile as [ zoom, x, y ].
  * @return string
  */
 function geolocation_tile_url( string $template, array $tile ): string {
 	$subdomains = array( 'a', 'b', 'c' );
 	return str_replace(
 		array( '{s}', '{z}', '{x}', '{y}' ),
-		array( $subdomains[ abs( $tile[1] + $tile[2] ) % 3 ], $tile[0], $tile[1], $tile[2] ),
+		array( $subdomains[ abs( $tile[1] + $tile[2] ) % 3 ], (string) $tile[0], (string) $tile[1], (string) $tile[2] ),
 		$template
 	);
 }
@@ -370,7 +372,7 @@ function geolocation_precache_tiles_url(): string {
 /**
  * Get the published pages and posts containing an overview map: a block, or on pages the shortcode.
  *
- * @return array The ids, pages first.
+ * @return array<int, int> The ids, pages first.
  */
 function geolocation_precache_map_ids(): array {
 	global $wpdb;
@@ -393,7 +395,7 @@ function geolocation_precache_map_ids(): array {
  * Pages and posts with an overview map come first, as these maps need the most tiles;
  * then the published posts with an enabled location, the newest first.
  *
- * @return array The ids of the pages and posts.
+ * @return array<int, int> The ids of the pages and posts.
  */
 function geolocation_precache_post_ids(): array {
 	$posts = get_posts(
@@ -428,10 +430,10 @@ function geolocation_precache_post_ids(): array {
 /**
  * Get the URLs of the tiles of the given posts which are not stored yet.
  *
- * @param array  $post_ids The ids of the posts.
- * @param string $template The tiles URL.
- * @param int    $limit Stop after this number of missing tiles, 0 for no limit.
- * @return array The number of posts looked at, the number of their tiles and the URLs of the missing ones.
+ * @param array<int, int> $post_ids The ids of the posts.
+ * @param string          $template The tiles URL.
+ * @param int             $limit Stop after this number of missing tiles, 0 for no limit.
+ * @return array{int, int, array<int, string>} The number of posts looked at, the number of their tiles and the URLs of the missing ones.
  */
 function geolocation_precache_missing( array $post_ids, string $template, int $limit = 0 ): array {
 	$posts   = 0;
@@ -461,8 +463,8 @@ function geolocation_precache_missing( array $post_ids, string $template, int $l
  *
  * The proxy answers with another image if it does not deliver a tile, e.g. outside the area it allows.
  *
- * @param array|WP_Error $response The answer of wp_remote_get().
- * @param string         $url The URL of the tile.
+ * @param array<string, mixed>|WP_Error $response The answer of wp_remote_get().
+ * @param string                        $url The URL of the tile.
  * @return bool
  */
 function geolocation_precache_is_tile( $response, string $url ): bool {
@@ -481,7 +483,7 @@ function geolocation_precache_is_tile( $response, string $url ): bool {
 /**
  * Request tiles through the proxy, which stores them.
  *
- * @param array $urls The URLs of the tiles.
+ * @param array<int, string> $urls The URLs of the tiles.
  * @return int The number of tiles delivered or stored.
  */
 function geolocation_precache_fetch( array $urls ): int {
@@ -542,7 +544,7 @@ function geolocation_precache_start(): bool {
 /**
  * Get the state of the current or the last run.
  *
- * @return array Empty if there has been no run yet.
+ * @return array<string, mixed> Empty if there has been no run yet.
  */
 function geolocation_precache_get_status(): array {
 	$status = get_option( 'geolocation_precache_status' );

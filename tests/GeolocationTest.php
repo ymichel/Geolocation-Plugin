@@ -950,4 +950,76 @@ class GeolocationTest extends TestCase {
 
 		$_REQUEST = $request;
 	}
+
+	/**
+	 * The settings page describes the run which reads locations from featured images.
+	 *
+	 * @return void
+	 */
+	public function test_derive_status_text() {
+		$this->assertSame( '', geolocation_derive_status_text() );
+		$GLOBALS['geolocation_test_options']['geolocation_derive_status'] = array(
+			'total'    => 12,
+			'done'     => 5,
+			'found'    => 2,
+			'finished' => 0,
+		);
+		$this->assertSame( 'Reading the featured images in the background. Posts checked: 5 of 12, locations found: 2.', geolocation_derive_status_text() );
+		$GLOBALS['geolocation_test_options']['geolocation_derive_status']['done']     = 12;
+		$GLOBALS['geolocation_test_options']['geolocation_derive_status']['finished'] = 1792000000;
+		$this->assertSame( 'Last run. Posts without a location checked: 12, locations found: 2.', geolocation_derive_status_text() );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_derive_status'] );
+	}
+
+	/**
+	 * The attributes of the shortcode become those of the block "Geolocation Map".
+	 *
+	 * @return void
+	 */
+	public function test_convert_atts() {
+		$this->assertSame( array(), geolocation_convert_atts( geolocation_sanitize_map_atts( array() ), 1 ) );
+		$this->assertSame(
+			array(
+				'width'  => '600',
+				'height' => 250,
+				'zoom'   => 8,
+				'route'  => true,
+			),
+			geolocation_convert_atts(
+				geolocation_sanitize_map_atts(
+					array(
+						'width'  => '600px',
+						'height' => '250',
+						'zoom'   => '8',
+						'route'  => 'yes',
+					)
+				),
+				1
+			)
+		);
+		$this->assertSame( array( 'width' => '100%' ), geolocation_convert_atts( geolocation_sanitize_map_atts( array( 'width' => '100%' ) ), 1 ) );
+	}
+
+	/**
+	 * The part of the elevation profile which belongs to the track visitors see.
+	 *
+	 * @return void
+	 */
+	public function test_track_visible_range() {
+		// Four sections of about 11.1 km along a meridian.
+		$GLOBALS['geolocation_test_post_meta'][7] = array( 'geo_track' => '[[0,0],[0.1,0],[0.2,0],[0.3,0],[0.4,0]]' );
+		$this->assertSame( array( 0.0, 1.0 ), geolocation_track_visible_range( 7 ) );
+		// Shortened by 5 km: one section at each end is hidden.
+		$GLOBALS['geolocation_test_options']['geolocation_track_trim'] = 5000;
+		list( $start, $end ) = geolocation_track_visible_range( 7 );
+		$this->assertEqualsWithDelta( 0.25, $start, 0.0001 );
+		$this->assertEqualsWithDelta( 0.75, $end, 0.0001 );
+		// Shortened by more than half: nothing is visible.
+		$GLOBALS['geolocation_test_options']['geolocation_track_trim'] = 30000;
+		list( $start, $end ) = geolocation_track_visible_range( 7 );
+		$this->assertGreaterThan( $end, $start );
+		// No track.
+		$this->assertSame( array( 1.0, 0.0 ), geolocation_track_visible_range( 8 ) );
+		unset( $GLOBALS['geolocation_test_options']['geolocation_track_trim'] );
+	}
 }

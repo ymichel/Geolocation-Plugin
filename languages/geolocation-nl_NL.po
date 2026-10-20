@@ -110,6 +110,15 @@ msgstr "Dit bericht heeft nog geen locatie om te tonen. Stel die in het Geolocat
 msgid "No post with a visible location matches these settings."
 msgstr "Geen bericht met een zichtbare locatie komt overeen met deze instellingen."
 
+msgid "Last conversion. Shortcodes converted: %d."
+msgstr "Laatste omzetting. Omgezette shortcodes: %d."
+
+msgid "No page or post contains the shortcode."
+msgstr "Geen pagina of bericht bevat de shortcode."
+
+msgid "Pages and posts with the shortcode: %s"
+msgstr "Pagina’s en berichten met de shortcode: %s"
+
 msgid "Location"
 msgstr "Locatie"
 
@@ -272,6 +281,9 @@ msgstr "Locaties publiceren die uit de uitgelichte afbeelding komen van berichte
 msgid "A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor."
 msgstr "Een bericht dat door een app of via de API is gemaakt, krijgt de locatie van zijn uitgelichte afbeelding. Zolang dit uit staat, zien alleen ingelogde gebruikers die locatie, totdat je ze in de editor op openbaar zet."
 
+msgid "Read the locations of existing posts without a location from their featured images (once, when the settings are saved)."
+msgstr "De locaties van bestaande berichten zonder locatie uit hun uitgelichte afbeeldingen lezen (eenmalig, bij het opslaan van de instellingen)."
+
 msgid "External map"
 msgstr "Externe kaart"
 
@@ -398,6 +410,12 @@ msgstr "Gebruikte taal voor adressen"
 msgid "Update all addresses from posts that have location information (only once this setup is saved)."
 msgstr "Werk alle adressen bij van berichten met locatiegegevens (eenmalig, bij het opslaan van deze instellingen)."
 
+msgid "Convert the shortcodes of pages and posts into blocks (once, when the settings are saved). The previous content stays available as a revision."
+msgstr "De shortcodes van pagina’s en berichten omzetten in blokken (eenmalig, bij het opslaan van de instellingen). De vorige inhoud blijft als revisie beschikbaar."
+
+msgid "A shortcode stays where it is not a paragraph of its own, where none of the categories or tags it names exists, and in posts unless the location is set to appear where the shortcode is."
+msgstr "Een shortcode blijft staan waar hij geen eigen alinea is, waar geen van de categorieën of tags bestaat die hij noemt, en in berichten, tenzij de locatie moet verschijnen waar de shortcode staat."
+
 msgid "Save Changes"
 msgstr "Wijzigingen opslaan"
 
@@ -460,6 +478,12 @@ msgstr "Track verwijderen"
 
 msgid "The file is read in your browser. Only the simplified line of the track is stored, not the file."
 msgstr "Het bestand wordt in je browser gelezen. Alleen de vereenvoudigde lijn van de track wordt opgeslagen, niet het bestand."
+
+msgid "Reading the featured images in the background. Posts checked: %1$d of %2$d, locations found: %3$d."
+msgstr "De uitgelichte afbeeldingen worden op de achtergrond gelezen. Gecontroleerde berichten: %1$d van %2$d, gevonden locaties: %3$d."
+
+msgid "Last run. Posts without a location checked: %1$d, locations found: %2$d."
+msgstr "Laatste keer. Gecontroleerde berichten zonder locatie: %1$d, gevonden locaties: %2$d."
 
 msgid "Your location could not be determined."
 msgstr "Je locatie kon niet worden bepaald."

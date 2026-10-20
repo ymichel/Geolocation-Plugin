@@ -83,6 +83,8 @@ function geolocation_settings_page(): void {
 
 	// Restore defaults for emptied settings and reset the one-time update flag.
 	$update_addresses = (bool) get_option( 'geolocation_updateAddresses' );
+	$derive_locations = (bool) get_option( 'geolocation_derive_locations' );
+	$convert          = (bool) get_option( 'geolocation_convert_shortcodes' );
 	geolocation_default_settings();
 
 	// Cache option values.
@@ -103,6 +105,12 @@ function geolocation_settings_page(): void {
 
 	if ( $update_addresses ) {
 		geolocation_update_addresses();
+	}
+	if ( $derive_locations ) {
+		geolocation_derive_locations_start();
+	}
+	if ( $convert ) {
+		geolocation_convert_all();
 	}
 
 	// The address the proxy plugin offers, whether it is used at the moment or not.
@@ -200,6 +208,10 @@ function geolocation_settings_page(): void {
 					<input type="checkbox" id="geolocation_image_public" name="geolocation_image_public" value="1" <?php checked( (bool) get_option( 'geolocation_image_public' ) ); ?>>
 					<label for="geolocation_image_public"><?php esc_html_e( 'Publish locations taken from the featured image of posts which are not created in the editor.', 'geolocation' ); ?></label>
 					<p class="description"><?php esc_html_e( 'A post created by an app or through the API gets the location of its featured image. Unless this is switched on, only logged-in users see that location until you set it to public in the editor.', 'geolocation' ); ?></p>
+					<br />
+					<input type="checkbox" id="geolocation_derive_locations" name="geolocation_derive_locations" value="1">
+					<label for="geolocation_derive_locations"><?php esc_html_e( 'Read the locations of existing posts without a location from their featured images (once, when the settings are saved).', 'geolocation' ); ?></label>
+					<p class="description" id="geolocation-derive-status"><?php echo geolocation_derive_status_text(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in geolocation_derive_status_text(). ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -383,6 +395,15 @@ function geolocation_settings_page(): void {
 				<td class="position">
 					<input type="checkbox" id="geolocation_updateAddresses" name="geolocation_updateAddresses" value="1">
 					<label for="geolocation_updateAddresses"><?php esc_html_e( 'Update all addresses from posts that have location information (only once this setup is saved).', 'geolocation' ); ?></label>
+				</td>
+			</tr>
+			<tr id="geolocation-convert-row">
+				<th scope="row"><?php esc_html_e( 'Shortcode', 'geolocation' ); ?></th>
+				<td>
+					<input type="checkbox" id="geolocation_convert_shortcodes" name="geolocation_convert_shortcodes" value="1">
+					<label for="geolocation_convert_shortcodes"><?php esc_html_e( 'Convert the shortcodes of pages and posts into blocks (once, when the settings are saved). The previous content stays available as a revision.', 'geolocation' ); ?></label>
+					<p class="description"><?php esc_html_e( 'A shortcode stays where it is not a paragraph of its own, where none of the categories or tags it names exists, and in posts unless the location is set to appear where the shortcode is.', 'geolocation' ); ?></p>
+					<?php echo geolocation_convert_status_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in geolocation_convert_status_html(). ?>
 				</td>
 			</tr>
 		</table>

@@ -46,12 +46,30 @@ async function chooseProvider( page, name ) {
 	}
 }
 
+// The EXIF block of a photo taken at the given position (north and east).
+function exif( lat, lng ) {
+  const tiff = Buffer.alloc(128);
+  const rational = (value, offset) => {
+    const deg = Math.floor(value); const min = Math.floor((value - deg) * 60); const sec = Math.round(((value - deg) * 60 - min) * 6000);
+    [[deg, 1], [min, 1], [sec, 100]].forEach((pair, i) => { tiff.writeUInt32BE(pair[0], offset + i * 8); tiff.writeUInt32BE(pair[1], offset + i * 8 + 4); });
+  };
+  const entry = (offset, tag, type, count, value) => { tiff.writeUInt16BE(tag, offset); tiff.writeUInt16BE(type, offset + 2); tiff.writeUInt32BE(count, offset + 4); if (typeof value === 'string') tiff.write(value, offset + 8, 'ascii'); else tiff.writeUInt32BE(value, offset + 8); };
+  tiff.write('MM', 0, 'ascii'); tiff.writeUInt16BE(42, 2); tiff.writeUInt32BE(8, 4);
+  // The first directory only points to the GPS directory.
+  tiff.writeUInt16BE(1, 8); entry(10, 0x8825, 4, 1, 26);
+  tiff.writeUInt16BE(4, 26); entry(28, 1, 2, 2, 'N'); entry(40, 2, 5, 3, 80); entry(52, 3, 2, 2, 'E'); entry(64, 4, 5, 3, 104);
+  rational(lat, 80); rational(lng, 104);
+  const head = Buffer.alloc(10); head.writeUInt16BE(0xFFE1, 0); head.writeUInt16BE(8 + tiff.length, 2); head.write('Exif', 4, 'ascii');
+  return Buffer.concat([head, tiff]);
+}
+
 module.exports = {
 	base,
 	instance,
 	// Where the proxy plugin stores tiles, and the must-use plugins of the instance.
 	cache: path.join( instance, 'wp-content', 'cache', 'osm-tiles' ),
 	chooseProvider,
+	exif,
 	muPlugins: process.env.GEOLOCATION_TEST_DIR ? path.join( instance, 'wp-content', 'mu-plugins' ) : path.join( __dirname, 'mu-plugins' ),
 	id
 };
