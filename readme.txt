@@ -104,6 +104,8 @@ With the position setting "Not automatically" a location is only shown in posts 
 6. Overview map with the route between the posts
 7. The block "Geolocation Map" with its settings in the block editor
 8. The track of a GPX file on an overview map
+9. The elevation profile of a track follows the pointer and the map marks the same place
+10. The list of posts shows every location; the bulk edit form publishes several at once
 
 == Upgrade Notice ==
 
