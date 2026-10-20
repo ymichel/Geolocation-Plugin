@@ -95,6 +95,7 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 | `test-track.js` | Checks the GPX track of a post: reading a file in the editor (also one without a track), saving, the map of the post, the overview map with a route, shortening and removing. Writes its GPX files to `out/` and leaves "Trip to Hamburg" and "Trip to Potsdam" with a track. With `--google` the maps are also loaded with Google Maps. |
 | `test-upgrade-uninstall.js` | Checks the upgrade from the state of version 1.9.9 and the uninstall routine through the test helper, which backs up the plugin's options and geo data in the database and compares the restored data with it. |
 | `screenshot-1.js` | Takes screenshot 1 (editing a post) into `out/`, using the post "Munich to Venice by bike" with its track. Also checks that the track is drawn on the editor map, removed and drawn again. With `--google` it writes control images of the editor with Google Maps instead. |
+| `screenshots-profile-list.js` | Takes the screenshots 9 (the elevation profile of "Trip to Potsdam" following the pointer, with the place on the map) and 10 (the list of posts with the column "Location" and the bulk edit form) into `out/`. Nothing is saved. |
 | `screenshots-route.js` | Takes the screenshots 7 (overview map with a route), 8 ("Shortcode" help tab of the settings page) 9 (the block in the editor, not saved) and 10 (overview map with the track of the page "Munich to Venice") into `out/`. Since the demo posts have tracks, a new screenshot 7 shows the gaps as dashed lines. Creates or updates the page "Our route". |
 | `screenshots.js` | Takes the wordpress.org screenshots 2 to 6 into `out/` (PNG, 2732 px wide). It waits until all map tiles are loaded and switches the display mode (plain, link, map) through the settings page; the instance ends on "map". |
 
@@ -115,8 +116,10 @@ Every pull request needs proof of a successful test in a real instance. Add the 
 
 ## Screenshots for wordpress.org
 
-`screenshots.js`, `screenshot-1.js` and `screenshots-route.js` write the screenshots as PNG, 2732 pixels wide, to `tests/browser/out/`. The two images which show the shortcode (5 and 8 of the scripts) are not published any more: the scripts' images 6, 7, 9 and 10 are the published screenshots 5, 6, 7 and 8. On macOS they are converted with:
+`screenshots.js`, `screenshot-1.js`, `screenshots-route.js` and `screenshots-profile-list.js` write the screenshots as PNG, 2732 pixels wide, to `tests/browser/out/`. The two images which show the shortcode (5 and 8 of `screenshots.js` and `screenshots-route.js`) are not published any more: their images 6, 7, 9 and 10 are the published screenshots 5, 6, 7 and 8. `screenshots-profile-list.js` writes the screenshots 9 and 10 under their published numbers. On macOS they are converted with:
 
 ```bash
 cd tests/browser && for pair in 1:1 2:2 3:3 4:4 6:5 7:6 9:7 10:8; do sips -s format jpeg -s formatOptions 85 out/screenshot-${pair%:*}.png --out ../../.wordpress-org/screenshot-${pair#*:}.jpg; done
+# after screenshots-profile-list.js, which overwrites out/screenshot-9.png and -10.png:
+for i in 9 10; do sips -s format jpeg -s formatOptions 85 out/screenshot-$i.png --out ../../.wordpress-org/screenshot-$i.jpg; done
 ```
