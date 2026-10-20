@@ -15,6 +15,7 @@ parameters:
     paths:
         - geolocation.php
         - geolocation-block.php
+        - geolocation-convert.php
         - geolocation-list.php
         - geolocation-map-link.php
         - geolocation-map-provider-google.php

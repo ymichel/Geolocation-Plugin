@@ -970,4 +970,33 @@ class GeolocationTest extends TestCase {
 		$this->assertSame( 'Last run. Posts without a location checked: 12, locations found: 2.', geolocation_derive_status_text() );
 		unset( $GLOBALS['geolocation_test_options']['geolocation_derive_status'] );
 	}
+
+	/**
+	 * The attributes of the shortcode become those of the block "Geolocation Map".
+	 *
+	 * @return void
+	 */
+	public function test_convert_atts() {
+		$this->assertSame( array(), geolocation_convert_atts( geolocation_sanitize_map_atts( array() ), 1 ) );
+		$this->assertSame(
+			array(
+				'width'  => '600',
+				'height' => 250,
+				'zoom'   => 8,
+				'route'  => true,
+			),
+			geolocation_convert_atts(
+				geolocation_sanitize_map_atts(
+					array(
+						'width'  => '600px',
+						'height' => '250',
+						'zoom'   => '8',
+						'route'  => 'yes',
+					)
+				),
+				1
+			)
+		);
+		$this->assertSame( array( 'width' => '100%' ), geolocation_convert_atts( geolocation_sanitize_map_atts( array( 'width' => '100%' ) ), 1 ) );
+	}
 }

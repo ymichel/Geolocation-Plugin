@@ -47,6 +47,7 @@ function geolocation_get_settings_definition(): array {
 		'geolocation_map_link_notice'      => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_image_public'         => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_derive_locations'     => array( 'string', 'sanitize_text_field', null ),
+		'geolocation_convert_shortcodes'   => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_google_maps_api_key'  => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_updateAddresses'      => array( 'string', 'sanitize_text_field', null ),
 		'geolocation_map_width_page'       => array( 'integer', 'absint', '600' ),
@@ -189,6 +190,7 @@ function geolocation_default_settings(): void {
 	add_option( 'geolocation_markers_version', '' );
 	update_option( 'geolocation_updateAddresses', false );
 	update_option( 'geolocation_derive_locations', false );
+	update_option( 'geolocation_convert_shortcodes', false );
 }
 
 /**
@@ -205,6 +207,7 @@ function geolocation_delete_settings(): void {
 	delete_option( 'geolocation_precache_status' );
 	delete_option( 'geolocation_derive_queue' );
 	delete_option( 'geolocation_derive_status' );
+	delete_option( 'geolocation_convert_status' );
 	geolocation_delete_legacy_settings();
 }
 

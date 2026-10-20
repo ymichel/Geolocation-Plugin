@@ -110,6 +110,15 @@ msgstr "Esta entrada aún no tiene una ubicación que mostrar. Defínela en la c
 msgid "No post with a visible location matches these settings."
 msgstr "Ninguna entrada con ubicación visible coincide con estos ajustes."
 
+msgid "Last conversion. Shortcodes converted: %d."
+msgstr "Última conversión. Shortcodes convertidos: %d."
+
+msgid "No page or post contains the shortcode."
+msgstr "Ninguna página ni entrada contiene el shortcode."
+
+msgid "Pages and posts with the shortcode: %s"
+msgstr "Páginas y entradas con el shortcode: %s"
+
 msgid "Location"
 msgstr "Ubicación"
 
@@ -400,6 +409,12 @@ msgstr "Idioma usado para las direcciones"
 
 msgid "Update all addresses from posts that have location information (only once this setup is saved)."
 msgstr "Actualizar todas las direcciones de las entradas que tienen información de ubicación (solo una vez, al guardar estos ajustes)."
+
+msgid "Convert the shortcodes of pages and posts into blocks (once, when the settings are saved). The previous content stays available as a revision."
+msgstr "Convertir los shortcodes de páginas y entradas en bloques (una vez, al guardar los ajustes). El contenido anterior sigue disponible como revisión."
+
+msgid "A shortcode stays where it is not a paragraph of its own, where none of the categories or tags it names exists, and in posts unless the location is set to appear where the shortcode is."
+msgstr "Un shortcode se mantiene donde no es un párrafo propio, donde no existe ninguna de las categorías o etiquetas que nombra, y en las entradas, salvo que la ubicación deba aparecer donde está el shortcode."
 
 msgid "Save Changes"
 msgstr "Guardar cambios"

@@ -78,6 +78,7 @@ require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-track.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-precache.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-map-link.php';
 require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-list.php';
+require_once GEOLOCATION__PLUGIN_DIR . 'geolocation-convert.php';
 // Only the code of the selected map provider is loaded.
 switch ( get_option( 'geolocation_provider' ) ) {
 	case 'google':

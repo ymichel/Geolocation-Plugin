@@ -114,6 +114,7 @@ Requires PHP 8.3 and WordPress 6.4. Google Maps is no longer developed further; 
 
 = 1.20.0 =
 * new: existing posts without a location can get the location of their featured image, read once in the background from the settings page.
+* new: the settings page converts the shortcodes of existing pages and posts into the blocks, keeping their categories, tags, size, zoom and route.
 
 = 1.19.0 =
 * PHP 8.3 and WordPress 6.4 or newer are required.
