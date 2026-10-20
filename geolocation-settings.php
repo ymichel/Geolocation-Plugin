@@ -33,7 +33,7 @@ function geolocation_get_site_lang(): string {
 /**
  * Get all settings of this plugin including their type, sanitizing and default value.
  *
- * @return array
+ * @return array<string, array{string, string, string|null}>
  */
 function geolocation_get_settings_definition(): array {
 	return array(

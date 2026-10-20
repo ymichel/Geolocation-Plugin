@@ -20,7 +20,7 @@ define( 'GEOLOCATION__TRACK_POINTS_PAGE', 3000 );
  * Turn a submitted or stored track into a clean list of positions.
  *
  * @param mixed $raw The track as JSON or as an array of [ latitude, longitude ] pairs.
- * @return array The positions as [ latitude, longitude ] pairs, empty if there is no valid track.
+ * @return array<int, array{float, float}> The positions as [ latitude, longitude ] pairs, empty if there is no valid track.
  */
 function geolocation_sanitize_track( mixed $raw ): array {
 	$points = is_string( $raw ) ? json_decode( $raw, true ) : $raw;
@@ -46,8 +46,8 @@ function geolocation_sanitize_track( mixed $raw ): array {
 /**
  * Get the distance between two positions in kilometres.
  *
- * @param array $from The first position as [ latitude, longitude ].
- * @param array $to The second position as [ latitude, longitude ].
+ * @param array{float, float} $from The first position as [ latitude, longitude ].
+ * @param array{float, float} $to The second position as [ latitude, longitude ].
  * @return float
  */
 function geolocation_distance( array $from, array $to ): float {
@@ -60,7 +60,7 @@ function geolocation_distance( array $from, array $to ): float {
 /**
  * Get the length of a track in kilometres.
  *
- * @param array $points The positions of the track.
+ * @param array<int, array{float, float}> $points The positions of the track.
  * @return float
  */
 function geolocation_track_length( array $points ): float {
@@ -75,9 +75,9 @@ function geolocation_track_length( array $points ): float {
 /**
  * Drop the positions of a track which are not needed to keep its shape (Douglas-Peucker).
  *
- * @param array $points The positions of the track.
- * @param float $tolerance The allowed deviation in degrees of latitude.
- * @return array
+ * @param array<int, array{float, float}> $points The positions of the track.
+ * @param float                           $tolerance The allowed deviation in degrees of latitude.
+ * @return array<int, array{float, float}>
  */
 function geolocation_simplify_track_by( array $points, float $tolerance ): array {
 	$count = count( $points );
@@ -127,9 +127,9 @@ function geolocation_simplify_track_by( array $points, float $tolerance ): array
 /**
  * Reduce a track to a maximum number of positions while keeping its shape.
  *
- * @param array $points The positions of the track.
- * @param int   $max The maximum number of positions.
- * @return array
+ * @param array<int, array{float, float}> $points The positions of the track.
+ * @param int                             $max The maximum number of positions.
+ * @return array<int, array{float, float}>
  */
 function geolocation_simplify_track( array $points, int $max ): array {
 	$max       = max( 2, (int) $max );
@@ -146,9 +146,9 @@ function geolocation_simplify_track( array $points, int $max ): array {
 /**
  * Cut the given distance off both ends of a track, e.g. to keep a home address private.
  *
- * @param array $points The positions of the track.
- * @param int   $metres The distance to cut off at the start and at the end.
- * @return array The shortened track, empty if nothing is left of it.
+ * @param array<int, array{float, float}> $points The positions of the track.
+ * @param int                             $metres The distance to cut off at the start and at the end.
+ * @return array<int, array{float, float}> The shortened track, empty if nothing is left of it.
  */
 function geolocation_trim_track( array $points, int $metres ): array {
 	$cut = (int) $metres / 1000;
@@ -191,7 +191,7 @@ function geolocation_format_track_length( mixed $km ): string {
  *
  * @param mixed $raw The elevations as JSON or as an array with the keys "profile" (elevations in metres at
  *                   equal distances along the track), "up" and "down" (ascent and descent in metres).
- * @return array The keys "profile", "up", "down", "min" and "max"; empty if there are no valid elevations.
+ * @return array<string, mixed> The keys "profile", "up", "down", "min" and "max"; empty if there are no valid elevations.
  */
 function geolocation_sanitize_elevation( mixed $raw ): array {
 	$data = is_string( $raw ) ? json_decode( $raw, true ) : $raw;
@@ -221,7 +221,7 @@ function geolocation_sanitize_elevation( mixed $raw ): array {
  * Get the elevations of the track of a post.
  *
  * @param int $post_id The posts id.
- * @return array As returned by geolocation_sanitize_elevation().
+ * @return array<string, mixed> As returned by geolocation_sanitize_elevation().
  */
 function geolocation_get_elevation( int $post_id ): array {
 	$stored = get_post_meta( $post_id, 'geo_track_ele', true );
@@ -256,10 +256,10 @@ function geolocation_get_track_summary( int $post_id ): string {
 /**
  * Draw the elevation profile of a track as an inline SVG image.
  *
- * @param array  $elevation The elevations as returned by geolocation_sanitize_elevation().
- * @param string $length The formatted length of the track, e.g. "42 km".
- * @param int    $width The width of the image in pixels.
- * @param array  $labels The texts "title", "min" and "max" (formatted elevations).
+ * @param array<string, mixed>  $elevation The elevations as returned by geolocation_sanitize_elevation().
+ * @param string                $length The formatted length of the track, e.g. "42 km".
+ * @param int                   $width The width of the image in pixels.
+ * @param array<string, string> $labels The texts "title", "min" and "max" (formatted elevations).
  * @return string The escaped SVG, or an empty string if there is no profile.
  */
 function geolocation_get_elevation_svg( array $elevation, string $length, int $width, array $labels ): string {
@@ -392,7 +392,7 @@ function geolocation_save_track( int $post_id ): void {
  *
  * @param int $post_id The posts id.
  * @param int $max The maximum number of positions.
- * @return array The positions as [ latitude, longitude ] pairs, empty if the post has no track.
+ * @return array<int, array{float, float}> The positions as [ latitude, longitude ] pairs, empty if the post has no track.
  */
 function geolocation_get_track( int $post_id, int $max = GEOLOCATION__TRACK_POINTS ): array {
 	$stored = get_post_meta( $post_id, 'geo_track', true );

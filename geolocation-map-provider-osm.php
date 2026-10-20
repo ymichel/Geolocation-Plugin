@@ -82,7 +82,7 @@ function geolocation_enqueue_front_osm(): void {
  *
  * @param string $latitude The latitude.
  * @param string $longitude The longitude.
- * @return array The decoded answer, or an empty array if the request failed.
+ * @return array<string, mixed> The decoded answer, or an empty array if the request failed.
  */
 function geolocation_pull_json_osm( string $latitude, string $longitude ): array {
 	$url  = geolocation_get_osm_nominatim_url() . '/reverse';

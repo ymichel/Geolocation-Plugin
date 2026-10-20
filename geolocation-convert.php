@@ -40,9 +40,9 @@ function geolocation_convert_candidates(): array {
  * the block uses the terms which exist and leaves out the others. If none of the named terms exists, the shortcode
  * shows no posts; the block could not express that, so the shortcode is kept.
  *
- * @param array $atts The attributes as cleaned by geolocation_sanitize_map_atts().
- * @param int   $page_id The page, whose custom field "category" counts if the shortcode names no category.
- * @return array|null The attributes of the block, or null if the shortcode cannot be converted.
+ * @param array<string, string> $atts The attributes as cleaned by geolocation_sanitize_map_atts().
+ * @param int                   $page_id The page, whose custom field "category" counts if the shortcode names no category.
+ * @return array<string, mixed>|null The attributes of the block, or null if the shortcode cannot be converted.
  */
 function geolocation_convert_atts( array $atts, int $page_id ): ?array {
 	$attributes = array();
@@ -122,12 +122,12 @@ function geolocation_convert_post( int $post_id ): array {
 /**
  * Replace the blocks which consist of nothing but the shortcode, also inside other blocks.
  *
- * @param array  $blocks The parsed blocks.
- * @param string $regex The pattern of the shortcode.
- * @param bool   $is_page Whether the content belongs to a page.
- * @param int    $post_id The page or post.
- * @param array  $result Counts of converted and kept shortcodes, updated by this function.
- * @return array The blocks.
+ * @param array<int, array<string, mixed>> $blocks The parsed blocks.
+ * @param string                           $regex The pattern of the shortcode.
+ * @param bool                             $is_page Whether the content belongs to a page.
+ * @param int                              $post_id The page or post.
+ * @param array{converted: int, kept: int} $result Counts of converted and kept shortcodes, updated by this function.
+ * @return array<int, array<string, mixed>> The blocks.
  */
 function geolocation_convert_blocks( array $blocks, string $regex, bool $is_page, int $post_id, array &$result ): array {
 	foreach ( $blocks as $index => $block ) {
@@ -154,10 +154,10 @@ function geolocation_convert_blocks( array $blocks, string $regex, bool $is_page
 /**
  * Build the block which replaces a shortcode.
  *
- * @param array $matches The match of the shortcode, with its attributes as first group.
- * @param bool  $is_page Whether the shortcode is on a page.
- * @param int   $post_id The page or post.
- * @return array|null The block, or null if the shortcode stays.
+ * @param array<int, array<int, string>> $matches The match of the shortcode, with its attributes as first group.
+ * @param bool                           $is_page Whether the shortcode is on a page.
+ * @param int                            $post_id The page or post.
+ * @return array<string, mixed>|null The block, or null if the shortcode stays.
  */
 function geolocation_convert_block( array $matches, bool $is_page, int $post_id ): ?array {
 	if ( ! $is_page ) {

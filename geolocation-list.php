@@ -14,8 +14,8 @@
 /**
  * Add the column "Location" to the list of posts.
  *
- * @param array $columns The columns of the list.
- * @return array
+ * @param array<string, string> $columns The columns of the list.
+ * @return array<string, string>
  */
 function geolocation_list_columns( array $columns ): array {
 	$columns['geolocation'] = __( 'Location', 'geolocation' );
@@ -83,8 +83,8 @@ function geolocation_bulk_edit_field( string $column, string $post_type ): void 
  * Only posts which have a location and which the user may edit are changed. Whether a location is
  * switched on or off stays as it is.
  *
- * @param array $post_ids The ids of the posts.
- * @param bool  $is_public Whether the locations shall be public.
+ * @param array<int, int|string> $post_ids The ids of the posts.
+ * @param bool                   $is_public Whether the locations shall be public.
  * @return int The number of posts whose location has been changed.
  */
 function geolocation_set_public( array $post_ids, bool $is_public ): int {
