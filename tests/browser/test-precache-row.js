@@ -27,9 +27,11 @@ const { base, chooseProvider } = require('./lib');
     out.checkedNotSaved = await row();
     await save(); await open();
     out.savedOnAgain = await row();
-    // With Google Maps the whole OSM section is hidden.
-    await chooseProvider(page, 'google');
-    out.googleNotSaved = await row();
+    // With Google Maps the whole OSM section is hidden. Only offered with an API key in the instance.
+    if (await page.$('select#geolocation_provider')) {
+      await chooseProvider(page, 'google');
+      out.googleNotSaved = await row();
+    }
   } finally {
     await open(); await chooseProvider(page, 'osm'); await page.check('#geolocation_osm_use_proxy'); await page.check('#geolocation_osm_precache_on_save'); await save();
   }

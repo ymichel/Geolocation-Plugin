@@ -46,6 +46,13 @@ async function chooseProvider( page, name ) {
 	}
 }
 
+// The providers a check which covers both can use: without an API key in the instance, as in CI, OpenStreetMap only.
+// Asked on the settings page, which shows the select only while Google Maps is offered.
+async function providers( page ) {
+	await page.goto( base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' } );
+	return ( await page.$( 'select#geolocation_provider' ) ) ? [ 'osm', 'google' ] : [ 'osm' ];
+}
+
 // The EXIF block of a photo taken at the given position (north and east).
 function exif( lat, lng ) {
   const tiff = Buffer.alloc(128);
@@ -63,6 +70,17 @@ function exif( lat, lng ) {
   return Buffer.concat([head, tiff]);
 }
 
+// Print what a check measured, with the expectations which are not met as list "failed". Each expectation is a
+// label and whether it holds; one not met sets the exit code, so the check fails in run.js and in CI, but it still
+// runs to its end and restores what it changed.
+function report( out, expected = {} ) {
+	out.failed = Object.keys( expected ).filter( ( label ) => true !== expected[ label ] );
+	console.log( JSON.stringify( out, null, 1 ) );
+	if ( out.failed.length ) {
+		process.exitCode = 1;
+	}
+}
+
 module.exports = {
 	base,
 	instance,
@@ -71,5 +89,7 @@ module.exports = {
 	chooseProvider,
 	exif,
 	muPlugins: process.env.GEOLOCATION_TEST_DIR ? path.join( instance, 'wp-content', 'mu-plugins' ) : path.join( __dirname, 'mu-plugins' ),
-	id
+	id,
+	providers,
+	report
 };

@@ -3,7 +3,7 @@
 // Also the unchanged behaviour without the strict mode and with Google Maps. Nothing is saved to the post;
 // the settings are restored afterwards.
 const { chromium } = require('playwright-core');
-const { base, id, chooseProvider } = require('./lib');
+const { base, id, chooseProvider, providers } = require('./lib');
 const POST = id('trip-to-dresden');
 
 (async () => {
@@ -54,8 +54,10 @@ const POST = id('trip-to-dresden');
     out.previewAfterUnchecking = await page.evaluate(() => document.getElementById('map').textContent.trim());
     await set('osm', false, false);
     out.notStrictWithoutProxy = { editor: await editor(false), settings: await settingsPage() };
-    await set('google', true, true);
-    out.google = { editor: await editor(true), settings: await settingsPage() };
+    if ((await providers(page)).length > 1) {
+      await set('google', true, true);
+      out.google = { editor: await editor(true), settings: await settingsPage() };
+    }
   } finally {
     await set('osm', true, false);
   }

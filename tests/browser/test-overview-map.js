@@ -3,7 +3,7 @@
 // With --google the map is also checked with Google Maps; the provider is switched back to OSM afterwards.
 const { chromium } = require('playwright-core');
 const fs = require('fs');
-const { base, chooseProvider } = require('./lib');
+const { base, chooseProvider, report } = require('./lib');
 
 async function setProvider(page, provider) {
   await page.goto(base + '/wp-admin/options-general.php?page=geolocation.php', { waitUntil: 'load' });
@@ -106,6 +106,13 @@ async function setProvider(page, provider) {
   }
 
   out.errors = [...new Set(errors)].slice(0, 8);
-  console.log(JSON.stringify(out, null, 1));
+  const popup = out.osmHamburgPopup || {};
+  report(out, {
+    'the map has the demo posts with a location': out.osm.dataMarkers >= 2,
+    'nearby markers are clustered': out.osm.clusters.length > 0 && out.osm.clusterScript && out.osm.clusterCss > 0,
+    'a single marker opens its popup': out.osmPopupSingle !== null,
+    'the popup of "Trip to Hamburg" has title, link, date, excerpt and image': popup.title === 'Trip to Hamburg' && /trip-to-hamburg/.test(popup.href) && !!popup.date && !!popup.excerpt && !!popup.img && popup.img.loaded > 0,
+    'the cluster opens when clicked': out.osmFinal.singleMarkers > out.osm.singleMarkers
+  });
   await browser.close();
 })().catch(e => { console.error(e); process.exit(1); });

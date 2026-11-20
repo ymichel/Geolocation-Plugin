@@ -76,7 +76,9 @@ const POST = id('trip-to-potsdam');
     out.locationLink = await preview('.wp-block-geolocation-location', 0);
 
     // Without a valid nonce the preview page is refused.
-    out.withoutNonce = await page.evaluate(async () => (await fetch(window.geolocationBlock.preview.replace(/_wpnonce=[^&]+/, '_wpnonce=wrong') + '&block=map&atts=%7B%7D')).status);
+    // Asked outside the page, so the expected 403 is not logged as an error of the page.
+    const refused = await page.evaluate(() => window.geolocationBlock.preview.replace(/_wpnonce=[^&]+/, '_wpnonce=wrong') + '&block=map&atts=%7B%7D');
+    out.withoutNonce = (await page.request.get(new URL(refused, base).href)).status();
   } finally {
     if (original !== null) await setContent(original);
     if (GOOGLE) await setProvider('osm');

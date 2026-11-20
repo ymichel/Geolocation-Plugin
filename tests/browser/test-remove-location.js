@@ -3,7 +3,7 @@
 // saved again. Then a new location is chosen, which works as before. With --google the same with Google Maps.
 // Restores the location of the post at the end.
 const { chromium } = require('playwright-core');
-const { base, id, chooseProvider } = require('./lib');
+const { base, id, chooseProvider, report } = require('./lib');
 const GOOGLE = process.argv[2] === '--google';
 const POST = id('trip-to-munich');
 
@@ -57,6 +57,17 @@ const POST = id('trip-to-munich');
   }
   out.restored = await meta();
   out.errors = errors;
-  console.log(JSON.stringify(out, null, 1));
+  const removed = (stored) => !!stored && stored[0] === '' && stored[3] === 'enabled 0' && stored[5] === 'removed';
+  const empty = (box) => !!box && box.lat === '' && box.address === '' && box.off === true && box.markers === 0;
+  report(out, {
+    'the post starts with its location and a marker': !!out.boxBefore && out.boxBefore.lat !== '' && out.boxBefore.markers === 1,
+    '"Remove location" empties the box and hides the marker': empty(out.boxAfterClick),
+    'saved without location, switched off and marked as removed': removed(out.storedAfterRemove),
+    'still empty after a reload': empty(out.boxAfterReload),
+    'nothing comes back when saved again': removed(out.storedAfterSecondSave),
+    'the website shows no location': out.website === '(no location shown)',
+    'a new location can be chosen': !!out.boxAfterSearch && out.boxAfterSearch.on === true && out.boxAfterSearch.markers === 1 && !!out.storedAfterNewLocation && out.storedAfterNewLocation[3] === 'enabled 1',
+    'the location of the post restored': JSON.stringify(out.restored) === JSON.stringify(out.before)
+  });
   await browser.close();
 })().catch(e => { console.error(e); process.exit(1); });

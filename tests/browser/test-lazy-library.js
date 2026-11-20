@@ -3,7 +3,7 @@
 // maps, and nothing at all on a page without a location. Runs with both providers; the display mode and the
 // provider are restored afterwards.
 const { chromium } = require('playwright-core');
-const { base, chooseProvider } = require('./lib');
+const { base, chooseProvider, providers } = require('./lib');
 const POST = '/2026/10/04/trip-to-berlin/';
 const isLibrary = u => /leaflet(\.min)?\.js|leaflet\.css|maps\.googleapis\.com\/maps\/api\/js|osm-tiles-proxy.*leaflet/.test(u);
 const isCluster = u => /markercluster|MarkerCluster/.test(u);
@@ -30,7 +30,7 @@ const isCluster = u => /markercluster|MarkerCluster/.test(u);
   const [providerBefore, displayBefore] = await read();
   const out = { before: [providerBefore, displayBefore] };
   try {
-    for (const provider of ['osm', 'google']) {
+    for (const provider of await providers(admin)) {
       const r = {};
       await set(provider, 'map');
       // A post whose map is below the visible part of a very low window.

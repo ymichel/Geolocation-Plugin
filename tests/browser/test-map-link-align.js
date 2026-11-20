@@ -2,7 +2,7 @@
 // below it, with both providers, on a desktop and on a phone. Keeps the settings as they are, except the provider,
 // which ends on the one found. The link has to be switched on.
 const { chromium } = require('playwright-core');
-const { base, chooseProvider } = require('./lib');
+const { base, chooseProvider, providers } = require('./lib');
 (async () => {
   const browser = await chromium.launch();
   const page = await (await browser.newContext({ viewport: { width: 1366, height: 1000 } })).newPage();
@@ -12,7 +12,7 @@ const { base, chooseProvider } = require('./lib');
   const [was, linkOn] = await provider();
   const out = { providerBefore: was, linkOn };
   try {
-    for (const p of ['osm', 'google']) {
+    for (const p of await providers(page)) {
       await provider(p);
       for (const [name, w] of [['desktop', 1366], ['phone', 390]]) {
         await page.setViewportSize({ width: w, height: 1000 });
