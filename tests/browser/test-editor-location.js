@@ -1,7 +1,7 @@
 // Checks picking a location in the post editor: click on the map, dragging the marker and "My location".
 // Uses post 5 of the test instance and restores its location (Hamburg) and the OSM provider at the end.
 const { chromium } = require('playwright-core');
-const { base, id, chooseProvider } = require('./lib');
+const { base, id, chooseProvider, report } = require('./lib');
 const POST = id('trip-to-hamburg');
 const HOME = { lat: '53.5511', lng: '9.9937' };
 
@@ -100,6 +100,16 @@ async function scenario(page, ctx, label) {
   out.restored = await page.evaluate(() => ({ lat: geolocationAdmin.latitude, lng: geolocationAdmin.longitude, addr: geolocationAdmin.address }));
 
   out.errors = [...new Set(errors)];
-  console.log(JSON.stringify(out, null, 1));
+  const o = out.osm;
+  report(out, {
+    'the editor starts at the location of the post': o.initial.lat === HOME.lat && o.initial.lng === HOME.lng,
+    'a click on the map moves the location and finds an address': o.afterClick.lat !== o.initial.lat && o.afterClick.addr !== '',
+    'dragging the marker moves the location': o.afterDrag.lat !== o.afterClick.lat && o.afterDrag.addr !== '',
+    'clicks are ignored while the location is off': o.clickIgnoredWhenOff === true,
+    '"My location" takes the position of the browser': o.afterLocate.lat === '48.8584' && o.afterLocate.lng === '2.2945',
+    'the picked location is saved': out.osmSaved.lat === '48.8584' && out.osmSaved.lng === '2.2945',
+    'a message when the browser denies the position': out.locateDenied.status !== '',
+    'the location of the post restored': out.restored.lat === HOME.lat && out.restored.lng === HOME.lng
+  });
   await browser.close();
 })().catch(e => { console.error(e); process.exit(1); });

@@ -3,7 +3,7 @@
 // map of the page "Map" is read as a logged-out visitor, who only sees public locations. Runs with both providers
 // and sets the two locations to public again at the end, as in the demo content.
 const { chromium } = require('playwright-core');
-const { base, id, chooseProvider } = require('./lib');
+const { base, id, chooseProvider, providers, report } = require('./lib');
 const BERLIN = id('trip-to-berlin');
 const DRESDEN = id('trip-to-dresden');
 
@@ -47,7 +47,7 @@ async function visitorSees() {
     without = await page.evaluate(async () => (await wp.apiFetch({ path: '/wp/v2/posts', method: 'POST', data: { title: 'Bulk test without location', status: 'draft' } })).id);
     await list();
     out.list = { column: await page.evaluate(() => (document.querySelector('thead th.column-geolocation') || {}).innerText || null), berlin: await cell(BERLIN), dresden: await cell(DRESDEN), withoutLocation: await cell(without) };
-    for (const name of ['osm', 'google']) {
+    for (const name of await providers(page)) {
       await provider(name);
       const r = { visitorBefore: (await visitorSees()).length };
       // Take the locations of two posts back; the post without a location is not counted.
@@ -75,6 +75,21 @@ async function visitorSees() {
   }
   out.final = { provider: await provider(), meta: [await isPublic(BERLIN), await isPublic(DRESDEN)] };
   out.errors = errors;
-  console.log(JSON.stringify(out, null, 1));
+  const expected = {
+    'the column "Location" in the list of posts': out.list.column === 'Location' && /\| Public$/.test(out.list.berlin) && out.list.withoutLocation === '—',
+    'the locations public again at the end': out.final.meta.join() === '1,1' && out.final.provider === out.providerBefore
+  };
+  for (const name of ['osm', 'google'].filter(n => out[n])) {
+    const r = out[name];
+    Object.assign(expected, {
+      [name + ': the field "Location" with "No change" chosen']: r.notPublic.field.label === 'Location' && r.notPublic.field.options.length === 3 && r.notPublic.field.chosen === '',
+      [name + ': "Not public" takes the locations back']: r.afterNotPublic.meta.join() === '0,0' && /Not public$/.test(r.afterNotPublic.berlin) && r.afterNotPublic.withoutLocation === '—',
+      [name + ': visitors no longer see them on the overview map']: r.visitorAfterNotPublic[0] === r.visitorBefore - 2 && !r.visitorAfterNotPublic[1] && !r.visitorAfterNotPublic[2],
+      [name + ': "No change" leaves them as they are']: r.afterNoChange.join() === '0,0',
+      [name + ': "Public" publishes them']: r.afterPublic.meta.join() === '1,1' && r.visitorAfterPublic[0] === r.visitorBefore && r.visitorAfterPublic[1] && r.visitorAfterPublic[2]
+    });
+  }
+  expected['checked with OpenStreetMap'] = !!out.osm;
+  report(out, expected);
   await browser.close();
 })().catch(e => { console.error(e); process.exit(1); });

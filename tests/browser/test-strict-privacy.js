@@ -1,5 +1,5 @@
 const { chromium } = require('playwright-core');
-const { base, id } = require('./lib');
+const { base, id, report } = require('./lib');
 const proxyRow = 'tr[data-plugin="osm-tiles-proxy/osm-tiles-proxy.php"]';
 let external = [];
 
@@ -70,6 +70,18 @@ async function front(page) {
   out.s4_proxy_again = await front(page);
 
   out.errors = [...new Set(errors)];
-  console.log(JSON.stringify(out, null, 1));
+  // The demo content loads avatars and photos from these hosts; every other external host is a map or geocoding server.
+  const mapServers = (r) => r.externalRequests.filter(h => !['secure.gravatar.com', 'upload.wikimedia.org'].includes(h));
+  const throughProxy = (r) => r.post.map && r.post.tilesLoaded > 0 && /\(proxy\)$/.test(r.post.tileHost) && r.pageMap.map && r.pageMap.markers > 0;
+  report(out, {
+    'strict mode with the proxy: maps with tiles from the proxy': throughProxy(out.s1_strict_proxy_ok),
+    'strict mode with the proxy: no request to a map server': mapServers(out.s1_strict_proxy_ok).length === 0,
+    'strict mode without the proxy: only the text, no map and no map library': !out.s2_strict_proxy_gone.post.map && out.s2_strict_proxy_gone.post.cls === 'geolocation-plain' && out.s2_strict_proxy_gone.post.leafletLoaded === 0 && !out.s2_strict_proxy_gone.pageMap.map,
+    'strict mode without the proxy: no request to a map server': mapServers(out.s2_strict_proxy_gone).length === 0,
+    'strict mode without the proxy: a notice for administrators': out.s2_notice.length === 1,
+    'strict mode without the proxy: no tiles in the editor': out.s2_editor.tilesUrl === '',
+    'without strict mode and proxy: tiles from OpenStreetMap': out.s3_not_strict_no_proxy.post.tilesLoaded > 0 && out.s3_not_strict_no_proxy.post.tileHost === 'tile.openstreetmap.org',
+    'the proxy again: tiles from the proxy': throughProxy(out.s4_proxy_again) && out.proxyActive4 === true
+  });
   await browser.close();
 })().catch(e => { console.error(e); process.exit(1); });

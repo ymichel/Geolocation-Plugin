@@ -3,7 +3,7 @@
 // modes, the option of the block "Post Location" and the settings page. Uses the post "Trip to Berlin" (restored).
 // The link itself is not followed, so the test does not contact the map services through it.
 const { chromium } = require('playwright-core');
-const { base, id, chooseProvider } = require('./lib');
+const { base, id, chooseProvider, providers } = require('./lib');
 const POST = id('trip-to-berlin');
 const URL_ = '/2026/10/04/trip-to-berlin/';
 
@@ -27,7 +27,7 @@ const URL_ = '/2026/10/04/trip-to-berlin/';
   await page.goto(base + '/wp-admin/edit.php', { waitUntil: 'load' });
   const original = await page.evaluate(async (id) => (await wp.apiFetch({ path: '/wp/v2/posts/' + id + '?context=edit' })).content.raw, POST);
   try {
-    for (const provider of ['osm', 'google']) {
+    for (const provider of await providers(page)) {
       const r = {};
       await set({ provider, strict: false, link: false, notice: false, display: 'map' });
       r.off = await link();
@@ -71,8 +71,10 @@ const URL_ = '/2026/10/04/trip-to-berlin/';
     out.settingsStrictUnchecked = await box();
     await page.check('#geolocation_osm_strict_privacy');
     out.settingsStrictChecked = await box();
-    await chooseProvider(page, 'google');
-    out.settingsGoogleSelected = await box();
+    if (await page.$('select#geolocation_provider')) {
+      await chooseProvider(page, 'google');
+      out.settingsGoogleSelected = await box();
+    }
     // A chosen notice survives a time in strict mode.
     await set({ provider: 'osm', strict: false, link: true, notice: true });
     await set({ provider: 'osm', strict: true });

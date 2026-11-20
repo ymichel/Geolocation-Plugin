@@ -38,7 +38,10 @@ const POST = id('trip-to-dresden');
   await helper('classic_on');
   try {
     out.before = await open();
-    await page.setInputFiles('#geolocation-track-file', 'out/berlin-potsdam.gpx');
+    // Its own track, so the check does not depend on the files of test-track.js.
+    const points = Array.from({ length: 200 }, (_, i) => { const t = i / 199; return '<trkpt lat="' + (52.52 - 0.1294 * t).toFixed(5) + '" lon="' + (13.405 - 0.3405 * t).toFixed(5) + '"><ele>' + (40 + 30 * Math.sin(t * Math.PI)).toFixed(1) + '</ele></trkpt>'; });
+    require('fs').writeFileSync('out/classic-editor.gpx', '<?xml version="1.0"?><gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Berlin to Potsdam</name><trkseg>' + points.join('') + '</trkseg></trk></gpx>');
+    await page.setInputFiles('#geolocation-track-file', 'out/classic-editor.gpx');
     await page.waitForTimeout(GOOGLE ? 2500 : 1500);
     out.chosen = await page.evaluate(() => ({ status: document.getElementById('geolocation-track-status').textContent, points: JSON.parse(document.getElementById('geolocation-track').value).length, ele: !!document.getElementById('geolocation-track-ele').value, line: !!document.querySelector('#geolocation-map .leaflet-overlay-pane path') }));
     await page.screenshot({ path: 'out/classic-editor' + (GOOGLE ? '-google' : '') + '.png' });

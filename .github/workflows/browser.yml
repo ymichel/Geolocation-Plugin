@@ -1,0 +1,52 @@
+name: Browser checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  browser:
+    name: Browser checks (OpenStreetMap)
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright-core install --with-deps chromium-headless-shell
+      - name: Start WordPress Playground
+        run: |
+          mkdir -p tests/browser/out
+          nohup npm run wp:start > tests/browser/out/playground.log 2>&1 &
+          for i in $(seq 1 100); do
+            if curl -sf -o /dev/null http://127.0.0.1:9400/; then exit 0; fi
+            sleep 3
+          done
+          cat tests/browser/out/playground.log
+          exit 1
+      - name: Demo content
+        run: npm run wp:seed | tee tests/browser/out/seed.log
+      - name: Browser checks
+        run: node tests/browser/run.js
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo '### Browser checks'
+            echo
+            echo "$(grep -m1 "^WordPress" tests/browser/out/seed.log), OpenStreetMap, headless Chromium"
+            echo
+            cat tests/browser/out/summary.md 2>/dev/null
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the output and the control images
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: browser-checks
+          path: tests/browser/out/
+          retention-days: 30

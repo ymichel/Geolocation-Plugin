@@ -31,14 +31,17 @@ What you get:
 
 `npm run wp:seed` can be repeated at any time. It overwrites the posts and pages of the demo content and the settings of the plugin, and keeps a stored Google Maps API key.
 
-## Run a check
+## Run the checks
 
 ```bash
-node tests/browser/test-map-link.js
+npm run wp:check                       # the checks which also run in CI, one after another
+npm run wp:check -- test-track test-route
+node tests/browser/test-map-link.js    # a single check with its full output
 node tests/browser/test-overview-map.js --google
 ```
 
-- A check prints what it measured as JSON; read it and compare it with what you expect. An empty list `"errors"` means that the pages raised no JavaScript error. Control images are written to `tests/browser/out/`.
+- A check prints what it measured as JSON. An empty list `"errors"` means that the pages raised no JavaScript error. Checks with expectations also list in `"failed"` the expectations which are not met and then end with exit code 1. Control images are written to `tests/browser/out/`.
+- `npm run wp:check` (`tests/browser/run.js`) runs the checks and says for each whether it passed: it fails when the check ends with an error, reports JavaScript errors or expectations not met. A failed check is repeated once after `npm run wp:seed`, as the instance and the external servers sometimes stumble. The output of each check goes to `tests/browser/out/<check>.log`, a summary to `tests/browser/out/summary.md`. The list in `run.js` leaves out the checks for Google Maps, the pre-caching checks and the screenshots.
 - Most checks change settings or a post and restore them at the end. If one is interrupted, `npm run wp:seed` brings the instance back to the starting point.
 - **Map providers:** new functions are made for OpenStreetMap only, but websites which use Google Maps keep it. A change to code which both share has to be checked with Google Maps as well. Checks which know the option `--google` repeat their steps with Google Maps; the others switch the provider themselves or are independent of it.
 - **Google Maps needs your own API key.** Enter it yourself under Settings > Geolocation in the instance. It is stored in the database of the instance only; never put a key into a file of the repository.
@@ -47,9 +50,23 @@ node tests/browser/test-overview-map.js --google
 
 Another instance can be used with `GEOLOCATION_TEST_URL` (its address) and `GEOLOCATION_TEST_DIR` (the folder of its WordPress files, needed by the pre-caching checks). It needs the test helper as must-use plugin and the demo content. `npm run wp:start -- --port=9401` starts the instance on another port.
 
+## In CI
+
+The workflow "Browser checks" (`.github/workflows/browser.yml`) does the same for every pull request on GitHub: it starts WordPress Playground with the latest WordPress, runs `npm run wp:seed` and `npm run wp:check`, with OpenStreetMap only, as CI has no Google Maps API key. The summary of the run lists every check with its result, and the artifact "browser-checks" holds the logs and the control images. The run takes about half an hour.
+
+For the time being the workflow is advisory: a failed run has to be looked at, but it does not block a merge by itself, as Playground and the external servers it uses (map tiles, Nominatim, Wikimedia) sometimes fail.
+
 ## What to put into a pull request
 
-Every pull request needs proof of a successful test in a real instance. Add the output of the checks you ran, or a control image from `tests/browser/out/`, and name the WordPress version, the map provider and the browser (the checks use headless Chromium). List what you did not test.
+Every pull request needs proof of a successful test in a real instance. A passed run of the workflow "Browser checks" is such proof for OpenStreetMap, as long as a check covers the change: link the run. Otherwise add the output of the checks you ran, or a control image from `tests/browser/out/`, and name the WordPress version, the map provider and the browser (the checks use headless Chromium). Changes to code which Google Maps shares need a run with `--google` in your own instance. List what you did not test.
+
+## Writing a check
+
+- A check is a Node.js script which opens pages with Playwright, collects what it measures in an object and ends with `report( out, { ... } )` from `lib.js`. Each expectation is a label and a condition: `'the map is drawn with Leaflet': out.map.leaflet === true`. Write the conditions so that they hold in a fresh instance with the demo content and in an instance which has seen other checks before.
+- Collect JavaScript errors of the pages in `out.errors` (`page.on( 'pageerror', ... )`).
+- Restore at the end what the check changed, also when it fails (`try` / `finally`).
+- A check which covers both providers loops over `await providers( page )`: without an API key in the instance that is OpenStreetMap only.
+- Add the check to the list in `run.js` unless it needs Google Maps or requests many new tiles from the OpenStreetMap servers.
 
 ## The checks
 

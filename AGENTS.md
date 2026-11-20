@@ -37,9 +37,10 @@ composer analyse # PHPStan: the native types against their use
 composer test    # PHPUnit
 npm run lint     # ESLint for the own scripts
 npm test         # unit tests of the scripts (Node.js 22 or newer)
+npm run wp:check # browser checks against a running test instance, see tests/instructions.md
 ```
 
-All five checks run in CI for every pull request and have to pass.
+All five checks run in CI for every pull request and have to pass. The workflow "Browser checks" also runs the browser checks in WordPress Playground with OpenStreetMap; for now it is advisory: look at every failure, but it does not block a merge by itself.
 
 **WPCS has to succeed.** The PHP code follows the WordPress Coding Standards, and the CI check "WPCS" fails the pull request on any error. Run `composer lint` before every commit and fix what it reports, with `composer fix` or by hand. Do not silence a finding with `phpcs:ignore` unless the line is correct as it is; then name the sniff and give the reason in the same comment. The two known warnings about `meta_query` in `geolocation.php` are accepted.
 
@@ -66,12 +67,12 @@ All five checks run in CI for every pull request and have to pass.
 
 - Add a PHPUnit test for every pure function (calculation, sanitizing, formatting) and a test in `tests/js/` for calculating code in scripts. `tests/bootstrap.php` stubs the WordPress functions the tests need; add a stub there instead of loading WordPress.
 - Behaviour in the browser (maps, editor, settings screen) cannot be checked by these tests, which only stub WordPress.
-- For that there is a real instance: [tests/instructions.md](tests/instructions.md) describes how to start WordPress Playground with this checkout as plugin (`npm run wp:start`), fill it with demo content (`npm run wp:seed`) and run the browser checks in `tests/browser/`. Add or extend a check there when you change behaviour in the browser.
+- For that there is a real instance: [tests/instructions.md](tests/instructions.md) describes how to start WordPress Playground with this checkout as plugin (`npm run wp:start`), fill it with demo content (`npm run wp:seed`) and run the browser checks in `tests/browser/`. Add or extend a check there when you change behaviour in the browser, with expectations through `report()` from `tests/browser/lib.js`, and add it to the list in `tests/browser/run.js` unless it needs Google Maps or requests many map tiles.
 
 ## Pull requests
 
-- **Every pull request has to contain proof of a successful test in a real instance:** a running WordPress with the plugin active (a local installation, WordPress Playground or a staging site), not the stubbed unit tests. Passing CI is not such proof.
-- Proof is a screenshot, or the output of a check from `tests/browser/` run against the instance, which shows the changed behaviour working. Attach it to the description of the pull request and say which WordPress version, which map provider and which browser were used.
+- **Every pull request has to contain proof of a successful test in a real instance:** a running WordPress with the plugin active (a local installation, WordPress Playground or a staging site), not the stubbed unit tests. Passing the unit tests and the linters in CI is not such proof.
+- Proof is a passed run of the workflow "Browser checks" with a check which covers the change (link the run), a screenshot, or the output of a check from `tests/browser/` run against the instance, which shows the changed behaviour working. Attach it to the description of the pull request and say which WordPress version, which map provider and which browser were used.
 - A change is proven with OpenStreetMap. If it touches code which Google Maps shares, also show that Google Maps still works.
 - Also list what was not tested. If no real instance is available, say so plainly and do not present the change as tested.
 - A change without visible behaviour (comments, development tools, documentation) needs no screenshot; state instead that the plugin still activates and shows a map in the instance.

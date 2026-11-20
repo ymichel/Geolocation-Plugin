@@ -2,7 +2,7 @@
 // nothing on a page, registration and controls in the editor. With --google the website is checked with Google Maps
 // (needs a stored API key; OSM is restored afterwards). The content of the post "Trip to Berlin" is restored afterwards.
 const { chromium } = require('playwright-core');
-const { base, id, chooseProvider } = require('./lib');
+const { base, id, chooseProvider, report } = require('./lib');
 const POST = id('trip-to-berlin');
 const GOOGLE = process.argv[2] === '--google';
 
@@ -102,6 +102,18 @@ const GOOGLE = process.argv[2] === '--google';
     out.restored = await page.evaluate(async (id) => !/geolocation\/location/.test((await wp.apiFetch({ path: '/wp/v2/posts/' + id + '?context=edit' })).content.raw), POST);
   }
   out.errors = [...new Set(errors)];
-  console.log(JSON.stringify(out, null, 1));
+  const drawn = (r) => r && r.maps.length === 1 && (GOOGLE ? r.maps[0].google : r.maps[0].leaflet);
+  report(out, {
+    'the automatic map of the post before the block is added': drawn(out.before),
+    'the block shows the map in its own size, in place of the automatic one': drawn(out.map) && out.map.maps[0].w === 600 && out.map.maps[0].h === 320 && out.map.maps[0].wrapper === 'wp-block-geolocation-location' && out.map.order === true,
+    'the hover map of the link': !!out.hover && out.hover.visible === true && out.hover.wrapper === true,
+    'plain text without a map': !!out.plain && out.plain.maps.length === 0 && out.plain.plain.length === 1 && out.plain.links === 0,
+    'the display of the settings': drawn(out.asSettings),
+    'rendered through the REST API only with a post': !!out.rest && out.rest.withoutPost === '' && out.rest.withPost !== '',
+    'the block valid in the editor': !!out.editor && out.editor.title === 'Post Location' && out.editor.valid === true,
+    'the size only offered for a map': !!out.sidebarPlain && out.sidebarBefore.includes('Height') && !out.sidebarPlain.includes('Height'),
+    'the height set in the editor': !!out.afterEdit && out.afterEdit.height === 280,
+    'the content of the post restored': out.restored === true
+  });
   await browser.close();
 })().catch(e => { console.error(e); process.exit(1); });

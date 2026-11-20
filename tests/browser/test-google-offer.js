@@ -10,7 +10,9 @@ const { base } = require('./lib');
   const browser = await chromium.launch();
   const page = await (await browser.newContext({ viewport: { width: 1366, height: 1000 } })).newPage();
   const errors = []; const requests = [];
-  page.on('pageerror', e => errors.push('pageerror: ' + e.message));
+  // The Google Maps API refuses the placeholder key and then throws errors of its own; they are listed apart.
+  const googleErrors = [];
+  page.on('pageerror', e => (/maps\.googleapis\.com/.test(e.stack) ? googleErrors : errors).push('pageerror: ' + e.message));
   page.on('request', r => requests.push(r.url()));
   await page.goto(base + '/wp-admin/', { waitUntil: 'load' });
   const helper = (q) => page.evaluate((query) => fetch('/wp-admin/admin-ajax.php?action=geolocation_test&do=' + query, { credentials: 'include' }).then(r => r.json()).then(j => j.data), q);
@@ -62,6 +64,7 @@ const { base } = require('./lib');
   await page.waitForTimeout(3000);
   out.postMap = await page.evaluate(() => document.querySelectorAll('.geolocation-map[data-geolocation] img.leaflet-tile-loaded').length > 0);
   out.errors = errors;
+  out.googleErrors = [...new Set(googleErrors)];
   console.log(JSON.stringify(out, null, 1));
   await browser.close();
 })().catch(e => { console.error(e); process.exit(1); });

@@ -3,7 +3,7 @@
 // already, and the setting which makes such locations public. Runs with both providers, as the address comes from
 // the geocoder of the provider. Creates photos with GPS data itself and deletes its posts and photos at the end.
 const { chromium } = require('playwright-core');
-const { base, chooseProvider, exif } = require('./lib');
+const { base, chooseProvider, exif, providers } = require('./lib');
 
 (async () => {
   const browser = await chromium.launch();
@@ -33,7 +33,7 @@ const { base, chooseProvider, exif } = require('./lib');
     const leipzig = await upload('geolocation-test-leipzig.jpg', photo(51.3397, 12.3731));
     const rome = await upload('geolocation-test-rome.jpg', photo(41.9028, 12.4964));
     const without = await upload('geolocation-test-plain.jpg', plain);
-    for (const provider of ['osm', 'google']) {
+    for (const provider of await providers(page)) {
       const r = {};
       await set(provider, false);
       // Created with its featured image in one request.

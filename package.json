@@ -8,7 +8,8 @@
     "test": "node --test \"tests/js/*.test.js\"",
     "wp:start": "node tests/browser/start.js",
     "wp:seed": "node tests/browser/seed.js",
-    "wp:browser": "playwright-core install chromium-headless-shell"
+    "wp:browser": "playwright-core install chromium-headless-shell",
+    "wp:check": "node tests/browser/run.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

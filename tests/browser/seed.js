@@ -33,6 +33,7 @@ const { base }     = require( './lib' );
 
 	console.log( 'created: ' + ( result.data.created.join( ', ' ) || '-' ) );
 	console.log( 'reset:   ' + ( result.data.updated.join( ', ' ) || '-' ) );
+	console.log( 'WordPress ' + result.data.state.wordpress + ', plugin geolocation ' + result.data.state.version );
 	console.log( 'proxy plugin active: ' + result.data.proxy + ', Google Maps API key stored: ' + result.data.state.apiKey );
 } )().catch( ( error ) => {
 	console.error( error.message );

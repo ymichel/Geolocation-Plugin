@@ -230,6 +230,7 @@ function geolocation_test_state() {
 		'backup'     => false !== get_option( 'geolocation_test_backup' ),
 		'locale'     => (string) get_option( 'geolocation_test_locale' ),
 		'checksum'   => md5( wp_json_encode( $data ) ),
+		'wordpress'  => get_bloginfo( 'version' ),
 	);
 }
 
